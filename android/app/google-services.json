@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "986373697299",
+    "project_id": "intelligent-personalized-care",
+    "storage_bucket": "intelligent-personalized-care.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986373697299:android:4b1ecd170b7943ca6db4e6",
+        "android_client_info": {
+          "package_name": "pt.ipc_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986373697299-rcc4ttrt6vpirv9uet45u7eqlqbtqej0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB9PeBhdMnRjFM6BSCQEupjaxns13zNCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986373697299-rcc4ttrt6vpirv9uet45u7eqlqbtqej0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
