@@ -1,4 +1,4 @@
-package pt.ipc.api.service.users.dtos
+package pt.ipc.service.sections.users.dtos
 
 data class RegisterOutput(
     val name: String,

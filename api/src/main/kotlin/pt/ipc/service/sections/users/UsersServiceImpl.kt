@@ -1,10 +1,10 @@
-package pt.ipc.api.service.users
+package pt.ipc.service.sections.users
 
 import org.springframework.stereotype.Component
-import pt.ipc.api.domain.User
-import pt.ipc.api.service.users.dtos.RegisterInput
-import pt.ipc.api.service.users.dtos.RegisterOutput
-import pt.ipc.api.service.users.dtos.UserOutput
+import pt.ipc.domain.User
+import pt.ipc.service.sections.users.dtos.RegisterInput
+import pt.ipc.service.sections.users.dtos.RegisterOutput
+import pt.ipc.service.sections.users.dtos.UserOutput
 
 @Component
 class UsersServiceImpl(

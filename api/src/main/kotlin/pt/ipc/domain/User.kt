@@ -1,4 +1,4 @@
-package pt.ipc.api.domain
+package pt.ipc.domain
 
 data class User(
     val id: Int,

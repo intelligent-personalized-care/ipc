@@ -1,10 +1,24 @@
-CREATE TABLE IF NOT EXISTS MONITOR (
+CREATE TABLE IF NOT EXISTS USERS(
+   id UUID PRIMARY KEY NOT NULL,
+   u_name VARCHAR(50) NOT NULL,
+   u_email VARCHAR(50) UNIQUE CHECK (u_email LIKE '%@%.%') NOT NULL
+);
+
+
+
+/*CREATE TABLE IF NOT EXISTS MONITOR (
    id UUID PRIMARY KEY NOT NULL,
    m_name VARCHAR(50) NOT NULL,
    m_email VARCHAR(50) UNIQUE CHECK (m_email LIKE '%@%.%') NOT NULL
+);*/
+
+CREATE TABLE IF NOT EXISTS MONITOR (
+   m_id UUID PRIMARY KEY NOT NULL,
+
+  FOREIGN KEY (m_id) REFERENCES USERS(id)
 );
 
-CREATE TABLE IF NOT EXISTS CLIENT (
+/*CREATE TABLE IF NOT EXISTS CLIENT (
     id UUID PRIMARY KEY NOT NULL,
     c_name VARCHAR(50) NOT NULL,
     c_email VARCHAR(50) UNIQUE CHECK (c_email LIKE '%@%.%') NOT NULL,
@@ -12,9 +26,21 @@ CREATE TABLE IF NOT EXISTS CLIENT (
     monitor_id UUID,--can be null because of the free exercise option
 
     FOREIGN KEY(monitor_id) REFERENCES MONITOR (id)
+);*/
+
+CREATE TABLE IF NOT EXISTS CLIENT (
+    c_id UUID PRIMARY KEY NOT NULL,
+    physical_condition VARCHAR(200),
+    monitor_id UUID,--can be null because of the free exercise option
+
+    FOREIGN KEY (c_id) REFERENCES USERS(id),
+    FOREIGN KEY(monitor_id) REFERENCES MONITOR (m_id)
 );
 
-
+CREATE TABLE TOKENS(
+   token_validation VARCHAR(256) primary key,
+   user_id int references USERS(id)
+);
 
 CREATE TABLE IF NOT EXISTS MONITOR_RATING (
     monitor_id UUID NOT NULL,
