@@ -32,7 +32,13 @@ dependencies {
 	//JDBI dependencies
 	implementation("org.jdbi:jdbi3-core:3.35.0")
 	implementation("org.jdbi:jdbi3-kotlin:3.35.0")
+	implementation("org.jdbi:jdbi3-postgres:3.33.0")
 	implementation("org.postgresql:postgresql:42.5.1")
+
+	//for JWT implementation
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 	//Jetty Dependencies
 	implementation("org.eclipse.jetty:jetty-server:11.0.13")
