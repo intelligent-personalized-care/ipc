@@ -3,7 +3,7 @@ package pt.ipc.api.http.pipeline
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
-import pt.ipc.api.domain.User
+import pt.ipc.domain.User
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 

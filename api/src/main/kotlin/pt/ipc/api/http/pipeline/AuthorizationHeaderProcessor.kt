@@ -1,8 +1,8 @@
 package pt.ipc.api.http.pipeline
 
 import org.springframework.stereotype.Component
-import pt.ipc.api.domain.User
-import pt.ipc.api.service.users.UsersServiceImpl
+import pt.ipc.domain.User
+import pt.ipc.service.sections.users.UsersServiceImpl
 
 @Component
 class AuthorizationHeaderProcessor(
