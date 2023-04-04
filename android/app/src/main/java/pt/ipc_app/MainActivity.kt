@@ -1,4 +1,5 @@
 package pt.ipc_app
 
-class MainActivity {
-}
+import androidx.activity.ComponentActivity
+
+class MainActivity : ComponentActivity()
