@@ -7,13 +7,14 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.Client
 import pt.ipc.domain.User
 import javax.servlet.http.HttpServletRequest
 
 @Component
 class UserArgumentResolver: HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter) =
-        parameter.parameterType == User::class.java
+        parameter.parameterType == Client::class.java
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?,
                                  webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
@@ -26,8 +27,8 @@ class UserArgumentResolver: HandlerMethodArgumentResolver {
     companion object {
         private const val KEY = "UserArgumentResolver"
 
-        fun addUserTo(user: User, request: HttpServletRequest) =
-            request.setAttribute(KEY, user)
+        fun addUserTo(client: User, request: HttpServletRequest) =
+            request.setAttribute(KEY, client)
 
         fun getUserFrom(request: HttpServletRequest): User? =
             request.getAttribute(KEY)?.let {

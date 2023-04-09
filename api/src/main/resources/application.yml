@@ -3,3 +3,4 @@ server:
     secrets:
       access-token-secret: 2DOVg#%&?/()yISFeDsKJ9v7#%&?/()b0het2fANnG4FWhw25QgnRQhPLW0ld4Nt
       encryption-secret: m%mj&5!MzGZwlGhv5!txn%UMbOwNxfVb
+      google-project-id: intelligente-personalized-care

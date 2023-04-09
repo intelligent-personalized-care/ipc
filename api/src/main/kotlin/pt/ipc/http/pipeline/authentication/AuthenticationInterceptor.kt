@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 import pt.ipc.domain.Unauthorized
-import pt.ipc.domain.User
+import pt.ipc.domain.Client
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -29,7 +29,7 @@ class AuthenticationInterceptor(
             return if(user == null){
                 throw Unauthorized()
             }else{
-                if(handler.methodParameters.any { it.parameterType == User::class.java }){
+                if(handler.methodParameters.any { it.parameterType == Client::class.java }){
                     UserArgumentResolver.addUserTo(user, request)
                 }
                 true

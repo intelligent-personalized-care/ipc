@@ -35,14 +35,21 @@ dependencies {
 	implementation("org.jdbi:jdbi3-postgres:3.33.0")
 	implementation("org.postgresql:postgresql:42.5.1")
 
-	//for JWT implementation
+	//JWT implementation
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+	//Google Storage
+	implementation("com.google.cloud:google-cloud-storage:1.118.1")
+
+	//Increase request maximum permited size
+	implementation("commons-fileupload:commons-fileupload:1.4")
+
 	//Jetty Dependencies
 	implementation("org.eclipse.jetty:jetty-server:11.0.13")
 	implementation("org.eclipse.jetty:jetty-servlet:11.0.13")
+
 
 	implementation("org.slf4j:slf4j-api:2.0.5")
 	runtimeOnly("org.slf4j:slf4j-simple:2.0.5")

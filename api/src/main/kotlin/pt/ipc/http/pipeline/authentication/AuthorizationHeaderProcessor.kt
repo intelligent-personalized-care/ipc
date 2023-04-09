@@ -2,12 +2,12 @@ package pt.ipc.http.pipeline.authentication
 
 import org.springframework.stereotype.Component
 import pt.ipc.domain.User
-import pt.ipc.services.users.UsersService
+import pt.ipc.services.users.UsersServiceUtils
 import javax.servlet.http.Cookie
 
 @Component
 class AuthorizationHeaderProcessor(
-   private val usersService: UsersService
+   private val usersServiceUtils: UsersServiceUtils
 ) {
 
     fun process(cookie : Cookie?) : User?{
@@ -15,7 +15,7 @@ class AuthorizationHeaderProcessor(
 
         val value = cookie.value
 
-        return usersService.getUserByToken(value)
+        return usersServiceUtils.getUserByToken(value)
     }
 
 
