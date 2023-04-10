@@ -6,6 +6,7 @@ import pt.ipc.domain.Client
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
 import pt.ipc.domain.encryption.EncryptionUtils
+import java.util.*
 
 @Service
 class ClientsServiceImpl(
@@ -44,6 +45,10 @@ class ClientsServiceImpl(
 
         return RegisterOutput(id = id, token = token)
 
+    }
+
+    override fun addMonitorRequest(clientID : Int, monitorID : Int) : UUID{
+        TODO()
     }
 
 }
