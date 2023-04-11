@@ -3,6 +3,7 @@ package pt.ipc
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
@@ -39,7 +40,7 @@ class ApiApplication{
 	@Bean
 	fun jdbi(): Jdbi = Jdbi.create(
 		PGSimpleDataSource().apply {
-			setURL(System.getenv("postgresql_database"))
+			setURL(System.getenv("JDBC_DATABASE_URL"))
 		}
 	).configure()
 }
@@ -47,10 +48,10 @@ class ApiApplication{
 
 fun main(args: Array<String>) {
 
-	val cl = CloudStorageUtilsImpl(CloudStorageConfiguration("intelligente-personalized-care"))
-	cl.deleteWithID(UUID.fromString("35d8b08e-05ff-46f1-afef-e77a6f962455"))
+	//val cl = CloudStorageUtilsImpl(CloudStorageConfiguration("intelligente-personalized-care"))
+	//cl.deleteWithID(UUID.fromString("35d8b08e-05ff-46f1-afef-e77a6f962455"))
 
-	//runApplication<ApiApplication>(*args)
+	runApplication<ApiApplication>(*args)
 }
 
 

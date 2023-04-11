@@ -28,8 +28,8 @@ class ClientsServiceImpl(
             name = input.name,
             email = input.email,
             password = encryptionUtils.encrypt(input.password),
-            weigth = input.weigth,
-            heigth = input.heigth,
+            weigth = input.weight,
+            heigth = input.height,
             birthDate = input.birthDate
         )
 

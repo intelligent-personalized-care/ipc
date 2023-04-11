@@ -1,6 +1,4 @@
-package pt.ipc.services.users.dtos
-
-import java.time.LocalDate
+package pt.ipc_app.service.models.register
 
 data class RegisterClientInput(
     val email: String,
@@ -8,6 +6,6 @@ data class RegisterClientInput(
     val password: String,
     val weight : Int,
     val height : Int,
-    val birthDate : LocalDate,
+    val birthDate : String,
     val physicalCondition : String
 )
