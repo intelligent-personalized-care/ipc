@@ -6,6 +6,8 @@ import pt.ipc.domain.Client
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.toLocalDate
+import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -28,9 +30,9 @@ class ClientsServiceImpl(
             name = input.name,
             email = input.email,
             password = encryptionUtils.encrypt(input.password),
-            weigth = input.weight,
-            heigth = input.height,
-            birthDate = input.birthDate
+            weight = input.weight,
+            height = input.height,
+            birthDate = input.birthDate.toLocalDate()
         )
 
         artificialTransactionManager.runBlock(

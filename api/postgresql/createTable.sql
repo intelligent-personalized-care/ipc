@@ -1,128 +1,123 @@
-create schema if not exists dbo;
+CREATE SCHEMA IF NOT EXISTS dbo;
 
-CREATE TABLE IF NOT EXISTS dbo.USERS(
-     id UUID PRIMARY KEY NOT NULL,
-     u_name VARCHAR(50) NOT NULL,
-     u_email VARCHAR(50) UNIQUE CHECK (u_email LIKE '%@%.%') NOT NULL,
-     password_hash VARCHAR(60) NOT NULL
+CREATE TABLE IF NOT EXISTS dbo.users(
+    id               UUID PRIMARY KEY,
+    name             VARCHAR(50) NOT NULL,
+    email            VARCHAR(80) NOT NULL UNIQUE,
+    password_hash    VARCHAR(60) NOT NULL,
+
+    CONSTRAINT name_length CHECK ( char_length(name) >= 3 ),
+    CONSTRAINT email_is_valid CHECK ( email ~ '^[A-Za-z0-9+_.-]+@(.+)$' )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.MONITOR(
-      m_id UUID PRIMARY KEY NOT NULL,
-      FOREIGN KEY (m_id) REFERENCES dbo.USERS(id)
+CREATE TABLE IF NOT EXISTS dbo.tokens(
+    token_hash       VARCHAR(256) PRIMARY KEY,
+    user_id          UUID REFERENCES dbo.users(id)
 );
 
-CREATE TABLE IF NOT EXISTS dbo.CLIENT (
-       c_id UUID PRIMARY KEY NOT NULL,
-       physical_condition VARCHAR(200),
-       weigth INT NOT NULL,
-       heigth INT NOT NULL,
-       birth_date DATE NOT NULL,
-       monitor_id UUID,--can be null because of the free exercise option
-
-       FOREIGN KEY (c_id) REFERENCES dbo.USERS(id),
-       FOREIGN KEY(monitor_id) REFERENCES dbo.MONITOR (m_id)
+CREATE TABLE IF NOT EXISTS dbo.monitors(
+    m_id    UUID PRIMARY KEY REFERENCES dbo.users(id)
 );
 
+CREATE TABLE IF NOT EXISTS dbo.clients(
+    c_id                    UUID PRIMARY KEY REFERENCES dbo.users (id),
+    birth_date              DATE NOT NULL,
+    weight                  INT,
+    height                  INT,
+    physical_condition      VARCHAR(50),
+    monitor_id              UUID REFERENCES dbo.monitors (m_id),
 
-CREATE TABLE dbo.TOKENS(
-       token_hash VARCHAR(256) primary key,
-       user_id UUID references dbo.USERS(id)
+    CONSTRAINT age_is_valid  CHECK ( date_part('years', age(CURRENT_DATE, birth_date)) >= 7 ),
+    CONSTRAINT weight_is_valid CHECK ( weight >= 30 AND weight <= 300 ),
+    CONSTRAINT height_is_valid CHECK ( height >= 100 AND height <= 250 ),
+    CONSTRAINT physical_condition_length CHECK ( char_length(physical_condition) >= 5 ),
+    CONSTRAINT client_diff_monitor CHECK ( c_id != monitor_id )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.MONITOR_RATING (
-       monitor_id UUID NOT NULL,
-       client_id UUID NOT NULL,
-       stars INT NOT NULL CHECK ( stars >= 1 and stars <= 5 ),
+CREATE TABLE IF NOT EXISTS dbo.monitor_requests(
+    monitor_id       UUID REFERENCES dbo.monitors (m_id),
+    client_id        UUID REFERENCES dbo.clients (c_id),
 
-       PRIMARY KEY(monitor_id,client_id),
-       FOREIGN KEY(monitor_id) REFERENCES dbo.MONITOR(m_id),
-       FOREIGN KEY (client_id) REFERENCES dbo.CLIENT(c_id)
+    PRIMARY KEY (monitor_id, client_id),
+
+    CONSTRAINT client_diff_monitor CHECK ( client_id != monitor_id )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.DOC_AUTHENTICITY(
-       monitor_id UUID PRIMARY KEY NOT NULL,
-       doc_valid BOOLEAN NOT NULL,
-       dt_submit DATE NOT NULL,
+CREATE TABLE IF NOT EXISTS dbo.monitor_rating(
+    monitor_id       UUID NOT NULL REFERENCES dbo.monitors (m_id),
+    client_id        UUID NOT NULL REFERENCES dbo.clients (c_id),
+    stars            INT NOT NULL,
 
-       FOREIGN KEY (monitor_id) REFERENCES dbo.MONITOR(m_id)
+    PRIMARY KEY (monitor_id, client_id),
+
+    CONSTRAINT client_diff_monitor CHECK ( client_id != monitor_id ),
+    CONSTRAINT stars_are_valid CHECK ( stars >= 1 AND stars <= 5 )
 );
 
+CREATE TABLE IF NOT EXISTS dbo.docs_authenticity(
+    monitor_id      UUID PRIMARY KEY REFERENCES dbo.monitors (m_id),
+    state           VARCHAR(10) NOT NULL,
+    dt_submit       DATE NOT NULL,
 
-CREATE TABLE IF NOT EXISTS dbo.PLAN(
-       id SERIAL PRIMARY KEY NOT NULL,
-       p_name VARCHAR(50) NOT NULL,
-       monitor_id UUID NOT NULL,
-
-       FOREIGN KEY (monitor_id) REFERENCES dbo.MONITOR(m_id)
-
+    CONSTRAINT state_check CHECK ( state IN ('invalid', 'waiting', 'valid') )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.CLIENT_PLAN(
-       plan_id INT NOT NULL,
-       client_id UUID  NOT NULL,
-       dt_start DATE NOT NULL,
-       dt_end DATE NOT NULL CHECK ( dt_end > dt_start ),
+CREATE TABLE IF NOT EXISTS dbo.plans(
+    id               SERIAL PRIMARY KEY,
+    monitor_id       UUID NOT NULL REFERENCES dbo.monitors (m_id),
+    title            VARCHAR(50) NOT NULL,
+    duration         INT NOT NULL,
 
-       PRIMARY KEY(plan_id,client_id),
-       FOREIGN KEY (client_id) REFERENCES dbo.CLIENT(c_id),
-       FOREIGN KEY (plan_id) REFERENCES dbo.PLAN(id)
+    CONSTRAINT title_length CHECK ( char_length(title) >= 5 ),
+    CONSTRAINT duration_is_valid CHECK ( duration >= 1 )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.DAILY_LIST(
-       id SERIAL PRIMARY KEY NOT NULL,
-       plan_id INT NOT NULL,
-       dt_to_do DATE NOT NULL,
+CREATE TABLE IF NOT EXISTS dbo.client_plans(
+    plan_id   INT NOT NULL REFERENCES dbo.plans (id),
+    client_id UUID NOT NULL REFERENCES dbo.clients (c_id),
+    dt_start  DATE NOT NULL,
 
-       FOREIGN KEY (plan_id) REFERENCES dbo.PLAN(id)
+    PRIMARY KEY (plan_id, client_id),
+
+    CONSTRAINT date_greater_than_current CHECK ( dt_start > CURRENT_DATE )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.EXERCISE_INFORMATION(
-       id UUID PRIMARY KEY NOT NULL,
-       title varchar(20) NOT NULL,
-       description VARCHAR(100) NOT NULL
+CREATE TABLE IF NOT EXISTS dbo.daily_lists(
+    id          SERIAL PRIMARY KEY,
+    index       INT NOT NULL,
+    plan_id     INT NOT NULL REFERENCES dbo.plans (id),
+
+    UNIQUE (index, plan_id),
+
+    CONSTRAINT index_is_valid CHECK ( index >= 1 )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.EXERCISE(
-       id SERIAL PRIMARY KEY NOT NULL,
-       ex_info_id UUID NOT NULL,
-       e_sets INT NOT NULL CHECK ( e_sets > 0 ),
-       e_reps INT NOT NULL CHECK ( e_reps > 0 ),
+CREATE TABLE IF NOT EXISTS dbo.exercises_info(
+    id               UUID PRIMARY KEY,
+    title            VARCHAR(50) NOT NULL,
+    description      VARCHAR(500) NOT NULL,
+    type             VARCHAR(20) NOT NULL,
 
-       FOREIGN KEY (ex_info_id) REFERENCES dbo.EXERCISE_INFORMATION(id)
+    CONSTRAINT title_length CHECK ( char_length(title) >= 5 ),
+    CONSTRAINT description_length CHECK ( char_length(description) >= 10 ),
+    CONSTRAINT type_length CHECK ( char_length(description) >= 2 )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.DAILY_EXERCISE(
-       list_id INT NOT NULL,
-       ex_id INT NOT NULL,
+CREATE TABLE IF NOT EXISTS dbo.daily_exercises(
+    id                  SERIAL PRIMARY KEY,
+    ex_id               UUID NOT NULL REFERENCES dbo.exercises_info (id),
+    daily_list_id       INT NOT NULL REFERENCES dbo.daily_lists (id),
+    sets                INT NOT NULL,
+    reps                INT NOT NULL,
 
-       PRIMARY KEY (list_id,ex_id),
-       FOREIGN KEY (list_id) REFERENCES dbo.DAILY_LIST(id),
-       FOREIGN KEY (ex_id) REFERENCES dbo.EXERCISE(id)
-
+    CONSTRAINT sets_is_valid CHECK ( sets >= 1 AND sets <= 10 ),
+    CONSTRAINT reps_is_valid CHECK ( reps >= 1 AND reps <= 50 )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.EXERCISE_VIDEO(
-       id UUID NOT NULL,
-       submitted DATE NOT NULL,
-       list_id INT NOT NULL,
-       ex_id INT NOT NULL,
-       client_id UUID NOT NULL,
-       feedback_monitor VARCHAR(200),--can be null, no answer or waiting
-
-       CONSTRAINT not_repeat unique (list_id, ex_id, client_id),
-
-       PRIMARY KEY(id),
-       FOREIGN KEY (client_id) REFERENCES dbo.CLIENT(c_id),
-       FOREIGN KEY (list_id,ex_id) REFERENCES dbo.DAILY_EXERCISE(list_id, ex_id)
-);
-
-CREATE TABLE IF NOT EXISTS dbo.MONITOR_REQUEST(
-    request_id UUID NOT NULL,
-    monitor_id UUID REFERENCES dbo.MONITOR(m_id),
-    client_id UUID REFERENCES dbo.CLIENT(c_id),
-    constraint unique_pair_constraint_request UNIQUE (monitor_id,client_id),
-    constraint different_request check (monitor_id != client_id)
-);
-
-
+CREATE TABLE IF NOT EXISTS dbo.exercises_video(
+    id                  UUID PRIMARY KEY,
+    ex_id               INT NOT NULL REFERENCES dbo.daily_exercises (id),
+    client_id           UUID NOT NULL REFERENCES dbo.clients (c_id),
+    dt_submit           DATE NOT NULL,
+    feedback_monitor    VARCHAR(200)-- can be null, no answer or waiting
+)

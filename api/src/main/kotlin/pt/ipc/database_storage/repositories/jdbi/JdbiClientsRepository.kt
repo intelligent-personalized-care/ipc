@@ -6,14 +6,13 @@ import pt.ipc.domain.Client
 import pt.ipc.database_storage.repositories.ClientsRepository
 import pt.ipc.domain.User
 
-
 class JdbiClientsRepository(
     private val handle : Handle
 ) : ClientsRepository {
 
     override fun existsEmail(email: String): Boolean {
         return handle
-            .createQuery("select count(*) from dbo.users where u_email = :email")
+            .createQuery("select count(*) from dbo.users where email = :email")
             .bind("email", email)
             .mapTo<Int>()
             .single() == 1
@@ -25,7 +24,7 @@ class JdbiClientsRepository(
 
     override fun registerClient(input: Client, token: String, physicalCondition : String){
 
-        handle.createUpdate("insert into dbo.users (id, u_name, u_email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
+        handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
             .bind("id", input.id )
             .bind("u_name", input.name )
             .bind("u_email", input.email )
@@ -33,12 +32,12 @@ class JdbiClientsRepository(
             .execute()
 
         handle.createUpdate(
-            "insert into dbo.client(c_id, physical_condition, weigth, heigth, birth_date, monitor_id) values (:c_id,:physical_condition,:weigth,:heigth,:birth_date,null)"
+            "insert into dbo.clients (c_id, physical_condition, weight, height, birth_date, monitor_id) values (:c_id,:physical_condition,:weight,:height,:birth_date,null)"
         )
             .bind("c_id", input.id)
             .bind("physical_condition", physicalCondition)
-            .bind("weigth", input.weigth)
-            .bind("heigth", input.heigth)
+            .bind("weight", input.weight)
+            .bind("height", input.height)
             .bind("birth_date", input.birthDate)
             .execute()
 
@@ -46,11 +45,7 @@ class JdbiClientsRepository(
             .bind("token_hash", token)
             .bind("user_id", input.id)
             .execute()
-
-
     }
-
-
 
 }
 

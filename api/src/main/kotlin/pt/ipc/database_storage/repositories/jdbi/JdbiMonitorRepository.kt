@@ -17,7 +17,7 @@ class JdbiMonitorRepository(
             .bind("password_hash",user.passwordHash)
             .execute()
 
-        handle.createUpdate("insert into dbo.monitor values (:id)")
+        handle.createUpdate("insert into dbo.monitors values (:id)")
             .bind("id", user.id)
             .execute()
 
@@ -26,7 +26,7 @@ class JdbiMonitorRepository(
             .bind("user_id", user.id)
             .execute()
 
-        handle.createUpdate("insert into dbo.doc_authenticity values(:monitor_id,false,:dt_submit)")
+        handle.createUpdate("insert into dbo.docs_authenticity values(:monitor_id,false,:dt_submit)")
             .bind("monitor_id", user.id)
             .bind("dt_submit",date)
             .execute()
