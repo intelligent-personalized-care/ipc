@@ -2,6 +2,7 @@ package pt.ipc_app.preferences
 
 import android.content.Context
 import pt.ipc_app.domain.UserInfo
+import java.util.Date
 
 class UserInfoSharedPrefs(private val context: Context) {
 
@@ -15,7 +16,7 @@ class UserInfoSharedPrefs(private val context: Context) {
         get() {
             val savedNick = prefs.getString(userNameKey, null)
             return if (savedNick != null)
-                UserInfo(savedNick, "", "")
+                UserInfo(savedNick, "", "", "", 0, 0, "")
             else
                 null
         }

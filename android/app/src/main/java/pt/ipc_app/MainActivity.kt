@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import pt.ipc_app.ui.screens.RegisterScreen
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -23,6 +24,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            RegisterScreen(
+                onSaveRequest = {
+                    viewModel.register(
+                        it.email, it.name, it.password, it.weight, it.height, it.birthDate, it.physicalCondition
+                    )
+                }
+            )
+            /*
             Button(onClick = { viewModel.register(
                 name = "Test1",
                 email = "test1@gmail.com",
@@ -34,6 +43,7 @@ class MainActivity : ComponentActivity() {
             ) }) {
                 Text(text = "Create Client")
             }
+             */
         }
     }
 
