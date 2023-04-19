@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS dbo.users(
     name             VARCHAR(50) NOT NULL,
     email            VARCHAR(80) NOT NULL UNIQUE,
     password_hash    VARCHAR(60) NOT NULL,
+    photo_id         UUID
 
     CONSTRAINT name_length CHECK ( char_length(name) >= 3 ),
     CONSTRAINT email_is_valid CHECK ( email ~ '^[A-Za-z0-9+_.-]+@(.+)$' )

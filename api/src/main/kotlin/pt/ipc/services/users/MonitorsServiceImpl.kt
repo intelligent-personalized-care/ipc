@@ -1,7 +1,7 @@
 package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
-import pt.ipc.database_storage.artificialTransaction.ArtificialTransactionManager
+import pt.ipc.database_storage.artificialTransaction.TransactionManager
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.users.dtos.RegisterMonitorInput
@@ -11,7 +11,7 @@ import java.time.LocalDate
 @Service
 class MonitorsServiceImpl(
     private val encryptionUtils: EncryptionUtils,
-    private val artificialTransactionManager : ArtificialTransactionManager,
+    private val transactionManager : TransactionManager,
     private val usersServiceUtils: UsersServiceUtils
 ) : MonitorService {
 
@@ -30,7 +30,7 @@ class MonitorsServiceImpl(
 
         usersServiceUtils.checkDetails(email = registerMonitorInput.email, password = registerMonitorInput.password)
 
-        artificialTransactionManager.runBlock(
+        transactionManager.runBlock(
             block = {
                 it.cloudStorage.uploadMonitorCredentials(
                     fileName = userID,

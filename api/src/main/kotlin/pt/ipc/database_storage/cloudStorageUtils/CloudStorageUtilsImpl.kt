@@ -62,12 +62,12 @@ class CloudStorageUtilsImpl(
    override fun deleteWithID(fileName: UUID){
       val blobToDelete = storage.list(bucketName)
          .iterateAll()
-         .find { blob -> blob.name == "$clientsVideosFolder/$fileName" || blob.name == "$monitorCredentialsFolder/$fileName" }
+         .find { blob -> blob.name == "$monitorCredentialsFolder/$fileName" || blob.name == "$clientsVideosFolder/$fileName" }
          ?.let { BlobId.of(bucketName, it.name) }
 
       if (blobToDelete != null) {
          storage.delete(blobToDelete)
-      }
+      } // throw exception to say that the video does not exist
    }
 
 }

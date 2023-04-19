@@ -6,7 +6,7 @@ import pt.ipc.database_storage.repositories.ClientsRepository
 import pt.ipc.database_storage.repositories.MonitorRepository
 
 @Component
-interface ArtificialTransaction {
+interface Transaction {
 
     val clientsRepository : ClientsRepository
 

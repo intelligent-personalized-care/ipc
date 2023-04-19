@@ -6,16 +6,16 @@ import pt.ipc.database_storage.cloudStorageUtils.CloudStorageConfiguration
 import java.util.*
 
 @Component
-class ArtificialTransactionManagerImpl(
+class TransactionManagerImpl(
     private val jdbi: Jdbi,
     private val cloudStorageConfiguration: CloudStorageConfiguration
-) : ArtificialTransactionManager {
+) : TransactionManager {
 
-    override fun <R> runBlock(block: (ArtificialTransaction) -> R, fileName: UUID?): R {
+    override fun <R> runBlock(block: (Transaction) -> R, fileName: UUID?): R {
 
         return jdbi.inTransaction<R, Exception> { handle ->
 
-            val transaction = ArtificialTransactionImpl(handle, cloudStorageConfiguration)
+            val transaction = TransactionImpl(handle, cloudStorageConfiguration)
 
             try {
 

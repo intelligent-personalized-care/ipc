@@ -10,5 +10,5 @@ interface ClientsRepository {
 
     fun getUserByToken(token: String): User?
 
-    fun registerClient(input: Client, token: String, physicalCondition : String)
+    fun registerClient(input: Client, token: String, physicalCondition : String? = null)
 }

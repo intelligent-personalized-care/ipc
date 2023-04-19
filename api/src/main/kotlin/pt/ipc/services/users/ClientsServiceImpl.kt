@@ -1,18 +1,17 @@
 package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
-import pt.ipc.database_storage.artificialTransaction.ArtificialTransactionManager
+import pt.ipc.database_storage.artificialTransaction.TransactionManager
 import pt.ipc.domain.Client
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.toLocalDate
-import java.time.LocalDate
 import java.util.*
 
 @Service
 class ClientsServiceImpl(
-    private val artificialTransactionManager: ArtificialTransactionManager,
+    private val transactionManager: TransactionManager,
     private val encryptionUtils: EncryptionUtils,
     private val usersServiceUtils: UsersServiceUtils,
 ): ClientsService {
@@ -32,10 +31,10 @@ class ClientsServiceImpl(
             password = encryptionUtils.encrypt(input.password),
             weight = input.weight,
             height = input.height,
-            birthDate = input.birthDate.toLocalDate()
+            birthDate = input.birthDate?.toLocalDate()
         )
 
-        artificialTransactionManager.runBlock(
+        transactionManager.runBlock(
           block = {
                 it.clientsRepository.registerClient(
                     input = encryptedClient,

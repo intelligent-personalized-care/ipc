@@ -8,9 +8,9 @@ data class Client(
     val name: String,
     val email : String,
     val password: String,
-    val weight : Int,
-    val height : Int,
-    val birthDate : LocalDate
+    val weight : Int? = null,
+    val height : Int? = null,
+    val birthDate : LocalDate? = null
 )
 
 fun String.toLocalDate(): LocalDate {

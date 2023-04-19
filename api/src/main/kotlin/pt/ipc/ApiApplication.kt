@@ -8,17 +8,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
-import pt.ipc.database_storage.cloudStorageUtils.CloudStorageConfiguration
-import pt.ipc.database_storage.cloudStorageUtils.CloudStorageUtilsImpl
 import pt.ipc.database_storage.repositories.jdbi.configure
 import java.io.File
-import java.util.*
 
 @Configuration
 class AppConfig {
 
 	private val maxVideoSize : Long = 33_868_800
-	private val maxInMemory : Int = 1_048_576
+	private val maxInMemory : Int = 1
 
 	@Bean
 	fun multipartResolver(): CommonsMultipartResolver {
@@ -27,7 +24,7 @@ class AppConfig {
 		resolver.setResolveLazily(true)
 		resolver.setMaxUploadSizePerFile(maxVideoSize) // 10 MB
 		resolver.setMaxUploadSize(maxVideoSize) // 10 MB
-		resolver.setMaxInMemorySize(maxInMemory) // 1 MB
+		resolver.setMaxInMemorySize(maxInMemory)
 		resolver.setUploadTempDir(FileSystemResource(File(System.getProperty("java.io.tmpdir"))))
 		return resolver
 	}

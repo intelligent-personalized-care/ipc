@@ -10,10 +10,10 @@ import pt.ipc.database_storage.repositories.jdbi.JdbiClientsRepository
 import pt.ipc.database_storage.repositories.jdbi.JdbiMonitorRepository
 
 
-class ArtificialTransactionImpl(
+class TransactionImpl(
     private val handle : Handle,
     private val cloudStorageConfiguration: CloudStorageConfiguration,
- ) : ArtificialTransaction {
+ ) : Transaction {
 
     override val clientsRepository: ClientsRepository by lazy {JdbiClientsRepository(handle)}
 

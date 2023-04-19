@@ -1,7 +1,7 @@
 package pt.ipc.services.users
 
 import org.springframework.stereotype.Component
-import pt.ipc.database_storage.artificialTransaction.ArtificialTransactionManager
+import pt.ipc.database_storage.artificialTransaction.TransactionManager
 import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.jwt.JwtUtils
@@ -10,7 +10,7 @@ import java.util.*
 @Component
 class UsersServiceUtils(
     private val encryptionUtils: EncryptionUtils,
-    private val transactionManager: ArtificialTransactionManager,
+    private val transactionManager: TransactionManager,
     private val jwtUtils: JwtUtils,
 ) {
 
@@ -33,8 +33,7 @@ class UsersServiceUtils(
 
     private fun emailExists(email: String) : Boolean =
         transactionManager.runBlock({
-            val encrypted = encryptionUtils.encrypt(plainText = email)
-            it.clientsRepository.existsEmail(email = encrypted)
+            it.clientsRepository.existsEmail(email = email)
         }
 
     )
