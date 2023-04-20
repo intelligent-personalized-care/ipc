@@ -10,10 +10,12 @@ abstract class UnauthorizedRequest(msg : String) : Exception(msg)
 
 abstract class Forbidden(msg : String) : Exception(msg)
 
-class Unauthorized : UnauthorizedRequest("Unauthorized")
+class Unauthenticated : UnauthorizedRequest("Unauthenticated")
 
 class EmailAlreadyInUse : Conflit("Email already in Use")
 
 class BadEmail : BadRequest("Bad Email")
 
 class WeakPassword : BadRequest("Password too weak")
+
+class Unauthorized : UnauthorizedRequest("You cannot access this resource")

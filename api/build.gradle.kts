@@ -28,6 +28,7 @@ dependencies {
 	implementation("org.springframework:spring-context:5.3.22")
 	implementation("org.springframework.security:spring-security-core:5.7.7")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	//JDBI dependencies
 	implementation("org.jdbi:jdbi3-core:3.35.0")

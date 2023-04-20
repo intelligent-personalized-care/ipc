@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import pt.ipc.database_storage.repositories.jdbi.configure
+import pt.ipc.domain.jwt.JwtConfiguration
+import pt.ipc.domain.jwt.JwtUtils
 import java.io.File
 
 @Configuration
@@ -37,17 +39,13 @@ class ApiApplication{
 	@Bean
 	fun jdbi(): Jdbi = Jdbi.create(
 		PGSimpleDataSource().apply {
-			setURL(System.getenv("JDBC_DATABASE_URL"))
+			setURL(System.getenv("postgresql_database"))
 		}
 	).configure()
 }
 
 
 fun main(args: Array<String>) {
-
-	//val cl = CloudStorageUtilsImpl(CloudStorageConfiguration("intelligente-personalized-care"))
-	//cl.deleteWithID(UUID.fromString("35d8b08e-05ff-46f1-afef-e77a6f962455"))
-
 	runApplication<ApiApplication>(*args)
 }
 

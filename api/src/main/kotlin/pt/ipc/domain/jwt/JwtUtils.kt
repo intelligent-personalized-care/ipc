@@ -3,12 +3,17 @@ package pt.ipc.domain.jwt
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.springframework.stereotype.Component
+import pt.ipc.domain.Role
+import pt.ipc.domain.toRole
+import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
 @Component
 class JwtUtils(jwtConfiguration : JwtConfiguration) {
 
-    private val USER_CREATION = "userCreation"
+    private val userEmail = "userEmail"
+    private val userID = "userID"
+    private val userRole = "role"
 
     private val acessTokenKey = SecretKeySpec(
             jwtConfiguration.accessTokenSecret.toByteArray(),
@@ -17,16 +22,18 @@ class JwtUtils(jwtConfiguration : JwtConfiguration) {
 
      data class JwtPayload(val claims: Claims)
 
-     fun createJwtPayload(email : String, name : String): JwtPayload {
+     private fun createJwtPayload(email : String, id : UUID, role: Role): JwtPayload {
                 val claims = Jwts.claims()
-                claims[USER_CREATION] = "${email}${name}"
+                claims[userEmail] = email
+                claims[userID] = id
+                claims[userRole] = role
                 return JwtPayload(claims = claims)
      }
     
 
-    fun createJWToken(email : String, name : String): JWToken {
+    fun createJWToken(email : String, id : UUID, role : Role): JWToken {
         
-        val jwtPayload = createJwtPayload(email = email, name = name)
+        val jwtPayload = createJwtPayload(email = email, id = id, role = role)
         
         return JWToken(
              token =   Jwts.builder()
@@ -35,6 +42,20 @@ class JwtUtils(jwtConfiguration : JwtConfiguration) {
                        .compact()
         )
     }
+
+    private fun getClaimsFromToken(token: String): Claims {
+        return Jwts.parserBuilder()
+            .setSigningKey(acessTokenKey)
+            .build()
+            .parseClaimsJws(token)
+            .body
+    }
+
+    fun getRoleFromToken(token: String): Role {
+        val claims = getClaimsFromToken(token = token)
+        return claims[userRole].toString().toRole()
+    }
+
 
     companion object {
         private const val SECRET_KEY_ALGORITHM = "HmacSHA512"

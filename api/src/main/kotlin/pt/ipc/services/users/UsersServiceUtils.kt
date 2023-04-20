@@ -15,14 +15,21 @@ class UsersServiceUtils(
 ) {
 
     fun getUserByToken(token: String): User? {
-        TODO("Not yet implemented")
+        val hashedToken = encryptionUtils.encrypt(token)
+        return transactionManager.runBlock(
+            {
+                it.clientsRepository.getUserByToken(token = hashedToken)
+            }
+        )
     }
 
-    fun createCredentials(email: String, name : String) : Pair<String, UUID>{
+    fun createCredentials(email: String, role : Role) : Pair<String, UUID>{
 
-        val token = jwtUtils.createJWToken(email = email, name = name )
+        val id = UUID.randomUUID()
 
-        return Pair(token.token, UUID.randomUUID())
+        val token = jwtUtils.createJWToken(email = email, id = id, role = role)
+
+        return Pair(token.token, id)
     }
 
 
@@ -32,10 +39,10 @@ class UsersServiceUtils(
     }
 
     private fun emailExists(email: String) : Boolean =
-        transactionManager.runBlock({
-            it.clientsRepository.existsEmail(email = email)
-        }
-
+        transactionManager.runBlock(
+            {
+                it.clientsRepository.existsEmail(email = email)
+            }
     )
 
     fun checkDetails(email: String, password: String){

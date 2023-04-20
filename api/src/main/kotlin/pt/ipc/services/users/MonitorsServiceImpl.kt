@@ -2,6 +2,7 @@ package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
 import pt.ipc.database_storage.artificialTransaction.TransactionManager
+import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.users.dtos.RegisterMonitorInput
@@ -17,7 +18,7 @@ class MonitorsServiceImpl(
 
     override fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput {
 
-        val (token,userID) = usersServiceUtils.createCredentials(registerMonitorInput.email,registerMonitorInput.name)
+        val (token,userID) = usersServiceUtils.createCredentials(email = registerMonitorInput.email, role = Role.MONITOR)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS dbo.users(
     id               UUID PRIMARY KEY,
     name             VARCHAR(50) NOT NULL,
     email            VARCHAR(80) NOT NULL UNIQUE,
-    password_hash    VARCHAR(60) NOT NULL,
+    password_hash    text NOT NULL,
     photo_id         UUID
 
     CONSTRAINT name_length CHECK ( char_length(name) >= 3 ),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS dbo.users(
 );
 
 CREATE TABLE IF NOT EXISTS dbo.tokens(
-    token_hash       VARCHAR(256) PRIMARY KEY,
+    token_hash       text PRIMARY KEY,
     user_id          UUID REFERENCES dbo.users(id)
 );
 

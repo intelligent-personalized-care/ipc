@@ -6,7 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.Unauthenticated
 import pt.ipc.domain.Client
 import pt.ipc.domain.User
 import javax.servlet.http.HttpServletRequest
@@ -20,8 +20,8 @@ class UserArgumentResolver: HandlerMethodArgumentResolver {
                                  webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
 
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
-            ?: throw Unauthorized()
-        return getUserFrom(request) ?: throw Unauthorized()
+            ?: throw Unauthenticated()
+        return getUserFrom(request) ?: throw Unauthenticated()
     }
 
     companion object {
