@@ -6,6 +6,7 @@ import pt.ipc.domain.Client
 import pt.ipc.database_storage.repositories.ClientsRepository
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import java.util.*
 
 class JdbiClientsRepository(
     private val handle : Handle
@@ -19,12 +20,28 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    override fun getUserByToken(token: String): User? {
+    private fun roleOfUser(id : UUID) : Role {
 
-        return handle.createQuery("select id, name, email, password_hash from dbo.users u inner join dbo.tokens t on u.id = t.user_id where token_hash = :token")
+        handle.createQuery("select count(*) from dbo.tokens t inner join dbo.clients c on t.user_id = c.c_id where t.user_id = :id")
+            .bind("id", id)
+            .mapTo<Int>()
+            .singleOrNull() ?: return Role.MONITOR
+
+        return Role.CLIENT
+    }
+
+    override fun getUserByToken(token: String): Pair<User,Role>? {
+
+        val user = handle.createQuery("select id, name, email, password_hash from dbo.users u inner join dbo.tokens t on u.id = t.user_id where token_hash = :token")
             .bind("token", token)
             .mapTo<User>()
-            .singleOrNull()
+            .singleOrNull() ?: return null
+
+       val role = roleOfUser(id = user.id)
+
+       return Pair(user,role)
+
+
     }
 
     override fun registerClient(input: Client, token: String, physicalCondition : String?){
@@ -52,15 +69,7 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun roleOfUser(token: String) : Role {
 
-        handle.createQuery("select count(*) from dbo.tokens t inner join dbo.clients c on t.user_id = c.c_id where t.token_hash = :token")
-            .bind("token", token)
-            .mapTo<Int>()
-            .singleOrNull() ?: return Role.CLIENT
-
-        return Role.MONITOR
-    }
 
 }
 

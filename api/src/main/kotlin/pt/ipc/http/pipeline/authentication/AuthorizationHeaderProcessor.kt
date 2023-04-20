@@ -10,7 +10,6 @@ import javax.servlet.http.Cookie
 @Component
 class AuthorizationHeaderProcessor(
    private val usersServiceUtils: UsersServiceUtils,
-   private val jwtUtils: JwtUtils
 ) {
 
     fun process(cookie : Cookie?) : Pair<User,Role>?{
@@ -18,11 +17,8 @@ class AuthorizationHeaderProcessor(
 
         val value = cookie.value
 
-        val role = jwtUtils.getRoleFromToken(value)
+        return usersServiceUtils.getUserByToken(value)
 
-        val user = usersServiceUtils.getUserByToken(value) ?: return null
-
-        return Pair(user,role)
     }
 
 

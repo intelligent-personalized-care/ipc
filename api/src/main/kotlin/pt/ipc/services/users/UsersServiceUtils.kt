@@ -14,7 +14,7 @@ class UsersServiceUtils(
     private val jwtUtils: JwtUtils,
 ) {
 
-    fun getUserByToken(token: String): User? {
+    fun getUserByToken(token: String): Pair<User,Role>? {
         val hashedToken = encryptionUtils.encrypt(token)
         return transactionManager.runBlock(
             {

@@ -43,20 +43,6 @@ class JwtUtils(jwtConfiguration : JwtConfiguration) {
         )
     }
 
-    private fun getClaimsFromToken(token: String): Claims {
-        return Jwts.parserBuilder()
-            .setSigningKey(acessTokenKey)
-            .build()
-            .parseClaimsJws(token)
-            .body
-    }
-
-    fun getRoleFromToken(token: String): Role {
-        val claims = getClaimsFromToken(token = token)
-        return claims[userRole].toString().toRole()
-    }
-
-
     companion object {
         private const val SECRET_KEY_ALGORITHM = "HmacSHA512"
     }

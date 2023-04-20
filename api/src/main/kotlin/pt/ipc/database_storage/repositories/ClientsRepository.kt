@@ -9,9 +9,8 @@ interface ClientsRepository {
 
     fun existsEmail(email : String) : Boolean
 
-    fun getUserByToken(token: String): User?
+    fun getUserByToken(token: String) : Pair<User,Role>?
 
     fun registerClient(input: Client, token: String, physicalCondition : String? = null)
 
-    fun roleOfUser(token : String) : Role
 }
