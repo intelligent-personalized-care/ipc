@@ -8,6 +8,6 @@ interface ClientsService {
 
     fun registerClient(input: RegisterClientInput): RegisterOutput
 
-    fun addMonitorRequest(clientID : Int, monitorID : Int) : UUID
+    fun addProfilePicture(clientID: UUID, profilePicture : ByteArray)
 
 }

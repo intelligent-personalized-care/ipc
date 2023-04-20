@@ -17,4 +17,6 @@ interface CloudStorageUtils{
 
     fun deleteWithID(fileName: UUID)
 
+    fun uploadProfilePicture(fileName: UUID, file : ByteArray)
+
 }

@@ -69,6 +69,13 @@ class JdbiClientsRepository(
             .execute()
     }
 
+    override fun updateProfilePictureID(userID : UUID, profileID : UUID){
+        handle.createUpdate("update dbo.users set photo_id = :profileID where id = :userID")
+              .bind("profileID", profileID)
+              .bind("userID", userID)
+              .execute()
+    }
+
 
 
 }

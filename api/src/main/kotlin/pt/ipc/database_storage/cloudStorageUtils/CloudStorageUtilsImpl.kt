@@ -15,11 +15,15 @@ class CloudStorageUtilsImpl(
 
    private val storage : Storage = cloudStorageConfiguration.storage
    private val bucketName = cloudStorageConfiguration.bucketName
+
    private val videoContentType = "video/mp4"
    private val pdfContentType = "application/pdf"
+   private val pngContenType = "image/png"
+
    private val clientsVideosFolder = "clients_videos"
    private val monitorCredentialsFolder = "monitor_certifications"
    private val exampleVideoFolder = "example_videos"
+   private val userProfilePicturesFolder = "users_profile_pictures"
 
 
    private fun upload(fileName : UUID, content : ByteArray, contentType : String, folder : String){
@@ -62,12 +66,15 @@ class CloudStorageUtilsImpl(
    override fun deleteWithID(fileName: UUID){
       val blobToDelete = storage.list(bucketName)
          .iterateAll()
-         .find { blob -> blob.name == "$monitorCredentialsFolder/$fileName" || blob.name == "$clientsVideosFolder/$fileName" }
+         .find { blob -> blob.name == "$monitorCredentialsFolder/$fileName" || blob.name == "$clientsVideosFolder/$fileName" || blob.name == "$userProfilePicturesFolder/$fileName" }
          ?.let { BlobId.of(bucketName, it.name) }
 
       if (blobToDelete != null) {
          storage.delete(blobToDelete)
-      } // throw exception to say that the video does not exist
+      }
    }
+
+   override fun uploadProfilePicture(fileName: UUID, file : ByteArray) =
+      upload(fileName = fileName, content = file, contentType = pngContenType, folder = userProfilePicturesFolder)
 
 }

@@ -49,8 +49,16 @@ class ClientsServiceImpl(
 
     }
 
-    override fun addMonitorRequest(clientID : Int, monitorID : Int) : UUID{
-        TODO()
+    override fun addProfilePicture(clientID: UUID, profilePicture : ByteArray){
+        val pictureID = UUID.randomUUID()
+        transactionManager.runBlock(
+            block = {
+                it.cloudStorage.uploadProfilePicture(fileName = pictureID, file = profilePicture)
+                it.clientsRepository.updateProfilePictureID(userID = clientID,pictureID)
+            },
+            fileName = pictureID
+        )
     }
+
 
 }

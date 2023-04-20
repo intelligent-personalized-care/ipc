@@ -7,14 +7,13 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import pt.ipc.domain.Unauthenticated
-import pt.ipc.domain.Client
 import pt.ipc.domain.User
 import javax.servlet.http.HttpServletRequest
 
 @Component
 class UserArgumentResolver: HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter) =
-        parameter.parameterType == Client::class.java
+        parameter.parameterType == User::class.java
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?,
                                  webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
