@@ -131,7 +131,7 @@ class ExceptionHandler{
 
 
     companion object {
-        const val PROBLEMS_DOCS_URI = "https://github.com/RodrigoNevesWork/Splitify/tree/main/docs/problems/"
+        const val PROBLEMS_DOCS_URI = "https://github.com/intelligent-personalized-care/ipc/tree/main/api/docs/problems"
 
         fun Exception.toProblemType(): String =
             (this::class.simpleName ?: "Unknown")
