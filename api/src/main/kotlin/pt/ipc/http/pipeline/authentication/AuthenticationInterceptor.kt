@@ -22,21 +22,17 @@ class AuthenticationInterceptor(
                     )
         ) {
             val cookies = request.cookies ?: throw Unauthenticated()
+
             val tokenCookie = cookies.find { it.name == "token" }
 
-            val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
+            val (user, userRole) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
 
-            return if (
-                handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
-                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
-            ) {
-                throw Unauthorized()
-            } else {
-                if (handler.methodParameters.any { it.parameterType == User::class.java }) {
-                    UserArgumentResolver.addUserTo(user, request)
-                }
-                true
-            }
+            val necessaryRole = handler.method.getAnnotation(Authentication::class.java) ?: throw Exception("Isto é um erro de backend")
+
+            if (necessaryRole.role != userRole) throw Unauthorized()
+
+            if (handler.methodParameters.any { it.parameterType == User::class.java }) UserArgumentResolver.addUserTo(user, request)
+
         }
         return true
     }
