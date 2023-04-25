@@ -35,12 +35,10 @@ CREATE TABLE IF NOT EXISTS dbo.clients(
     CONSTRAINT client_diff_monitor CHECK ( c_id != monitor_id )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.monitor_requests(
+CREATE TABLE IF NOT EXISTS dbo.client_requests(
     monitor_id       UUID REFERENCES dbo.monitors (m_id),
     client_id        UUID REFERENCES dbo.clients (c_id),
-
-    PRIMARY KEY (monitor_id, client_id),
-
+    request_id       UUID PRIMARY KEY
     CONSTRAINT client_diff_monitor CHECK ( client_id != monitor_id )
 );
 

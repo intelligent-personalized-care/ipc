@@ -4,6 +4,7 @@ import org.jdbi.v3.core.Handle
 import pt.ipc.database_storage.repositories.MonitorRepository
 import pt.ipc.domain.User
 import java.time.LocalDate
+import java.util.*
 
 class JdbiMonitorRepository(
     private val handle : Handle
@@ -30,6 +31,15 @@ class JdbiMonitorRepository(
             .bind("monitor_id", user.id)
             .bind("dt_submit",date)
             .execute()
+    }
+
+    override fun requestClient(requestID : UUID,monitorID: UUID, clientID: UUID) {
+
+        handle.createUpdate("insert into dbo.client_requests values(:monitorID, :clientID, :request_id)")
+            .bind("monitorID",monitorID)
+            .bind("clientID",clientID)
+            .execute()
+
     }
 
 }

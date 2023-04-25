@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
-import pt.ipc.domain.jwt.JWToken
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -56,7 +55,7 @@ class ClientController(private val clientsService: ClientsService) {
 
     companion object{
 
-        private fun addAuthenticationCookies(response: HttpServletResponse,token: String){
+        fun addAuthenticationCookies(response: HttpServletResponse,token: String){
             val responseCookie = ResponseCookie.from("token", token)
                 .httpOnly(true)
                 .path("/")
@@ -65,14 +64,6 @@ class ClientController(private val clientsService: ClientsService) {
 
             response.addCookie(responseCookie)
 
-        }
-
-        private fun clearAuthenticationCookies(response: HttpServletResponse){
-            val tokenCookie = ResponseCookie.from("token", "")
-                .httpOnly(true)
-                .maxAge(0)
-                .sameSite("Strict")
-                .build()
         }
 
         private fun HttpServletResponse.addCookie(cookie: ResponseCookie) {

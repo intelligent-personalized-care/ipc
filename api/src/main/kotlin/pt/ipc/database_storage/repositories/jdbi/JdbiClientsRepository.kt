@@ -6,6 +6,7 @@ import pt.ipc.domain.Client
 import pt.ipc.database_storage.repositories.ClientsRepository
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import pt.ipc.domain.UserNotExists
 import java.util.*
 
 class JdbiClientsRepository(
@@ -20,14 +21,22 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    private fun roleOfUser(id : UUID) : Role {
+    override fun roleOfUser(id : UUID) : Role {
 
-        handle.createQuery("select count(*) from dbo.tokens t inner join dbo.clients c on t.user_id = c.c_id where t.user_id = :id")
+        val maybeClient = handle.createQuery("select count(*) from dbo.clients where c_id = :id")
             .bind("id", id)
             .mapTo<Int>()
-            .singleOrNull() ?: return Role.MONITOR
+            .singleOrNull()
 
-        return Role.CLIENT
+        if(maybeClient != null) return Role.CLIENT
+
+            handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
+            .bind("id", id)
+            .mapTo<Int>()
+            .singleOrNull() ?: throw UserNotExists()
+
+        return  Role.MONITOR
+
     }
 
     override fun getUserByToken(token: String): Pair<User,Role>? {

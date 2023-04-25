@@ -16,4 +16,6 @@ interface ClientsRepository {
 
     fun updateProfilePictureID(userID : UUID, profileID : UUID)
 
+    fun roleOfUser(id : UUID) : Role
+
 }

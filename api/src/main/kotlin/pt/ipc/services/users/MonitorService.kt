@@ -8,6 +8,7 @@ interface MonitorService {
 
     fun registerMonitor(registerMonitorInput: RegisterMonitorInput) : RegisterOutput
 
+    fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
-
+    fun requestClient(monitorID: UUID, clientID : UUID) : UUID
 }

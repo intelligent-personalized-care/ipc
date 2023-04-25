@@ -3,11 +3,13 @@ package pt.ipc.services.users
 import org.springframework.stereotype.Service
 import pt.ipc.database_storage.artificialTransaction.TransactionManager
 import pt.ipc.domain.Role
+import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.users.dtos.RegisterMonitorInput
 import pt.ipc.services.users.dtos.RegisterOutput
 import java.time.LocalDate
+import java.util.*
 
 @Service
 class MonitorsServiceImpl(
@@ -44,5 +46,34 @@ class MonitorsServiceImpl(
 
         return RegisterOutput(id = userID, token = token)
 
+    }
+
+
+    override fun updateProfilePicture(monitorID: UUID, photo: ByteArray){
+
+        val photoID = UUID.randomUUID()
+
+        transactionManager.runBlock(
+            block = {
+                it.clientsRepository.updateProfilePictureID(userID = monitorID, profileID = photoID)
+                it.cloudStorage.uploadProfilePicture(fileName = photoID, file = photo)
+            }
+        )
+    }
+
+    override fun requestClient(monitorID: UUID, clientID: UUID): UUID {
+        val requestID = UUID.randomUUID()
+
+        transactionManager.runBlock(
+            block = {
+                if(
+                   it.clientsRepository.roleOfUser(monitorID) != Role.MONITOR ||
+                   it.clientsRepository.roleOfUser(clientID) != Role.CLIENT) throw Unauthorized()
+
+                it.monitorRepository.requestClient(requestID = requestID, monitorID = monitorID, clientID = clientID)
+            }
+        )
+
+        return requestID
     }
 }
