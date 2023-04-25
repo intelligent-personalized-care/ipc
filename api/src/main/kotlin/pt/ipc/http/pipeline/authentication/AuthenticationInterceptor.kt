@@ -15,24 +15,24 @@ class AuthenticationInterceptor(
 )  : HandlerInterceptor{
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean{
-        if(
-            (handler is HandlerMethod) &&
-            (
-                    handler.hasMethodAnnotation(Authentication::class.java) || handler.method.declaringClass.isAnnotationPresent(Authentication::class.java)
-                    )
-        ) {
-            val cookies = request.cookies ?: throw Unauthenticated()
+        if( handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java) ) {
 
+            val cookies = request.cookies ?: throw Unauthenticated()
             val tokenCookie = cookies.find { it.name == "token" }
 
-            val (user, userRole) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
+            val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
 
-            val necessaryRole = handler.method.getAnnotation(Authentication::class.java) ?: throw Exception("Isto é um erro de backend")
-
-            if (necessaryRole.role != userRole) throw Unauthorized()
-
-            if (handler.methodParameters.any { it.parameterType == User::class.java }) UserArgumentResolver.addUserTo(user, request)
-
+            return if (
+                handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
+                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
+            ) {
+                throw Unauthorized()
+            } else {
+                if (handler.methodParameters.any { it.parameterType == User::class.java }) {
+                    UserArgumentResolver.addUserTo(user, request)
+                }
+                true
+            }
         }
         return true
     }

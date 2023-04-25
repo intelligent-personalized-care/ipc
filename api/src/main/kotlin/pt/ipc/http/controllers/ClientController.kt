@@ -6,7 +6,6 @@ import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -36,7 +35,7 @@ class ClientController(private val clientsService: ClientsService) {
 
     }
 
-    @Authentication(Role.CLIENT)
+    @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
         user : User,
@@ -52,6 +51,10 @@ class ClientController(private val clientsService: ClientsService) {
 
 
     }
+
+
+
+
 
     companion object{
 

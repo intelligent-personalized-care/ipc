@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import javax.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.multipart.MultipartException
-import pt.ipc.domain.BadRequest
-import pt.ipc.domain.Forbidden
-import pt.ipc.domain.NotFound
-import pt.ipc.domain.UnauthorizedRequest
+import pt.ipc.domain.*
 import java.net.URI
 
 @ControllerAdvice
@@ -29,6 +26,17 @@ class ExceptionHandler{
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Bad Request",
+            status = HttpStatus.BAD_REQUEST.value(),
+        ).toResponseEntity()
+
+    @ExceptionHandler(value = [Conflit::class])
+    fun handleConflit(
+        request: HttpServletRequest,
+        ex: Exception
+    ): ResponseEntity<Any> =
+        Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
+            title = ex.message ?: "Conflit",
             status = HttpStatus.BAD_REQUEST.value(),
         ).toResponseEntity()
 
@@ -131,7 +139,7 @@ class ExceptionHandler{
 
 
     companion object {
-        const val PROBLEMS_DOCS_URI = "https://github.com/intelligent-personalized-care/ipc/tree/main/api/docs/problems"
+        const val PROBLEMS_DOCS_URI = "https://github.com/intelligent-personalized-care/ipc/tree/main/api/docs/problems/"
 
         fun Exception.toProblemType(): String =
             (this::class.simpleName ?: "Unknown")

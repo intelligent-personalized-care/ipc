@@ -45,7 +45,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     }
 
-    @Authentication(Role.MONITOR)
+    @Authentication
     @PostMapping(Uris.MONITOR_PHOTO)
     fun addProfilePicture(@PathVariable monitor_id: UUID, @RequestParam photo : MultipartFile,user : User) : ResponseEntity<String> {
 
@@ -57,7 +57,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     }
 
-    @Authentication(Role.MONITOR)
+    @Authentication
     @PostMapping(Uris.REQUEST_CLIENT)
     fun makeRequestforClient(@PathVariable client_id: UUID, user : User) : ResponseEntity<UUID>{
 
