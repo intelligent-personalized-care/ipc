@@ -1,7 +1,9 @@
 package pt.ipc.database_storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
+import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.database_storage.repositories.MonitorRepository
+import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.User
 import java.time.LocalDate
 import java.util.*
@@ -42,5 +44,12 @@ class JdbiMonitorRepository(
             .execute()
 
     }
+
+    override fun monitorRequests(monitorID: UUID) : List<RequestInformation> =
+        handle.createQuery("select client_id, monitor_id, request_id from dbo.client_requests where monitor_id = :monitorID")
+            .bind("monitorID",monitorID)
+            .mapTo<RequestInformation>()
+            .toList()
+
 
 }

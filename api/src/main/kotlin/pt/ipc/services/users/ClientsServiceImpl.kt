@@ -68,9 +68,13 @@ class ClientsServiceImpl(
 
             }
         )
-
-
     }
 
+    override fun getRequestsOfclient(clientID : UUID) : List<RequestInformation> =
+        transactionManager.runBlock(
+            block = {
+                it.clientsRepository.getClientRequests(clientID = clientID)
+            }
+        )
 
 }

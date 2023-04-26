@@ -2,6 +2,7 @@ package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
 import pt.ipc.database_storage.artificialTransaction.TransactionManager
+import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
@@ -76,4 +77,11 @@ class MonitorsServiceImpl(
 
         return requestID
     }
+
+    override fun monitorRequests(monitorID : UUID) : List<RequestInformation> =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.monitorRequests(monitorID = monitorID)
+            }
+        )
 }

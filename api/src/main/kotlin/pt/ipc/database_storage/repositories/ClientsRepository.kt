@@ -20,4 +20,6 @@ interface ClientsRepository {
 
     fun getRequestInformations(requestID: UUID) : RequestInformation?
 
+    fun getClientRequests(clientID : UUID) : List<RequestInformation>
+
 }

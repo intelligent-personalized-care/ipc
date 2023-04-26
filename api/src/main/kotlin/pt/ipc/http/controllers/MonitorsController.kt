@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
@@ -64,6 +65,18 @@ class MonitorsController(private val monitorService: MonitorService) {
         val requestID = monitorService.requestClient(monitorID = user.id, clientID = client_id)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(requestID)
+
+    }
+
+    @Authentication
+    @GetMapping(Uris.MONITOR_REQUESTS)
+    fun getMonitorRequests(@PathVariable monitor_id: UUID, user : User) : ResponseEntity<List<RequestInformation>>{
+
+        if(monitor_id != user.id) throw Unauthorized()
+
+        val requests : List<RequestInformation> = monitorService.monitorRequests(monitorID = monitor_id)
+
+        return ResponseEntity.ok(requests)
 
     }
 

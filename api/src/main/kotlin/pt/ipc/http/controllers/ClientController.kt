@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.RequestDecision
+import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -65,10 +66,16 @@ class ClientController(private val clientsService: ClientsService) {
 
     }
 
+    @Authentication
+    @GetMapping(Uris.CLIENT_REQUESTS)
+    fun getRequestsOfClient(@PathVariable client_id: UUID, user : User) : ResponseEntity<List<RequestInformation>>{
 
+        if(client_id != user.id) throw Unauthorized()
 
+        val requests : List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
 
-
+        return ResponseEntity.ok(requests)
+    }
 
     companion object{
 

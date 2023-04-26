@@ -102,7 +102,11 @@ class JdbiClientsRepository(
               .execute()
     }
 
-
+    override fun getClientRequests(clientID : UUID) : List<RequestInformation> =
+        handle.createQuery("select client_id, monitor_id, request_id from dbo.client_requests where client_id = :clientID")
+              .bind("clientID",clientID)
+              .mapTo<RequestInformation>()
+              .toList()
 
 }
 
