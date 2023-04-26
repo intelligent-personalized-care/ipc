@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import javax.servlet.http.HttpServletRequest
@@ -102,13 +103,25 @@ class ExceptionHandler{
         ).toResponseEntity()
 
 
+    @ExceptionHandler(value = [HttpRequestMethodNotSupportedException::class])
+    fun handleRequestMethodNotSupportedException(
+        request: HttpServletRequest,
+        ex: HttpRequestMethodNotSupportedException
+    ) : ResponseEntity<Any> =
+        Problem(
+            type = URI.create("${PROBLEMS_DOCS_URI}method-not-allowed"),
+            title = "${ex.method} Not allowed",
+            status = HttpStatus.METHOD_NOT_ALLOWED.value()
+        ).toResponseEntity()
+
+
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
     fun handleHttpMessageNotReadableExceptions(
         request: HttpServletRequest,
         ex: HttpMessageNotReadableException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create("$PROBLEMS_DOCS_URI + invalid-request-body"),
+            type = URI.create("${PROBLEMS_DOCS_URI}invalid-request-body"),
             title = "Invalid request body${
                 ex.rootCause.let {
                     ": " +

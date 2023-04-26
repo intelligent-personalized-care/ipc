@@ -6,6 +6,7 @@ import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.RequestDecision
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -51,6 +52,19 @@ class ClientController(private val clientsService: ClientsService) {
 
 
     }
+
+    @Authentication
+    @PostMapping(Uris.REQUEST_DECISION)
+    fun deciseRequest(@PathVariable client_id: UUID, @PathVariable request_id: UUID, user: User, @RequestBody decision : RequestDecision) : ResponseEntity<String>{
+
+        if(user.id != client_id) throw Unauthorized()
+
+        clientsService.decideRequest(requestID = request_id, clientID = client_id, decision = decision)
+
+        return ResponseEntity.status(HttpStatus.OK).body("Request Decision Made")
+
+    }
+
 
 
 

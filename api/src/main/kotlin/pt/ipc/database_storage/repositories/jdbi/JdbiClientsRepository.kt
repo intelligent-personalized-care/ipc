@@ -2,11 +2,8 @@ package pt.ipc.database_storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.Client
 import pt.ipc.database_storage.repositories.ClientsRepository
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
-import pt.ipc.domain.UserNotExists
+import pt.ipc.domain.*
 import java.util.*
 
 class JdbiClientsRepository(
@@ -28,7 +25,7 @@ class JdbiClientsRepository(
             .mapTo<Int>()
             .singleOrNull()
 
-        if(maybeClient != null) return Role.CLIENT
+        if(maybeClient != 0) return Role.CLIENT
 
             handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
             .bind("id", id)
@@ -37,6 +34,27 @@ class JdbiClientsRepository(
 
         return  Role.MONITOR
 
+    }
+
+    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision) {
+
+        handle.createUpdate("delete from dbo.client_requests where request_id = :requestID ")
+              .bind("requestID",requestID)
+              .execute()
+
+        if(decision == RequestDecision.ACCEPT){
+            handle.createUpdate("update dbo.clients set monitor_id = :monitorID where c_id = :clientID")
+                .bind("monitorID",monitorID)
+                .bind("clientID",clientID)
+                .execute()
+        }
+    }
+
+    override fun getRequestInformations(requestID: UUID) : RequestInformation? {
+        return handle.createQuery("select * from dbo.client_requests where request_id = :requestID ")
+            .bind("requestID",requestID)
+            .mapTo<RequestInformation>()
+            .singleOrNull()
     }
 
     override fun getUserByToken(token: String): Pair<User,Role>? {
@@ -49,7 +67,6 @@ class JdbiClientsRepository(
        val role = roleOfUser(id = user.id)
 
        return Pair(user,role)
-
 
     }
 

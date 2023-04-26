@@ -27,7 +27,7 @@ class JdbiMonitorRepository(
             .bind("user_id", user.id)
             .execute()
 
-        handle.createUpdate("insert into dbo.docs_authenticity values(:monitor_id,false,:dt_submit)")
+        handle.createUpdate("insert into dbo.docs_authenticity values(:monitor_id,'waiting',:dt_submit)")
             .bind("monitor_id", user.id)
             .bind("dt_submit",date)
             .execute()
@@ -35,9 +35,10 @@ class JdbiMonitorRepository(
 
     override fun requestClient(requestID : UUID,monitorID: UUID, clientID: UUID) {
 
-        handle.createUpdate("insert into dbo.client_requests values(:monitorID, :clientID, :request_id)")
+        handle.createUpdate("insert into dbo.client_requests values(:monitorID, :clientID, :requestID)")
             .bind("monitorID",monitorID)
             .bind("clientID",clientID)
+            .bind("requestID",requestID)
             .execute()
 
     }

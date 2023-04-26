@@ -1,8 +1,6 @@
 package pt.ipc.database_storage.repositories
 
-import pt.ipc.domain.Client
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import java.util.*
 
 
@@ -17,5 +15,9 @@ interface ClientsRepository {
     fun updateProfilePictureID(userID : UUID, profileID : UUID)
 
     fun roleOfUser(id : UUID) : Role
+
+    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision)
+
+    fun getRequestInformations(requestID: UUID) : RequestInformation?
 
 }

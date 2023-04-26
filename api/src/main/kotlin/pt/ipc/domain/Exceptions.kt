@@ -18,6 +18,8 @@ class BadEmail : BadRequest("Bad Email")
 
 class WeakPassword : BadRequest("Password too weak")
 
-class Unauthorized : UnauthorizedRequest("You cannot access this resource")
+class Unauthorized : Forbidden("You cannot access this resource")
 
 class UserNotExists : NotFound("This User does Not Exists")
+
+class RequestNotExists : NotFound("This Request does not exists")

@@ -2,12 +2,10 @@ package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
 import pt.ipc.database_storage.artificialTransaction.TransactionManager
-import pt.ipc.domain.Client
-import pt.ipc.domain.Role
+import pt.ipc.domain.*
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.toLocalDate
 import java.util.*
 
 @Service
@@ -58,6 +56,20 @@ class ClientsServiceImpl(
             },
             fileName = pictureID
         )
+    }
+
+    override fun decideRequest(requestID: UUID, clientID: UUID, decision: RequestDecision) {
+        transactionManager.runBlock(
+            block = {
+                val requestInformation = it.clientsRepository.getRequestInformations(requestID = requestID) ?: throw RequestNotExists()
+                val monitorID = requestInformation.monitorID
+                if(requestInformation.clientID != clientID) throw Unauthorized()
+                it.clientsRepository.decideRequest(requestID = requestID, clientID = clientID, monitorID = monitorID, decision = decision)
+
+            }
+        )
+
+
     }
 
 

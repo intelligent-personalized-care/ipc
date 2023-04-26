@@ -21,6 +21,7 @@ class AuthenticationInterceptor(
             val tokenCookie = cookies.find { it.name == "token" }
 
             val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
+            println("---------------------------------- THIS IS THE ROLE -> $role---------------------------")
 
             return if (
                 handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
