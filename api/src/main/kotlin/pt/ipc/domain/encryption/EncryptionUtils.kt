@@ -13,7 +13,6 @@ class EncryptionUtils(
     private val secretKey = encryptionUtilsConfiguration.encryptionSecret
 
     fun encrypt(plainText: String): String {
-
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
 
         cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(secretKey.toByteArray(), "AES"))
@@ -30,5 +29,4 @@ class EncryptionUtils(
         val decryptedBytes = cipher.doFinal(encryptedBytes)
         return String(decryptedBytes, Charsets.UTF_8)
     }
-
 }

@@ -7,11 +7,11 @@ import java.util.*
 
 interface MonitorService {
 
-    fun registerMonitor(registerMonitorInput: RegisterMonitorInput) : RegisterOutput
+    fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
-    fun requestClient(monitorID: UUID, clientID : UUID) : UUID
+    fun requestClient(monitorID: UUID, clientID: UUID): UUID
 
-    fun monitorRequests(monitorID : UUID) : List<RequestInformation>
+    fun monitorRequests(monitorID: UUID): List<RequestInformation>
 }

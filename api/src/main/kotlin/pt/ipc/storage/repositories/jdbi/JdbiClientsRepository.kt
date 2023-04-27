@@ -1,13 +1,18 @@
-package pt.ipc.database_storage.repositories.jdbi
+package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.database_storage.repositories.ClientsRepository
-import pt.ipc.domain.*
+import pt.ipc.domain.Client
+import pt.ipc.domain.RequestDecision
+import pt.ipc.domain.RequestInformation
+import pt.ipc.domain.Role
+import pt.ipc.domain.User
+import pt.ipc.domain.UserNotExists
+import pt.ipc.storage.repositories.ClientsRepository
 import java.util.*
 
 class JdbiClientsRepository(
-    private val handle : Handle
+    private val handle: Handle
 ) : ClientsRepository {
 
     override fun existsEmail(email: String): Boolean {
@@ -18,65 +23,59 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    override fun roleOfUser(id : UUID) : Role {
-
+    override fun roleOfUser(id: UUID): Role {
         val maybeClient = handle.createQuery("select count(*) from dbo.clients where c_id = :id")
             .bind("id", id)
             .mapTo<Int>()
             .singleOrNull()
 
-        if(maybeClient != 0) return Role.CLIENT
+        if (maybeClient != 0) return Role.CLIENT
 
-            handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
+        handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
             .bind("id", id)
             .mapTo<Int>()
             .singleOrNull() ?: throw UserNotExists()
 
-        return  Role.MONITOR
-
+        return Role.MONITOR
     }
 
     override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision) {
-
         handle.createUpdate("delete from dbo.client_requests where request_id = :requestID ")
-              .bind("requestID",requestID)
-              .execute()
+            .bind("requestID", requestID)
+            .execute()
 
-        if(decision == RequestDecision.ACCEPT){
+        if (decision == RequestDecision.ACCEPT) {
             handle.createUpdate("update dbo.clients set monitor_id = :monitorID where c_id = :clientID")
-                .bind("monitorID",monitorID)
-                .bind("clientID",clientID)
+                .bind("monitorID", monitorID)
+                .bind("clientID", clientID)
                 .execute()
         }
     }
 
-    override fun getRequestInformations(requestID: UUID) : RequestInformation? {
+    override fun getRequestInformations(requestID: UUID): RequestInformation? {
         return handle.createQuery("select * from dbo.client_requests where request_id = :requestID ")
-            .bind("requestID",requestID)
+            .bind("requestID", requestID)
             .mapTo<RequestInformation>()
             .singleOrNull()
     }
 
-    override fun getUserByToken(token: String): Pair<User,Role>? {
-
+    override fun getUserByToken(token: String): Pair<User, Role>? {
         val user = handle.createQuery("select id, name, email, password_hash from dbo.users u inner join dbo.tokens t on u.id = t.user_id where token_hash = :token")
             .bind("token", token)
             .mapTo<User>()
             .singleOrNull() ?: return null
 
-       val role = roleOfUser(id = user.id)
+        val role = roleOfUser(id = user.id)
 
-       return Pair(user,role)
-
+        return Pair(user, role)
     }
 
-    override fun registerClient(input: Client, token: String, physicalCondition : String?){
-
+    override fun registerClient(input: Client, token: String, physicalCondition: String?) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
-            .bind("id", input.id )
-            .bind("u_name", input.name )
-            .bind("u_email", input.email )
-            .bind("password_hash", input.id )
+            .bind("id", input.id)
+            .bind("u_name", input.name)
+            .bind("u_email", input.email)
+            .bind("password_hash", input.id)
             .execute()
 
         handle.createUpdate(
@@ -95,18 +94,16 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun updateProfilePictureID(userID : UUID, profileID : UUID){
+    override fun updateProfilePictureID(userID: UUID, profileID: UUID) {
         handle.createUpdate("update dbo.users set photo_id = :profileID where id = :userID")
-              .bind("profileID", profileID)
-              .bind("userID", userID)
-              .execute()
+            .bind("profileID", profileID)
+            .bind("userID", userID)
+            .execute()
     }
 
-    override fun getClientRequests(clientID : UUID) : List<RequestInformation> =
+    override fun getClientRequests(clientID: UUID): List<RequestInformation> =
         handle.createQuery("select client_id, monitor_id, request_id from dbo.client_requests where client_id = :clientID")
-              .bind("clientID",clientID)
-              .mapTo<RequestInformation>()
-              .toList()
-
+            .bind("clientID", clientID)
+            .mapTo<RequestInformation>()
+            .toList()
 }
-

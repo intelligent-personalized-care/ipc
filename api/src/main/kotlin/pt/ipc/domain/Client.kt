@@ -6,11 +6,11 @@ import java.util.UUID
 data class Client(
     val id: UUID,
     val name: String,
-    val email : String,
+    val email: String,
     val password: String,
-    val weight : Int? = null,
-    val height : Int? = null,
-    val birthDate : LocalDate? = null
+    val weight: Int? = null,
+    val height: Int? = null,
+    val birthDate: LocalDate? = null
 )
 
 fun String.toLocalDate(): LocalDate {

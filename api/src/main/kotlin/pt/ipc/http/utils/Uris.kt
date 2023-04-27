@@ -13,6 +13,4 @@ object Uris {
     const val MONITOR_PHOTO = "users/monitors/{monitor_id}/profile-photo"
     const val REQUEST_CLIENT = "users/clients/{client_id}"
     const val MONITOR_REQUESTS = "users/monitors/{monitor_id}/requests"
-
-
 }

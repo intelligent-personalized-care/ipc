@@ -28,6 +28,4 @@ class PipelineConfiguration(
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedOrigins("http://localhost")
     }
-
-
 }

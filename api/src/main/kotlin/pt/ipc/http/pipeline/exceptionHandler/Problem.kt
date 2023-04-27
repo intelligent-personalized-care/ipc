@@ -21,6 +21,5 @@ data class Problem(
         private const val APPLICATION_TYPE = "application"
         private const val PROBLEM_SUBTYPE = "problem+json"
         const val PROBLEM_MEDIA_TYPE = "$APPLICATION_TYPE/$PROBLEM_SUBTYPE"
-
     }
 }

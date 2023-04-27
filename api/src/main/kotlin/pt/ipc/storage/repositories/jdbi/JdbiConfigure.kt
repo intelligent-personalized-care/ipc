@@ -1,4 +1,4 @@
-package pt.ipc.database_storage.repositories.jdbi
+package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin

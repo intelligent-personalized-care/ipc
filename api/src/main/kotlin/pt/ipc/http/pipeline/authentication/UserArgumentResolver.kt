@@ -11,13 +11,16 @@ import pt.ipc.domain.User
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class UserArgumentResolver: HandlerMethodArgumentResolver {
+class UserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter) =
         parameter.parameterType == User::class.java
 
-    override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?,
-                                 webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
-
+    override fun resolveArgument(
+        parameter: MethodParameter,
+        mavContainer: ModelAndViewContainer?,
+        webRequest: NativeWebRequest,
+        binderFactory: WebDataBinderFactory?
+    ): Any? {
         val request = webRequest.getNativeRequest(HttpServletRequest::class.java)
             ?: throw Unauthenticated()
         return getUserFrom(request) ?: throw Unauthenticated()

@@ -1,25 +1,30 @@
 package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
-import pt.ipc.database_storage.artificialTransaction.TransactionManager
-import pt.ipc.domain.*
+import pt.ipc.domain.Client
+import pt.ipc.domain.RequestDecision
+import pt.ipc.domain.RequestInformation
+import pt.ipc.domain.RequestNotExists
+import pt.ipc.domain.Role
+import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.toLocalDate
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
-import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.storage.artificialTransaction.TransactionManager
 import java.util.*
 
 @Service
 class ClientsServiceImpl(
     private val transactionManager: TransactionManager,
     private val encryptionUtils: EncryptionUtils,
-    private val usersServiceUtils: UsersServiceUtils,
-): ClientsService {
+    private val usersServiceUtils: UsersServiceUtils
+) : ClientsService {
 
     override fun registerClient(input: RegisterClientInput): RegisterOutput {
-
         usersServiceUtils.checkDetails(email = input.email, password = input.password)
 
-        val (token,id) = usersServiceUtils.createCredentials(email = input.email, role = Role.CLIENT)
+        val (token, id) = usersServiceUtils.createCredentials(email = input.email, role = Role.CLIENT)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 
@@ -34,7 +39,7 @@ class ClientsServiceImpl(
         )
 
         transactionManager.runBlock(
-          block = {
+            block = {
                 it.clientsRepository.registerClient(
                     input = encryptedClient,
                     token = encryptedToken,
@@ -44,15 +49,14 @@ class ClientsServiceImpl(
         )
 
         return RegisterOutput(id = id, token = token)
-
     }
 
-    override fun addProfilePicture(clientID: UUID, profilePicture : ByteArray){
+    override fun addProfilePicture(clientID: UUID, profilePicture: ByteArray) {
         val pictureID = UUID.randomUUID()
         transactionManager.runBlock(
             block = {
                 it.cloudStorage.uploadProfilePicture(fileName = pictureID, file = profilePicture)
-                it.clientsRepository.updateProfilePictureID(userID = clientID,pictureID)
+                it.clientsRepository.updateProfilePictureID(userID = clientID, pictureID)
             },
             fileName = pictureID
         )
@@ -63,18 +67,16 @@ class ClientsServiceImpl(
             block = {
                 val requestInformation = it.clientsRepository.getRequestInformations(requestID = requestID) ?: throw RequestNotExists()
                 val monitorID = requestInformation.monitorID
-                if(requestInformation.clientID != clientID) throw Unauthorized()
+                if (requestInformation.clientID != clientID) throw Unauthorized()
                 it.clientsRepository.decideRequest(requestID = requestID, clientID = clientID, monitorID = monitorID, decision = decision)
-
             }
         )
     }
 
-    override fun getRequestsOfclient(clientID : UUID) : List<RequestInformation> =
+    override fun getRequestsOfclient(clientID: UUID): List<RequestInformation> =
         transactionManager.runBlock(
             block = {
                 it.clientsRepository.getClientRequests(clientID = clientID)
             }
         )
-
 }

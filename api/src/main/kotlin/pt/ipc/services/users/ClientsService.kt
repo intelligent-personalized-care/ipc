@@ -10,10 +10,9 @@ interface ClientsService {
 
     fun registerClient(input: RegisterClientInput): RegisterOutput
 
-    fun addProfilePicture(clientID: UUID, profilePicture : ByteArray)
+    fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
-    fun decideRequest(requestID : UUID, clientID: UUID, decision: RequestDecision )
+    fun decideRequest(requestID: UUID, clientID: UUID, decision: RequestDecision)
 
-    fun getRequestsOfclient(clientID : UUID) : List<RequestInformation>
-
+    fun getRequestsOfclient(clientID: UUID): List<RequestInformation>
 }

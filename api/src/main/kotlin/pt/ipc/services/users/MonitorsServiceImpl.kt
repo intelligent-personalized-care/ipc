@@ -1,7 +1,6 @@
 package pt.ipc.services.users
 
 import org.springframework.stereotype.Service
-import pt.ipc.database_storage.artificialTransaction.TransactionManager
 import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
@@ -9,19 +8,19 @@ import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.users.dtos.RegisterMonitorInput
 import pt.ipc.services.users.dtos.RegisterOutput
+import pt.ipc.storage.artificialTransaction.TransactionManager
 import java.time.LocalDate
 import java.util.*
 
 @Service
 class MonitorsServiceImpl(
     private val encryptionUtils: EncryptionUtils,
-    private val transactionManager : TransactionManager,
+    private val transactionManager: TransactionManager,
     private val usersServiceUtils: UsersServiceUtils
 ) : MonitorService {
 
     override fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput {
-
-        val (token,userID) = usersServiceUtils.createCredentials(email = registerMonitorInput.email, role = Role.MONITOR)
+        val (token, userID) = usersServiceUtils.createCredentials(email = registerMonitorInput.email, role = Role.MONITOR)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 
@@ -46,12 +45,9 @@ class MonitorsServiceImpl(
         )
 
         return RegisterOutput(id = userID, token = token)
-
     }
 
-
-    override fun updateProfilePicture(monitorID: UUID, photo: ByteArray){
-
+    override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         val photoID = UUID.randomUUID()
 
         transactionManager.runBlock(
@@ -67,9 +63,12 @@ class MonitorsServiceImpl(
 
         transactionManager.runBlock(
             block = {
-                if(
-                   it.clientsRepository.roleOfUser(monitorID) != Role.MONITOR ||
-                   it.clientsRepository.roleOfUser(clientID) != Role.CLIENT) throw Unauthorized()
+                if (
+                    it.clientsRepository.roleOfUser(monitorID) != Role.MONITOR ||
+                    it.clientsRepository.roleOfUser(clientID) != Role.CLIENT
+                ) {
+                    throw Unauthorized()
+                }
 
                 it.monitorRepository.requestClient(requestID = requestID, monitorID = monitorID, clientID = clientID)
             }
@@ -78,7 +77,7 @@ class MonitorsServiceImpl(
         return requestID
     }
 
-    override fun monitorRequests(monitorID : UUID) : List<RequestInformation> =
+    override fun monitorRequests(monitorID: UUID): List<RequestInformation> =
         transactionManager.runBlock(
             block = {
                 it.monitorRepository.monitorRequests(monitorID = monitorID)

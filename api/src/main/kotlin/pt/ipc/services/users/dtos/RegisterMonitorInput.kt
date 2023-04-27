@@ -1,7 +1,6 @@
 package pt.ipc.services.users.dtos
 
-
-data class RegisterMonitorInput(val email : String, val name : String, val password : String, val credential : ByteArray) {
+data class RegisterMonitorInput(val email: String, val name: String, val password: String, val credential: ByteArray) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -24,5 +23,4 @@ data class RegisterMonitorInput(val email : String, val name : String, val passw
         result = 31 * result + credential.contentHashCode()
         return result
     }
-
 }

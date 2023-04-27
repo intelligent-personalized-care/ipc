@@ -4,7 +4,13 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.RequestDecision
 import pt.ipc.domain.RequestInformation
@@ -27,59 +33,51 @@ class ClientController(private val clientsService: ClientsService) {
     fun getUserHome(): ResponseEntity<String> = ResponseEntity.accepted().body("Hello User")
 
     @PostMapping(Uris.REGISTER_CLIENT)
-    fun registerClient(@RequestBody registerClientInput: RegisterClientInput,response : HttpServletResponse): ResponseEntity<RegisterOutput>{
+    fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<RegisterOutput> {
+        val registerOutput: RegisterOutput = clientsService.registerClient(registerClientInput)
 
-        val registerOutput : RegisterOutput = clientsService.registerClient(registerClientInput)
-
-        addAuthenticationCookies(response,registerOutput.token)
+        addAuthenticationCookies(response, registerOutput.token)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
-
     }
 
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
-        user : User,
-        @PathVariable client_id : UUID,
-        @RequestParam profilePicture : MultipartFile
-    ) : ResponseEntity<String>{
-
-        if(user.id != client_id) throw Unauthorized()
+        user: User,
+        @PathVariable client_id: UUID,
+        @RequestParam profilePicture: MultipartFile
+    ): ResponseEntity<String> {
+        if (user.id != client_id) throw Unauthorized()
 
         clientsService.addProfilePicture(clientID = client_id, profilePicture = profilePicture.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Created")
-
-
     }
 
     @Authentication
     @PostMapping(Uris.REQUEST_DECISION)
-    fun deciseRequest(@PathVariable client_id: UUID, @PathVariable request_id: UUID, user: User, @RequestBody decision : RequestDecision) : ResponseEntity<String>{
-
-        if(user.id != client_id) throw Unauthorized()
+    fun deciseRequest(@PathVariable client_id: UUID, @PathVariable request_id: UUID, user: User, @RequestBody decision: RequestDecision): ResponseEntity<String> {
+        if (user.id != client_id) throw Unauthorized()
 
         clientsService.decideRequest(requestID = request_id, clientID = client_id, decision = decision)
 
         return ResponseEntity.status(HttpStatus.OK).body("Request Decision Made")
-
     }
 
     @Authentication
     @GetMapping(Uris.CLIENT_REQUESTS)
-    fun getRequestsOfClient(@PathVariable client_id: UUID, user : User) : ResponseEntity<List<RequestInformation>>{
+    fun getRequestsOfClient(@PathVariable client_id: UUID, user: User): ResponseEntity<List<RequestInformation>> {
+        if (client_id != user.id) throw Unauthorized()
 
-        if(client_id != user.id) throw Unauthorized()
-
-        val requests : List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
+        val requests: List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
 
         return ResponseEntity.ok(requests)
     }
 
-    companion object{
+    companion object {
 
-        fun addAuthenticationCookies(response: HttpServletResponse,token: String){
+        fun addAuthenticationCookies(response: HttpServletResponse, token: String) {
             val responseCookie = ResponseCookie.from("token", token)
                 .httpOnly(true)
                 .path("/")
@@ -87,13 +85,10 @@ class ClientController(private val clientsService: ClientsService) {
                 .build()
 
             response.addCookie(responseCookie)
-
         }
 
         private fun HttpServletResponse.addCookie(cookie: ResponseCookie) {
             this.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
         }
     }
-
-
 }

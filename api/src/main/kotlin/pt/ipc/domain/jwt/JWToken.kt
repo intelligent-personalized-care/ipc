@@ -1,3 +1,3 @@
 package pt.ipc.domain.jwt
 
-data class JWToken(val token : String)
+data class JWToken(val token: String)
