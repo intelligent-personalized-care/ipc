@@ -23,19 +23,3 @@ sealed class APIResult<out T> {
      */
     class Failure(val error: ProblemJson) : APIResult<Nothing>()
 }
-
-/**
- * Checks if the api result is a success.
- *
- * @receiver the api result to check
- * @return true if the result is a success, false otherwise
- */
-fun <T> APIResult<T>.isSuccess(): Boolean = this is APIResult.Success
-
-/**
- * Checks if the api result is a failure.
- *
- * @receiver the api result to check
- * @return true if the result is a failure, false otherwise
- */
-fun <T> APIResult<T>.isFailure(): Boolean = this is APIResult.Failure

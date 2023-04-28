@@ -7,10 +7,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import pt.ipc_app.service.connection.APIResult
-import pt.ipc_app.service.connection.getBodyOrThrow
-import pt.ipc_app.service.connection.send
-import pt.ipc_app.service.connection.checkAuthorization
+import pt.ipc_app.service.connection.*
 import pt.ipc_app.service.models.ProblemJson
 import pt.ipc_app.service.models.ProblemJson.Companion.problemJsonMediaType
 import java.io.IOException
@@ -42,17 +39,13 @@ abstract class HTTPService(
             val resJson = JsonReader(body.charStream())
 
             try {
-                when {
-                    response.isSuccessful ->
-                        APIResult.Success(
-                            data = jsonEncoder.fromJson(resJson, T::class.java)
-                        )
-                    !response.isSuccessful && body.contentType() == problemJsonMediaType ->
-                        APIResult.Failure(
-                            error = jsonEncoder.fromJson(resJson, ProblemJson::class.java)
-                        )
-                    else -> throw IllegalArgumentException()
-                }
+                if (response.isSuccessful)
+                    APIResult.Success(jsonEncoder.fromJson(resJson, T::class.java))
+                else if (body.contentType() == problemJsonMediaType)
+                    APIResult.Failure(jsonEncoder.fromJson(resJson, ProblemJson::class.java))
+                else
+                    throw IllegalArgumentException()
+
             } catch (e: JsonSyntaxException) {
                 throw IllegalArgumentException()
             }

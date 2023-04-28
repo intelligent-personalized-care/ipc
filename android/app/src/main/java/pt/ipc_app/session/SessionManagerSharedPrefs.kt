@@ -1,6 +1,7 @@
 package pt.ipc_app.session
 
 import android.content.Context
+import pt.ipc_app.domain.user.Role
 
 /**
  * Session manager that uses shared preferences to store the session.
@@ -20,7 +21,10 @@ class SessionManagerSharedPrefs(private val context: Context) {
         get() = prefs.getString(TOKEN, null)
 
     val username: String?
-        get() = prefs.getString(USERNAME, null)
+        get() = prefs.getString(NAME, null)
+
+    val role: String?
+        get() = prefs.getString(ROLE, null)
 
     /**
      * Checks if the user is logged in.
@@ -32,16 +36,18 @@ class SessionManagerSharedPrefs(private val context: Context) {
     /**
      * Updates the session with the given tokens and username.
      *
-     * @param token the user's access token
-     * @param username the user's username
+     * @param token the user's token
+     * @param name the user's name
      */
     fun setSession(
         token: String,
-        username: String
+        name: String,
+        role: Role
     ) {
         prefs.edit()
             .putString(TOKEN, token)
-            .putString(USERNAME, username)
+            .putString(NAME, name)
+            .putString(ROLE, role.name)
             .apply()
     }
 
@@ -51,13 +57,15 @@ class SessionManagerSharedPrefs(private val context: Context) {
     fun clearSession() {
         prefs.edit()
             .remove(TOKEN)
-            .remove(USERNAME)
+            .remove(NAME)
+            .remove(ROLE)
             .apply()
     }
 
     companion object {
         private const val SESSION_PREFS = "session"
         private const val TOKEN = "token"
-        private const val USERNAME = "username"
+        private const val NAME = "name"
+        private const val ROLE = "role"
     }
 }

@@ -8,3 +8,5 @@ enum class Role {
         fun isClient(role: String) = role == CLIENT.name
     }
 }
+
+fun Role.isClient(): Boolean = this == Role.CLIENT

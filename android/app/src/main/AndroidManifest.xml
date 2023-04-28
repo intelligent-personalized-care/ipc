@@ -41,6 +41,16 @@
             android:windowSoftInputMode="adjustPan">
         </activity>
 
+        <activity
+            android:name=".ui.screens.home.ClientHomeActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".ui.screens.home.MonitorHomeActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>
