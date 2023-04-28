@@ -40,6 +40,6 @@ class IPCApplication : DependenciesContainer, Application() {
     )
 
     companion object {
-        private const val API_ENDPOINT = "https://f52c-194-210-195-230.ngrok-free.app"
+        private const val API_ENDPOINT = "https://5841-194-210-193-66.ngrok-free.app"
     }
 }

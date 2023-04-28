@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">IPC_APP</string>
 
-    <string name="register_screen_title">Register</string>
+    <string name="register_client_screen_title">Register Client</string>
+    <string name="register_monitor_screen_title">Register Monitor</string>
+
     <string name="register_screen_label_name">Name</string>
     <string name="register_screen_label_email">Email</string>
     <string name="register_screen_label_password">Password</string>

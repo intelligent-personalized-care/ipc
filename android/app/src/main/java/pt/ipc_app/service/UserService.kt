@@ -4,7 +4,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.register.RegisterClientInput
-import pt.ipc_app.service.models.register.RegisterClientOutput
+import pt.ipc_app.service.models.register.RegisterMonitorInput
+import pt.ipc_app.service.models.register.RegisterOutput
 import java.io.IOException
 
 /**
@@ -21,21 +22,21 @@ class UsersService(
 ) : HTTPService(apiEndpoint, httpClient, jsonEncoder) {
 
     /**
-     * Registers the user with the given [email], [name] and [password].
+     * Registers the client with the given [name], [email] and [password].
      *
      * @return the API result of the register request
      *
      * @throws IOException if there is an error while sending the request
      */
     suspend fun registerClient(
-        email: String,
         name: String,
+        email: String,
         password: String,
-        weight: Int,
-        height: Int,
-        birthDate: String,
-        physicalCondition: String
-    ): APIResult<RegisterClientOutput> =
+        weight: Int?,
+        height: Int?,
+        birthDate: String?,
+        physicalCondition: String?
+    ): APIResult<RegisterOutput> =
         post(
             uri = "/users/clients",
             body = RegisterClientInput(
@@ -49,4 +50,26 @@ class UsersService(
             )
         )
 
+    /**
+     * Registers the monitor with the given [name], [email] and [password].
+     *
+     * @return the API result of the register request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun registerMonitor(
+        name: String,
+        email: String,
+        password: String,
+        credential: ByteArray
+    ): APIResult<RegisterOutput> =
+        post(
+            uri = "/users/monitors",
+            body = RegisterMonitorInput(
+                name = name,
+                email = email,
+                password = password,
+                credential = ByteArray(1) // TODO()
+            )
+        )
 }

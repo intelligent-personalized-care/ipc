@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.R
+import pt.ipc_app.ui.components.CustomTextField
 
 /**
  * Use [CustomTextField] to display a list with options and you can select one of them.

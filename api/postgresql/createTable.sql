@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS dbo.monitors(
 
 CREATE TABLE IF NOT EXISTS dbo.clients(
     c_id                    UUID PRIMARY KEY REFERENCES dbo.users (id),
-    birth_date              DATE NOT NULL,
+    birth_date              DATE,
     weight                  INT,
     height                  INT,
     physical_condition      VARCHAR(50),
