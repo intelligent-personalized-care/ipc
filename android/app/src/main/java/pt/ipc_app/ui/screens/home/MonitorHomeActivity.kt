@@ -5,12 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Text
+import pt.ipc_app.DependenciesContainer
 
 /**
  * The monitor home activity.
  */
 class MonitorHomeActivity : ComponentActivity() {
+
+    private val repo by lazy {
+        (application as DependenciesContainer).sessionManager
+    }
 
     companion object {
         fun navigate(context: Context) {
@@ -24,7 +28,9 @@ class MonitorHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text("Hello World")
+            MonitorHomeScreen(
+                monitor = repo.userInfo!!
+            )
         }
     }
 }

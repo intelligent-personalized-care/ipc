@@ -1,5 +1,8 @@
 package pt.ipc_app.ui.screens.register
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.user.Role
@@ -16,6 +19,10 @@ class RegisterViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
+
+    private var _isLoading by mutableStateOf(false)
+    val isLoading
+        get() = _isLoading
 
     private val _registeredRole = MutableStateFlow<Role?>(null)
     val registeredRole
@@ -39,6 +46,7 @@ class RegisterViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
+                _isLoading = true
                 usersService.registerClient(
                     name = name,
                     email = email,
@@ -47,7 +55,9 @@ class RegisterViewModel(
                     height = if (height != 0) height else null,
                     birthDate = birthDate.ifEmpty { null },
                     physicalCondition = physicalCondition.ifEmpty { null }
-                )
+                ).also {
+                    _isLoading = false
+                }
             },
             onSuccess = {
                 val role = Role.CLIENT

@@ -12,6 +12,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.ui.components.CheckProblemJson
+import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.utils.viewModelInit
@@ -42,8 +43,13 @@ class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val progressState =
+                if (viewModel.isLoading) ProgressState.Creating
+                else ProgressState.Idle
+
             if (Role.isClient(role))
                 RegisterClientScreen(
+                    progressState = progressState,
                     onSaveRequest = {
                         viewModel.registerClient(
                             it.name, it.email, it.password, it.weight, it.height, it.birthDate, it.physicalCondition
@@ -52,6 +58,7 @@ class RegisterActivity : ComponentActivity() {
                 )
             else
                 RegisterMonitorScreen(
+                    progressState = progressState,
                     onSaveRequest = {
                         viewModel.registerMonitor(
                             it.name, it.email, it.password, it.credential!!

@@ -5,8 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Text
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.domain.user.Client
+import pt.ipc_app.domain.user.Monitor
 
 /**
  * The client home activity.
@@ -29,7 +30,9 @@ class ClientHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text("Hello ${repo.username}")
+            ClientHomeScreen(
+                client = repo.userInfo!!
+            )
         }
     }
 }

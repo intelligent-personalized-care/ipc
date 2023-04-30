@@ -12,6 +12,8 @@ import pt.ipc_app.R
 import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.ui.components.ChooseFile
+import pt.ipc_app.ui.components.ProgressState
+import pt.ipc_app.ui.components.RegisterButton
 import pt.ipc_app.ui.screens.AppScreen
 
 /**
@@ -21,6 +23,7 @@ import pt.ipc_app.ui.screens.AppScreen
  */
 @Composable
 fun RegisterMonitorScreen(
+    progressState: ProgressState = ProgressState.Idle,
     onSaveRequest: (Monitor) -> Unit
 ) {
     var userInfo: User? by remember { mutableStateOf(null) }
@@ -54,8 +57,9 @@ fun RegisterMonitorScreen(
                     onChooseFile = { credential = it }
                 )
             }
-            ButtonRegister(
+            RegisterButton(
                 validationInfo = monitorValidation,
+                state = progressState,
                 onClick = { if (monitorValidation != null) onSaveRequest(monitorValidation) }
             )
         }

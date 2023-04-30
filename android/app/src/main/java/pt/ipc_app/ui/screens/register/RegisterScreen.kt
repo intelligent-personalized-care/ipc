@@ -1,11 +1,5 @@
 package pt.ipc_app.ui.screens.register
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -14,7 +8,6 @@ import pt.ipc_app.R
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.domain.user.User.Companion.userOrNull
 import pt.ipc_app.ui.components.CustomTextField
-import kotlin.math.min
 
 @Composable
 fun UserRegister(
@@ -50,29 +43,6 @@ fun UserRegister(
         hide = true,
         keyboardType = KeyboardType.Password
     )
-}
-
-@Composable
-fun ButtonRegister(
-    validationInfo: User?,
-    onClick: (User) -> Unit = {}
-) {
-    var editing by remember { mutableStateOf(validationInfo == null) }
-
-    Spacer(modifier = Modifier.height(5.dp))
-
-    Button(
-        onClick = {
-            if (!editing) editing = true
-            else if (validationInfo != null) { onClick(validationInfo) }
-        },
-        enabled = validationInfo != null,
-        shape = CircleShape,
-        modifier = Modifier
-            .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
-    ) {
-        Icon(imageVector = Icons.Default.Login, contentDescription = "")
-    }
 }
 
 /*

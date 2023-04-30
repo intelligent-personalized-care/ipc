@@ -19,6 +19,8 @@ import pt.ipc_app.domain.user.Client
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.ui.screens.AppScreen
 import pt.ipc_app.ui.components.CustomTextField
+import pt.ipc_app.ui.components.ProgressState
+import pt.ipc_app.ui.components.RegisterButton
 import pt.ipc_app.utils.DatePicker
 import pt.ipc_app.utils.MyDatePicker
 
@@ -32,7 +34,8 @@ private const val HEIGHT_METRIC = " cm"
  */
 @Composable
 fun RegisterClientScreen(
-    onSaveRequest: (Client) -> Unit
+    progressState: ProgressState = ProgressState.Idle,
+    onSaveRequest: (Client) -> Unit = { }
 ) {
     var userInfo: User? by remember { mutableStateOf(null) }
 
@@ -105,8 +108,9 @@ fun RegisterClientScreen(
                     iconImageVector = Icons.Default.Edit
                 )
             }
-            ButtonRegister(
+            RegisterButton(
                 validationInfo = clientValidation,
+                state = progressState,
                 onClick = { if (clientValidation != null) onSaveRequest(clientValidation) }
             )
         }

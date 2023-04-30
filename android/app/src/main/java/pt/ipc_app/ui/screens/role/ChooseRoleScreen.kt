@@ -24,13 +24,13 @@ fun ChooseRoleScreen(
         ) {
             Row {
                 Button(
-                    onClick = { role = Role.CLIENT },
+                    onClick = { role = if (role != Role.CLIENT) Role.CLIENT else null },
                     colors = styleButtonIf(role == Role.CLIENT)
                 ) {
                     Text("Client")
                 }
                 Button(
-                    onClick = { role = Role.MONITOR },
+                    onClick = { role = if (role != Role.MONITOR) Role.MONITOR else null },
                     colors = styleButtonIf(role == Role.MONITOR)
                 ) {
                     Text("Monitor")
