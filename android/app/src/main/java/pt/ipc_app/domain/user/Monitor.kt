@@ -9,7 +9,9 @@ class Monitor(
     name: String,
     email: String,
     password: String,
-    val credential: ByteArray?
+    val credential: ByteArray?,
+    val title: String? = null,
+    val stars: Float? = 0f
 ): User(name, email, password) {
 
     companion object {

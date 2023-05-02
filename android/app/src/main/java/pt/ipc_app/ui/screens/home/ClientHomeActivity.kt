@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.domain.user.Client
-import pt.ipc_app.domain.user.Monitor
+import pt.ipc_app.domain.user.*
+import pt.ipc_app.ui.components.plan
 
 /**
  * The client home activity.
@@ -31,7 +31,9 @@ class ClientHomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ClientHomeScreen(
-                client = repo.userInfo!!
+                client = repo.userInfo!!,
+                monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
+                plan = plan
             )
         }
     }

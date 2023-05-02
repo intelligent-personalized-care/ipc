@@ -6,7 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.ui.screens.AppScreen
 
@@ -27,13 +29,13 @@ fun ChooseRoleScreen(
                     onClick = { role = if (role != Role.CLIENT) Role.CLIENT else null },
                     colors = styleButtonIf(role == Role.CLIENT)
                 ) {
-                    Text("Client")
+                    Text(stringResource(id = R.string.client))
                 }
                 Button(
                     onClick = { role = if (role != Role.MONITOR) Role.MONITOR else null },
                     colors = styleButtonIf(role == Role.MONITOR)
                 ) {
-                    Text("Monitor")
+                    Text(stringResource(id = R.string.monitor))
                 }
             }
 
@@ -41,7 +43,7 @@ fun ChooseRoleScreen(
                 onClick = { role?.let { onRoleChoose(it) } },
                 enabled = role != null
             ) {
-                Text("Select")
+                Text(stringResource(id = R.string.select))
             }
         }
     }
