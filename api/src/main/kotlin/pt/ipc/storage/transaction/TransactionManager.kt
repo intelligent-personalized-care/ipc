@@ -1,4 +1,4 @@
-package pt.ipc.storage.artificialTransaction
+package pt.ipc.storage.transaction
 
 import java.util.UUID
 

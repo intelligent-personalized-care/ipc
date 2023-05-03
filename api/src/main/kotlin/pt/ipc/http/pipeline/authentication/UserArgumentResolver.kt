@@ -29,8 +29,8 @@ class UserArgumentResolver : HandlerMethodArgumentResolver {
     companion object {
         private const val KEY = "UserArgumentResolver"
 
-        fun addUserTo(client: User, request: HttpServletRequest) =
-            request.setAttribute(KEY, client)
+        fun addUserTo(user: User, request: HttpServletRequest) =
+            request.setAttribute(KEY, user)
 
         fun getUserFrom(request: HttpServletRequest): User? =
             request.getAttribute(KEY)?.let {

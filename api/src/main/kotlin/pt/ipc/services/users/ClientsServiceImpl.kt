@@ -11,7 +11,7 @@ import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.toLocalDate
 import pt.ipc.services.users.dtos.RegisterClientInput
 import pt.ipc.services.users.dtos.RegisterOutput
-import pt.ipc.storage.artificialTransaction.TransactionManager
+import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
 @Service

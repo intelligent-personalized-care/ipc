@@ -8,7 +8,7 @@ import pt.ipc.domain.User
 import pt.ipc.domain.WeakPassword
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.jwt.JwtUtils
-import pt.ipc.storage.artificialTransaction.TransactionManager
+import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
 @Component
@@ -40,16 +40,8 @@ class UsersServiceUtils(
         return regex.matches(password)
     }
 
-    private fun emailExists(email: String): Boolean =
-        transactionManager.runBlock(
-            {
-                it.clientsRepository.existsEmail(email = email)
-            }
-        )
-
     fun checkDetails(email: String, password: String) {
         if (!email.contains("@")) throw BadEmail()
         if (!isPasswordSafe(password = password)) throw WeakPassword()
-        if (emailExists(email = email)) throw EmailAlreadyInUse()
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.RequestID
 import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
@@ -28,7 +29,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @PostMapping(Uris.REGISTER_MONITOR, consumes = ["multipart/form-data"])
     fun registerMonitor(
-        @RequestParam credential: MultipartFile,
+        @RequestParam("credential") credential: MultipartFile,
         @RequestParam email: String,
         @RequestParam name: String,
         @RequestParam password: String,
@@ -60,10 +61,10 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.REQUEST_CLIENT)
-    fun makeRequestforClient(@PathVariable client_id: UUID, user: User): ResponseEntity<UUID> {
+    fun makeRequestforClient(@PathVariable client_id: UUID, user: User): ResponseEntity<RequestID> {
         val requestID = monitorService.requestClient(monitorID = user.id, clientID = client_id)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(requestID)
+        return ResponseEntity.status(HttpStatus.CREATED).body(RequestID(requestID = requestID))
     }
 
     @Authentication

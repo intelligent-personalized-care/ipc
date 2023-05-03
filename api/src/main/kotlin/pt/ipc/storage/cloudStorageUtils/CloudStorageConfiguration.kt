@@ -17,7 +17,7 @@ class CloudStorageConfiguration(
 
 ) {
 
-    private val maxAttemps = 10
+    private val maxAttemps = 5
 
     private val retryDelayMultiplier = 3.0
 

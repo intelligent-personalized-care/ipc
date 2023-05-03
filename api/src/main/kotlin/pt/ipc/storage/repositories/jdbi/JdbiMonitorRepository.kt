@@ -33,6 +33,7 @@ class JdbiMonitorRepository(
             .bind("monitor_id", user.id)
             .bind("dt_submit", date)
             .execute()
+
     }
 
     override fun requestClient(requestID: UUID, monitorID: UUID, clientID: UUID) {

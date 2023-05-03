@@ -8,7 +8,7 @@ import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.users.dtos.RegisterMonitorInput
 import pt.ipc.services.users.dtos.RegisterOutput
-import pt.ipc.storage.artificialTransaction.TransactionManager
+import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.*
 

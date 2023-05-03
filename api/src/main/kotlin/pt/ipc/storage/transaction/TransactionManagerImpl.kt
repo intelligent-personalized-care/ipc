@@ -1,4 +1,4 @@
-package pt.ipc.storage.artificialTransaction
+package pt.ipc.storage.transaction
 
 import org.jdbi.v3.core.Jdbi
 import org.springframework.stereotype.Component
