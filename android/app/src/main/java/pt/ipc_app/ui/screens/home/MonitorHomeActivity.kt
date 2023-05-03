@@ -29,7 +29,8 @@ class MonitorHomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MonitorHomeScreen(
-                monitor = repo.userInfo!!
+                monitor = repo.userInfo!!,
+                onClientsRequest = {}
             )
         }
     }

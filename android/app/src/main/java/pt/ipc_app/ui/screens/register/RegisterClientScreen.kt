@@ -21,8 +21,8 @@ import pt.ipc_app.ui.screens.AppScreen
 import pt.ipc_app.ui.components.CustomTextField
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.RegisterButton
-import pt.ipc_app.utils.DatePicker
-import pt.ipc_app.utils.MyDatePicker
+import pt.ipc_app.ui.components.DatePicker
+import pt.ipc_app.ui.components.MyDatePicker
 
 private const val WEIGHT_METRIC = " kg"
 private const val HEIGHT_METRIC = " cm"

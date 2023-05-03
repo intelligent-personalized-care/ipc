@@ -1,4 +1,4 @@
-package pt.ipc_app.utils
+package pt.ipc_app.ui.components
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import pt.ipc_app.ui.components.CustomTextField
 import java.util.*
 
 @Composable
