@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import pt.ipc_app.domain.user.DailyList
-import pt.ipc_app.domain.user.Exercise
-import pt.ipc_app.domain.user.Plan
+import pt.ipc_app.domain.DailyList
+import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.Plan
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
@@ -31,22 +31,14 @@ fun PlanScreen(
     onExerciseSelect: (Exercise) -> Unit = {}
 ) {
 
-    var dailyListSelected: DailyList? by remember { mutableStateOf(DailyList(
-        id = 1,
-        day = LocalDate.now(),
-        exercises = listOf(
-            Exercise(1, "Push ups"),
-            Exercise(2, "Abs"),
-            Exercise(3, "Leg extension")
-        )
-    )) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(plan.getListOfTodayIfExists()) }
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = plan.title
+            text = "${plan.title} - ${plan.duration} days"
         )
         Row(
             modifier = Modifier
@@ -87,7 +79,7 @@ fun PlanScreen(
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(top = 40.dp)
                 .border(1.dp, Color(204, 202, 202, 255))
         ) {
             dailyListSelected?.let {
@@ -162,7 +154,9 @@ val plan = Plan(
             exercises = listOf(
                 Exercise(1, "Push ups2"),
                 Exercise(2, "Abs2"),
-                Exercise(3, "Leg extension2")
+                Exercise(3, "Leg extension2"),
+                Exercise(4, "Leg extension2"),
+                Exercise(5, "Leg extension2"),
             )
         ),
         DailyList(

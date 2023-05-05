@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
+import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.ui.components.BottomBar
@@ -28,7 +29,11 @@ import pt.ipc_app.ui.screens.AppScreen
 fun ClientHomeScreen(
     client: UserInfo,
     monitor: Monitor? = null,
-    plan: Plan? = null
+    plan: Plan? = null,
+    onHomeClick: () -> Unit = { },
+    onExercisesClick: () -> Unit = { },
+    onUserInfoClick: () -> Unit = { },
+    onAboutClick: () -> Unit = { }
 ) {
     var notifications by remember { mutableStateOf(true) }
 
@@ -39,7 +44,8 @@ fun ClientHomeScreen(
             Text(
                 text = stringResource(id = R.string.hello)+ " ${client.name}",
                 style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.End)
+                textAlign = TextAlign.End
+            )
         }
         Row(
             horizontalArrangement = Arrangement.End,
@@ -62,7 +68,7 @@ fun ClientHomeScreen(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(top = 150.dp)
+            modifier = Modifier.padding(top = 130.dp)
         ) {
 
             monitor?.let {
@@ -71,7 +77,7 @@ fun ClientHomeScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.padding(top = 70.dp))
+            Spacer(modifier = Modifier.padding(top = 40.dp))
 
             plan?.let {
                 PlanScreen(
@@ -82,7 +88,12 @@ fun ClientHomeScreen(
         Column(
             verticalArrangement = Arrangement.Bottom
         ) {
-            BottomBar()
+            BottomBar(
+                onHomeClick = onHomeClick,
+                onExercisesClick = onExercisesClick,
+                onUserInfoClick = onUserInfoClick,
+                onAboutClick = onAboutClick
+            )
         }
     }
 }

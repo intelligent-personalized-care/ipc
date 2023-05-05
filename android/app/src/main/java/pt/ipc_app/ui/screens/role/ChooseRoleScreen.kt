@@ -14,9 +14,10 @@ import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun ChooseRoleScreen(
-    onRoleChoose: (Role) -> Unit
+    role: Role?,
+    onRoleChoose: (Role?) -> Unit,
+    onRoleSelect: (Role) -> Unit
 ) {
-    var role: Role? by remember { mutableStateOf(null) }
 
     AppScreen {
         Column(
@@ -26,13 +27,13 @@ fun ChooseRoleScreen(
         ) {
             Row {
                 Button(
-                    onClick = { role = if (role != Role.CLIENT) Role.CLIENT else null },
+                    onClick = { onRoleChoose(if (role != Role.CLIENT) Role.CLIENT else null) },
                     colors = styleButtonIf(role == Role.CLIENT)
                 ) {
                     Text(stringResource(id = R.string.client))
                 }
                 Button(
-                    onClick = { role = if (role != Role.MONITOR) Role.MONITOR else null },
+                    onClick = { onRoleChoose(if (role != Role.MONITOR) Role.MONITOR else null) },
                     colors = styleButtonIf(role == Role.MONITOR)
                 ) {
                     Text(stringResource(id = R.string.monitor))
@@ -40,7 +41,7 @@ fun ChooseRoleScreen(
             }
 
             Button(
-                onClick = { role?.let { onRoleChoose(it) } },
+                onClick = { role?.let { onRoleSelect(it) } },
                 enabled = role != null
             ) {
                 Text(stringResource(id = R.string.select))
@@ -59,5 +60,9 @@ private fun styleButtonIf(cond: Boolean): ButtonColors =
 @Preview
 @Composable
 fun ChooseRoleScreenPreview() {
-    ChooseRoleScreen {}
+    ChooseRoleScreen(
+        role = null,
+        onRoleChoose = {},
+        onRoleSelect = {}
+    )
 }

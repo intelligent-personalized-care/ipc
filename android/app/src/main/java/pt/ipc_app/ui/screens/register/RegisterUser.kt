@@ -4,13 +4,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.domain.user.User.Companion.userOrNull
 import pt.ipc_app.ui.components.CustomTextField
 
 @Composable
-fun UserRegister(
+fun RegisterUser(
     userValidation: (User?) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
@@ -45,13 +46,10 @@ fun UserRegister(
     )
 }
 
-/*
 @Preview
 @Composable
-private fun RegisterScreenPreview() {
-    UserRegister(
-        onSaveRequest = {}
+private fun RegisterUserPreview() {
+    RegisterUser(
+        userValidation = {}
     )
 }
-
- */

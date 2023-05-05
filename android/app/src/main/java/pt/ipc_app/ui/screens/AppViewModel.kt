@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import pt.ipc_app.domain.user.APIException
+import pt.ipc_app.domain.APIException
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.ProblemJson
 import pt.ipc_app.utils.executeRequest

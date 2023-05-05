@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.user.User
 
-enum class ProgressState { Idle, Creating }
+enum class ProgressState { Idle, Creating, Created }
 
 @Composable
 fun RegisterButton(

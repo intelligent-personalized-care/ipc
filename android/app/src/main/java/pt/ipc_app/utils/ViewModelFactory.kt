@@ -2,7 +2,7 @@ package pt.ipc_app.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import pt.ipc_app.domain.user.APIException
+import pt.ipc_app.domain.APIException
 import pt.ipc_app.service.connection.APIResult
 
 @Suppress("UNCHECKED_CAST")
