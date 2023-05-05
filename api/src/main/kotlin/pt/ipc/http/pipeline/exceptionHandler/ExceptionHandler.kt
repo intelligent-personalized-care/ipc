@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
-import org.postgresql.util.PSQLException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -12,6 +11,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.multipart.MultipartException
 import pt.ipc.domain.BadRequest
 import pt.ipc.domain.Conflit
@@ -57,6 +57,18 @@ class ExceptionHandler {
             status = HttpStatus.NOT_FOUND.value()
         ).toResponseEntity()
 
+    @ExceptionHandler(value = [MethodArgumentTypeMismatchException::class])
+    fun handleArgumentMismatch(
+        request: HttpServletRequest,
+        ex : Exception
+    ) : ResponseEntity<Any> =
+        Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
+            title = "This Argument does not exists",
+            status = HttpStatus.BAD_REQUEST.value()
+        ).toResponseEntity()
+
+
     @ExceptionHandler(value = [UnableToExecuteStatementException::class])
     fun hanldePostgreSQLError(
         request: HttpServletRequest,
@@ -85,7 +97,8 @@ class ExceptionHandler {
             "type_length" to "The type of exercise must be bigger than 5",
             "sets_is_valid" to "The number of sets must be between 1 and 10",
             "reps_is_valid" to "The number of reps must be between 1 and 50",
-            "users_pkey" to "This ID is already in use"
+            "users_pkey" to "This ID is already in use",
+            "client_to_monitor_client_id_key" to "Can't have more than a monitor"
         )
 
         val key = ex.shortMessage.substringAfter("constraint \"").substringBefore("\"")

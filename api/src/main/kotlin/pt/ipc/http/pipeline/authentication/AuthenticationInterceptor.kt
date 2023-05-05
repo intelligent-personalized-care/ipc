@@ -22,11 +22,14 @@ class AuthenticationInterceptor(
             val cookies = request.cookies ?: throw Unauthenticated()
             val tokenCookie = cookies.find { it.name == "token" }
 
+
             val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
 
-            return if (
-                handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
-                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
+            val bothRoles = handler.getMethodAnnotation(Authentication::class.java) ?: throw Exception("This is a Backend Error")
+
+            return if ( !bothRoles.bothRoles &&
+                (handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
+                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR)
             ) {
                 throw Unauthorized()
             } else {

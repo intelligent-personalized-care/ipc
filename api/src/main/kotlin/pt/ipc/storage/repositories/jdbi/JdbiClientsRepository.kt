@@ -45,7 +45,7 @@ class JdbiClientsRepository(
             .execute()
 
         if (decision == RequestDecision.ACCEPT) {
-            handle.createUpdate("update dbo.clients set monitor_id = :monitorID where c_id = :clientID")
+            handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
                 .bind("monitorID", monitorID)
                 .bind("clientID", clientID)
                 .execute()
@@ -79,7 +79,7 @@ class JdbiClientsRepository(
             .execute()
 
         handle.createUpdate(
-            "insert into dbo.clients (c_id, physical_condition, weight, height, birth_date, monitor_id) values (:c_id,:physical_condition,:weight,:height,:birth_date,null)"
+            "insert into dbo.clients (c_id, physical_condition, weight, height, birth_date) values (:c_id,:physical_condition,:weight,:height,:birth_date)"
         )
             .bind("c_id", input.id)
             .bind("physical_condition", physicalCondition)

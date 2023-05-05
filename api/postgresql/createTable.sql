@@ -26,13 +26,18 @@ CREATE TABLE IF NOT EXISTS dbo.clients(
     weight                  INT,
     height                  INT,
     physical_condition      VARCHAR(50),
-    monitor_id              UUID REFERENCES dbo.monitors (m_id),
 
     CONSTRAINT age_is_valid  CHECK ( date_part('years', age(CURRENT_DATE, birth_date)) >= 7 ),
     CONSTRAINT weight_is_valid CHECK ( weight >= 30 AND weight <= 300 ),
     CONSTRAINT height_is_valid CHECK ( height >= 100 AND height <= 250 ),
-    CONSTRAINT physical_condition_length CHECK ( char_length(physical_condition) >= 5 ),
-    CONSTRAINT client_diff_monitor CHECK ( c_id != monitor_id )
+    CONSTRAINT physical_condition_length CHECK ( char_length(physical_condition) >= 5 )
+
+);
+
+CREATE TABLE dbo.CLIENT_TO_MONITOR(
+      monitor_id UUID  REFERENCES dbo.monitors (m_id),
+      client_id  UUID UNIQUE REFERENCES dbo.users (id)
+
 );
 
 CREATE TABLE IF NOT EXISTS dbo.client_requests(

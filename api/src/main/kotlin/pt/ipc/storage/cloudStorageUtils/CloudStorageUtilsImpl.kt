@@ -1,10 +1,10 @@
 package pt.ipc.storage.cloudStorageUtils
 
-import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import org.springframework.stereotype.Component
+import pt.ipc.domain.ExerciseVideoNotExists
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -36,7 +36,7 @@ class CloudStorageUtilsImpl(
     }
 
     private fun download(fileName: UUID, folder: String): ByteArray {
-        val blob: Blob = storage.get(bucketName, "$folder/$fileName")
+        val blob = storage.get(bucketName, "$folder/$fileName") ?: throw ExerciseVideoNotExists()
 
         val outputStream = ByteArrayOutputStream()
 

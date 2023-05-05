@@ -1,10 +1,7 @@
 package pt.ipc
 
-import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.Jdbi
-import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 import org.postgresql.ds.PGSimpleDataSource
-import org.postgresql.util.PSQLException
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
@@ -12,14 +9,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
-import pt.ipc.domain.Client
-import pt.ipc.storage.cloudStorageUtils.CloudStorageConfiguration
 import pt.ipc.storage.repositories.jdbi.configure
-import pt.ipc.storage.transaction.TransactionManagerImpl
 import java.io.File
-import java.sql.SQLException
-import java.time.LocalDate
-import java.util.*
 
 @Configuration
 class AppConfig {

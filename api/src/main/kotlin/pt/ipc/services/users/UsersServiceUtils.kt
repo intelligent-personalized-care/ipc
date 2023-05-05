@@ -2,7 +2,6 @@ package pt.ipc.services.users
 
 import org.springframework.stereotype.Component
 import pt.ipc.domain.BadEmail
-import pt.ipc.domain.EmailAlreadyInUse
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.WeakPassword

@@ -10,9 +10,11 @@ abstract class UnauthorizedRequest(msg: String) : Exception(msg)
 
 abstract class Forbidden(msg: String) : Exception(msg)
 
-class Unauthenticated : UnauthorizedRequest("Unauthenticated")
+class ExerciseNotExists : BadRequest("This exercise does not exists")
 
-class EmailAlreadyInUse : Conflit("Email already in Use")
+class ExerciseVideoNotExists : BadRequest("This exercise video does not exists")
+
+class Unauthenticated : UnauthorizedRequest("Unauthenticated")
 
 class BadEmail : BadRequest("Bad Email")
 
