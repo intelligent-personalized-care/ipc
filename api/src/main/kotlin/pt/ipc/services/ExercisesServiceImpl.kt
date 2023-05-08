@@ -1,21 +1,21 @@
-package pt.ipc.services.users
+package pt.ipc.services
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseNotExists
 import pt.ipc.domain.ExerciseType
-import pt.ipc.services.users.dtos.ExerciseVideo
+import pt.ipc.services.dtos.ExerciseVideo
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
 @Service
 class ExercisesServiceImpl(
-    private val transactionManager: TransactionManager,
+    private val transactionManager: TransactionManager
 ) : ExercisesService {
     override fun getExercisesInfo(exerciseID: UUID): ExerciseVideo {
         return transactionManager.runBlock(
             block = {
-                val exerciseInfo = it.exerciseRepository.getExercise(exerciseID = exerciseID) ?: throw ExerciseNotExists()
+                val exerciseInfo = it.exerciseRepository.getExercise(exerciseID = exerciseID) ?: throw ExerciseNotExists
                 val video = it.cloudStorage.downloadExampleVideo(exerciseName = exerciseID)
                 ExerciseVideo(
                     exerciseInfo = exerciseInfo,
@@ -28,7 +28,7 @@ class ExercisesServiceImpl(
     override fun getExercises(exerciseType: ExerciseType?): List<ExerciseInfo> {
         return transactionManager.runBlock(
             block = {
-                if(exerciseType == null) it.exerciseRepository.getExercises() else it.exerciseRepository.getExerciseByType(exerciseType)
+                if (exerciseType == null) it.exerciseRepository.getExercises() else it.exerciseRepository.getExerciseByType(exerciseType)
             }
         )
     }

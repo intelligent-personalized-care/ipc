@@ -10,18 +10,20 @@ abstract class UnauthorizedRequest(msg: String) : Exception(msg)
 
 abstract class Forbidden(msg: String) : Exception(msg)
 
-class ExerciseNotExists : BadRequest("This exercise does not exists")
+object ExerciseNotExists : BadRequest("This exercise does not exists")
 
-class ExerciseVideoNotExists : BadRequest("This exercise video does not exists")
+object ExerciseVideoNotExists : BadRequest("This exercise video does not exists")
 
-class Unauthenticated : UnauthorizedRequest("Unauthenticated")
+object Unauthenticated : UnauthorizedRequest("Unauthenticated")
 
-class BadEmail : BadRequest("Bad Email")
+object BadEmail : BadRequest("Bad Email")
 
-class WeakPassword : BadRequest("Password too weak")
+object WeakPassword : BadRequest("Password too weak")
 
-class Unauthorized : Forbidden("You cannot access this resource")
+object Unauthorized : Forbidden("You cannot access this resource")
 
-class UserNotExists : NotFound("This User does Not Exists")
+object UserNotExists : NotFound("This User does Not Exists")
 
-class RequestNotExists : NotFound("This Request does not exists")
+object RequestNotExists : NotFound("This Request does not exists")
+
+object MonitorNotVerified : Forbidden("You have to wait for your document to be verified ")

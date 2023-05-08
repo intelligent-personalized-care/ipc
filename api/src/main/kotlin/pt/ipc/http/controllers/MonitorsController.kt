@@ -17,9 +17,9 @@ import pt.ipc.http.controllers.ClientController.Companion.addAuthenticationCooki
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
-import pt.ipc.services.users.MonitorService
-import pt.ipc.services.users.dtos.RegisterMonitorInput
-import pt.ipc.services.users.dtos.RegisterOutput
+import pt.ipc.services.MonitorService
+import pt.ipc.services.dtos.RegisterMonitorInput
+import pt.ipc.services.dtos.RegisterOutput
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
@@ -52,7 +52,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @PostMapping(Uris.MONITOR_PHOTO)
     fun addProfilePicture(@PathVariable monitor_id: UUID, @RequestParam photo: MultipartFile, user: User): ResponseEntity<String> {
-        if (user.id != monitor_id) throw Unauthorized()
+        if (user.id != monitor_id) throw Unauthorized
 
         monitorService.updateProfilePicture(monitorID = monitor_id, photo.bytes)
 
@@ -70,12 +70,15 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.MONITOR_REQUESTS)
     fun getMonitorRequests(@PathVariable monitor_id: UUID, user: User): ResponseEntity<List<RequestInformation>> {
-        if (monitor_id != user.id) throw Unauthorized()
+        if (monitor_id != user.id) throw Unauthorized
 
         val requests: List<RequestInformation> = monitorService.monitorRequests(monitorID = monitor_id)
 
         return ResponseEntity.ok(requests)
     }
 
-
+    @Authentication
+    @PostMapping(Uris.PLANS)
+    fun createPlanForClient(@PathVariable client_id: UUID, @PathVariable monitor_id: UUID) {
+    }
 }

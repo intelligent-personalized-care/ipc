@@ -1,4 +1,4 @@
-package pt.ipc.services.users
+package pt.ipc.services
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.RequestInformation
@@ -6,8 +6,8 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.services.users.dtos.RegisterMonitorInput
-import pt.ipc.services.users.dtos.RegisterOutput
+import pt.ipc.services.dtos.RegisterMonitorInput
+import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.*
@@ -67,7 +67,7 @@ class MonitorsServiceImpl(
                     it.clientsRepository.roleOfUser(monitorID) != Role.MONITOR ||
                     it.clientsRepository.roleOfUser(clientID) != Role.CLIENT
                 ) {
-                    throw Unauthorized()
+                    throw Unauthorized
                 }
 
                 it.monitorRepository.requestClient(requestID = requestID, monitorID = monitorID, clientID = clientID)

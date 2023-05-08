@@ -36,7 +36,7 @@ class CloudStorageUtilsImpl(
     }
 
     private fun download(fileName: UUID, folder: String): ByteArray {
-        val blob = storage.get(bucketName, "$folder/$fileName") ?: throw ExerciseVideoNotExists()
+        val blob = storage.get(bucketName, "$folder/$fileName") ?: throw ExerciseVideoNotExists
 
         val outputStream = ByteArrayOutputStream()
 

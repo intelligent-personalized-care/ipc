@@ -19,9 +19,9 @@ import pt.ipc.domain.User
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
-import pt.ipc.services.users.ClientsService
-import pt.ipc.services.users.dtos.RegisterClientInput
-import pt.ipc.services.users.dtos.RegisterOutput
+import pt.ipc.services.ClientsService
+import pt.ipc.services.dtos.RegisterClientInput
+import pt.ipc.services.dtos.RegisterOutput
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
@@ -48,7 +48,7 @@ class ClientController(private val clientsService: ClientsService) {
         @PathVariable client_id: UUID,
         @RequestParam profilePicture: MultipartFile
     ): ResponseEntity<String> {
-        if (user.id != client_id) throw Unauthorized()
+        if (user.id != client_id) throw Unauthorized
 
         clientsService.addProfilePicture(clientID = client_id, profilePicture = profilePicture.bytes)
 
@@ -58,7 +58,7 @@ class ClientController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.REQUEST_DECISION)
     fun deciseRequest(@PathVariable client_id: UUID, @PathVariable request_id: UUID, user: User, @RequestBody decision: RequestDecision): ResponseEntity<String> {
-        if (user.id != client_id) throw Unauthorized()
+        if (user.id != client_id) throw Unauthorized
 
         clientsService.decideRequest(requestID = request_id, clientID = client_id, decision = decision)
 
@@ -68,7 +68,7 @@ class ClientController(private val clientsService: ClientsService) {
     @Authentication
     @GetMapping(Uris.CLIENT_REQUESTS)
     fun getRequestsOfClient(@PathVariable client_id: UUID, user: User): ResponseEntity<List<RequestInformation>> {
-        if (client_id != user.id) throw Unauthorized()
+        if (client_id != user.id) throw Unauthorized
 
         val requests: List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
 

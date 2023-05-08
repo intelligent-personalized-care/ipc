@@ -8,14 +8,14 @@ import pt.ipc.storage.repositories.ExerciseRepository
 import java.util.*
 
 class JdbiExercisesRepository(
-    private val handle : Handle
+    private val handle: Handle
 ) : ExerciseRepository {
 
     override fun getExercise(exerciseID: UUID): ExerciseInfo? {
-       return handle.createQuery("select * from dbo.exercises_info where id = :exerciseID")
-            .bind("exerciseID",exerciseID)
+        return handle.createQuery("select * from dbo.exercises_info where id = :exerciseID")
+            .bind("exerciseID", exerciseID)
             .mapTo<ExerciseInfo>()
-           .singleOrNull()
+            .singleOrNull()
     }
 
     override fun getExercises(): List<ExerciseInfo> {
@@ -26,8 +26,8 @@ class JdbiExercisesRepository(
 
     override fun getExerciseByType(type: ExerciseType): List<ExerciseInfo> {
         return handle.createQuery("select * from dbo.exercises_info where type = :type")
-              .bind("type",type)
-              .mapTo<ExerciseInfo>()
-              .toList()
+            .bind("type", type)
+            .mapTo<ExerciseInfo>()
+            .toList()
     }
 }

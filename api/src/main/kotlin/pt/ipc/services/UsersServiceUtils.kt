@@ -1,10 +1,7 @@
-package pt.ipc.services.users
+package pt.ipc.services
 
 import org.springframework.stereotype.Component
-import pt.ipc.domain.BadEmail
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
-import pt.ipc.domain.WeakPassword
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.jwt.JwtUtils
 import pt.ipc.storage.transaction.TransactionManager
@@ -20,8 +17,12 @@ class UsersServiceUtils(
     fun getUserByToken(token: String): Pair<User, Role>? {
         val hashedToken = encryptionUtils.encrypt(token)
         return transactionManager.runBlock(
-            {
-                it.clientsRepository.getUserByToken(token = hashedToken)
+            block = {
+               val (user,role) = it.clientsRepository.getUserByToken(token = hashedToken) ?: return@runBlock null
+               if(role == Role.MONITOR){
+                   if(!it.monitorRepository.checkIfMonitorIsVerified(user.id)) throw MonitorNotVerified
+               }
+               Pair(user,role)
             }
         )
     }
@@ -40,7 +41,7 @@ class UsersServiceUtils(
     }
 
     fun checkDetails(email: String, password: String) {
-        if (!email.contains("@")) throw BadEmail()
-        if (!isPasswordSafe(password = password)) throw WeakPassword()
+        if (!email.contains("@")) throw BadEmail
+        if (!isPasswordSafe(password = password)) throw WeakPassword
     }
 }

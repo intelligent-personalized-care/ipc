@@ -1,4 +1,4 @@
-package pt.ipc.services.users.dtos
+package pt.ipc.services.dtos
 
 import java.util.UUID
 

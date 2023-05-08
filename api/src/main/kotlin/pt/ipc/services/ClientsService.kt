@@ -1,9 +1,9 @@
-package pt.ipc.services.users
+package pt.ipc.services
 
 import pt.ipc.domain.RequestDecision
 import pt.ipc.domain.RequestInformation
-import pt.ipc.services.users.dtos.RegisterClientInput
-import pt.ipc.services.users.dtos.RegisterOutput
+import pt.ipc.services.dtos.RegisterClientInput
+import pt.ipc.services.dtos.RegisterOutput
 import java.util.*
 
 interface ClientsService {

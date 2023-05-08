@@ -6,10 +6,9 @@ import java.util.UUID
 
 interface ExerciseRepository {
 
-    fun getExercise(exerciseID : UUID) : ExerciseInfo?
+    fun getExercise(exerciseID: UUID): ExerciseInfo?
 
-    fun getExercises() : List<ExerciseInfo>
+    fun getExercises(): List<ExerciseInfo>
 
-    fun getExerciseByType(type : ExerciseType) : List<ExerciseInfo>
-
+    fun getExerciseByType(type: ExerciseType): List<ExerciseInfo>
 }

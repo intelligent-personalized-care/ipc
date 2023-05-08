@@ -19,24 +19,21 @@ class AuthenticationInterceptor(
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
-            val cookies = request.cookies ?: throw Unauthenticated()
+            val cookies = request.cookies ?: throw Unauthenticated
             val tokenCookie = cookies.find { it.name == "token" }
 
+            val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated
 
-            val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated()
-
-            val bothRoles = handler.getMethodAnnotation(Authentication::class.java) ?: throw Exception("This is a Backend Error")
-
-            return if ( !bothRoles.bothRoles &&
-                (handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
-                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR)
+             if (
+                handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
+                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
             ) {
-                throw Unauthorized()
+                throw Unauthorized
             } else {
                 if (handler.methodParameters.any { it.parameterType == User::class.java }) {
                     UserArgumentResolver.addUserTo(user, request)
                 }
-                true
+                return true
             }
         }
         return true

@@ -42,7 +42,6 @@ class ApiApplication {
     ).configure()
 }
 
-
 fun main(args: Array<String>) {
     runApplication<ApiApplication>(*args)
 }

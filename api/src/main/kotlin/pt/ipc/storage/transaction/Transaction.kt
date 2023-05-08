@@ -13,7 +13,7 @@ interface Transaction {
 
     val monitorRepository: MonitorRepository
 
-    val exerciseRepository : ExerciseRepository
+    val exerciseRepository: ExerciseRepository
 
     val cloudStorage: CloudStorageUtils
 }

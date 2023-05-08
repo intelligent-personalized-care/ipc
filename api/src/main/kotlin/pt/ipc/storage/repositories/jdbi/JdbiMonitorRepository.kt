@@ -33,7 +33,6 @@ class JdbiMonitorRepository(
             .bind("monitor_id", user.id)
             .bind("dt_submit", date)
             .execute()
-
     }
 
     override fun requestClient(requestID: UUID, monitorID: UUID, clientID: UUID) {
@@ -49,4 +48,10 @@ class JdbiMonitorRepository(
             .bind("monitorID", monitorID)
             .mapTo<RequestInformation>()
             .toList()
+
+    override fun checkIfMonitorIsVerified(monitorID: UUID) : Boolean =
+        handle.createQuery("select count(*) from dbo.docs_authenticity where monitor_id = :monitorID and state = 'valid' ")
+               .bind("monitorID",monitorID)
+               .mapTo<Int>()
+               .single() == 1
 }

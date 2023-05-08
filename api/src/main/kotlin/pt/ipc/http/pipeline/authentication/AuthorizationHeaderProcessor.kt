@@ -3,7 +3,7 @@ package pt.ipc.http.pipeline.authentication
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.services.users.UsersServiceUtils
+import pt.ipc.services.UsersServiceUtils
 import javax.servlet.http.Cookie
 
 @Component

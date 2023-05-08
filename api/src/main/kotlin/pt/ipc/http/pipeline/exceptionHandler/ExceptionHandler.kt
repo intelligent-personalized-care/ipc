@@ -60,19 +60,18 @@ class ExceptionHandler {
     @ExceptionHandler(value = [MethodArgumentTypeMismatchException::class])
     fun handleArgumentMismatch(
         request: HttpServletRequest,
-        ex : Exception
-    ) : ResponseEntity<Any> =
+        ex: Exception
+    ): ResponseEntity<Any> =
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = "This Argument does not exists",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
 
-
     @ExceptionHandler(value = [UnableToExecuteStatementException::class])
     fun hanldePostgreSQLError(
         request: HttpServletRequest,
-        ex : UnableToExecuteStatementException
+        ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {
         val map = hashMapOf(
             "users_email_key" to "This email already exists",
@@ -108,8 +107,6 @@ class ExceptionHandler {
             title = map[key] ?: "Error in database",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
-
-
     }
 
     @ExceptionHandler(value = [MultipartException::class])

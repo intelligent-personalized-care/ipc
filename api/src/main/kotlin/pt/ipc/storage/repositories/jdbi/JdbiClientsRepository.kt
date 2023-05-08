@@ -34,7 +34,7 @@ class JdbiClientsRepository(
         handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
             .bind("id", id)
             .mapTo<Int>()
-            .singleOrNull() ?: throw UserNotExists()
+            .singleOrNull() ?: throw UserNotExists
 
         return Role.MONITOR
     }
