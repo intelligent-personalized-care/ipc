@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
-import pt.ipc_app.ui.components.ChooseFile
+import pt.ipc_app.ui.components.FilePicker
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.RegisterButton
 import pt.ipc_app.ui.screens.AppScreen
@@ -47,11 +47,13 @@ fun RegisterMonitorScreen(
                     color = Color.Black,
                 )
             }
-            Column {
-                UserRegister(
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                RegisterUser(
                     userValidation = { userInfo = it }
                 )
-                ChooseFile(
+                FilePicker(
                     text = "Select Credential",
                     fileType = "*/*",
                     onChooseFile = { credential = it }

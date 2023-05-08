@@ -3,17 +3,20 @@ package pt.ipc_app.ui.components
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import java.io.ByteArrayOutputStream
 
 @Composable
-fun ChooseFile(
+fun FilePicker(
     text: String,
     fileType: String = "*/*",
-    onChooseFile: (ByteArray) -> Unit
+    onChooseFile: (Uri) -> Unit
 ) {
     var pickedFileUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -23,20 +26,12 @@ fun ChooseFile(
     )
 
     pickedFileUri?.let { uri ->
-        Text(uri.toString())
-        
-        val contentResolver = LocalContext.current.contentResolver
-        val byteArray = ByteArrayOutputStream().use { output ->
-            contentResolver.openInputStream(uri)?.use { input ->
-                input.copyTo(output)
-            }
-            output.toByteArray()
-        }
-        onChooseFile(byteArray)
+        onChooseFile(uri)
     }
 
     Button(
-        onClick = { launcher.launch(fileType) }
+        onClick = { launcher.launch(fileType) },
+        modifier = Modifier.padding(top = 10.dp)
     ) {
         Text(text)
     }

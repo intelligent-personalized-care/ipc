@@ -64,7 +64,7 @@ fun RegisterClientScreen(
                 )
             }
             Column {
-                UserRegister(
+                RegisterUser(
                     userValidation = { userInfo = it }
                 )
 

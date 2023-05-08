@@ -1,9 +1,7 @@
 package pt.ipc_app
 
 import android.os.Bundle
-import android.os.Handler
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
@@ -21,7 +19,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repo.setSession("Tiago", "", Role.CLIENT)
+        // repo.setSession("Tiago", "", Role.CLIENT)
+        repo.clearSession()
         if (!repo.isLoggedIn())
             ChooseRoleActivity.navigate(this)
         else {

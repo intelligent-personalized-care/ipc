@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
@@ -43,13 +45,11 @@ class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val progressState =
-                if (viewModel.isLoading) ProgressState.Creating
-                else ProgressState.Idle
+            val state by viewModel.state.collectAsState()
 
             if (Role.isClient(role))
                 RegisterClientScreen(
-                    progressState = progressState,
+                    progressState = state,
                     onSaveRequest = {
                         viewModel.registerClient(
                             it.name, it.email, it.password, it.weight, it.height, it.birthDate, it.physicalCondition
@@ -58,7 +58,7 @@ class RegisterActivity : ComponentActivity() {
                 )
             else
                 RegisterMonitorScreen(
-                    progressState = progressState,
+                    progressState = state,
                     onSaveRequest = {
                         viewModel.registerMonitor(
                             it.name, it.email, it.password, it.credential!!
@@ -69,10 +69,10 @@ class RegisterActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.registeredRole.collect {
+            viewModel.state.collect {
 
-                it?.let {
-                    if (it.isClient())
+                if (it == ProgressState.Created) {
+                    if (Role.isClient(role))
                         ClientHomeActivity.navigate(this@RegisterActivity)
                     else
                         MonitorHomeActivity.navigate(this@RegisterActivity)

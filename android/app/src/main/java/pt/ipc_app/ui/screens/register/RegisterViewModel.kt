@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
+import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 
 /**
@@ -20,13 +22,18 @@ class RegisterViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
-    private var _isLoading by mutableStateOf(false)
-    val isLoading
-        get() = _isLoading
+    private val _state = MutableStateFlow(ProgressState.Idle)
+    val state
+        get() = _state.asStateFlow()
 
-    private val _registeredRole = MutableStateFlow<Role?>(null)
-    val registeredRole
-        get() = _registeredRole.asStateFlow()
+    private val _chosenRole = MutableStateFlow<Role?>(null)
+    val chosenRole
+        get() = _chosenRole.asStateFlow()
+
+
+    fun selectRole(role: Role?) {
+        _chosenRole.value = role
+    }
 
     /**
      * Attempts to register the client with the given credentials.
@@ -46,7 +53,7 @@ class RegisterViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                _isLoading = true
+                _state.value = ProgressState.Creating
                 usersService.registerClient(
                     name = name,
                     email = email,
@@ -56,13 +63,11 @@ class RegisterViewModel(
                     birthDate = birthDate.ifEmpty { null },
                     physicalCondition = physicalCondition.ifEmpty { null }
                 ).also {
-                    _isLoading = false
+                    _state.value = if (it is APIResult.Success) ProgressState.Created else ProgressState.Idle
                 }
             },
             onSuccess = {
-                val role = Role.CLIENT
-                sessionManager.setSession(it.token, name, role)
-                _registeredRole.value = role
+                sessionManager.setSession(name, it.token, Role.CLIENT)
             }
         )
     }
@@ -90,9 +95,7 @@ class RegisterViewModel(
                 )
             },
             onSuccess = {
-                val role = Role.MONITOR
-                sessionManager.setSession(it.token, name, role)
-                _registeredRole.value = role
+                sessionManager.setSession(name, it.token, Role.MONITOR)
             }
         )
     }

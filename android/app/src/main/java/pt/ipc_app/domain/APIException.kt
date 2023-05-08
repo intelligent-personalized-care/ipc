@@ -1,4 +1,4 @@
-package pt.ipc_app.domain.user
+package pt.ipc_app.domain
 
 import pt.ipc_app.service.models.ProblemJson
 
