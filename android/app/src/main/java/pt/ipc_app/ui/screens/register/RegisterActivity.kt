@@ -50,6 +50,7 @@ class RegisterActivity : ComponentActivity() {
             if (Role.isClient(role))
                 RegisterClientScreen(
                     progressState = state,
+                    error = viewModel.error,
                     onSaveRequest = {
                         viewModel.registerClient(
                             it.name, it.email, it.password, it.weight, it.height, it.birthDate, it.physicalCondition
@@ -65,7 +66,7 @@ class RegisterActivity : ComponentActivity() {
                         )
                     }
                 )
-            CheckProblemJson(error = viewModel.error)
+            //CheckProblemJson(error = viewModel.error)
         }
 
         lifecycleScope.launch {

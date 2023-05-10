@@ -8,12 +8,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.domain.user.User.Companion.userOrNull
+import pt.ipc_app.service.models.ProblemJson
 import pt.ipc_app.ui.components.CustomTextField
+import pt.ipc_app.ui.components.TextFieldType
 
 @Composable
 fun RegisterUser(
-    userValidation: (User?) -> Unit
-) {
+    userValidation: (User?) -> Unit,
+    error: ProblemJson? = null
+    ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -21,28 +24,29 @@ fun RegisterUser(
     userValidation(userOrNull(name, email, password))
 
     CustomTextField(
-        labelId = R.string.register_screen_label_name,
+        fieldType = TextFieldType.NAME,
         textToDisplay = name,
         updateText = { name = it },
         maxLength = User.NAME_LENGTH_RANGE.last,
         isToTrim = false,
-        iconImageVector = Icons.Default.Face
+        iconImageVector = Icons.Default.Face,
     )
     CustomTextField(
-        labelId = R.string.register_screen_label_email,
+        fieldType = TextFieldType.EMAIL,
         textToDisplay = email,
         updateText = { email = it },
         maxLength = User.EMAIL_LENGTH_RANGE.last,
         iconImageVector = Icons.Default.Email,
-        keyboardType = KeyboardType.Email
+        keyboardType = KeyboardType.Email,
+        error = error
     )
     CustomTextField(
-        labelId = R.string.register_screen_label_password,
+        fieldType = TextFieldType.PASSWORD,
         textToDisplay = password,
         updateText = { password = it },
         iconImageVector = Icons.Default.Password,
         hide = true,
-        keyboardType = KeyboardType.Password
+        keyboardType = KeyboardType.Password,
     )
 }
 

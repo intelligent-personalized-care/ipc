@@ -56,7 +56,7 @@ fun RegisterMonitorScreen(
                 FilePicker(
                     text = "Select Credential",
                     fileType = "*/*",
-                    onChooseFile = { credential = it }
+                    onChooseFile = {  }
                 )
             }
             RegisterButton(

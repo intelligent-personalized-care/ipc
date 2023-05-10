@@ -13,16 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Client
 import pt.ipc_app.domain.user.User
+import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.screens.AppScreen
-import pt.ipc_app.ui.components.CustomTextField
-import pt.ipc_app.ui.components.ProgressState
-import pt.ipc_app.ui.components.RegisterButton
-import pt.ipc_app.ui.components.DatePicker
-import pt.ipc_app.ui.components.MyDatePicker
 
 private const val WEIGHT_METRIC = " kg"
 private const val HEIGHT_METRIC = " cm"
@@ -35,6 +33,7 @@ private const val HEIGHT_METRIC = " cm"
 @Composable
 fun RegisterClientScreen(
     progressState: ProgressState = ProgressState.Idle,
+    error: ProblemJson? = null,
     onSaveRequest: (Client) -> Unit = { }
 ) {
     var userInfo: User? by remember { mutableStateOf(null) }
@@ -63,49 +62,51 @@ fun RegisterClientScreen(
                     color = Color.Black,
                 )
             }
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 RegisterUser(
-                    userValidation = { userInfo = it }
+                    userValidation = { userInfo = it },
+                    error = error
                 )
 
                 val dt = DatePicker(
                     onDateSelected = { birthDate = it }
                 )
                 MyDatePicker(
-                    labelId = R.string.register_screen_label_birthDate,
                     value = birthDate,
                     onValueChange = { birthDate = it },
                     onClick = { dt.show() }
                 )
                 Row {
                     CustomTextField(
-                        labelId = R.string.register_screen_label_weight,
+                        fieldType = TextFieldType.WEIGHT,
                         textToDisplay = if (weight != 0) "$weight$WEIGHT_METRIC" else "",
                         updateText = { weight = it.toInteger(WEIGHT_METRIC, Client.WEIGHT_LENGTH_MAX) },
                         iconImageVector = Icons.Default.MonitorWeight,
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier
                             .weight(0.5f)
-                            .padding(start = 48.dp)
+                            .padding(start = 48.dp, end = 5.dp)
                     )
                     CustomTextField(
-                        labelId = R.string.register_screen_label_height,
+                        fieldType = TextFieldType.HEIGHT,
                         textToDisplay = if (height != 0) "$height$HEIGHT_METRIC" else "",
                         updateText = { height = it.toInteger(HEIGHT_METRIC, Client.HEIGHT_LENGTH_MAX) },
                         iconImageVector = Icons.Default.Height,
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier
                             .weight(0.5f)
-                            .padding(end = 48.dp)
+                            .padding(start = 5.dp, end = 48.dp)
                     )
                 }
                 CustomTextField(
-                    labelId = R.string.register_screen_label_physicalCondition,
+                    fieldType = TextFieldType.PHYSICAL_CONDITION,
                     textToDisplay = physicalCondition,
                     updateText = { physicalCondition = it },
                     maxLength = Client.PHYSICAL_CONDITION_LENGTH_RANGE.last,
                     isToTrim = false,
-                    iconImageVector = Icons.Default.Edit
+                    iconImageVector = Icons.Default.Edit,
                 )
             }
             RegisterButton(
@@ -122,4 +123,10 @@ private fun String.toInteger(toSplit: String, maxLength: Int): Int {
 
     return if (value.isEmpty() || value.toIntOrNull() == null || value.length > maxLength) 0
     else value.toInt()
+}
+
+@Preview
+@Composable
+fun RegisterClientScreenPreview() {
+    RegisterClientScreen()
 }

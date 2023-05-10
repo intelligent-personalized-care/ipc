@@ -1,4 +1,4 @@
-package pt.ipc_app.utils
+package pt.ipc_app.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,15 +9,13 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import pt.ipc_app.R
-import pt.ipc_app.ui.components.CustomTextField
 
 /**
  * Use [CustomTextField] to display a list with options and you can select one of them.
  */
 @Composable
 fun TextFieldWithOptions(
-    labelId: Int,
+    fieldType: TextFieldType,
     options: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
@@ -26,7 +24,7 @@ fun TextFieldWithOptions(
     var isExpanded by remember { mutableStateOf(false) }
 
     CustomTextField(
-        labelId = labelId,
+        fieldType = fieldType,
         textToDisplay = selectedOption,
         updateText = { onOptionSelected(it) },
         readOnly = true,
@@ -60,7 +58,7 @@ fun TextFieldWithOptionsPreview() {
     var selectedOption by remember { mutableStateOf("") }
     TextFieldWithOptions(
         selectedOption = selectedOption,
-        labelId = R.string.register_screen_label_weight,
+        fieldType = TextFieldType.HEIGHT,
         options = List(150) { (100 + it).toString() },
         onOptionSelected = { selectedOption = it}
     )

@@ -21,3 +21,7 @@ data class ProblemJson(
         val problemJsonMediaType = PROBLEM_MEDIA_TYPE.toMediaType()
     }
 }
+
+object Errors {
+    val emailAlreadyExists = "This email already exists"
+}

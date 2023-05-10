@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import java.util.*
 
 @Composable
@@ -62,18 +64,20 @@ fun DatePickerPreview() {
 
 @Composable
 fun MyDatePicker(
-    labelId: Int,
     value: String,
     onValueChange: (String) -> Unit,
     onClick: () -> Unit,
 ) {
-    Box {
+    Box(
+        modifier = Modifier.padding(horizontal = 48.dp)
+    ) {
         CustomTextField(
             textToDisplay = value,
             readOnly = true,
-            labelId = labelId,
+            fieldType = TextFieldType.DATE,
             iconImageVector = Icons.Default.DateRange,
             updateText = onValueChange,
+            modifier = Modifier
         )
         Box(modifier = Modifier
             .matchParentSize()
