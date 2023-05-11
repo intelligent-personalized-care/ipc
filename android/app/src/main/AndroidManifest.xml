@@ -56,6 +56,38 @@
             android:exported="false">
         </activity>
 
+        <!-- ML KIT Activities -->
+
+        <activity
+            android:name=".mlkit.EntryChoiceActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
+            android:name=".mlkit.vision.ChooserActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
+            android:name=".mlkit.vision.LivePreviewActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
+            android:name=".mlkit.vision.CameraXLivePreviewActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
+            android:name=".mlkit.preference.SettingsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+        </activity>
+
     </application>
 
 </manifest>
