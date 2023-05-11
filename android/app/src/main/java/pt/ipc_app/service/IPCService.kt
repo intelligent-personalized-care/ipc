@@ -22,6 +22,7 @@ open class IPCService(
 ) : HTTPService(apiEndpoint, httpClient, jsonEncoder) {
 
     val usersService = UsersService(apiEndpoint, httpClient, jsonEncoder)
+    val exercisesService = ExercisesService(apiEndpoint, httpClient, jsonEncoder)
 
     /**
      * Gets the home information.

@@ -16,21 +16,10 @@ import java.io.ByteArrayOutputStream
 fun FilePicker(
     text: String,
     fileType: String = "*/*",
-    onChooseFile: (Uri) -> Unit
+    onChooseFile: () -> Unit
 ) {
-    var pickedFileUri by remember { mutableStateOf<Uri?>(null) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { pickedFileUri = it }
-    )
-
-    pickedFileUri?.let { uri ->
-        onChooseFile(uri)
-    }
-
     Button(
-        onClick = { launcher.launch(fileType) },
+        onClick = { onChooseFile() },
         modifier = Modifier.padding(top = 10.dp)
     ) {
         Text(text)

@@ -19,8 +19,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // repo.setSession("Tiago", "", Role.CLIENT)
-        repo.clearSession()
+        repo.setSession("Tiago", "", Role.CLIENT)
+        // repo.clearSession()
         if (!repo.isLoggedIn())
             ChooseRoleActivity.navigate(this)
         else {

@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.ui.components.plan
+import pt.ipc_app.ui.screens.exercise.ExerciseActivity
 
 /**
  * The client home activity.
@@ -33,7 +34,8 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = repo.userInfo!!,
                 monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
-                plan = plan
+                plan = plan,
+                onExerciseSelect = { ExerciseActivity.navigate(this, it) }
             )
         }
     }

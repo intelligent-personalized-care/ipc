@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
+import pt.ipc_app.domain.Exercise
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
@@ -30,6 +31,7 @@ fun ClientHomeScreen(
     client: UserInfo,
     monitor: Monitor? = null,
     plan: Plan? = null,
+    onExerciseSelect: (Exercise) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
@@ -81,7 +83,8 @@ fun ClientHomeScreen(
 
             plan?.let {
                 PlanScreen(
-                    plan = it
+                    plan = it,
+                    onExerciseSelect = { ex -> onExerciseSelect(ex) }
                 )
             }
         }
