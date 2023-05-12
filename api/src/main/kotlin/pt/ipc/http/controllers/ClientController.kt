@@ -1,5 +1,6 @@
 package pt.ipc.http.controllers
 
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
@@ -12,16 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.RequestDecision
-import pt.ipc.domain.RequestInformation
-import pt.ipc.domain.Unauthorized
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
+import java.time.LocalDate
 import java.util.*
 import javax.servlet.http.HttpServletResponse
 
@@ -73,6 +72,17 @@ class ClientController(private val clientsService: ClientsService) {
         val requests: List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
 
         return ResponseEntity.ok(requests)
+    }
+
+    @Authentication
+    @GetMapping(Uris.EXERCISES_OF_CLIENT)
+    fun getExercisesOfClient(
+        @PathVariable client_id: UUID,
+        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") date : LocalDate?) : ResponseEntity<List<Exercise>>{
+
+        val exercises = clientsService.getExercisesOfClient(clientID = client_id, date = date)
+        return ResponseEntity.ok(exercises)
+
     }
 
     companion object {

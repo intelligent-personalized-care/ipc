@@ -15,7 +15,7 @@ import java.util.*
 @RequestMapping(produces = ["application/json", Problem.PROBLEM_MEDIA_TYPE])
 class ExercisesController(private val exercisesService: ExercisesService) {
 
-    @Authentication
+    //@Authentication
     @GetMapping(Uris.EXERCISES)
     fun getExercises(@RequestParam(required = false) exerciseType: ExerciseType?): ResponseEntity<List<ExerciseInfo>> {
         val exercises = exercisesService.getExercises(exerciseType)
@@ -26,7 +26,6 @@ class ExercisesController(private val exercisesService: ExercisesService) {
     @GetMapping(Uris.EXERCISES_INFO)
     fun getExerciseInfo(@PathVariable exercise_id: UUID): ResponseEntity<ExerciseVideo> {
         val exerciseVideo = exercisesService.getExercisesInfo(exerciseID = exercise_id)
-        println("Exercise size : ${exerciseVideo.exerciseVideo.size}")
         return ResponseEntity.ok(exerciseVideo)
     }
 }

@@ -1,10 +1,7 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.RequestInformation
-import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthorized
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -83,4 +80,23 @@ class MonitorsServiceImpl(
                 it.monitorRepository.monitorRequests(monitorID = monitorID)
             }
         )
+
+
+    override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan) : Int{
+       return transactionManager.runBlock(
+            block = {
+                if(!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID,clientID = clientID)) throw NotMonitorOfClient
+                it.exerciseRepository.createPlan(monitorID = monitorID, clientID = clientID ,plan = plan)
+            }
+        )
+    }
+
+    override fun getPlan(monitorID: UUID, planID : Int) : PlanOutput{
+        return transactionManager.runBlock(
+            block = {
+                if(!it.exerciseRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
+                it.exerciseRepository.getPlan(planID)
+            }
+        )
+    }
 }

@@ -14,4 +14,6 @@ interface MonitorRepository {
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
     fun checkIfMonitorIsVerified(monitorID: UUID) : Boolean
+
+    fun checkIfIsMonitorOfClient(monitorID: UUID,clientID: UUID) : Boolean
 }

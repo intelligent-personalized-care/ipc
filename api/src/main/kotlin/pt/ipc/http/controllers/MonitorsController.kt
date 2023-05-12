@@ -5,14 +5,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.RequestID
-import pt.ipc.domain.RequestInformation
-import pt.ipc.domain.Unauthorized
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.http.controllers.ClientController.Companion.addAuthenticationCookies
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
@@ -79,6 +77,20 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable client_id: UUID, @PathVariable monitor_id: UUID) {
+    fun createPlanForClient(@PathVariable client_id: UUID, @PathVariable monitor_id: UUID, user : User, @RequestBody plan: Plan) : ResponseEntity<PLanID> {
+        if(user.id != monitor_id) throw Unauthorized
+
+        val planID = monitorService.createPlan(monitorID = monitor_id, clientID = client_id, plan = plan)
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(PLanID(id = planID))
+
+    }
+
+    @Authentication
+    @GetMapping(Uris.PLAN_BY_ID)
+    fun getPlanOfMonitroByID(@PathVariable monitor_id: UUID, @PathVariable plan_id: Int, user : User) : ResponseEntity<PlanOutput>{
+        if(user.id != monitor_id) throw Unauthorized
+        val planOutput : PlanOutput = monitorService.getPlan(monitorID = monitor_id, planID = plan_id)
+        return ResponseEntity.ok(planOutput)
     }
 }

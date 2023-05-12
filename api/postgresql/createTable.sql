@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS dbo.clients(
 
 );
 
-CREATE TABLE dbo.CLIENT_TO_MONITOR(
+CREATE TABLE IF NOT EXISTS dbo.CLIENT_TO_MONITOR(
       monitor_id UUID  REFERENCES dbo.monitors (m_id),
       client_id  UUID UNIQUE REFERENCES dbo.users (id)
 
@@ -70,10 +70,8 @@ CREATE TABLE IF NOT EXISTS dbo.plans(
     id               SERIAL PRIMARY KEY,
     monitor_id       UUID NOT NULL REFERENCES dbo.monitors (m_id),
     title            VARCHAR(50) NOT NULL,
-    duration         INT NOT NULL,
 
-    CONSTRAINT title_length CHECK ( char_length(title) >= 5 ),
-    CONSTRAINT duration_is_valid CHECK ( duration >= 1 )
+    CONSTRAINT title_length CHECK ( char_length(title) >= 5 )
 );
 
 CREATE TABLE IF NOT EXISTS dbo.client_plans(
@@ -93,13 +91,13 @@ CREATE TABLE IF NOT EXISTS dbo.daily_lists(
 
     UNIQUE (index, plan_id),
 
-    CONSTRAINT index_is_valid CHECK ( index >= 1 )
+    CONSTRAINT index_is_valid CHECK ( index >= 0 )
 );
 
 CREATE TABLE IF NOT EXISTS dbo.exercises_info(
     id               UUID PRIMARY KEY,
     title            VARCHAR(50) NOT NULL,
-    description      VARCHAR(500) NOT NULL,
+    description      TEXT NOT NULL,
     type             VARCHAR(20) NOT NULL,
 
     CONSTRAINT title_length CHECK ( char_length(title) >= 5 ),

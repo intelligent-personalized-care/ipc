@@ -18,5 +18,7 @@ object Uris {
     const val EXERCISES_INFO = "/exercises/{exercise_id}"
 
     const val PLANS = "users/monitors/{monitor_id}/clients/{client_id}/plans"
-    const val PLAN_ID = "users/monitors/{monitor_id}/clients/{client_id}/plans/plan_id"
+    const val EXERCISES_OF_CLIENT = "users/clients/{client_id}/exercises"
+    const val PLANS_OF_MONITOR = "users/monitors/{monitor_id}/plans"
+    const val PLAN_BY_ID = "users/monitors/{monitor_id}/plans/{plan_id}"
 }

@@ -1,17 +1,12 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.Client
-import pt.ipc.domain.RequestDecision
-import pt.ipc.domain.RequestInformation
-import pt.ipc.domain.RequestNotExists
-import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.toLocalDate
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
+import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -79,4 +74,15 @@ class ClientsServiceImpl(
                 it.clientsRepository.getClientRequests(clientID = clientID)
             }
         )
+
+    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?) : List<Exercise>{
+        return transactionManager.runBlock(
+            block = {
+                if(date == null)
+                    it.exerciseRepository.getAllExercisesOfClient(clientID = clientID)
+                else
+                    it.exerciseRepository.getExercisesOfDay(clientID = clientID, date = date)
+            }
+        )
+    }
 }

@@ -27,3 +27,7 @@ object UserNotExists : NotFound("This User does Not Exists")
 object RequestNotExists : NotFound("This Request does not exists")
 
 object MonitorNotVerified : Forbidden("You have to wait for your document to be verified ")
+
+object NotMonitorOfClient : UnauthorizedRequest("You are not the Monitor of this Client")
+
+object NotPlanOfMonitor : UnauthorizedRequest("This plan does not belong to you")

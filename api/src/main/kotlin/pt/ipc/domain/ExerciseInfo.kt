@@ -10,5 +10,6 @@ enum class ExerciseType {
     Shoulders,
     Back,
     Gluts,
-    Abdominals
+    Abdominals,
+    Chest
 }
