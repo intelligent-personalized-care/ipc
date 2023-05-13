@@ -89,14 +89,11 @@ class ChooserActivity :
         private const val TAG = "ChooserActivity"
         private val CLASSES =
             arrayOf<Class<*>>(
-                LivePreviewActivity::class.java,
-                CameraXLivePreviewActivity::class.java
+                LivePreviewActivity::class.java
             )
         private val DESCRIPTION_IDS =
             intArrayOf(
-                R.string.desc_camera_source_activity,
-                R.string.desc_camerax_live_preview_activity,
-                R.string.desc_cameraxsource_demo_activity
+                R.string.desc_camera_source_activity
             )
     }
 }
