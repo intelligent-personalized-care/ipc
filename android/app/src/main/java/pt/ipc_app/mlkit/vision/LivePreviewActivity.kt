@@ -16,7 +16,10 @@
 
 package pt.ipc_app.mlkit.vision
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
@@ -29,11 +32,14 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.R
 import pt.ipc_app.mlkit.CameraSource
 import pt.ipc_app.mlkit.CameraSourcePreview
+import pt.ipc_app.mlkit.EntryChoiceActivity
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
@@ -87,6 +93,11 @@ class LivePreviewActivity :
       val intent = Intent(applicationContext, SettingsActivity::class.java)
       intent.putExtra(SettingsActivity.EXTRA_LAUNCH_SOURCE, SettingsActivity.LaunchSource.LIVE_PREVIEW)
       startActivity(intent)
+    }
+
+    //verifies all permissions before acessing camera
+    if (!allRuntimePermissionsGranted()) {
+      getRuntimePermissions()
     }
 
     createCameraSource(selectedModel)
@@ -204,9 +215,64 @@ class LivePreviewActivity :
     }
   }
 
+  //------------- Checking Permissions
+  private fun allRuntimePermissionsGranted(): Boolean {
+    for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+      permission?.let {
+        if (!isPermissionGranted(this, it)) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  private fun getRuntimePermissions() {
+    val permissionsToRequest = ArrayList<String>()
+    for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+      permission?.let {
+        if (!isPermissionGranted(this, it)) {
+          permissionsToRequest.add(permission)
+        }
+      }
+    }
+
+    if (permissionsToRequest.isNotEmpty()) {
+      ActivityCompat.requestPermissions(
+        this,
+        permissionsToRequest.toTypedArray(),
+        PERMISSION_REQUESTS
+      )
+    }
+  }
+
+  private fun isPermissionGranted(context: Context, permission: String): Boolean {
+    if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+    ) {
+      Log.i(TAG, "Permission granted: $permission")
+      return true
+    }
+    Log.i(TAG, "Permission NOT granted: $permission")
+    return false
+  }
+
   companion object {
     private const val POSE_DETECTION = "Pose Detection"
 
     private const val TAG = "LivePreviewActivity"
+    private const val PERMISSION_REQUESTS = 1
+
+    private val REQUIRED_RUNTIME_PERMISSIONS =
+      arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,//see if is necessary
+        Manifest.permission.READ_EXTERNAL_STORAGE//see if is necessary
+      )
+    fun navigate(context: Context) {
+      with(context) {
+        val intent = Intent(this, LivePreviewActivity::class.java)
+        startActivity(intent)
+      }
+    }
   }
 }

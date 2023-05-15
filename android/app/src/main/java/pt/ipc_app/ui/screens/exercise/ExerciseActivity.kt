@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.EntryChoiceActivity
+import pt.ipc_app.mlkit.vision.LivePreviewActivity
 import pt.ipc_app.utils.viewModelInit
 
 class ExerciseActivity: ComponentActivity() {
@@ -50,7 +51,7 @@ class ExerciseActivity: ComponentActivity() {
         setContent {
             ExerciseScreen(
                 exercise = exercise,
-                onRecordClick = {EntryChoiceActivity.navigate(this)}
+                onRecordClick = {LivePreviewActivity.navigate(this)}
             )
 
         }

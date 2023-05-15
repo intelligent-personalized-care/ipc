@@ -28,7 +28,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import pt.ipc_app.R
 import pt.ipc_app.mlkit.vision.ChooserActivity
-import pt.ipc_app.ui.screens.role.ChooseRoleActivity
 import java.util.ArrayList
 
 class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {

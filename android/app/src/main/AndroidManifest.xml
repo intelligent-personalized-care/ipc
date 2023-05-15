@@ -77,12 +77,6 @@
         </activity>
 
         <activity
-            android:name=".mlkit.vision.CameraXLivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-        </activity>
-
-        <activity
             android:name=".mlkit.preference.SettingsActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
