@@ -51,7 +51,7 @@ class ExerciseActivity: ComponentActivity() {
         setContent {
             ExerciseScreen(
                 exercise = exercise,
-                onRecordClick = {LivePreviewActivity.navigate(this)}
+                onRecordClick = { LivePreviewActivity.navigate(this) }
             )
 
         }

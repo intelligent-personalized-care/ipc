@@ -8,8 +8,10 @@ import kotlin.random.Random
 data class Exercise(
     val id: Int,
     val title: String,
-    val reps: Int = 0,
-    val sets: Int = 0
+    val description: String,
+    val type: String,
+    val sets: Int = 0,
+    val reps: Int = 0
 ): Parcelable {
     fun isDone() = Random.nextBoolean()
 }

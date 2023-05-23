@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,11 +28,13 @@ import java.util.*
 @Composable
 fun PlanScreen(
     plan: Plan,
-    onDaySelect: (DailyList) -> Unit = {},
+    onDailyListSelected: (DailyList) -> Unit = {},
     onExerciseSelect: (Exercise) -> Unit = {}
 ) {
 
-    var dailyListSelected: DailyList? by remember { mutableStateOf(plan.getListOfTodayIfExists()) }
+    var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(plan.getListOfDayIfExists(daySelected)) }
+
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -42,89 +45,71 @@ fun PlanScreen(
         )
         Row(
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(20.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            plan.dailyLists.forEach {
+            daysOfWeek().forEach {
                 Column(
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(56.dp)
                         .border(1.dp, Color(131, 129, 129, 255), RoundedCornerShape(10.dp))
                         .clip(RoundedCornerShape(10.dp))
                         .background(
-                            if (it.day == LocalDate.now())
-                                Color(170, 233, 98, 255)
-                            else if (dailyListSelected?.id != it.id)
-                                Color(231, 231, 231, 255)
-                            else
-                                Color(174, 237, 245, 255)
+                            when (it) {
+                                LocalDate.now() -> Color(170, 233, 98, 255)
+                                daySelected -> Color(174, 237, 245, 255)
+                                else -> Color(231, 231, 231, 255)
+                            }
                         )
                         .clickable {
-                            dailyListSelected = it
-                            onDaySelect(it)
+                            daySelected = it
+                            dailyListSelected = plan.getListOfDayIfExists(daySelected)
+                            dailyListSelected?.let(onDailyListSelected)
                         }
                 ) {
-                    Text(it.day.dayOfMonth.toString())
+                    Text(it.dayOfMonth.toString())
                     Text(
-                        text = it.day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
+                        text = it.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
                         fontSize = 10.sp
                     )
                 }
             }
         }
+        Spacer(modifier = Modifier.padding(top = 20.dp))
 
-        Column(
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier
-                .padding(top = 40.dp)
-                .border(1.dp, Color(204, 202, 202, 255))
-        ) {
-            dailyListSelected?.let {
-                it.exercises.forEach { ex ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .width(300.dp)
-                            .height(60.dp)
-                            .background(Color.White)
-                            .clickable {
-                                onExerciseSelect(ex)
-                            }
-                            .padding(8.dp)
-                    ) {
-                        Column {
-                            Text(ex.title)
-                            Text(
-                                text = "${ex.reps} reps - ${ex.sets} sets",
-                                style = MaterialTheme.typography.overline,
-                            )
-                        }
-                        Spacer(modifier = Modifier.weight(0.1f))
-                        Row {
-                            ExerciseIconDone(ex)
-                        }
+        if (dailyListSelected != null) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .border(1.dp, Color(204, 202, 202, 255))
+            ) {
+                    dailyListSelected!!.exercises.forEach { ex ->
+                        ExerciseRow(
+                            exercise = ex,
+                            onExerciseSelect = onExerciseSelect
+                        )
                     }
-                    if (ex.id != it.exercises.last().id)
-                        Spacer(modifier = Modifier.height(5.dp))
-
-                }
             }
+        } else {
+            Text("No exercises for this day.\nDay off :)", textAlign = TextAlign.Center)
         }
     }
 }
 
-@Composable
-fun ExerciseIconDone(ex: Exercise) {
-    val isDone = ex.isDone()
-    Icon(
-        imageVector = if (isDone) Icons.Default.Check else Icons.Default.HourglassBottom,
-        contentDescription = "Exercise is done",
-        tint = if (isDone) Color(131, 204, 46, 255)
-        else Color(255, 217, 102, 255)
+fun daysOfWeek(): List<LocalDate> {
+    val today = LocalDate.now()
+
+    return listOf(
+        today.minusDays(2),
+        today.minusDays(1),
+        today,
+        today.plusDays(1),
+        today.plusDays(2),
     )
+
 }
 
 @Preview
@@ -141,67 +126,51 @@ val plan = Plan(
     dailyLists = listOf(
         DailyList(
             id = 1,
-            day = LocalDate.of(2023, 5, 1),
+            day = LocalDate.of(2023, 5, 20),
             exercises = listOf(
-                Exercise(1, "Push ups"),
-                Exercise(2, "Abs"),
-                Exercise(3, "Leg extension")
+                Exercise(1, "Push ups", "", ""),
+                Exercise(2, "Abs", "", ""),
+                Exercise(3, "Leg extension", "", "")
             )
         ),
         DailyList(
             id = 2,
-            day = LocalDate.of(2023, 5, 2),
+            day = LocalDate.of(2023, 5, 21),
             exercises = listOf(
-                Exercise(1, "Push ups2"),
-                Exercise(2, "Abs2"),
-                Exercise(3, "Leg extension2"),
-                Exercise(4, "Leg extension2"),
-                Exercise(5, "Leg extension2"),
+                Exercise(1, "Push ups2", "", ""),
+                Exercise(2, "Abs2", "", ""),
+                Exercise(3, "Leg extension2", "", ""),
+                Exercise(4, "Leg extension2", "", ""),
+                Exercise(5, "Leg extension2", "", ""),
             )
         ),
         DailyList(
             id = 3,
-            day = LocalDate.of(2023, 5, 3),
+            day = LocalDate.of(2023, 5, 22),
             exercises = listOf(
-                Exercise(1, "Push ups3"),
-                Exercise(2, "Abs3"),
-                Exercise(3, "Leg extension3")
+                Exercise(1, "Push ups3", "", ""),
+                Exercise(2, "Abs3", "", ""),
+                Exercise(3, "Leg extension3", "", "")
             )
         ),
         DailyList(
             id = 4,
-            day = LocalDate.of(2023, 5, 4),
+            day = LocalDate.of(2023, 5, 23),
             exercises = listOf(
-                Exercise(1, "Push ups4"),
-                Exercise(2, "Abs4"),
-                Exercise(3, "Leg extension4")
+                Exercise(1, "Push ups4", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
+                        "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
+                        "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", ""),
+                Exercise(2, "Abs4", "", ""),
+                Exercise(3, "Leg extension4", "", "")
             )
         ),
         DailyList(
             id = 5,
-            day = LocalDate.of(2023, 5, 5),
+            day = LocalDate.of(2023, 5, 24),
             exercises = listOf(
-                Exercise(1, "Push ups5"),
-                Exercise(2, "Abs5"),
-                Exercise(3, "Leg extension5")
-            )
-        ),
-        DailyList(
-            id = 6,
-            day = LocalDate.of(2023, 5, 6),
-            exercises = listOf(
-                Exercise(1, "Push ups6"),
-                Exercise(2, "Abs6"),
-                Exercise(3, "Leg extension6")
-            )
-        ),
-        DailyList(
-            id = 7,
-            day = LocalDate.of(2023, 5, 7),
-            exercises = listOf(
-                Exercise(1, "Push ups7"),
-                Exercise(2, "Abs7"),
-                Exercise(3, "Leg extension7")
+                Exercise(1, "Push ups5", "", ""),
+                Exercise(2, "Abs5", "", ""),
+                Exercise(3, "Leg extension5", "", "")
             )
         )
     )
