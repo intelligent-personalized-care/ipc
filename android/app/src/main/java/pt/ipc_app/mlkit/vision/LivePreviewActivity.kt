@@ -17,35 +17,36 @@
 package pt.ipc_app.mlkit.vision
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.CompoundButton
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.Toast
-import android.widget.ToggleButton
+import androidx.camera.core.VideoCapture
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.annotation.KeepName
+import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.R
 import pt.ipc_app.mlkit.CameraSource
 import pt.ipc_app.mlkit.CameraSourcePreview
-import pt.ipc_app.mlkit.EntryChoiceActivity
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
+import java.io.File
 import java.io.IOException
-import java.util.ArrayList
+import java.util.*
 
 /** Live preview demo for ML Kit APIs. */
 @KeepName
@@ -57,33 +58,70 @@ class LivePreviewActivity :
   private var graphicOverlay: GraphicOverlay? = null
   private var selectedModel = POSE_DETECTION
 
+  private lateinit var videoCapture: VideoCapture
+  private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
+
+  private lateinit var btnCamera: Button
+  private var recording = false
+
+  @SuppressLint("RestrictedApi")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate")
     setContentView(R.layout.activity_vision_live_preview)
 
     preview = findViewById(R.id.preview_view)
-    if (preview == null) {
+    if (preview == null)
       Log.d(TAG, "Preview is null")
-    }
 
     graphicOverlay = findViewById(R.id.graphic_overlay)
-    if (graphicOverlay == null) {
+    if (graphicOverlay == null)
       Log.d(TAG, "graphicOverlay is null")
+
+
+    btnCamera = findViewById(R.id.camera_button)
+
+    btnCamera.setOnClickListener {
+      if (!recording) {
+        recording = true
+
+        val file = File(
+          externalMediaDirs.first(),
+          "${UUID.randomUUID()}.mp4"
+        )
+
+        val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
+
+        if (ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.RECORD_AUDIO
+          ) != PackageManager.PERMISSION_GRANTED
+        ) { }
+
+        videoCapture.startRecording(
+          outputFileOptions,
+          ContextCompat.getMainExecutor(this),
+
+          object : VideoCapture.OnVideoSavedCallback {
+            override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+              Log.d("Check:", "On Video Saved")
+            }
+
+            override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
+              Log.d("Check:", "On Video Error $message")
+            }
+
+          }
+        )
+      } else {
+        recording = false
+        videoCapture.stopRecording()
+        finish()
+      }
     }
 
-    val spinner = findViewById<Spinner>(R.id.spinner)
     val options: MutableList<String> = ArrayList()
     options.add(POSE_DETECTION)
-
-    // Creating adapter for spinner
-    val dataAdapter = ArrayAdapter(this, R.layout.spinner_style, options)
-
-    // Drop down layout style - list view with radio button
-    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    // attaching data adapter to spinner
-    spinner.adapter = dataAdapter
-    spinner.onItemSelectedListener = this
 
     val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
     facingSwitch.setOnCheckedChangeListener(this)
@@ -275,4 +313,13 @@ class LivePreviewActivity :
       }
     }
   }
+}
+
+private fun ContentResolver.saveVideoToGallery(file: File) {
+  val values = ContentValues().apply {
+    put(MediaStore.Video.Media.DISPLAY_NAME, file.name)
+    put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+  }
+
+  insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
 }
