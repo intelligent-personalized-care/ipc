@@ -28,4 +28,6 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         val exerciseVideo = exercisesService.getExercisesInfo(exerciseID = exercise_id)
         return ResponseEntity.ok(exerciseVideo)
     }
+
+
 }

@@ -31,3 +31,9 @@ object MonitorNotVerified : Forbidden("You have to wait for your document to be 
 object NotMonitorOfClient : UnauthorizedRequest("You are not the Monitor of this Client")
 
 object NotPlanOfMonitor : UnauthorizedRequest("This plan does not belong to you")
+
+object AlreadyRatedThisMonitor : BadRequest("You already rated this Monitor")
+
+object ClientDontHaveThisExercise : BadRequest("You don't have this exercise")
+
+object ExerciseAlreadyUploaded : BadRequest("You don't have this exercise")

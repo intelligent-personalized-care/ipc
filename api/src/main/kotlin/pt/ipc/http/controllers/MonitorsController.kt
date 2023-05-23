@@ -52,7 +52,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     fun addProfilePicture(@PathVariable monitor_id: UUID, @RequestParam photo: MultipartFile, user: User): ResponseEntity<String> {
         if (user.id != monitor_id) throw Unauthorized
 
-        monitorService.updateProfilePicture(monitorID = monitor_id, photo.bytes)
+        monitorService.updateProfilePicture(monitorID = monitor_id, photo = photo.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Updated")
     }
@@ -77,12 +77,12 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable client_id: UUID, @PathVariable monitor_id: UUID, user : User, @RequestBody plan: Plan) : ResponseEntity<PLanID> {
+    fun createPlanForClient(@PathVariable client_id: UUID, @PathVariable monitor_id: UUID, user : User, @RequestBody plan: Plan) : ResponseEntity<PlanID> {
         if(user.id != monitor_id) throw Unauthorized
 
         val planID = monitorService.createPlan(monitorID = monitor_id, clientID = client_id, plan = plan)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(PLanID(id = planID))
+        return ResponseEntity.status(HttpStatus.CREATED).body(PlanID(id = planID))
 
     }
 

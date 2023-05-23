@@ -9,6 +9,7 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.UserNotExists
 import pt.ipc.storage.repositories.ClientsRepository
+import java.time.LocalDate
 import java.util.*
 
 class JdbiClientsRepository(
@@ -106,4 +107,53 @@ class JdbiClientsRepository(
             .bind("clientID", clientID)
             .mapTo<RequestInformation>()
             .toList()
+
+    override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
+        handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")
+              .bind("clientID",clientID)
+              .bind("monitorID",monitorID)
+              .mapTo<Int>()
+              .single() == 1
+
+    override fun rateMonitor(clientID: UUID, monitorID: UUID, rating: Int) {
+        handle.createUpdate("insert into dbo.monitor_rating (monitor_id, client_id, stars) values (:monitorID,:clientID, :rating)")
+              .bind("monitorID",monitorID)
+              .bind("clientID",clientID)
+              .bind("rating",rating)
+              .execute()
+
+    }
+
+    override fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int) : Boolean {
+        return handle.createQuery("select count(*) from dbo.plans p " +
+                "inner join dbo.daily_lists dl on p.id = dl.plan_id " +
+                "inner join dbo.daily_exercises de on dl.id = de.daily_list_id " +
+                "inner join dbo.client_plans cp on cp.plan_id = p.id " +
+                "where p.id = :planID and dl.id = :dailyListID and de.id = :exerciseID and cp.client_id = :clientID ")
+            .bind("planID",planID)
+            .bind("dailyListID",dailyList)
+            .bind("exerciseID",exerciseID)
+            .bind("clientID",clientID)
+            .mapTo<Int>()
+            .single() == 1
+
+    }
+
+    override fun checkIfClientAlreadyUploadedVideo(clientID : UUID, exerciseID: Int) : Boolean {
+        return handle.createQuery("select count(*) from dbo.exercises_video where client_id = :client and ex_id = :exerciseID")
+            .bind("client",clientID)
+            .bind("exerciseID",exerciseID)
+            .mapTo<Int>()
+            .single() == 1
+    }
+
+    override fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate) {
+        handle.createUpdate("insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_monitor) " +
+                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,null)")
+            .bind("exerciseVideoID",exerciseVideoID)
+            .bind("exerciseID",exerciseID)
+            .bind("clientID",clientID)
+            .bind("date",date)
+            .execute()
+    }
 }

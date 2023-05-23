@@ -85,4 +85,32 @@ class ClientsServiceImpl(
             }
         )
     }
+
+    override fun rateMonitor(monitorID : UUID, clientID: UUID, rating : Int){
+        transactionManager.runBlock(
+            block = {
+                if(!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                if(it.clientsRepository.hasClientRatedMonitor(clientID = clientID, monitorID = monitorID)) throw AlreadyRatedThisMonitor
+                it.clientsRepository.rateMonitor(clientID = clientID, monitorID = monitorID, rating = rating)
+            }
+        )
+    }
+
+    override fun uploadVideoOfClient(video : ByteArray, clientID : UUID, planID : Int, dailyListID : Int, exerciseID : Int){
+        val exerciseVideoID = UUID.randomUUID()
+        transactionManager.runBlock(
+            block = {
+                if(it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
+                if(it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID,exerciseID = exerciseID)) throw ExerciseAlreadyUploaded
+                it.clientsRepository.uploadExerciseVideoOfClient(
+                    clientID = clientID,
+                    exerciseID = exerciseID,
+                    exerciseVideoID = exerciseVideoID,
+                    date = LocalDate.now()
+                )
+                it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID,video)
+                    },
+            fileName = exerciseVideoID
+        )
+    }
 }
