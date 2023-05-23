@@ -69,18 +69,6 @@
         <!-- ML KIT Activities -->
 
         <activity
-            android:name=".mlkit.EntryChoiceActivity"
-            android:exported="false"
-            android:theme="@style/Theme.IPC_APP">
-        </activity>
-
-        <activity
-            android:name=".mlkit.vision.ChooserActivity"
-            android:exported="false"
-            android:theme="@style/Theme.IPC_APP">
-        </activity>
-
-        <activity
             android:name=".mlkit.vision.LivePreviewActivity"
             android:exported="false"
             android:theme="@style/Theme.IPC_APP">

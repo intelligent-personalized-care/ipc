@@ -27,6 +27,7 @@ import com.google.mlkit.vision.pose.PoseLandmark
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.InferenceInfoGraphic
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.math.atan2
 
 /** Draw the detected pose in preview.  */
@@ -34,18 +35,16 @@ class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val showInFrameLikelihood: Boolean
-) :
-  GraphicOverlay.Graphic(overlay) {
+): GraphicOverlay.Graphic(overlay) {
+
   private val leftPaint: Paint
   private val rightPaint: Paint
   private val whitePaint: Paint
   private val tipPaint: Paint
   override fun draw(canvas: Canvas) {
-    val landmarks =
-      pose.allPoseLandmarks
-    if (landmarks.isEmpty()) {
-      return
-    }
+    val landmarks = pose.allPoseLandmarks
+    if (landmarks.isEmpty()) return
+
     val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
     val lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
     val lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
@@ -82,62 +81,60 @@ class PoseGraphic internal constructor(
     val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
     val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
-
-    /////////////////////
     //Calculate whether the hand exceeds the shoulder
     val yRightHand = rightWrist!!.position.y - rightShoulder!!.position.y
     val yLeftHand = leftWrist!!.position.y - leftShoulder!!.position.y
     //Calculate whether the distance between the shoulder and the foot is the same width
-    val shoulderDistance = leftShoulder!!.position.x - rightShoulder!!.position.x
+    val shoulderDistance = leftShoulder.position.x - rightShoulder.position.x
     val footDistance = leftAnkle!!.position.x - rightAnkle!!.position.x
     val ratio = footDistance/shoulderDistance
     //angle of point 24-26-28
     val angle24_26_28 = getAngle(rightHip, rightKnee, rightAnkle)
 
-    if(((180-Math.abs(angle24_26_28)) > 5) && !isCount){
+    if(((180- abs(angle24_26_28)) > 5) && !isCount){
       reInitParams()
       lineOneText = "Please stand up straight"
     }else if(yLeftHand>0 || yRightHand>0){
       reInitParams()
       lineOneText = "Please hold your hands behind your head"
-    }else if(ratio<0.5 && isCount==false){
+    }else if(ratio < 0.5 && !isCount){
       reInitParams()
       lineOneText = "Please spread your feet shoulder-width apart"
     }else{
       val currentHeight =  (rightShoulder.position.y + leftShoulder.position.y)/2 //Judging up and down by shoulder height
 
-      if(!isCount){
+      if (!isCount) {
         shoulderHeight = currentHeight
         minSize = (rightAnkle.position.y - rightHip!!.position.y)/5
         isCount = true
         lastHeight = currentHeight
         lineOneText = "Gesture ready"
       }
-      if(!isDown && (currentHeight - lastHeight)>minSize){//开始下蹲
+      if (!isDown && (currentHeight - lastHeight) > minSize) {
         isDown = true
         isUp = false
         downCount++
         lastHeight = currentHeight
         lineTwoText = "start down"
-      }else if((currentHeight - lastHeight)>minSize){
+      } else if ((currentHeight - lastHeight) > minSize) {
         lineTwoText = "downing"
         lastHeight = currentHeight
       }
-      if(!isUp && (upCount < downCount) && ( lastHeight - currentHeight ) >minSize ){//开始起身
+      if (!isUp && (upCount < downCount) && ( lastHeight - currentHeight ) > minSize ) {
         isUp = true
         isDown = false
         upCount++
         lastHeight = currentHeight
         lineTwoText = "start up"
-      }else if((lastHeight - currentHeight ) >minSize){
+      } else if ((lastHeight - currentHeight ) >minSize) {
         lineTwoText = "uping"
         lastHeight = currentHeight
       }
     }
     drawText(canvas, lineOneText,1)
     drawText(canvas, lineTwoText,2)
-    drawText(canvas, "count："+upCount.toString(), 3)
-    /////////////////////
+    drawText(canvas, "count: $upCount", 3)
+
     // Face
     drawLine(canvas, nose!!.position, lefyEyeInner!!.position, whitePaint)
     drawLine(canvas, lefyEyeInner.position, lefyEye!!.position, whitePaint)
@@ -191,7 +188,7 @@ class PoseGraphic internal constructor(
     }
   }
 
-  fun reInitParams(){
+  fun reInitParams() {
     lineOneText = ""
     lineTwoText = ""
     shoulderHeight = 0f
@@ -204,9 +201,8 @@ class PoseGraphic internal constructor(
   }
 
   fun drawPoint(canvas: Canvas, point: PointF?, paint: Paint?) {
-    if (point == null) {
-      return
-    }
+    if (point == null) return
+
     canvas.drawCircle(
       translateX(point.x),
       translateY(point.y),
@@ -221,19 +217,17 @@ class PoseGraphic internal constructor(
     end: PointF?,
     paint: Paint?
   ) {
-    if (start == null || end == null) {
-      return
-    }
+    if (start == null || end == null) return
+
     canvas.drawLine(
       translateX(start.x), translateY(start.y), translateX(end.x), translateY(end.y), paint!!
     )
   }
 
   fun drawText(canvas: Canvas, text:String, line:Int) {
-    if (TextUtils.isEmpty(text)) {
-      return
-    }
-    canvas.drawText(text, TEXT_SIZE*0.5f, TEXT_SIZE*3 + TEXT_SIZE*line, tipPaint)
+    if (TextUtils.isEmpty(text)) return
+
+    canvas.drawText(text, TEXT_SIZE * 0.5f, TEXT_SIZE * 3 + TEXT_SIZE * line, tipPaint)
   }
 
   companion object {
@@ -248,7 +242,7 @@ class PoseGraphic internal constructor(
     var isCount = false //is counting
     var lineOneText = ""
     var lineTwoText = ""
-    var shoulderHeight = 0f //
+    var shoulderHeight = 0f
     var minSize = 0f
     var lastHeight = 0f
   }
@@ -268,14 +262,18 @@ class PoseGraphic internal constructor(
   }
 
   fun getAngle(firstPoint: PoseLandmark?, midPoint: PoseLandmark?, lastPoint: PoseLandmark?): Double {
-    var result = Math.toDegrees(atan2(1.0*lastPoint!!.getPosition().y - midPoint!!.getPosition().y,
-      1.0*lastPoint.getPosition().x - midPoint.getPosition().x)
-            - atan2(firstPoint!!.getPosition().y - midPoint.getPosition().y,
-      firstPoint.getPosition().x - midPoint.getPosition().x))
-    result = Math.abs(result) // Angle should never be negative
-    if (result > 180) {
-      result = 360.0 - result // Always get the acute representation of the angle
-    }
+    var result = Math.toDegrees(
+      atan2(
+        1.0 * lastPoint!!.position.y - midPoint!!.position.y,
+        1.0 * lastPoint.position.x - midPoint.position.x) -
+              atan2(
+                firstPoint!!.position.y - midPoint.position.y,
+                firstPoint.position.x - midPoint.position.x
+              )
+    )
+    result = abs(result) // Angle should never be negative
+    if (result > 180) result = 360.0 - result // Always get the acute representation of the angle
+
     return result
   }
 }

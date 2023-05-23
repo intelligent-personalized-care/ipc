@@ -23,20 +23,12 @@
       app:layout_constraintTop_toTopOf="@id/preview_view"
       app:layout_constraintBottom_toBottomOf="@id/preview_view"/>
 
-  <include
-      android:id="@+id/settings_button"
-      layout="@layout/settings_style"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      app:layout_constraintRight_toRightOf="@id/preview_view"
-      app:layout_constraintTop_toTopOf="@id/preview_view" />
-
   <LinearLayout
       android:id="@id/control"
       android:layout_width="match_parent"
-      android:layout_height="60dp"
+      android:layout_height="80dp"
       app:layout_constraintBottom_toBottomOf="parent"
-      android:background="#00000000"
+      android:background="#000000"
       android:orientation="horizontal">
 
     <ToggleButton
@@ -47,19 +39,28 @@
         android:background="@layout/toggle_style"
         android:checked="false"
         android:textOff=""
-        android:textOn=""/>
+        android:textOn=""
+        android:translationX="10dp" />
 
     <Button
         android:id="@+id/camera_button"
         android:background="@drawable/camera_button"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="hello"
-        android:textColor="#fff"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:translationX="130dp"
-        android:translationY="6dp" />
+        android:layout_gravity="center_vertical"
+        android:textOff=""
+        android:textOn="" />
 
+    <ImageView
+        android:id="@+id/settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center"
+        android:padding="12dp"
+        android:contentDescription="@string/menu_item_settings"
+        android:translationX="250dp"
+        android:src="@drawable/ic_settings_white_24dp"/>
 
   </LinearLayout>
 
