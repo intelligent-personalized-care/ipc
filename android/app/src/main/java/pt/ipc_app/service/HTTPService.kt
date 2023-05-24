@@ -99,6 +99,22 @@ abstract class HTTPService(
             .build()
             .getResponseResult()
 
+    protected suspend inline fun <reified T> postWithFile(
+        uri: String,
+        token: String? = null,
+        body: Any
+    ): APIResult<T> =
+        Request.Builder()
+            .url(apiEndpoint + uri)
+            .checkAuthorization(BEARER_TOKEN, token)
+            .post(
+                jsonEncoder
+                    .toJson(body)
+                    .toRequestBody("multipart/form-data".toMediaType())
+            )
+            .build()
+            .getResponseResult()
+
     companion object {
         private const val APPLICATION_JSON = "application/json"
         val applicationJsonMediaType = APPLICATION_JSON.toMediaType()

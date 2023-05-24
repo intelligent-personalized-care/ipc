@@ -43,8 +43,6 @@
         <activity
             android:name=".ui.screens.register.RegisterActivity"
             android:exported="false"
-            android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
         </activity>
 

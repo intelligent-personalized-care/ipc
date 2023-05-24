@@ -28,8 +28,8 @@ class SplashScreenActivity: ComponentActivity() {
             delay(3000) // suspends the coroutine for 3 seconds
 
             withContext(Dispatchers.IO) {
-                repo.setSession("Tiago", "", Role.CLIENT)
-                // repo.clearSession()
+                //repo.setSession("Tiago", "", Role.CLIENT)
+                repo.clearSession()
                 if (!repo.isLoggedIn())
                     ChooseRoleActivity.navigate(this@SplashScreenActivity)
                 else {

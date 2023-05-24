@@ -87,12 +87,15 @@ class RegisterViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
+                _state.value = ProgressState.Creating
                 usersService.registerMonitor(
                     name = name,
                     email = email,
                     password = password,
                     credential = credential
-                )
+                ).also {
+                    _state.value = if (it is APIResult.Success) ProgressState.Created else ProgressState.Idle
+                }
             },
             onSuccess = {
                 sessionManager.setSession(name, it.token, Role.MONITOR)
