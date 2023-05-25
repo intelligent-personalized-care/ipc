@@ -32,8 +32,7 @@ class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
   private val showInFrameLikelihood: Boolean
-) :
-  VisionProcessorBase<Pose>(context) {
+): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {
     super.stop()
@@ -45,18 +44,14 @@ class PoseDetectorProcessor(
   }
 
   override fun onSuccess(
-    pose: Pose,
+    results: Pose,
     graphicOverlay: GraphicOverlay
   ) {
-    graphicOverlay.add(PoseGraphic(graphicOverlay, pose, showInFrameLikelihood))
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, showInFrameLikelihood))
   }
 
   override fun onFailure(e: Exception) {
-    Log.e(
-      TAG,
-      "Pose detection failed!",
-      e
-    )
+    Log.e(TAG, "Pose detection failed!", e)
   }
 
   companion object {

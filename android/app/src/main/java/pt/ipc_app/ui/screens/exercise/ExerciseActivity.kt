@@ -1,27 +1,15 @@
 package pt.ipc_app.ui.screens.exercise
 
-import android.Manifest.permission.CAMERA
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Login
-import androidx.compose.ui.Alignment
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Exercise
-import pt.ipc_app.mlkit.EntryChoiceActivity
+import pt.ipc_app.mlkit.vision.CameraXLivePreviewActivity
 import pt.ipc_app.mlkit.vision.LivePreviewActivity
 import pt.ipc_app.utils.viewModelInit
 
@@ -51,7 +39,8 @@ class ExerciseActivity: ComponentActivity() {
         setContent {
             ExerciseScreen(
                 exercise = exercise,
-                onRecordClick = {LivePreviewActivity.navigate(this)}
+                //onRecordClick = { LivePreviewActivity.navigate(this) }
+                onRecordClick = { CameraXLivePreviewActivity.navigate(this) }
             )
 
         }

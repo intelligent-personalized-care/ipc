@@ -10,5 +10,5 @@ data class Plan(
 ) {
     val duration = dailyLists.size
 
-    fun getListOfTodayIfExists(): DailyList? = dailyLists.firstOrNull { it.day == LocalDate.now() }
+    fun getListOfDayIfExists(day: LocalDate): DailyList? = dailyLists.firstOrNull { it.day == day }
 }

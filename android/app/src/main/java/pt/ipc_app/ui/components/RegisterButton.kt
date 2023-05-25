@@ -15,19 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.user.User
 
-enum class ProgressState { Idle, Creating, Created }
+enum class ProgressState { IDLE, WAITING, FINISHED }
 
 @Composable
 fun RegisterButton(
     validationInfo: User?,
-    state: ProgressState = ProgressState.Idle,
+    state: ProgressState = ProgressState.IDLE,
     onClick: (User) -> Unit = { }
 ) {
     Spacer(modifier = Modifier.height(5.dp))
 
     val size = 56.dp
 
-    if (state == ProgressState.Creating) {
+    if (state == ProgressState.WAITING) {
         CircularProgressIndicator(
             Modifier.defaultMinSize(minWidth = size, minHeight = size)
         )
@@ -57,6 +57,6 @@ fun RegisterButton(
 fun RegisterButtonPreview() {
     RegisterButton(
         validationInfo = null,
-        state = ProgressState.Creating
+        state = ProgressState.WAITING
     )
 }

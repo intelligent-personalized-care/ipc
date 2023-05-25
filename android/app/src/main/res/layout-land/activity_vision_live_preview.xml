@@ -22,22 +22,16 @@
 
   <FrameLayout
       android:id="@id/control"
-      android:layout_width="220dp"
+      android:layout_width="80dp"
       android:layout_height="match_parent"
       app:layout_constraintEnd_toEndOf="parent"
       android:background="#000">
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"/>
 
     <ToggleButton
         android:id="@+id/facing_switch"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_gravity="bottom|start"
+        android:layout_gravity="bottom|center"
         android:background="@layout/toggle_style"
         android:checked="false"
         android:textOff=""
@@ -47,10 +41,19 @@
         android:id="@+id/settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="top|center"
         android:padding="12dp"
         android:contentDescription="@string/menu_item_settings"
         android:src="@drawable/ic_settings_white_24dp"/>
+
+    <ToggleButton
+        android:id="@+id/camera_button"
+        android:background="@drawable/camera_button"
+        android:layout_gravity="center|center"
+        android:textColor="#fff"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
   </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

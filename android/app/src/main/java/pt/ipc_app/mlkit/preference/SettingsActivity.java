@@ -35,7 +35,10 @@ public class SettingsActivity extends AppCompatActivity {
 
   /** Specifies where this activity is launched from. */
   public enum LaunchSource {
-    LIVE_PREVIEW(R.string.pref_screen_title_live_preview, LivePreviewPreferenceFragment.class);
+    LIVE_PREVIEW(R.string.pref_screen_title_live_preview, LivePreviewPreferenceFragment.class),
+    CAMERAX_LIVE_PREVIEW(
+            R.string.pref_screen_title_camerax_live_preview,
+            CameraXLivePreviewPreferenceFragment.class);
 
 
     private final int titleResId;

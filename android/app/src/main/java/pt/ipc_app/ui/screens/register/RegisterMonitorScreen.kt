@@ -1,5 +1,6 @@
 package pt.ipc_app.ui.screens.register
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -11,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
+import pt.ipc_app.service.models.ProblemJson
 import pt.ipc_app.ui.components.FilePicker
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.RegisterButton
@@ -23,15 +25,19 @@ import pt.ipc_app.ui.screens.AppScreen
  */
 @Composable
 fun RegisterMonitorScreen(
-    progressState: ProgressState = ProgressState.Idle,
+    progressState: ProgressState = ProgressState.IDLE,
+    error: ProblemJson? = null,
+    onFileRequest: (Uri) -> ByteArray,
     onSaveRequest: (Monitor) -> Unit
 ) {
     var userInfo: User? by remember { mutableStateOf(null) }
 
-    var credential: ByteArray by remember { mutableStateOf(ByteArray(0)) }
+    var credential: ByteArray? by remember { mutableStateOf(null) }
 
     val monitorValidation = userInfo?.let {
-        Monitor.monitorOrNull(it.name, it.email, it.password, credential)
+        credential?.let { ba ->
+            Monitor.monitorOrNull(it.name, it.email, it.password, ba)
+        }
     }
 
     AppScreen {
@@ -51,12 +57,15 @@ fun RegisterMonitorScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 RegisterUser(
-                    userValidation = { userInfo = it }
+                    userValidation = { userInfo = it },
+                    error = error
                 )
                 FilePicker(
                     text = "Select Credential",
                     fileType = "*/*",
-                    onChooseFile = {  }
+                    onChooseFile = {
+                        credential = onFileRequest(it)
+                    }
                 )
             }
             RegisterButton(

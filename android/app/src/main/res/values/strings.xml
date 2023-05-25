@@ -11,6 +11,8 @@
     <string name="register_screen_label_weight">Weight</string>
     <string name="register_screen_label_height">Height</string>
     <string name="register_screen_label_physicalCondition">Physical Condition</string>
+    <string name="search">Search…</string>
+
 
     <string name="client">Client</string>
     <string name="monitor">Monitor</string>
@@ -18,15 +20,18 @@
 
     <string name="hello">Hello</string>
 
+    <string name="clients_search_results">Search Results</string>
+    <string name="clients_search_name">Name</string>
+
+    <!-- ########################### ML KIT ########################### -->
+
     <!-- Strings for info preference. -->
     <string name="pref_title_info_hide" translatable="false">Hide detection info</string>
     <string name="pref_key_info_hide" translatable="false">ih</string>
 
-
     <!-- Settings related strings. -->
     <string name="pref_screen" translatable="false">ps</string>
     <string name="pref_screen_title_live_preview" translatable="false">Live preview settings</string>
-    <string name="pref_screen_title_still_image" translatable="false">Still image settings</string>
     <string name="pref_screen_title_camerax_live_preview" translatable="false">CameraX live preview settings</string>
     <string name="pref_category_pose_detection" translatable="false">Pose Detection</string>
 
@@ -79,15 +84,8 @@
     <string name="pref_key_pose_detector_run_classification" translatable="false">pdrc</string>
     <string name="pref_summary_pose_detector_run_classification" translatable="false">Classify squat and pushup poses. Count reps in streaming mode. To get the best classification results based on the current sample data, face the camera side way and make sure your full body is in the frame.</string>
 
-    <string name="desc_camera_source_activity" translatable="false">Vision detectors demo with live camera preview</string>
-    <string name="desc_still_image_activity" translatable="false">Vision detectors demo with a still image</string>
-    <string name="desc_camerax_live_preview_activity" translatable="false">Vision detectors demo with live preview using CameraX. Note that CameraX is only supported on API 21+</string>
-    <string name="desc_cameraxsource_demo_activity" translatable="false">Object detection with custom classifier using ML Kit CameraXSource API. Note that CameraX is only supported on API 21+</string>
-
     <string name="menu_item_settings" translatable="false">Settings</string>
 
     <string name="pref_category_info" translatable="false">Detection Info</string>
-
-    <string name="kotlin_entry_title" translatable="false">Run the ML Kit quickstart written in Kotlin</string>
 
 </resources>

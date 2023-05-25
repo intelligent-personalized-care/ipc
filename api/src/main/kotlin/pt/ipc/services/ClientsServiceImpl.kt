@@ -1,8 +1,14 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.*
+import pt.ipc.domain.Client
+import pt.ipc.domain.Exercise
+import pt.ipc.domain.RequestNotExists
+import pt.ipc.domain.Role
+import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.toLocalDate
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
@@ -57,31 +63,31 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun decideRequest(requestID: UUID, clientID: UUID, decision: RequestDecision) {
-        transactionManager.runBlock(
-            block = {
-                val requestInformation = it.clientsRepository.getRequestInformations(requestID = requestID) ?: throw RequestNotExists
-                val monitorID = requestInformation.monitorID
-                if (requestInformation.clientID != clientID) throw Unauthorized
-                it.clientsRepository.decideRequest(requestID = requestID, clientID = clientID, monitorID = monitorID, decision = decision)
-            }
-        )
+    override fun decideRequest(requestID: UUID, clientID: UUID, accept: Boolean) {
+        transactionManager.runBlock({
+            val requestInfo = it.clientsRepository.getRequestInformations(requestID = requestID) ?: throw RequestNotExists
+
+            if (requestInfo.clientID != clientID) throw Unauthorized
+
+            it.clientsRepository.decideRequest(requestID = requestID, clientID = clientID, monitorID = requestInfo.monitorID, accept = accept)
+        })
     }
 
-    override fun getRequestsOfclient(clientID: UUID): List<RequestInformation> =
+    override fun getRequestsOfClient(clientID: UUID): List<RequestInformation> =
         transactionManager.runBlock(
             block = {
                 it.clientsRepository.getClientRequests(clientID = clientID)
             }
         )
 
-    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?) : List<Exercise>{
+    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise> {
         return transactionManager.runBlock(
             block = {
-                if(date == null)
+                if (date == null) {
                     it.exerciseRepository.getAllExercisesOfClient(clientID = clientID)
-                else
+                } else {
                     it.exerciseRepository.getExercisesOfDay(clientID = clientID, date = date)
+                }
             }
         )
     }

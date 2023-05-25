@@ -11,7 +11,8 @@ enum class TextFieldType(val labelId: Int) {
     DATE(R.string.register_screen_label_birthDate),
     WEIGHT(R.string.register_screen_label_weight),
     HEIGHT(R.string.register_screen_label_height),
-    PHYSICAL_CONDITION(R.string.register_screen_label_physicalCondition)
+    PHYSICAL_CONDITION(R.string.register_screen_label_physicalCondition),
+    SEARCH(R.string.search)
 }
 
 fun TextFieldType.errorToShow(error: ProblemJson): String? =

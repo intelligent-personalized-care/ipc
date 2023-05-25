@@ -1,7 +1,11 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Component
-import pt.ipc.domain.*
+import pt.ipc.domain.BadEmail
+import pt.ipc.domain.MonitorNotVerified
+import pt.ipc.domain.Role
+import pt.ipc.domain.User
+import pt.ipc.domain.WeakPassword
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.jwt.JwtUtils
 import pt.ipc.storage.transaction.TransactionManager
@@ -18,11 +22,11 @@ class UsersServiceUtils(
         val hashedToken = encryptionUtils.encrypt(token)
         return transactionManager.runBlock(
             block = {
-               val (user,role) = it.clientsRepository.getUserByToken(token = hashedToken) ?: return@runBlock null
-               if(role == Role.MONITOR){
-                   if(!it.monitorRepository.checkIfMonitorIsVerified(user.id)) throw MonitorNotVerified
-               }
-               Pair(user,role)
+                val (user, role) = it.clientsRepository.getUserByToken(token = hashedToken) ?: return@runBlock null
+                if (role == Role.MONITOR) {
+                    if (!it.monitorRepository.checkIfMonitorIsVerified(user.id)) throw MonitorNotVerified
+                }
+                Pair(user, role)
             }
         )
     }

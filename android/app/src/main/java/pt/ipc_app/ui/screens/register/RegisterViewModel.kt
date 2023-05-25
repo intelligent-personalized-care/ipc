@@ -1,8 +1,5 @@
 package pt.ipc_app.ui.screens.register
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.user.Role
@@ -22,7 +19,7 @@ class RegisterViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
-    private val _state = MutableStateFlow(ProgressState.Idle)
+    private val _state = MutableStateFlow(ProgressState.IDLE)
     val state
         get() = _state.asStateFlow()
 
@@ -53,7 +50,7 @@ class RegisterViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                _state.value = ProgressState.Creating
+                _state.value = ProgressState.WAITING
                 usersService.registerClient(
                     name = name,
                     email = email,
@@ -63,7 +60,7 @@ class RegisterViewModel(
                     birthDate = birthDate.ifEmpty { null },
                     physicalCondition = physicalCondition.ifEmpty { null }
                 ).also {
-                    _state.value = if (it is APIResult.Success) ProgressState.Created else ProgressState.Idle
+                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }
             },
             onSuccess = {
@@ -87,12 +84,15 @@ class RegisterViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
+                _state.value = ProgressState.WAITING
                 usersService.registerMonitor(
                     name = name,
                     email = email,
                     password = password,
                     credential = credential
-                )
+                ).also {
+                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
+                }
             },
             onSuccess = {
                 sessionManager.setSession(name, it.token, Role.MONITOR)

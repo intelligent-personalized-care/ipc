@@ -1,3 +1,3 @@
 package pt.ipc.domain
 
-data class PLanID(val id : Int)
+data class PLanID(val id: Int)

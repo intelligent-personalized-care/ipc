@@ -1,7 +1,9 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.*
-import java.time.LocalDate
+import pt.ipc.domain.Client
+import pt.ipc.domain.Role
+import pt.ipc.domain.User
+import pt.ipc.http.models.RequestInformation
 import java.util.*
 
 interface ClientsRepository {
@@ -16,19 +18,9 @@ interface ClientsRepository {
 
     fun roleOfUser(id: UUID): Role
 
-    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision)
+    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
 
     fun getRequestInformations(requestID: UUID): RequestInformation?
 
     fun getClientRequests(clientID: UUID): List<RequestInformation>
-
-    fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID) : Boolean
-
-    fun rateMonitor(clientID: UUID, monitorID: UUID, rating : Int)
-
-    fun checkIfClientHasThisExercise(clientID: UUID, planID : Int, dailyList: Int, exerciseID: Int) : Boolean
-
-    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int) : Boolean
-
-    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID : Int, exerciseVideoID: UUID, date : LocalDate )
 }

@@ -63,13 +63,13 @@ class UsersService(
         password: String,
         credential: ByteArray
     ): APIResult<RegisterOutput> =
-        post(
+        postWithFile(
             uri = "/users/monitors",
             body = RegisterMonitorInput(
                 name = name,
                 email = email,
                 password = password,
-                credential = ByteArray(1) // TODO()
+                credential = credential
             )
         )
 }

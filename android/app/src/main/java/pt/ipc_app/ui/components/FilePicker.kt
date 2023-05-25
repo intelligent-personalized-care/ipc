@@ -1,6 +1,9 @@
 package pt.ipc_app.ui.components
 
+import android.content.ContentResolver
+import android.database.Cursor
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
@@ -16,12 +19,42 @@ import java.io.ByteArrayOutputStream
 fun FilePicker(
     text: String,
     fileType: String = "*/*",
-    onChooseFile: () -> Unit
+    onChooseFile: (Uri) -> Unit
 ) {
+    var pickedFileUri by remember { mutableStateOf<Uri?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { pickedFileUri = it }
+    )
+
+    pickedFileUri?.let {
+        onChooseFile(it)
+    }
+
     Button(
-        onClick = { onChooseFile() },
+        onClick = { launcher.launch(fileType) },
         modifier = Modifier.padding(top = 10.dp)
     ) {
         Text(text)
     }
+
+    pickedFileUri?.let {
+        Text(getFileNameFromUri(LocalContext.current.contentResolver, it))
+    }
+}
+
+fun getFileNameFromUri(contentResolver: ContentResolver, uri: Uri): String {
+    var fileName = ""
+    val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val displayNameColumnIndex: Int =
+                it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (displayNameColumnIndex != -1) {
+                fileName = it.getString(displayNameColumnIndex)
+            }
+        }
+    }
+    return fileName
 }

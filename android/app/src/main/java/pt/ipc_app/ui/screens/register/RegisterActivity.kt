@@ -12,12 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.user.Role
-import pt.ipc_app.domain.user.isClient
-import pt.ipc_app.ui.components.CheckProblemJson
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.utils.viewModelInit
+import java.io.ByteArrayOutputStream
 
 /**
  * The register activity.
@@ -60,23 +59,34 @@ class RegisterActivity : ComponentActivity() {
             else
                 RegisterMonitorScreen(
                     progressState = state,
+                    error = viewModel.error,
+                    onFileRequest = {
+                        val contentResolver = this.contentResolver
+                        val byteArray = ByteArrayOutputStream().use { output ->
+                            contentResolver.openInputStream(it)?.use { input ->
+                                input.copyTo(output)
+                            }
+                            output.toByteArray()
+                        }
+                        byteArray
+                    },
                     onSaveRequest = {
                         viewModel.registerMonitor(
                             it.name, it.email, it.password, it.credential!!
                         )
                     }
                 )
-            //CheckProblemJson(error = viewModel.error)
         }
 
         lifecycleScope.launch {
             viewModel.state.collect {
 
-                if (it == ProgressState.Created) {
+                if (it == ProgressState.FINISHED) {
                     if (Role.isClient(role))
                         ClientHomeActivity.navigate(this@RegisterActivity)
                     else
                         MonitorHomeActivity.navigate(this@RegisterActivity)
+                    finish()
                 }
             }
         }

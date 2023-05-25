@@ -1,16 +1,18 @@
 package pt.ipc_app.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +46,7 @@ fun ClientHomeScreen(
             modifier = Modifier.padding(30.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.hello)+ " ${client.name}",
+                text = stringResource(id = R.string.hello) + " ${client.name}",
                 style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.End
             )
@@ -53,17 +55,26 @@ fun ClientHomeScreen(
             horizontalArrangement = Arrangement.End,
             modifier = Modifier.padding(30.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .clickable(
+            BadgedBox(modifier = Modifier.padding(end = 10.dp),
+                badge = {
+                    if (notifications)
+                        Badge(
+                            Modifier
+                                .clip(CircleShape)
+                                .background(Color.Red)
+                                .align(Alignment.BottomEnd)
+                        )
+                }
+            ) {
+                Icon(
+                    imageVector = if (notifications) Icons.Default.Notifications else Icons.Default.NotificationsNone,
+                    contentDescription = "notification icon",
+                    tint = Color.Black,
+                    modifier = Modifier.clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
                         onClick = { if (notifications) notifications = false }
                     )
-            ) {
-                Icon(
-                    imageVector = if (notifications) Icons.Default.Notifications else Icons.Default.NotificationsNone,
-                    contentDescription = "Notification"
                 )
             }
         }
@@ -79,7 +90,7 @@ fun ClientHomeScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.padding(top = 40.dp))
+            Spacer(modifier = Modifier.padding(top = 80.dp))
 
             plan?.let {
                 PlanScreen(

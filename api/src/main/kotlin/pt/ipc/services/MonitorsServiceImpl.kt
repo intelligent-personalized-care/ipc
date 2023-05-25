@@ -1,8 +1,16 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.*
+import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.NotMonitorOfClient
+import pt.ipc.domain.NotPlanOfMonitor
+import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.Role
+import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
@@ -44,6 +52,20 @@ class MonitorsServiceImpl(
         return RegisterOutput(id = userID, token = token)
     }
 
+    override fun getMonitor(monitorID: UUID): MonitorDetails =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.getMonitor(monitorID)
+            }
+        )
+
+    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.searchMonitorsAvailable(name, skip, limit)
+            }
+        )
+
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         val photoID = UUID.randomUUID()
 
@@ -81,20 +103,19 @@ class MonitorsServiceImpl(
             }
         )
 
-
-    override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan) : Int{
-       return transactionManager.runBlock(
+    override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int {
+        return transactionManager.runBlock(
             block = {
-                if(!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID,clientID = clientID)) throw NotMonitorOfClient
-                it.exerciseRepository.createPlan(monitorID = monitorID, clientID = clientID ,plan = plan)
+                if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                it.exerciseRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
             }
         )
     }
 
-    override fun getPlan(monitorID: UUID, planID : Int) : PlanOutput{
+    override fun getPlan(monitorID: UUID, planID: Int): PlanOutput {
         return transactionManager.runBlock(
             block = {
-                if(!it.exerciseRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
+                if (!it.exerciseRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
                 it.exerciseRepository.getPlan(planID)
             }
         )

@@ -32,7 +32,7 @@ private const val HEIGHT_METRIC = " cm"
  */
 @Composable
 fun RegisterClientScreen(
-    progressState: ProgressState = ProgressState.Idle,
+    progressState: ProgressState = ProgressState.IDLE,
     error: ProblemJson? = null,
     onSaveRequest: (Client) -> Unit = { }
 ) {
