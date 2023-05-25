@@ -1,5 +1,6 @@
 package pt.ipc.storage.repositories
 
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
 import pt.ipc.http.models.RequestInformation
 import java.time.LocalDate
@@ -8,6 +9,10 @@ import java.util.*
 interface MonitorRepository {
 
     fun registerMonitor(user: User, date: LocalDate, encryptedToken: String)
+
+    fun getMonitor(monitorID: UUID): MonitorDetails
+
+    fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
     fun requestClient(requestID: UUID, monitorID: UUID, clientID: UUID)
 

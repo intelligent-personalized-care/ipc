@@ -2,13 +2,14 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.storage.repositories.MonitorRepository
 import java.time.LocalDate
 import java.util.*
 
-class JdbiMonitorRepository(
+class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
 
@@ -33,6 +34,32 @@ class JdbiMonitorRepository(
             .bind("monitor_id", user.id)
             .bind("dt_submit", date)
             .execute()
+    }
+
+    override fun getMonitor(monitorID: UUID): MonitorDetails =
+        handle.createQuery("select id, name, email, photo_id from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
+            .bind("monitorID", monitorID)
+            .mapTo<MonitorDetails>()
+            .single()
+
+    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
+        val queryName = if (name != null) "and u.name like :name" else ""
+
+        return handle.createQuery(
+            """
+                    select id, name, email, photo_id from dbo.monitors m
+                    inner join dbo.users u on u.id = m.m_id
+                    inner join dbo.docs_authenticity da on m.m_id = da.monitor_id
+                    where da.state = 'valid' $queryName
+                    offset :skip
+                    limit :limit
+                """.trimIndent()
+        )
+            .bind("name", "%$name%")
+            .bind("skip", skip)
+            .bind("limit", limit)
+            .mapTo<MonitorDetails>()
+            .toList()
     }
 
     override fun requestClient(requestID: UUID, monitorID: UUID, clientID: UUID) {

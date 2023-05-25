@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PLanID
 import pt.ipc.domain.Plan
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.controllers.ClientsController.Companion.addAuthenticationCookies
+import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -51,6 +53,25 @@ class MonitorsController(private val monitorService: MonitorService) {
         addAuthenticationCookies(response = response, token = registerOutput.token)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
+    }
+
+    @GetMapping(Uris.MONITOR_GET)
+    fun getMonitor(@PathVariable monitorId: UUID): ResponseEntity<MonitorDetails> {
+        val res = monitorService.getMonitor(monitorId)
+
+        return ResponseEntity.status(HttpStatus.OK).body(res)
+    }
+
+    @GetMapping(Uris.MONITOR_SEARCH_ALL_AVAILABLE)
+    fun searchMonitorsAvailable(
+        @RequestParam(required = false) name: String?,
+        @RequestParam(required = false) skip: Int?,
+        @RequestParam(required = false) limit: Int?,
+        ): ResponseEntity<AllMonitorsAvailableOutput> {
+
+        val res = monitorService.searchMonitorsAvailable(name, skip ?: DEFAULT_SKIP, limit ?: DEFAULT_LIMIT)
+
+        return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
     }
 
     @Authentication
@@ -99,5 +120,10 @@ class MonitorsController(private val monitorService: MonitorService) {
         if (user.id != monitorId) throw Unauthorized
         val planOutput: PlanOutput = monitorService.getPlan(monitorID = monitorId, planID = planId)
         return ResponseEntity.ok(planOutput)
+    }
+
+    companion object {
+        private const val DEFAULT_SKIP = 0
+        private const val DEFAULT_LIMIT = 10
     }
 }

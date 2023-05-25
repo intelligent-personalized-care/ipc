@@ -9,7 +9,7 @@ import pt.ipc.storage.repositories.ExerciseRepository
 import pt.ipc.storage.repositories.MonitorRepository
 import pt.ipc.storage.repositories.jdbi.JdbiClientsRepository
 import pt.ipc.storage.repositories.jdbi.JdbiExercisesRepository
-import pt.ipc.storage.repositories.jdbi.JdbiMonitorRepository
+import pt.ipc.storage.repositories.jdbi.JdbiMonitorsRepository
 
 class TransactionImpl(
     private val handle: Handle,
@@ -18,7 +18,7 @@ class TransactionImpl(
 
     override val clientsRepository: ClientsRepository by lazy { JdbiClientsRepository(handle) }
 
-    override val monitorRepository: MonitorRepository by lazy { JdbiMonitorRepository(handle) }
+    override val monitorRepository: MonitorRepository by lazy { JdbiMonitorsRepository(handle) }
 
     override val exerciseRepository: ExerciseRepository by lazy { JdbiExercisesRepository(handle) }
 

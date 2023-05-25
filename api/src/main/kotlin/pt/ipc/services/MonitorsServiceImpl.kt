@@ -1,6 +1,7 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.NotMonitorOfClient
 import pt.ipc.domain.NotPlanOfMonitor
 import pt.ipc.domain.Plan
@@ -50,6 +51,20 @@ class MonitorsServiceImpl(
 
         return RegisterOutput(id = userID, token = token)
     }
+
+    override fun getMonitor(monitorID: UUID): MonitorDetails =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.getMonitor(monitorID)
+            }
+        )
+
+    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.searchMonitorsAvailable(name, skip, limit)
+            }
+        )
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         val photoID = UUID.randomUUID()

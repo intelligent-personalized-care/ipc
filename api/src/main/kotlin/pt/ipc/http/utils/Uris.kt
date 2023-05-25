@@ -11,6 +11,8 @@ object Uris {
     const val CLIENT_DECIDE_REQUEST = "/users/clients/{clientId}/requests/{requestId}"
 
     const val MONITOR_REGISTER = "/users/monitors"
+    const val MONITOR_GET = "/users/monitors/{monitorId}"
+    const val MONITOR_SEARCH_ALL_AVAILABLE = "/users/monitors"
     const val MONITOR_PHOTO = "/users/monitors/{monitorId}/profile/photo"
     const val MONITOR_REQUESTS = "/users/monitors/{monitorId}/requests"
 

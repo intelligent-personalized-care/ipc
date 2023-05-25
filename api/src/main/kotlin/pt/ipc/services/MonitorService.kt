@@ -1,5 +1,6 @@
 package pt.ipc.services
 
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.Plan
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.RequestInformation
@@ -10,6 +11,10 @@ import java.util.*
 interface MonitorService {
 
     fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput
+
+    fun getMonitor(monitorID: UUID): MonitorDetails
+
+    fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
