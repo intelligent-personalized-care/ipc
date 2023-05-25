@@ -1,10 +1,9 @@
 package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Client
-import pt.ipc.domain.RequestDecision
-import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import pt.ipc.http.models.RequestInformation
 import java.util.*
 
 interface ClientsRepository {
@@ -19,7 +18,7 @@ interface ClientsRepository {
 
     fun roleOfUser(id: UUID): Role
 
-    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision)
+    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
 
     fun getRequestInformations(requestID: UUID): RequestInformation?
 

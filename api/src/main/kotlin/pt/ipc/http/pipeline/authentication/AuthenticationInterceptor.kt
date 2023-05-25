@@ -7,7 +7,7 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.Unauthenticated
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
-import pt.ipc.http.controllers.ClientController
+import pt.ipc.http.controllers.ClientsController
 import pt.ipc.http.controllers.MonitorsController
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -24,8 +24,8 @@ class AuthenticationInterceptor(
 
             val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated
 
-             if (
-                handler.method.declaringClass == ClientController::class.java && role != Role.CLIENT ||
+            if (
+                handler.method.declaringClass == ClientsController::class.java && role != Role.CLIENT ||
                 handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
             ) {
                 throw Unauthorized

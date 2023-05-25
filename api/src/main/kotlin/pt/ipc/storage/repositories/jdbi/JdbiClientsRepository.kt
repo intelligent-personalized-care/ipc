@@ -3,11 +3,10 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
-import pt.ipc.domain.RequestDecision
-import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.UserNotExists
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.storage.repositories.ClientsRepository
 import java.util.*
 
@@ -39,12 +38,12 @@ class JdbiClientsRepository(
         return Role.MONITOR
     }
 
-    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: RequestDecision) {
+    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean) {
         handle.createUpdate("delete from dbo.client_requests where request_id = :requestID ")
             .bind("requestID", requestID)
             .execute()
 
-        if (decision == RequestDecision.ACCEPT) {
+        if (accept) {
             handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
                 .bind("monitorID", monitorID)
                 .bind("clientID", clientID)

@@ -2,8 +2,8 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.RequestInformation
 import pt.ipc.domain.User
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.storage.repositories.MonitorRepository
 import java.time.LocalDate
 import java.util.*
@@ -49,17 +49,16 @@ class JdbiMonitorRepository(
             .mapTo<RequestInformation>()
             .toList()
 
-    override fun checkIfMonitorIsVerified(monitorID: UUID) : Boolean =
+    override fun checkIfMonitorIsVerified(monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.docs_authenticity where monitor_id = :monitorID and state = 'valid' ")
-               .bind("monitorID",monitorID)
-               .mapTo<Int>()
-               .single() == 1
+            .bind("monitorID", monitorID)
+            .mapTo<Int>()
+            .single() == 1
 
-
-    override fun checkIfIsMonitorOfClient(monitorID: UUID, clientID: UUID) : Boolean =
+    override fun checkIfIsMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.client_to_monitor where monitor_id = :monitorID and client_id = :clientID")
-            .bind("monitorID",monitorID)
-            .bind("clientID",clientID)
+            .bind("monitorID", monitorID)
+            .bind("clientID", clientID)
             .mapTo<Int>()
             .single() == 1
 }

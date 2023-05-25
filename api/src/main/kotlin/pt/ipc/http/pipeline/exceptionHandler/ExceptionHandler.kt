@@ -73,7 +73,6 @@ class ExceptionHandler {
         request: HttpServletRequest,
         ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {
-
         println(ex)
         val map = hashMapOf(
             "users_email_key" to "This email already exists",

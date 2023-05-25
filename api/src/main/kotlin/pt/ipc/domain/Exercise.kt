@@ -7,4 +7,5 @@ data class Exercise(
     @ColumnName("ex_id")
     val exerciseID: UUID,
     val sets: Int,
-    val reps: Int)
+    val reps: Int
+)

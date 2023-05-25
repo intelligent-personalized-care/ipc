@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.*
+import pt.ipc.domain.Exercise
+import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.User
+import pt.ipc.http.models.ConnectionRequestDecisionInput
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -26,12 +30,12 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping(produces = ["application/json", PROBLEM_MEDIA_TYPE])
-class ClientController(private val clientsService: ClientsService) {
+class ClientsController(private val clientsService: ClientsService) {
 
     @GetMapping(Uris.USER_HOME)
     fun getUserHome(): ResponseEntity<String> = ResponseEntity.accepted().body("Hello User")
 
-    @PostMapping(Uris.REGISTER_CLIENT)
+    @PostMapping(Uris.CLIENT_REGISTER)
     fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<RegisterOutput> {
         val registerOutput: RegisterOutput = clientsService.registerClient(registerClientInput)
 
@@ -43,33 +47,38 @@ class ClientController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
+        @PathVariable clientId: UUID,
         user: User,
-        @PathVariable client_id: UUID,
         @RequestParam profilePicture: MultipartFile
     ): ResponseEntity<String> {
-        if (user.id != client_id) throw Unauthorized
+        if (user.id != clientId) throw Unauthorized
 
-        clientsService.addProfilePicture(clientID = client_id, profilePicture = profilePicture.bytes)
+        clientsService.addProfilePicture(clientID = clientId, profilePicture = profilePicture.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Created")
     }
 
     @Authentication
-    @PostMapping(Uris.REQUEST_DECISION)
-    fun deciseRequest(@PathVariable client_id: UUID, @PathVariable request_id: UUID, user: User, @RequestBody decision: RequestDecision): ResponseEntity<String> {
-        if (user.id != client_id) throw Unauthorized
+    @PostMapping(Uris.CLIENT_DECIDE_REQUEST)
+    fun decideRequest(
+        @PathVariable clientId: UUID,
+        @PathVariable requestId: UUID,
+        user: User,
+        @RequestBody decision: ConnectionRequestDecisionInput
+    ): ResponseEntity<String> {
+        if (user.id != clientId) throw Unauthorized
 
-        clientsService.decideRequest(requestID = request_id, clientID = client_id, decision = decision)
+        clientsService.decideRequest(requestID = requestId, clientID = user.id, accept = decision.accept)
 
         return ResponseEntity.status(HttpStatus.OK).body("Request Decision Made")
     }
 
     @Authentication
     @GetMapping(Uris.CLIENT_REQUESTS)
-    fun getRequestsOfClient(@PathVariable client_id: UUID, user: User): ResponseEntity<List<RequestInformation>> {
-        if (client_id != user.id) throw Unauthorized
+    fun getRequestsOfClient(@PathVariable clientId: UUID, user: User): ResponseEntity<List<RequestInformation>> {
+        if (clientId != user.id) throw Unauthorized
 
-        val requests: List<RequestInformation> = clientsService.getRequestsOfclient(clientID = client_id)
+        val requests: List<RequestInformation> = clientsService.getRequestsOfClient(clientID = clientId)
 
         return ResponseEntity.ok(requests)
     }
@@ -77,12 +86,13 @@ class ClientController(private val clientsService: ClientsService) {
     @Authentication
     @GetMapping(Uris.EXERCISES_OF_CLIENT)
     fun getExercisesOfClient(
-        @PathVariable client_id: UUID,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") date : LocalDate?) : ResponseEntity<List<Exercise>>{
-
-        val exercises = clientsService.getExercisesOfClient(clientID = client_id, date = date)
+        @PathVariable clientId: UUID,
+        @RequestParam(required = false)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        date: LocalDate?
+    ): ResponseEntity<List<Exercise>> {
+        val exercises = clientsService.getExercisesOfClient(clientID = clientId, date = date)
         return ResponseEntity.ok(exercises)
-
     }
 
     companion object {
