@@ -64,6 +64,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".ui.screens.search_clients.SearchClientsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
         <!-- ML KIT Activities -->
 
         <activity

@@ -81,11 +81,12 @@ class RegisterActivity : ComponentActivity() {
         lifecycleScope.launch {
             viewModel.state.collect {
 
-                if (it == ProgressState.Created) {
+                if (it == ProgressState.FINISHED) {
                     if (Role.isClient(role))
                         ClientHomeActivity.navigate(this@RegisterActivity)
                     else
                         MonitorHomeActivity.navigate(this@RegisterActivity)
+                    finish()
                 }
             }
         }

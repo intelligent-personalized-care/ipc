@@ -33,7 +33,7 @@ private const val MAX_INPUT_SIZE = 100
 fun CustomTextField(
     fieldType: TextFieldType,
     textToDisplay: String,
-    updateText: (string: String) -> Unit,
+    updateText: (String) -> Unit,
     maxLength: Int = MAX_INPUT_SIZE,
     isToTrim: Boolean = true,
     readOnly: Boolean = false,

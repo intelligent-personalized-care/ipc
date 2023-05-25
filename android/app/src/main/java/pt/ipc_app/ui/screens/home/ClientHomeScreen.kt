@@ -46,7 +46,7 @@ fun ClientHomeScreen(
             modifier = Modifier.padding(30.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.hello)+ " ${client.name}",
+                text = stringResource(id = R.string.hello) + " ${client.name}",
                 style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.End
             )
@@ -77,7 +77,6 @@ fun ClientHomeScreen(
                     )
                 )
             }
-
         }
 
         Column(

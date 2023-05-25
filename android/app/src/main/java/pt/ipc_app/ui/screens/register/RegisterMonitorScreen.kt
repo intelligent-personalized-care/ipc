@@ -25,7 +25,7 @@ import pt.ipc_app.ui.screens.AppScreen
  */
 @Composable
 fun RegisterMonitorScreen(
-    progressState: ProgressState = ProgressState.Idle,
+    progressState: ProgressState = ProgressState.IDLE,
     error: ProblemJson? = null,
     onFileRequest: (Uri) -> ByteArray,
     onSaveRequest: (Monitor) -> Unit
