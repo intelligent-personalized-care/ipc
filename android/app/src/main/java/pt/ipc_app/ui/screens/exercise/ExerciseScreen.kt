@@ -39,7 +39,7 @@ fun ExerciseScreen(
                 )
             }
 
-            VideoPlayer(url = "https://www.youtube.com/watch?v=0eeCfNjTt4M")
+            VideoPlayer(url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
 
             Spacer(modifier = Modifier.padding(top = 100.dp))
 

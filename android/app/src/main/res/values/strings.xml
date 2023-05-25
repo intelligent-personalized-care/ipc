@@ -32,6 +32,7 @@
     <!-- Settings related strings. -->
     <string name="pref_screen" translatable="false">ps</string>
     <string name="pref_screen_title_live_preview" translatable="false">Live preview settings</string>
+    <string name="pref_screen_title_camerax_live_preview" translatable="false">CameraX live preview settings</string>
     <string name="pref_category_pose_detection" translatable="false">Pose Detection</string>
 
     <!-- Strings for camera settings. -->

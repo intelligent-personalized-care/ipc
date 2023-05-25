@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Exercise
+import pt.ipc_app.mlkit.vision.CameraXLivePreviewActivity
 import pt.ipc_app.mlkit.vision.LivePreviewActivity
 import pt.ipc_app.utils.viewModelInit
 
@@ -38,7 +39,8 @@ class ExerciseActivity: ComponentActivity() {
         setContent {
             ExerciseScreen(
                 exercise = exercise,
-                onRecordClick = { LivePreviewActivity.navigate(this) }
+                //onRecordClick = { LivePreviewActivity.navigate(this) }
+                onRecordClick = { CameraXLivePreviewActivity.navigate(this) }
             )
 
         }
