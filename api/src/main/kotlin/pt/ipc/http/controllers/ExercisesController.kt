@@ -28,8 +28,8 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     @Authentication
     @GetMapping(Uris.EXERCISES_INFO)
-    fun getExerciseInfo(@PathVariable exercise_id: UUID): ResponseEntity<ExerciseVideo> {
-        val exerciseVideo = exercisesService.getExercisesInfo(exerciseID = exercise_id)
+    fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseVideo> {
+        val exerciseVideo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
         return ResponseEntity.ok(exerciseVideo)
     }
 }

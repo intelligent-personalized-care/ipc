@@ -1,7 +1,6 @@
 package pt.ipc.services
 
 import pt.ipc.domain.Exercise
-import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import java.time.LocalDate
@@ -13,9 +12,7 @@ interface ClientsService {
 
     fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
-    fun decideRequest(requestID: UUID, clientID: UUID, accept: Boolean)
-
-    fun getRequestsOfClient(clientID: UUID): List<RequestInformation>
+    fun requestMonitor(monitorID: UUID, clientID: UUID, requestText : String?): UUID
 
     fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise>
 

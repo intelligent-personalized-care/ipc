@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS dbo.CLIENT_TO_MONITOR(
 CREATE TABLE IF NOT EXISTS dbo.client_requests(
     monitor_id       UUID REFERENCES dbo.monitors (m_id),
     client_id        UUID REFERENCES dbo.clients (c_id),
-    request_id       UUID PRIMARY KEY
+    request_id       UUID PRIMARY KEY,
+    request_definition TEXT,
     CONSTRAINT request_yourself CHECK ( client_id != monitor_id )
 );
 

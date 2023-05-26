@@ -7,12 +7,9 @@ import pt.ipc.domain.ClientDontHaveThisExercise
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.ExerciseAlreadyUploaded
 import pt.ipc.domain.NotMonitorOfClient
-import pt.ipc.domain.RequestNotExists
 import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.toLocalDate
-import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
@@ -67,22 +64,21 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun decideRequest(requestID: UUID, clientID: UUID, accept: Boolean) {
-        transactionManager.runBlock({
-            val requestInfo = it.clientsRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
+    override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID {
+        val requestID = UUID.randomUUID()
 
-            if (requestInfo.clientID != clientID) throw Unauthorized
-
-            it.clientsRepository.decideRequest(requestID = requestID, clientID = clientID, monitorID = requestInfo.monitorID, accept = accept)
-        })
-    }
-
-    override fun getRequestsOfClient(clientID: UUID): List<RequestInformation> =
         transactionManager.runBlock(
             block = {
-                it.clientsRepository.getClientRequests(clientID = clientID)
+                it.clientsRepository.requestMonitor(
+                    requestID = requestID,
+                    monitorID = monitorID,
+                    clientID = clientID,
+                    requestText = requestText
+                )
             }
         )
+        return requestID
+    }
 
     override fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise> {
         return transactionManager.runBlock(

@@ -17,10 +17,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.controllers.ClientsController.Companion.addAuthenticationCookies
-import pt.ipc.http.models.AllMonitorsAvailableOutput
-import pt.ipc.http.models.ConnectionRequestInput
-import pt.ipc.http.models.RequestIdOutput
-import pt.ipc.http.models.RequestInformation
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -56,9 +53,10 @@ class MonitorsController(private val monitorService: MonitorService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
 
-    @GetMapping(Uris.MONITOR_GET)
-    fun getMonitor(@PathVariable monitorId: UUID): ResponseEntity<MonitorDetails> {
-        val res = monitorService.getMonitor(monitorId)
+    @Authentication
+    @GetMapping(Uris.MONITOR)
+    fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
+        val res = monitorService.getMonitor(monitorID)
 
         return ResponseEntity.status(HttpStatus.OK).body(res)
     }
@@ -75,50 +73,61 @@ class MonitorsController(private val monitorService: MonitorService) {
     }
 
     @Authentication
-    @PostMapping(Uris.MONITOR_PHOTO)
-    fun addProfilePicture(@PathVariable monitorId: UUID, @RequestParam photo: MultipartFile, user: User): ResponseEntity<String> {
-        if (user.id != monitorId) throw Unauthorized
+    @PostMapping(Uris.MONITOR_DECIDE_REQUEST)
+    fun decideRequest(
+        @PathVariable monitorID: UUID,
+        @PathVariable requestID: UUID,
+        @RequestBody decision: ConnectionRequestDecisionInput,
+        user: User
+    ): ResponseEntity<String> {
 
-        monitorService.updateProfilePicture(monitorID = monitorId, photo.bytes)
+        if (user.id != monitorID) throw Unauthorized
+
+        monitorService.decideRequest(
+            requestID = requestID,
+            monitorID = monitorID,
+            accept = decision.accept
+        )
+
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    @Authentication
+    @PostMapping(Uris.MONITOR_PHOTO)
+    fun addProfilePicture(@PathVariable monitorID: UUID, @RequestParam photo: MultipartFile, user: User): ResponseEntity<String> {
+        if (user.id != monitorID) throw Unauthorized
+
+        monitorService.updateProfilePicture(monitorID = monitorID, photo = photo.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Updated")
     }
 
-    @Authentication
-    @PostMapping(Uris.MONITOR_REQUESTS)
-    fun makeRequestForClient(@PathVariable monitorId: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
-        if (monitorId != user.id) throw Unauthorized
-
-        val requestID = monitorService.requestClient(monitorID = user.id, clientID = connRequest.clientId)
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
-    }
 
     @Authentication
     @GetMapping(Uris.MONITOR_REQUESTS)
-    fun getMonitorRequests(@PathVariable monitorId: UUID, user: User): ResponseEntity<List<RequestInformation>> {
-        if (monitorId != user.id) throw Unauthorized
+    fun getMonitorRequests(@PathVariable monitorID: UUID, user: User): ResponseEntity<List<RequestInformation>> {
+        if (monitorID != user.id) throw Unauthorized
 
-        val requests: List<RequestInformation> = monitorService.monitorRequests(monitorID = monitorId)
+        val requests: List<RequestInformation> = monitorService.monitorRequests(monitorID = monitorID)
 
         return ResponseEntity.ok(requests)
     }
 
     @Authentication
     @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable clientId: UUID, @PathVariable monitorId: UUID, user: User, @RequestBody plan: Plan): ResponseEntity<PlanID> {
-        if (user.id != monitorId) throw Unauthorized
+    fun createPlanForClient(@PathVariable clientID: UUID, @PathVariable monitorID: UUID, user: User, @RequestBody plan: Plan): ResponseEntity<PlanID> {
+        if (user.id != monitorID) throw Unauthorized
 
-        val planID = monitorService.createPlan(monitorID = monitorId, clientID = clientId, plan = plan)
+        val planID = monitorService.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(PlanID(id = planID))
     }
 
     @Authentication
     @GetMapping(Uris.PLAN_BY_ID)
-    fun getPlanOfMonitorByID(@PathVariable monitorId: UUID, @PathVariable planId: Int, user: User): ResponseEntity<PlanOutput> {
-        if (user.id != monitorId) throw Unauthorized
-        val planOutput: PlanOutput = monitorService.getPlan(monitorID = monitorId, planID = planId)
+    fun getPlanOfMonitorByID(@PathVariable monitorID: UUID, @PathVariable planID: Int, user: User): ResponseEntity<PlanOutput> {
+        if (user.id != monitorID) throw Unauthorized
+        val planOutput: PlanOutput = monitorService.getPlan(monitorID = monitorID, planID = planID)
         return ResponseEntity.ok(planOutput)
     }
 

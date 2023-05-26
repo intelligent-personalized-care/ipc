@@ -17,8 +17,8 @@ import pt.ipc.domain.Exercise
 import pt.ipc.domain.Rating
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
-import pt.ipc.http.models.ConnectionRequestDecisionInput
-import pt.ipc.http.models.RequestInformation
+import pt.ipc.http.models.ConnectionRequestInput
+import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -48,59 +48,45 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
-        @PathVariable clientId: UUID,
-        user: User,
-        @RequestParam profilePicture: MultipartFile
+        @PathVariable clientID: UUID,
+        @RequestParam profilePicture: MultipartFile,
+        user: User
     ): ResponseEntity<String> {
-        if (user.id != clientId) throw Unauthorized
+        if (user.id != clientID) throw Unauthorized
 
-        clientsService.addProfilePicture(clientID = clientId, profilePicture = profilePicture.bytes)
+        clientsService.addProfilePicture(clientID = clientID, profilePicture = profilePicture.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Created")
     }
 
-    @Authentication
-    @PostMapping(Uris.CLIENT_DECIDE_REQUEST)
-    fun decideRequest(
-        @PathVariable clientId: UUID,
-        @PathVariable requestId: UUID,
-        @RequestBody decision: ConnectionRequestDecisionInput,
-        user: User
-    ): ResponseEntity<String> {
-        if (user.id != clientId) throw Unauthorized
-
-        clientsService.decideRequest(requestID = requestId, clientID = user.id, accept = decision.accept)
-
-        return ResponseEntity.status(HttpStatus.OK).body("Request Decision Made")
-    }
 
     @Authentication
-    @GetMapping(Uris.CLIENT_REQUESTS)
-    fun getRequestsOfClient(@PathVariable clientId: UUID, user: User): ResponseEntity<List<RequestInformation>> {
-        if (clientId != user.id) throw Unauthorized
+    @PostMapping(Uris.MONITOR_REQUESTS)
+    fun makeRequestForMonitor(@PathVariable monitorID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
+        if (user.id != connRequest.clientId) throw Unauthorized
 
-        val requests: List<RequestInformation> = clientsService.getRequestsOfClient(clientID = clientId)
+        val requestID = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientId, requestText = connRequest.text)
 
-        return ResponseEntity.ok(requests)
+        return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
     }
 
     @Authentication
     @GetMapping(Uris.EXERCISES_OF_CLIENT)
     fun getExercisesOfClient(
-        @PathVariable clientId: UUID,
+        @PathVariable clientID: UUID,
         @RequestParam(required = false)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         date: LocalDate?
     ): ResponseEntity<List<Exercise>> {
-        val exercises = clientsService.getExercisesOfClient(clientID = clientId, date = date)
+        val exercises = clientsService.getExercisesOfClient(clientID = clientID, date = date)
         return ResponseEntity.ok(exercises)
     }
 
     @Authentication
     @PostMapping(Uris.MONITOR_RATE)
-    fun rateMonitor(@PathVariable monitor_id: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
+    fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
         if (rating.user != user.id) throw Unauthorized
-        clientsService.rateMonitor(monitorID = monitor_id, clientID = user.id, rating = rating.rating)
+        clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = rating.rating)
         return ResponseEntity.ok().build()
     }
 
@@ -108,20 +94,20 @@ class ClientsController(private val clientsService: ClientsService) {
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
         @RequestBody video: MultipartFile,
-        @PathVariable client_id: UUID,
-        @PathVariable daily_list_id: Int,
-        @PathVariable exercise_id: Int,
-        @PathVariable plan_id: Int,
+        @PathVariable clientID: UUID,
+        @PathVariable dailyListID: Int,
+        @PathVariable exerciseID: Int,
+        @PathVariable planID: Int,
         user: User
     ): ResponseEntity<Unit> {
-        if (user.id != client_id) throw Unauthorized
+        if (user.id != clientID) throw Unauthorized
 
         clientsService.uploadVideoOfClient(
             video = video.bytes,
             clientID = user.id,
-            planID = plan_id,
-            dailyListID = daily_list_id,
-            exerciseID = exercise_id
+            planID = planID,
+            dailyListID = dailyListID,
+            exerciseID = exerciseID
         )
 
         return ResponseEntity.ok().build()

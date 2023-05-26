@@ -16,7 +16,9 @@ interface MonitorRepository {
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
-    fun requestClient(requestID: UUID, monitorID: UUID, clientID: UUID)
+    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
+
+    fun getRequestInformation(requestID: UUID): RequestInformation?
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 

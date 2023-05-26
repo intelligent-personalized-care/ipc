@@ -1,16 +1,7 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.ClientAlreadyHaveMonitor
-import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.MonitorNotFound
-import pt.ipc.domain.NotMonitorOfClient
-import pt.ipc.domain.NotPlanOfMonitor
-import pt.ipc.domain.Plan
-import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthorized
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
@@ -79,31 +70,30 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun requestClient(monitorID: UUID, clientID: UUID): UUID {
-        val requestID = UUID.randomUUID()
-
-        transactionManager.runBlock(
-            block = {
-                if (
-                    it.clientsRepository.roleOfUser(monitorID) != Role.MONITOR ||
-                    it.clientsRepository.roleOfUser(clientID) != Role.CLIENT
-                ) {
-                    throw Unauthorized
-                }
-                if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
-
-                it.monitorRepository.requestClient(requestID = requestID, monitorID = monitorID, clientID = clientID)
-            }
-        )
-        return requestID
-    }
-
     override fun monitorRequests(monitorID: UUID): List<RequestInformation> =
         transactionManager.runBlock(
             block = {
                 it.monitorRepository.monitorRequests(monitorID = monitorID)
             }
         )
+
+    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) {
+        transactionManager.runBlock(
+            block = {
+
+                val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
+
+                if(requestInformation.monitorID != monitorID ) throw Unauthorized
+
+                it.monitorRepository.decideRequest(
+                    requestID = requestID,
+                    clientID = requestInformation.clientID,
+                    monitorID = monitorID,
+                    accept = accept
+                )
+            }
+        )
+    }
 
     override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int {
         return transactionManager.runBlock(

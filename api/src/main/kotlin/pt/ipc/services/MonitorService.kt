@@ -18,9 +18,9 @@ interface MonitorService {
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
-    fun requestClient(monitorID: UUID, clientID: UUID): UUID
-
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
+
+    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean)
 
     fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int
 

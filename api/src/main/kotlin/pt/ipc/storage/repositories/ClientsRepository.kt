@@ -3,7 +3,6 @@ package pt.ipc.storage.repositories
 import pt.ipc.domain.Client
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.http.models.RequestInformation
 import java.time.LocalDate
 import java.util.*
 
@@ -19,11 +18,7 @@ interface ClientsRepository {
 
     fun roleOfUser(id: UUID): Role
 
-    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
-
-    fun getRequestInformation(requestID: UUID): RequestInformation?
-
-    fun getClientRequests(clientID: UUID): List<RequestInformation>
+    fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null )
 
     fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean
 

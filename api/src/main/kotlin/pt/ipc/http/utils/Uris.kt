@@ -6,25 +6,24 @@ object Uris {
     const val USER_HOME = "/users/home"
 
     const val CLIENT_REGISTER = "/users/clients"
-    const val CLIENT_PHOTO = "/users/clients/{clientId}/profile/photo"
-    const val CLIENT_REQUESTS = "/users/{clientId}/clients/requests"
-    const val CLIENT_DECIDE_REQUEST = "/users/clients/{clientId}/requests/{requestId}"
+    const val CLIENT_PHOTO = "/users/clients/{clientID}/profile/photo"
 
-    const val MONITOR_RATE = "users/monitors/{monitor_id}/rate"
+    const val MONITOR_RATE = "users/monitors/{monitorID}/rate"
     const val MONITOR_REGISTER = "/users/monitors"
-    const val MONITOR_GET = "/users/monitors/{monitorId}"
+    const val MONITOR = "/users/monitors/{monitorID}"
     const val MONITOR_SEARCH_ALL_AVAILABLE = "/users/monitors"
-    const val MONITOR_PHOTO = "/users/monitors/{monitorId}/profile/photo"
-    const val MONITOR_REQUESTS = "/users/monitors/{monitorId}/requests"
+    const val MONITOR_PHOTO = "/users/monitors/{monitorID}/profile/photo"
+    const val MONITOR_REQUESTS = "/users/monitors/{monitorID}/requests"
+    const val MONITOR_DECIDE_REQUEST = "/users/monitors/{monitorID}/requests/{requestID}"
 
     const val EXERCISES = "/exercises"
-    const val EXERCISES_INFO = "/exercises/{exercise_id}"
+    const val EXERCISES_INFO = "/exercises/{exerciseID}"
 
-    const val PLANS = "/users/monitors/{monitorId}/clients/{clientId}/plans"
-    const val EXERCISES_OF_CLIENT = "/users/clients/{clientId}/exercises"
-    const val PLANS_OF_MONITOR = "/users/monitors/{monitor_id}/plans"
-    const val PLAN_BY_ID = "/users/monitors/{monitorId}/plans/{planId}"
+    const val PLANS = "/users/monitors/{monitorID}/clients/{clientID}/plans"
+    const val EXERCISES_OF_CLIENT = "/users/clients/{clientID}/exercises"
+    const val PLANS_OF_MONITOR = "/users/monitors/{monitorID}/plans"
+    const val PLAN_BY_ID = "/users/monitors/{monitorID}/plans/{planID}"
 
-    const val VIDEO_OF_EXERCISE = "users/clients/{client_id}/plans/{plan_id}/daily_lists/{daily_list_id}/exercises/{exercise_id}"
-    const val VIDEO_OF_EXERCISE_FEEDBACK = "users/clients/{client_id}/plans/{plan_id}/daily_lists/{daily_list_id}/exercises/{exercise_id}"
+    const val VIDEO_OF_EXERCISE = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}"
+    const val VIDEO_OF_EXERCISE_FEEDBACK = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}"
 }
