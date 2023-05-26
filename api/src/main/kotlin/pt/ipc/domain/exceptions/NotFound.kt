@@ -1,0 +1,8 @@
+package pt.ipc.domain.exceptions
+
+abstract class NotFound(msg: String) : Exception(msg)
+
+object UserNotExists : NotFound("This User does Not Exists")
+object MonitorNotFound : NotFound("Monitor not found")
+object RequestNotExists : NotFound("This Request does not exists")
+object ClientDontHavePlan : NotFound("This Client does not have a plan assigned")

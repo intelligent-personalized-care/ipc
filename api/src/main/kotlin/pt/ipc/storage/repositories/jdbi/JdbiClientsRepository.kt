@@ -5,7 +5,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.domain.UserNotExists
+import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
 import java.util.*
@@ -40,10 +40,10 @@ class JdbiClientsRepository(
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
         handle.createUpdate("insert into dbo.client_requests (monitor_id, client_id, request_id, request_text) VALUES (:monitorID,:clientID,:requestID,:requestText)")
-            .bind("monitorID",monitorID)
-            .bind("clientID",clientID)
-            .bind("requestID",requestID)
-            .bind("requestText",requestText)
+            .bind("monitorID", monitorID)
+            .bind("clientID", clientID)
+            .bind("requestID", requestID)
+            .bind("requestText", requestText)
             .execute()
     }
 
@@ -88,7 +88,6 @@ class JdbiClientsRepository(
             .bind("userID", userID)
             .execute()
     }
-
 
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")

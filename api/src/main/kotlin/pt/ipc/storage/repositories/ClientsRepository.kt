@@ -18,7 +18,7 @@ interface ClientsRepository {
 
     fun roleOfUser(id: UUID): Role
 
-    fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null )
+    fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 
     fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean
 

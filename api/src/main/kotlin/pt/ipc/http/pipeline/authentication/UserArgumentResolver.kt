@@ -6,8 +6,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-import pt.ipc.domain.Unauthenticated
 import pt.ipc.domain.User
+import pt.ipc.domain.exceptions.Unauthenticated
 import javax.servlet.http.HttpServletRequest
 
 @Component

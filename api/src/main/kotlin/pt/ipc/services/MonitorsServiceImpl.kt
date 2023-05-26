@@ -1,8 +1,17 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.*
+import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.Role
+import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.exceptions.MonitorNotFound
+import pt.ipc.domain.exceptions.NotMonitorOfClient
+import pt.ipc.domain.exceptions.NotPlanOfMonitor
+import pt.ipc.domain.exceptions.RequestNotExists
+import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -80,10 +89,9 @@ class MonitorsServiceImpl(
     override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) {
         transactionManager.runBlock(
             block = {
-
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
 
-                if(requestInformation.monitorID != monitorID ) throw Unauthorized
+                if (requestInformation.monitorID != monitorID) throw Unauthorized
 
                 it.monitorRepository.decideRequest(
                     requestID = requestID,
@@ -99,7 +107,7 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
-                it.exerciseRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
+                it.plansRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
             }
         )
     }
@@ -107,8 +115,8 @@ class MonitorsServiceImpl(
     override fun getPlan(monitorID: UUID, planID: Int): PlanOutput {
         return transactionManager.runBlock(
             block = {
-                if (!it.exerciseRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
-                it.exerciseRepository.getPlan(planID)
+                if (!it.plansRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
+                it.plansRepository.getPlan(planID)
             }
         )
     }

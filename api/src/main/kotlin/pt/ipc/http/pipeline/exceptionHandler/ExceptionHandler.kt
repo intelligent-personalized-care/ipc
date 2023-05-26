@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.multipart.MultipartException
-import pt.ipc.domain.BadRequest
-import pt.ipc.domain.Conflict
-import pt.ipc.domain.Forbidden
-import pt.ipc.domain.NotFound
-import pt.ipc.domain.UnauthorizedRequest
+import pt.ipc.domain.exceptions.BadRequest
+import pt.ipc.domain.exceptions.Conflict
+import pt.ipc.domain.exceptions.Forbidden
+import pt.ipc.domain.exceptions.NotFound
+import pt.ipc.domain.exceptions.UnauthorizedRequest
 import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
@@ -69,7 +69,7 @@ class ExceptionHandler {
         ).toResponseEntity()
 
     @ExceptionHandler(value = [UnableToExecuteStatementException::class])
-    fun hanldePostgreSQLError(
+    fun handlePostgreSQLError(
         request: HttpServletRequest,
         ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {

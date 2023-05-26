@@ -7,9 +7,11 @@ import pt.ipc.storage.cloudStorageUtils.CloudStorageUtilsImpl
 import pt.ipc.storage.repositories.ClientsRepository
 import pt.ipc.storage.repositories.ExerciseRepository
 import pt.ipc.storage.repositories.MonitorRepository
+import pt.ipc.storage.repositories.PlansRepository
 import pt.ipc.storage.repositories.jdbi.JdbiClientsRepository
 import pt.ipc.storage.repositories.jdbi.JdbiExercisesRepository
 import pt.ipc.storage.repositories.jdbi.JdbiMonitorsRepository
+import pt.ipc.storage.repositories.jdbi.JdbiPlansRepository
 
 class TransactionImpl(
     private val handle: Handle,
@@ -19,6 +21,8 @@ class TransactionImpl(
     override val clientsRepository: ClientsRepository by lazy { JdbiClientsRepository(handle) }
 
     override val monitorRepository: MonitorRepository by lazy { JdbiMonitorsRepository(handle) }
+
+    override val plansRepository: PlansRepository by lazy { JdbiPlansRepository(handle) }
 
     override val exerciseRepository: ExerciseRepository by lazy { JdbiExercisesRepository(handle) }
 

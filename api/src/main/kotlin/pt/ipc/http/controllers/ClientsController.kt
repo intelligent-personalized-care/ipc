@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.Exercise
+import pt.ipc.domain.Plan
 import pt.ipc.domain.Rating
-import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
+import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.models.ConnectionRequestInput
 import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -59,7 +60,6 @@ class ClientsController(private val clientsService: ClientsService) {
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Created")
     }
 
-
     @Authentication
     @PostMapping(Uris.MONITOR_REQUESTS)
     fun makeRequestForMonitor(@PathVariable monitorID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
@@ -68,6 +68,13 @@ class ClientsController(private val clientsService: ClientsService) {
         val requestID = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientId, requestText = connRequest.text)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
+    }
+
+    @Authentication
+    @GetMapping(Uris.PLAN_CURRENT)
+    fun getCurrentPlanOfClient(@PathVariable clientID: UUID): ResponseEntity<Plan> {
+        val res = clientsService.getCurrentPlanOfClient(clientID)
+        return ResponseEntity.ok(res)
     }
 
     @Authentication

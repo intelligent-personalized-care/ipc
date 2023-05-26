@@ -4,9 +4,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthenticated
-import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
+import pt.ipc.domain.exceptions.Unauthenticated
+import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.controllers.ClientsController
 import pt.ipc.http.controllers.MonitorsController
 import javax.servlet.http.HttpServletRequest

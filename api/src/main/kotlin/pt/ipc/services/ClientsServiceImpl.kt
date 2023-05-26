@@ -1,14 +1,16 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.AlreadyRatedThisMonitor
 import pt.ipc.domain.Client
-import pt.ipc.domain.ClientDontHaveThisExercise
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.ExerciseAlreadyUploaded
-import pt.ipc.domain.NotMonitorOfClient
+import pt.ipc.domain.Plan
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
+import pt.ipc.domain.exceptions.ClientDontHavePlan
+import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
+import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
+import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.toLocalDate
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -79,6 +81,13 @@ class ClientsServiceImpl(
         )
         return requestID
     }
+
+    override fun getCurrentPlanOfClient(clientID: UUID): Plan =
+        transactionManager.runBlock(
+            block = {
+                it.plansRepository.getCurrentPlanOfClient(clientID) ?: throw ClientDontHavePlan
+            }
+        )
 
     override fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise> {
         return transactionManager.runBlock(

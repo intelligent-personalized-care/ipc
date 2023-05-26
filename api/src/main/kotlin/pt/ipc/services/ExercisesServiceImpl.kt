@@ -2,8 +2,8 @@ package pt.ipc.services
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.ExerciseInfo
-import pt.ipc.domain.ExerciseNotExists
 import pt.ipc.domain.ExerciseType
+import pt.ipc.domain.exceptions.ExerciseNotExists
 import pt.ipc.services.dtos.ExerciseVideo
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*

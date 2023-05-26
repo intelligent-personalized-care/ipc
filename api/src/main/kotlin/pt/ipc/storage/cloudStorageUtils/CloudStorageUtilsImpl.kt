@@ -4,7 +4,7 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import org.springframework.stereotype.Component
-import pt.ipc.domain.ExerciseVideoNotExists
+import pt.ipc.domain.exceptions.ExerciseVideoNotExists
 import java.io.ByteArrayOutputStream
 import java.util.*
 

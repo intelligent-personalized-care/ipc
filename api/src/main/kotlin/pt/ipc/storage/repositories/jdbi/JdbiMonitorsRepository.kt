@@ -76,7 +76,6 @@ class JdbiMonitorsRepository(
     }
 
     override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean) {
-
         handle.createUpdate("delete from dbo.client_requests where request_id = :requestID ")
             .bind("requestID", requestID)
             .execute()
@@ -91,7 +90,7 @@ class JdbiMonitorsRepository(
 
     override fun getRequestInformation(requestID: UUID): RequestInformation? {
         return handle.createQuery("select client_id,monitor_id,request_id,request_text from dbo.client_requests where request_id = :requestID")
-            .bind("requestID",requestID)
+            .bind("requestID", requestID)
             .mapTo<RequestInformation>()
             .singleOrNull()
     }

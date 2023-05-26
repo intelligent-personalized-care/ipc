@@ -14,10 +14,12 @@ import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.Plan
 import pt.ipc.domain.PlanID
 import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
+import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.controllers.ClientsController.Companion.addAuthenticationCookies
-import pt.ipc.http.models.*
+import pt.ipc.http.models.AllMonitorsAvailableOutput
+import pt.ipc.http.models.ConnectionRequestDecisionInput
+import pt.ipc.http.models.RequestInformation
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -80,7 +82,6 @@ class MonitorsController(private val monitorService: MonitorService) {
         @RequestBody decision: ConnectionRequestDecisionInput,
         user: User
     ): ResponseEntity<String> {
-
         if (user.id != monitorID) throw Unauthorized
 
         monitorService.decideRequest(
@@ -101,7 +102,6 @@ class MonitorsController(private val monitorService: MonitorService) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Updated")
     }
-
 
     @Authentication
     @GetMapping(Uris.MONITOR_REQUESTS)
