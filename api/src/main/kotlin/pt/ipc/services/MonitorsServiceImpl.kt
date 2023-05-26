@@ -1,7 +1,9 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
+import pt.ipc.domain.ClientAlreadyHaveMonitor
 import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.MonitorNotFound
 import pt.ipc.domain.NotMonitorOfClient
 import pt.ipc.domain.NotPlanOfMonitor
 import pt.ipc.domain.Plan
@@ -55,7 +57,7 @@ class MonitorsServiceImpl(
     override fun getMonitor(monitorID: UUID): MonitorDetails =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.getMonitor(monitorID)
+                it.monitorRepository.getMonitor(monitorID) ?: throw MonitorNotFound
             }
         )
 
@@ -88,11 +90,11 @@ class MonitorsServiceImpl(
                 ) {
                     throw Unauthorized
                 }
+                if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
 
                 it.monitorRepository.requestClient(requestID = requestID, monitorID = monitorID, clientID = clientID)
             }
         )
-
         return requestID
     }
 

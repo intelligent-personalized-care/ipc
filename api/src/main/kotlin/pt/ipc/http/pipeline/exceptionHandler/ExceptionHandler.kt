@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.multipart.MultipartException
 import pt.ipc.domain.BadRequest
-import pt.ipc.domain.Conflit
+import pt.ipc.domain.Conflict
 import pt.ipc.domain.Forbidden
 import pt.ipc.domain.NotFound
 import pt.ipc.domain.UnauthorizedRequest
@@ -35,7 +35,7 @@ class ExceptionHandler {
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
 
-    @ExceptionHandler(value = [Conflit::class])
+    @ExceptionHandler(value = [Conflict::class])
     fun handleConflit(
         request: HttpServletRequest,
         ex: Exception
@@ -43,7 +43,7 @@ class ExceptionHandler {
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Conflit",
-            status = HttpStatus.BAD_REQUEST.value()
+            status = HttpStatus.CONFLICT.value()
         ).toResponseEntity()
 
     @ExceptionHandler(value = [NotFound::class])

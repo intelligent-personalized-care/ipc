@@ -43,8 +43,8 @@ class ClientsController(private val clientsService: ClientsService) {
         addAuthenticationCookies(response, registerOutput.token)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
-
     }
+
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
@@ -98,24 +98,23 @@ class ClientsController(private val clientsService: ClientsService) {
 
     @Authentication
     @PostMapping(Uris.MONITOR_RATE)
-    fun rateMonitor(@PathVariable monitor_id: UUID, @RequestBody rating : Rating, user : User) : ResponseEntity<Unit>{
-        if(rating.user != user.id) throw Unauthorized
-        clientsService.rateMonitor(monitorID = monitor_id, clientID = user.id, rating = rating.rating )
+    fun rateMonitor(@PathVariable monitor_id: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
+        if (rating.user != user.id) throw Unauthorized
+        clientsService.rateMonitor(monitorID = monitor_id, clientID = user.id, rating = rating.rating)
         return ResponseEntity.ok().build()
     }
 
     @Authentication
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
-        @RequestBody video : MultipartFile,
+        @RequestBody video: MultipartFile,
         @PathVariable client_id: UUID,
         @PathVariable daily_list_id: Int,
         @PathVariable exercise_id: Int,
         @PathVariable plan_id: Int,
-        user : User
-    ) : ResponseEntity<Unit>{
-
-        if(user.id != client_id) throw Unauthorized
+        user: User
+    ): ResponseEntity<Unit> {
+        if (user.id != client_id) throw Unauthorized
 
         clientsService.uploadVideoOfClient(
             video = video.bytes,
@@ -127,7 +126,6 @@ class ClientsController(private val clientsService: ClientsService) {
 
         return ResponseEntity.ok().build()
     }
-
 
     companion object {
 

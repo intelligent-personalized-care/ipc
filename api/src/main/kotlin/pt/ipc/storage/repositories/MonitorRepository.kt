@@ -10,7 +10,9 @@ interface MonitorRepository {
 
     fun registerMonitor(user: User, date: LocalDate, encryptedToken: String)
 
-    fun getMonitor(monitorID: UUID): MonitorDetails
+    fun getMonitor(monitorID: UUID): MonitorDetails?
+
+    fun getMonitorOfClient(clientId: UUID): MonitorDetails?
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 

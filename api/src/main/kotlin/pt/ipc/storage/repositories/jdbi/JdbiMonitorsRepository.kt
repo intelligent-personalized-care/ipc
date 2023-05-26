@@ -36,11 +36,24 @@ class JdbiMonitorsRepository(
             .execute()
     }
 
-    override fun getMonitor(monitorID: UUID): MonitorDetails =
+    override fun getMonitor(monitorID: UUID): MonitorDetails? =
         handle.createQuery("select id, name, email, photo_id from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
             .bind("monitorID", monitorID)
             .mapTo<MonitorDetails>()
-            .single()
+            .singleOrNull()
+
+    override fun getMonitorOfClient(clientId: UUID): MonitorDetails? {
+        val monitorId = handle.createQuery(
+            """
+                select monitor_id from dbo.client_to_monitor where client_id = :clientID
+            """.trimIndent()
+        )
+            .bind("clientID", clientId)
+            .mapTo<UUID>()
+            .singleOrNull() ?: return null
+
+        return getMonitor(monitorId)
+    }
 
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
         val queryName = if (name != null) "and u.name like :name" else ""
@@ -53,7 +66,7 @@ class JdbiMonitorsRepository(
                     where da.state = 'valid' $queryName
                     offset :skip
                     limit :limit
-                """.trimIndent()
+            """.trimIndent()
         )
             .bind("name", "%$name%")
             .bind("skip", skip)

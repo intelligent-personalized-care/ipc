@@ -4,7 +4,7 @@ abstract class BadRequest(msg: String) : Exception(msg)
 
 abstract class NotFound(msg: String) : Exception(msg)
 
-abstract class Conflit(msg: String) : Exception(msg)
+abstract class Conflict(msg: String) : Exception(msg)
 
 abstract class UnauthorizedRequest(msg: String) : Exception(msg)
 
@@ -24,7 +24,11 @@ object Unauthorized : Forbidden("You cannot access this resource")
 
 object UserNotExists : NotFound("This User does Not Exists")
 
+object MonitorNotFound : NotFound("Monitor not found")
+
 object RequestNotExists : NotFound("This Request does not exists")
+
+object ClientAlreadyHaveMonitor : Conflict("This client already have a monitor")
 
 object MonitorNotVerified : Forbidden("You have to wait for your document to be verified ")
 

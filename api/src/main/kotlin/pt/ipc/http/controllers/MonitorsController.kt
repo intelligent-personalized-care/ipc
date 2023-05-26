@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.PlanID
 import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanID
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.controllers.ClientsController.Companion.addAuthenticationCookies
 import pt.ipc.http.models.AllMonitorsAvailableOutput
+import pt.ipc.http.models.ConnectionRequestInput
 import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -66,9 +67,8 @@ class MonitorsController(private val monitorService: MonitorService) {
     fun searchMonitorsAvailable(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) skip: Int?,
-        @RequestParam(required = false) limit: Int?,
-        ): ResponseEntity<AllMonitorsAvailableOutput> {
-
+        @RequestParam(required = false) limit: Int?
+    ): ResponseEntity<AllMonitorsAvailableOutput> {
         val res = monitorService.searchMonitorsAvailable(name, skip ?: DEFAULT_SKIP, limit ?: DEFAULT_LIMIT)
 
         return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
@@ -86,10 +86,10 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.MONITOR_REQUESTS)
-    fun makeRequestForClient(@PathVariable monitorId: UUID, @RequestBody clientId: UUID, user: User): ResponseEntity<RequestIdOutput> {
+    fun makeRequestForClient(@PathVariable monitorId: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
         if (monitorId != user.id) throw Unauthorized
 
-        val requestID = monitorService.requestClient(monitorID = user.id, clientID = clientId)
+        val requestID = monitorService.requestClient(monitorID = user.id, clientID = connRequest.clientId)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
     }

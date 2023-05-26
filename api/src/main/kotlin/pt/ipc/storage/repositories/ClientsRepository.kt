@@ -21,17 +21,17 @@ interface ClientsRepository {
 
     fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
 
-    fun getRequestInformations(requestID: UUID): RequestInformation?
+    fun getRequestInformation(requestID: UUID): RequestInformation?
 
     fun getClientRequests(clientID: UUID): List<RequestInformation>
 
-    fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID) : Boolean
+    fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean
 
-    fun rateMonitor(clientID: UUID, monitorID: UUID, rating : Int)
+    fun rateMonitor(clientID: UUID, monitorID: UUID, rating: Int)
 
-    fun checkIfClientHasThisExercise(clientID: UUID, planID : Int, dailyList: Int, exerciseID: Int) : Boolean
+    fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int): Boolean
 
-    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int) : Boolean
+    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int): Boolean
 
     fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate)
 }
