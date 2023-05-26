@@ -2,6 +2,7 @@ package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Plan
 import pt.ipc.domain.PlanOutput
+import java.time.LocalDate
 import java.util.*
 
 interface PlansRepository {
@@ -10,7 +11,9 @@ interface PlansRepository {
 
     fun getPlan(planID: Int): PlanOutput
 
+    fun getCurrentPlanOfClient(clientID: UUID): PlanOutput?
+
     fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean
 
-    fun getCurrentPlanOfClient(clientID: UUID): Plan?
+    fun checkIfExistsPlanInThisPeriod(period: List<LocalDate>): Boolean
 }

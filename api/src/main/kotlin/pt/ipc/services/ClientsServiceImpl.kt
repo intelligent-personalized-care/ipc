@@ -3,10 +3,11 @@ package pt.ipc.services
 import org.springframework.stereotype.Service
 import pt.ipc.domain.Client
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
+import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
 import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
 import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
@@ -71,6 +72,8 @@ class ClientsServiceImpl(
 
         transactionManager.runBlock(
             block = {
+                if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
+
                 it.clientsRepository.requestMonitor(
                     requestID = requestID,
                     monitorID = monitorID,
@@ -82,7 +85,7 @@ class ClientsServiceImpl(
         return requestID
     }
 
-    override fun getCurrentPlanOfClient(clientID: UUID): Plan =
+    override fun getCurrentPlanOfClient(clientID: UUID): PlanOutput =
         transactionManager.runBlock(
             block = {
                 it.plansRepository.getCurrentPlanOfClient(clientID) ?: throw ClientDontHavePlan

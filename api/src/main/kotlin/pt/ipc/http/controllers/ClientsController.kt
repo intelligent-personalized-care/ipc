@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Unauthorized
@@ -61,18 +61,18 @@ class ClientsController(private val clientsService: ClientsService) {
     }
 
     @Authentication
-    @PostMapping(Uris.MONITOR_REQUESTS)
-    fun makeRequestForMonitor(@PathVariable monitorID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
-        if (user.id != connRequest.clientId) throw Unauthorized
+    @PostMapping(Uris.CLIENT_REQUESTS)
+    fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
+        if (user.id != clientID) throw Unauthorized
 
-        val requestID = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientId, requestText = connRequest.text)
+        val requestID = clientsService.requestMonitor(monitorID = connRequest.monitorId, clientID = clientID, requestText = connRequest.text)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
     }
 
     @Authentication
     @GetMapping(Uris.PLAN_CURRENT)
-    fun getCurrentPlanOfClient(@PathVariable clientID: UUID): ResponseEntity<Plan> {
+    fun getCurrentPlanOfClient(@PathVariable clientID: UUID): ResponseEntity<PlanOutput> {
         val res = clientsService.getCurrentPlanOfClient(clientID)
         return ResponseEntity.ok(res)
     }

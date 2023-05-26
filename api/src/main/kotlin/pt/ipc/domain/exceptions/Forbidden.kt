@@ -3,4 +3,4 @@ package pt.ipc.domain.exceptions
 abstract class Forbidden(msg: String) : Exception(msg)
 
 object Unauthorized : Forbidden("You cannot access this resource")
-object MonitorNotVerified : Forbidden("You have to wait for your document to be verified ")
+object MonitorNotVerified : Forbidden("You have to wait for your document to be verified")

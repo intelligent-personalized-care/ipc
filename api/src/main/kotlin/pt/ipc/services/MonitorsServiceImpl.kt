@@ -107,6 +107,7 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+
                 it.plansRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
             }
         )

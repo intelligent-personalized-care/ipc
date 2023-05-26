@@ -89,25 +89,35 @@ class JdbiPlansRepository(
         )
     }
 
+    override fun getCurrentPlanOfClient(clientID: UUID): PlanOutput? {
+        val today = LocalDate.now()
+
+        val planId = handle.createQuery(
+            """
+                select distinct p.id
+                from dbo.plans p
+                inner join dbo.client_plans cp on p.id = cp.plan_id
+                inner join dbo.daily_lists dl on dl.plan_id = p.id
+                where cp.client_id = :clientID and :today >= cp.dt_start
+                and :today <= (cp.dt_start + dl.index * interval '1 day')
+            """.trimIndent()
+        )
+            .bind("clientID", clientID)
+            .bind("today", today)
+            .mapTo<Int>()
+            .singleOrNull() ?: return null
+
+        return getPlan(planId)
+    }
+
     override fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean =
-        handle.createQuery("select count(*) from dbo.plans where id = :planID and monitor_id = :monitorID")
+        handle.createQuery("select * from dbo.plans where id = :planID and monitor_id = :monitorID")
             .bind("planID", planID)
             .bind("monitorID", monitorID)
             .mapTo<Int>()
             .single() == 1
 
-    override fun getCurrentPlanOfClient(clientID: UUID): Plan? {
-        val today = LocalDate.now()
-
-        val planId = handle.createQuery(
-            """
-                
-            """.trimIndent()
-        )
-            .bind("clientID", clientID)
-            .mapTo<Int>()
-            .singleOrNull()
-
-        return null
+    override fun checkIfExistsPlanInThisPeriod(period: List<LocalDate>): Boolean {
+        TODO("Not yet implemented")
     }
 }

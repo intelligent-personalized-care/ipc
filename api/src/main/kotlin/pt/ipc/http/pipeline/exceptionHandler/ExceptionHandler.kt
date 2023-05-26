@@ -99,7 +99,8 @@ class ExceptionHandler {
             "reps_is_valid" to "The number of reps must be between 1 and 50",
             "users_pkey" to "This ID is already in use",
             "client_to_monitor_client_id_key" to "Can't have more than a monitor",
-            "daily_exercises_ex_id_fkey" to "Exercise not found"
+            "daily_exercises_ex_id_fkey" to "Exercise not found",
+            "client_requests_monitor_id_client_id_key" to "You have already sent a request to this monitor"
         )
 
         val key = ex.shortMessage.substringAfter("constraint \"").substringBefore("\"")
