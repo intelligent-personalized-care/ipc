@@ -75,19 +75,22 @@
         <activity
             android:name=".mlkit.vision.CameraXLivePreviewActivity"
             android:exported="false"
-            android:theme="@style/Theme.IPC_APP">
+            android:theme="@style/Theme.IPC_APP"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".mlkit.vision.LivePreviewActivity"
             android:exported="false"
-            android:theme="@style/Theme.IPC_APP">
+            android:theme="@style/Theme.IPC_APP"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".mlkit.preference.SettingsActivity"
             android:exported="false"
-            android:theme="@style/Theme.IPC_APP">
+            android:theme="@style/Theme.IPC_APP"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>
