@@ -85,10 +85,10 @@ class ClientsServiceImpl(
         return requestID
     }
 
-    override fun getCurrentPlanOfClient(clientID: UUID): PlanOutput =
+    override fun getCurrentPlanOfClient(clientID: UUID,date : LocalDate): PlanOutput =
         transactionManager.runBlock(
             block = {
-                it.plansRepository.getCurrentPlanOfClient(clientID) ?: throw ClientDontHavePlan
+                it.plansRepository.getCurrentPlanOfClient(clientID = clientID, date = date) ?: throw ClientDontHavePlan
             }
         )
 

@@ -11,7 +11,7 @@ interface PlansRepository {
 
     fun getPlan(planID: Int): PlanOutput
 
-    fun getCurrentPlanOfClient(clientID: UUID): PlanOutput?
+    fun getCurrentPlanOfClient(clientID: UUID, date : LocalDate): PlanOutput?
 
     fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean
 

@@ -72,8 +72,15 @@ class ClientsController(private val clientsService: ClientsService) {
 
     @Authentication
     @GetMapping(Uris.PLAN_CURRENT)
-    fun getCurrentPlanOfClient(@PathVariable clientID: UUID): ResponseEntity<PlanOutput> {
-        val res = clientsService.getCurrentPlanOfClient(clientID)
+    fun getCurrentPlanOfClient(
+        @PathVariable clientID: UUID,
+        @RequestParam(required = false)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        date: LocalDate?
+     ): ResponseEntity<PlanOutput> {
+
+        val res = clientsService.getCurrentPlanOfClient(clientID = clientID, date = date ?: LocalDate.now())
+
         return ResponseEntity.ok(res)
     }
 

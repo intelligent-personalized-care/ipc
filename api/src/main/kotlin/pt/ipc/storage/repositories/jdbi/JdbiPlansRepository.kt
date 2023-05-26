@@ -89,8 +89,7 @@ class JdbiPlansRepository(
         )
     }
 
-    override fun getCurrentPlanOfClient(clientID: UUID): PlanOutput? {
-        val today = LocalDate.now()
+    override fun getCurrentPlanOfClient(clientID: UUID, date : LocalDate): PlanOutput? {
 
         val planId = handle.createQuery(
             """
@@ -99,11 +98,11 @@ class JdbiPlansRepository(
                 inner join dbo.client_plans cp on p.id = cp.plan_id
                 inner join dbo.daily_lists dl on dl.plan_id = p.id
                 where cp.client_id = :clientID and :today >= cp.dt_start
-                and :today <= (cp.dt_start + dl.index * interval '1 day')
+                and :date <= (cp.dt_start + dl.index * interval '1 day')
             """.trimIndent()
         )
             .bind("clientID", clientID)
-            .bind("today", today)
+            .bind("today", date)
             .mapTo<Int>()
             .singleOrNull() ?: return null
 
