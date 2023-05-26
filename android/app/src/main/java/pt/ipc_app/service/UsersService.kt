@@ -72,4 +72,20 @@ class UsersService(
                 credential = credential
             )
         )
+
+    /**
+     * Connects the monitor with the client.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun connectClient(
+        id: Int
+    ): APIResult<RegisterOutput> =
+        post(
+            uri = "/users/monitors",
+            body = id
+
+        )
 }

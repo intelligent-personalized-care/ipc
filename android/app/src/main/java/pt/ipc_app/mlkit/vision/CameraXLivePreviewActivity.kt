@@ -24,15 +24,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
-import androidx.camera.core.VideoCapture
-import androidx.camera.core.impl.VideoCaptureConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -70,11 +68,11 @@ class CameraXLivePreviewActivity :
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var cameraSelector: CameraSelector? = null
 
-    private lateinit var btnCamera: Button
-    private var recording = false
+    private var isRecording = false
     private lateinit var outputDirectory: File
+    private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
-    private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
+    //private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,18 +91,10 @@ class CameraXLivePreviewActivity :
         if (graphicOverlay == null) {
             Log.d(TAG, "graphicOverlay is null")
         }
-        //val spinner = findViewById<Spinner>(R.id.spinner)
+
         val options: MutableList<String> = ArrayList()
         options.add(POSE_DETECTION)
 
-
-        /*// Creating adapter for spinner
-        val dataAdapter = ArrayAdapter(this, R.layout.spinner_style, options)
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // attaching data adapter to spinner
-        spinner.adapter = dataAdapter
-        spinner.onItemSelectedListener = this*/
         val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
         facingSwitch.setOnCheckedChangeListener(this)
         ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
@@ -126,68 +116,23 @@ class CameraXLivePreviewActivity :
         }
 
 
-        btnCamera = findViewById(R.id.camera_button)
-        outputDirectory = getOutputDirectory()
-        //videoCapture = createVideoCapture()
-        videoCapture = VideoCapture.Builder().apply {
-            setTargetAspectRatio(AspectRatio.RATIO_16_9)
-        }.build()
-
-
-        btnCamera.setOnClickListener {
-            if (!recording) {
-                recording = true
-
-                val file = File(
-                    //externalMediaDirs.first(),
-                    outputDirectory,
-                    "${UUID.randomUUID()}.mp4"
-                )
-
-                val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
-
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.RECORD_AUDIO
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) { }
-
-                videoCapture.startRecording(
-                    outputFileOptions,
-                    ContextCompat.getMainExecutor(this),
-
-
-                    object : VideoCapture.OnVideoSavedCallback {
-                        override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
-                            Log.d("Check:", "On Video Saved")
-                        }
-
-                        override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
-                            Log.d("Check:", "On Video Error $message")
-                        }
-
-                    }
-                )
-            } else {
-                recording = false
-                videoCapture.stopRecording()
-                finish()
-            }
-        }
-
-        /*cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        //nao apagar ainda
+       /* cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
             videoCapture = VideoCapture.Builder().build()
             bindAllCameraUseCases()
         }, ContextCompat.getMainExecutor(this))*/
 
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            videoCapture = VideoCapture.Builder().build()
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, cameraSelector!!, videoCapture)
-        }, ContextCompat.getMainExecutor(this))
+
+        //verifies all permissions before acessing camera
+        if (!allRuntimePermissionsGranted()) {
+            getRuntimePermissions()
+        }
+
+        outputDirectory = getOutputDirectory()
+        createVideoCapture()
+        setupRecordingButton()
 
     }
 
@@ -198,19 +143,6 @@ class CameraXLivePreviewActivity :
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else filesDir
     }
-
-    /*private fun createVideoCapture(): VideoCapture {
-        val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
-            setLensFacing(lensFacing)
-            setTargetRotation(previewView.display.rotation)
-            setTargetAspectRatio(AspectRatio.RATIO_16_9)
-            setVideoFrameRate(30)
-        }.build()
-
-        return VideoCapture(videoCaptureConfig)
-    }*/
-
-
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putString(STATE_SELECTED_MODEL, selectedModel)
@@ -281,6 +213,7 @@ class CameraXLivePreviewActivity :
             cameraProvider!!.unbindAll()
             bindPreviewUseCase()
             bindAnalysisUseCase()
+            bindVideoCaptureUseCase()
         }
     }
 
@@ -360,7 +293,7 @@ class CameraXLivePreviewActivity :
 
         analysisUseCase?.setAnalyzer(
             // imageProcessor.processImageProxy will use another thread to run the detection underneath,
-            // thus we can just runs the analyzer itself on main thread.
+            // and because of that we can just run the analyzer itself on main thread.
             ContextCompat.getMainExecutor(this),
             ImageAnalysis.Analyzer { imageProxy: ImageProxy ->
                 if (needUpdateGraphicOverlayImageSourceInfo) {
@@ -384,6 +317,125 @@ class CameraXLivePreviewActivity :
         cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, analysisUseCase)
     }
 
+    //-------------------------------- Recording video ------------------------------------------------------------
+    private fun bindVideoCaptureUseCase() {
+        val cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(lensFacing)
+            .build()
+
+        val cameraProvider = cameraProvider ?: return
+
+        try {
+            // Unbind any previously bound VideoCapture use case
+            cameraProvider.unbind(videoCapture)
+
+            // Bind the VideoCapture use case to the camera
+            camera = cameraProvider.bindToLifecycle(this, cameraSelector, videoCapture)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error binding VideoCapture", e)
+            Toast.makeText(applicationContext, "Error binding VideoCapture", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
+    private fun startRecording() {
+        val file = File(outputDirectory, "${UUID.randomUUID()}.mp4")
+        val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
+
+        videoCapture.startRecording(
+            outputFileOptions,
+            ContextCompat.getMainExecutor(this),
+            object : VideoCapture.OnVideoSavedCallback {
+                override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
+                    Log.d(TAG, "Video saved: ${file.absolutePath}")
+                }
+
+                override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
+                    Log.e(TAG, "Video recording error: $message", cause)
+                }
+            }
+        )
+    }
+
+    @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
+    private fun stopRecording() {
+        videoCapture.stopRecording()
+    }
+
+    @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
+    private fun createVideoCapture() {
+        /*val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
+            setLensFacing(lensFacing)
+            setTargetRotation(previewView.display.rotation)
+            setTargetAspectRatio(AspectRatio.RATIO_16_9)
+            setVideoFrameRate(30)
+        }.build()*/
+        videoCapture = VideoCapture.Builder().apply {
+            setTargetAspectRatio(AspectRatio.RATIO_16_9)
+            //setVideoFrameRate(30)
+            //setTargetRotation(previewView!!.display.rotation)
+            lensFacing
+        }.build()
+
+    }
+
+    private fun setupRecordingButton() {
+        val recordButton: Button = findViewById(R.id.camera_button)
+        recordButton.setOnClickListener {
+            if (isRecording) {
+                stopRecording()
+                recordButton.text = "R"//"Start Recording"
+            } else {
+                startRecording()
+                recordButton.text = "NR"//Stop Recording
+            }
+
+            isRecording = !isRecording
+        }
+    }
+
+
+    //----------------------------------- Checking Permissions ----------------------------------
+    private fun allRuntimePermissionsGranted(): Boolean {
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun getRuntimePermissions() {
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUESTS
+            )
+        }
+    }
+
+    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(TAG, "Permission granted: $permission")
+            return true
+        }
+        Log.i(TAG, "Permission NOT granted: $permission")
+        return false
+    }
+
     companion object {
         private const val TAG = "CameraXLivePreview"
 
@@ -391,6 +443,14 @@ class CameraXLivePreviewActivity :
 
         private const val STATE_SELECTED_MODEL = "selected_model"
 
+        private const val PERMISSION_REQUESTS = 1
+
+        private val REQUIRED_RUNTIME_PERMISSIONS =
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,//see if is necessary
+                Manifest.permission.RECORD_AUDIO
+            )
 
         fun navigate(context: Context) {
             with(context) {
