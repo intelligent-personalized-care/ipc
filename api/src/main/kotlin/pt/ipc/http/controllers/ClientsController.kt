@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.Exercise
+import pt.ipc.domain.Rating
 import pt.ipc.domain.Unauthorized
 import pt.ipc.domain.User
 import pt.ipc.http.models.ConnectionRequestDecisionInput
@@ -63,8 +64,8 @@ class ClientsController(private val clientsService: ClientsService) {
     fun decideRequest(
         @PathVariable clientId: UUID,
         @PathVariable requestId: UUID,
-        user: User,
-        @RequestBody decision: ConnectionRequestDecisionInput
+        @RequestBody decision: ConnectionRequestDecisionInput,
+        user: User
     ): ResponseEntity<String> {
         if (user.id != clientId) throw Unauthorized
 
@@ -96,7 +97,7 @@ class ClientsController(private val clientsService: ClientsService) {
     }
 
     @Authentication
-    @PostMapping(Uris.RATE_MONITOR)
+    @PostMapping(Uris.MONITOR_RATE)
     fun rateMonitor(@PathVariable monitor_id: UUID, @RequestBody rating : Rating, user : User) : ResponseEntity<Unit>{
         if(rating.user != user.id) throw Unauthorized
         clientsService.rateMonitor(monitorID = monitor_id, clientID = user.id, rating = rating.rating )

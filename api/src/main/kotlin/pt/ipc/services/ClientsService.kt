@@ -17,5 +17,9 @@ interface ClientsService {
 
     fun getRequestsOfClient(clientID: UUID): List<RequestInformation>
 
-    fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise>
+    fun getExercisesOfClient(clientID: UUID, date: LocalDate?) : List<Exercise>
+
+    fun rateMonitor(monitorID : UUID, clientID: UUID, rating : Int)
+
+    fun uploadVideoOfClient(video : ByteArray, clientID : UUID, planID : Int, dailyListID : Int, exerciseID : Int)
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.PLanID
+import pt.ipc.domain.PlanID
 import pt.ipc.domain.Plan
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Unauthorized
@@ -106,12 +106,12 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable clientId: UUID, @PathVariable monitorId: UUID, user: User, @RequestBody plan: Plan): ResponseEntity<PLanID> {
+    fun createPlanForClient(@PathVariable clientId: UUID, @PathVariable monitorId: UUID, user: User, @RequestBody plan: Plan): ResponseEntity<PlanID> {
         if (user.id != monitorId) throw Unauthorized
 
         val planID = monitorService.createPlan(monitorID = monitorId, clientID = clientId, plan = plan)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(PLanID(id = planID))
+        return ResponseEntity.status(HttpStatus.CREATED).body(PlanID(id = planID))
     }
 
     @Authentication

@@ -1,13 +1,8 @@
 package pt.ipc.services
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.Client
-import pt.ipc.domain.Exercise
-import pt.ipc.domain.RequestNotExists
-import pt.ipc.domain.Role
-import pt.ipc.domain.Unauthorized
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.toLocalDate
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
