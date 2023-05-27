@@ -4,18 +4,30 @@ import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.services.UsersServiceUtils
-import javax.servlet.http.Cookie
 
 @Component
 class AuthorizationHeaderProcessor(
     private val usersServiceUtils: UsersServiceUtils
 ) {
 
-    fun process(cookie: Cookie?): Pair<User, Role>? {
-        if (cookie == null) return null
+    fun process(authorizationValue : String?): Pair<User, Role>? {
 
-        val value = cookie.value
+        if (authorizationValue == null) {
+            return null
+        }
 
-        return usersServiceUtils.getUserByToken(value)
+        val parts = authorizationValue.trim().split(" ")
+        if (parts.size != 2) {
+            return null
+        }
+        if (parts[0].lowercase() != SCHEME) {
+            return null
+        }
+
+        return usersServiceUtils.getUserByToken(parts[1])
+    }
+
+    companion object {
+        const val SCHEME = "bearer"
     }
 }

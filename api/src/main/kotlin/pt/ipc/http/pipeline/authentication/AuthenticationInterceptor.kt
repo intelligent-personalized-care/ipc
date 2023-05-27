@@ -19,10 +19,10 @@ class AuthenticationInterceptor(
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
-            val cookies = request.cookies ?: throw Unauthenticated
-            val tokenCookie = cookies.find { it.name == "token" }
 
-            val (user, role) = authorizationHeaderProcessor.process(tokenCookie) ?: throw Unauthenticated
+            val authorizationValue = request.getHeader(NAME_AUTHORIZATION_HEADER)
+
+            val (user, role) = authorizationHeaderProcessor.process(authorizationValue = authorizationValue) ?: throw Unauthenticated
 
             if (
                 handler.method.declaringClass == ClientsController::class.java && role != Role.CLIENT ||
@@ -37,5 +37,8 @@ class AuthenticationInterceptor(
             }
         }
         return true
+    }
+    companion object {
+        private const val NAME_AUTHORIZATION_HEADER = "Authorization"
     }
 }
