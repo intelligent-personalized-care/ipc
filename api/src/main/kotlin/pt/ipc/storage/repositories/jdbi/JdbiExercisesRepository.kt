@@ -20,20 +20,24 @@ class JdbiExercisesRepository(
             .singleOrNull()
     }
 
-    override fun getExercises(): List<ExerciseInfo> {
-        return handle.createQuery("select * from dbo.exercises_info")
+    override fun getExercises(skip : Int, limit : Int): List<ExerciseInfo> {
+        return handle.createQuery("select * from dbo.exercises_info offset :skip limit :limit")
+            .bind("skip",skip)
+            .bind("limit",limit)
             .mapTo<ExerciseInfo>()
             .toList()
     }
 
-    override fun getExerciseByType(type: ExerciseType): List<ExerciseInfo> {
-        return handle.createQuery("select * from dbo.exercises_info where type = :type")
+    override fun getExerciseByType(type: ExerciseType, skip : Int, limit : Int): List<ExerciseInfo> {
+        return handle.createQuery("select * from dbo.exercises_info where type = :type offset :skip limit :limit")
             .bind("type", type)
+            .bind("skip",skip)
+            .bind("limit",limit)
             .mapTo<ExerciseInfo>()
             .toList()
     }
 
-    override fun getAllExercisesOfClient(clientID: UUID): List<Exercise> {
+    override fun getAllExercisesOfClient(clientID: UUID, skip : Int, limit : Int): List<Exercise> {
         val sql = """
         SELECT de.ex_id, de.sets, de.reps
         FROM dbo.daily_exercises de
@@ -41,9 +45,13 @@ class JdbiExercisesRepository(
         JOIN dbo.plans p ON dl.plan_id = p.id
         JOIN dbo.client_plans cp ON p.id = cp.plan_id
         WHERE cp.client_id = :clientID
+        offset :skip 
+        limit :limit
     """
         return handle.createQuery(sql)
             .bind("clientID", clientID)
+            .bind("skip",skip)
+            .bind("limit",limit)
             .mapTo<Exercise>()
             .list()
     }
@@ -57,6 +65,8 @@ class JdbiExercisesRepository(
         JOIN dbo.client_plans cp ON p.id = cp.plan_id
         WHERE cp.client_id = :clientID
         AND dl.index = :dayIndex
+        offset :skip 
+        limit :limit
     """
 
         val dtStart = handle.createQuery("SELECT dt_start FROM dbo.client_plans WHERE client_id = :clientID")

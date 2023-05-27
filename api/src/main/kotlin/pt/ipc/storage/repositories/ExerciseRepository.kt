@@ -10,11 +10,11 @@ interface ExerciseRepository {
 
     fun getExercise(exerciseID: UUID): ExerciseInfo?
 
-    fun getExercises(): List<ExerciseInfo>
+    fun getExercises(skip : Int, limit : Int): List<ExerciseInfo>
 
-    fun getExerciseByType(type: ExerciseType): List<ExerciseInfo>
+    fun getExerciseByType(type: ExerciseType, skip : Int, limit : Int): List<ExerciseInfo>
 
-    fun getAllExercisesOfClient(clientID: UUID): List<Exercise>
+    fun getAllExercisesOfClient(clientID: UUID, skip : Int, limit : Int): List<Exercise>
 
     fun getExercisesOfDay(clientID: UUID, date: LocalDate): List<Exercise>
 }

@@ -92,11 +92,11 @@ class ClientsServiceImpl(
             }
         )
 
-    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise> {
+    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip : Int, limit : Int): List<Exercise> {
         return transactionManager.runBlock(
             block = {
                 if (date == null) {
-                    it.exerciseRepository.getAllExercisesOfClient(clientID = clientID)
+                    it.exerciseRepository.getAllExercisesOfClient(clientID = clientID, skip = skip, limit = limit)
                 } else {
                     it.exerciseRepository.getExercisesOfDay(clientID = clientID, date = date)
                 }

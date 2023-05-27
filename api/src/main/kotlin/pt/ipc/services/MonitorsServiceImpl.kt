@@ -58,14 +58,14 @@ class MonitorsServiceImpl(
     override fun getMonitor(monitorID: UUID): MonitorDetails =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.getMonitor(monitorID) ?: throw MonitorNotFound
+                it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
             }
         )
 
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.searchMonitorsAvailable(name, skip, limit)
+                it.monitorRepository.searchMonitorsAvailable(name = name, skip =  skip, limit = limit)
             }
         )
 

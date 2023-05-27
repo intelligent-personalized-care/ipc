@@ -25,10 +25,13 @@ class ExercisesServiceImpl(
         )
     }
 
-    override fun getExercises(exerciseType: ExerciseType?): List<ExerciseInfo> {
+    override fun getExercises(exerciseType: ExerciseType?, skip : Int, limit : Int): List<ExerciseInfo> {
         return transactionManager.runBlock(
             block = {
-                if (exerciseType == null) it.exerciseRepository.getExercises() else it.exerciseRepository.getExerciseByType(exerciseType)
+                if (exerciseType == null)
+                    it.exerciseRepository.getExercises(skip = skip, limit = limit)
+                else
+                    it.exerciseRepository.getExerciseByType(type = exerciseType, skip = skip, limit = limit)
             }
         )
     }

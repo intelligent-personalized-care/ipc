@@ -9,5 +9,5 @@ interface ExercisesService {
 
     fun getExercisesInfo(exerciseID: UUID): ExerciseVideo
 
-    fun getExercises(exerciseType: ExerciseType?): List<ExerciseInfo>
+    fun getExercises(exerciseType: ExerciseType?, skip : Int, limit : Int): List<ExerciseInfo>
 }

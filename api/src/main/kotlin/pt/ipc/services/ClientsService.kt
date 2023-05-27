@@ -17,7 +17,7 @@ interface ClientsService {
 
     fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput
 
-    fun getExercisesOfClient(clientID: UUID, date: LocalDate?): List<Exercise>
+    fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip : Int, limit : Int): List<Exercise>
 
     fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int)
 

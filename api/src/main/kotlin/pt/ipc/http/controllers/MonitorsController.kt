@@ -58,7 +58,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.MONITOR)
     fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
-        val res = monitorService.getMonitor(monitorID)
+        val res = monitorService.getMonitor(monitorID = monitorID)
 
         return ResponseEntity.status(HttpStatus.OK).body(res)
     }
@@ -66,10 +66,10 @@ class MonitorsController(private val monitorService: MonitorService) {
     @GetMapping(Uris.MONITOR_SEARCH_ALL_AVAILABLE)
     fun searchMonitorsAvailable(
         @RequestParam(required = false) name: String?,
-        @RequestParam(required = false) skip: Int?,
-        @RequestParam(required = false) limit: Int?
+        @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
+        @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
     ): ResponseEntity<AllMonitorsAvailableOutput> {
-        val res = monitorService.searchMonitorsAvailable(name, skip ?: DEFAULT_SKIP, limit ?: DEFAULT_LIMIT)
+        val res : List<MonitorDetails> = monitorService.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
 
         return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
     }
@@ -100,7 +100,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
         monitorService.updateProfilePicture(monitorID = monitorID, photo = photo.bytes)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Updated")
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @Authentication
@@ -132,7 +132,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     }
 
     companion object {
-        private const val DEFAULT_SKIP = 0
-        private const val DEFAULT_LIMIT = 10
+        private const val DEFAULT_SKIP = "0"
+        private const val DEFAULT_LIMIT = "10"
     }
 }

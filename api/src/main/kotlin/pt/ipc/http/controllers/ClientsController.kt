@@ -19,6 +19,7 @@ import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.models.ConnectionRequestInput
+import pt.ipc.http.models.ListOfExercisesOfClient
 import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
@@ -57,7 +58,7 @@ class ClientsController(private val clientsService: ClientsService) {
 
         clientsService.addProfilePicture(clientID = clientID, profilePicture = profilePicture.bytes)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Profile Picture Created")
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @Authentication
@@ -78,7 +79,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         date: LocalDate?
     ): ResponseEntity<PlanOutput> {
-        val res = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
+        val res : PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
 
         return ResponseEntity.ok(res)
     }
@@ -89,10 +90,16 @@ class ClientsController(private val clientsService: ClientsService) {
         @PathVariable clientID: UUID,
         @RequestParam(required = false)
         @DateTimeFormat(pattern = "yyyy-MM-dd")
-        date: LocalDate?
-    ): ResponseEntity<List<Exercise>> {
-        val exercises = clientsService.getExercisesOfClient(clientID = clientID, date = date)
-        return ResponseEntity.ok(exercises)
+        date: LocalDate?,
+        @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
+        @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
+    ): ResponseEntity<ListOfExercisesOfClient> {
+        val exercises : List<Exercise> = clientsService.getExercisesOfClient(clientID = clientID, date = date, skip = skip, limit = limit)
+        return ResponseEntity.ok(
+            ListOfExercisesOfClient(
+                exercises = exercises
+            )
+        )
     }
 
     @Authentication
@@ -127,6 +134,9 @@ class ClientsController(private val clientsService: ClientsService) {
     }
 
     companion object {
+
+        const val DEFAULT_SKIP = "0"
+        const val DEFAULT_LIMIT = "10"
 
         fun addAuthenticationCookies(response: HttpServletResponse, token: String) {
             val responseCookie = ResponseCookie.from("token", token)
