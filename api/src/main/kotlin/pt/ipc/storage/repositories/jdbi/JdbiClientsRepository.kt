@@ -82,13 +82,6 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun updateProfilePictureID(userID: UUID, profileID: UUID) {
-        handle.createUpdate("update dbo.users set photo_id = :profileID where id = :userID")
-            .bind("profileID", profileID)
-            .bind("userID", userID)
-            .execute()
-    }
-
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")
             .bind("clientID", clientID)

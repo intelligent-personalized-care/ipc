@@ -58,8 +58,8 @@ class CloudStorageUtilsImpl(
     override fun downloadMonitorCredentials(fileName: UUID): ByteArray =
         download(fileName = fileName, folder = monitorCredentialsFolder)
 
-    override fun downloadExampleVideo(exerciseName: UUID): ByteArray =
-        download(fileName = exerciseName, folder = exampleVideoFolder)
+    override fun downloadExampleVideo(exerciseID: UUID): ByteArray =
+        download(fileName = exerciseID, folder = exampleVideoFolder)
 
     override fun deleteWithID(fileName: UUID) {
         val blobToDelete = storage.list(bucketName)
@@ -74,4 +74,7 @@ class CloudStorageUtilsImpl(
 
     override fun uploadProfilePicture(fileName: UUID, file: ByteArray) =
         upload(fileName = fileName, content = file, contentType = pngContenType, folder = userProfilePicturesFolder)
+
+    override fun downloadProfilePicture(fileName: UUID) : ByteArray =
+        download(fileName = fileName, folder = userProfilePicturesFolder)
 }

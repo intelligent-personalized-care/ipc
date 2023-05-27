@@ -1,22 +1,13 @@
 package pt.ipc.http.controllers
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.Plan
-import pt.ipc.domain.PlanID
-import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.Unauthorized
-import pt.ipc.http.controllers.ClientsController.Companion.addAuthenticationCookies
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.ConnectionRequestDecisionInput
 import pt.ipc.http.models.RequestInformation
@@ -27,40 +18,31 @@ import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
 import java.util.*
-import javax.servlet.http.HttpServletResponse
 
 @RestController
-@RequestMapping(produces = ["application/json", PROBLEM_MEDIA_TYPE])
+@RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
 class MonitorsController(private val monitorService: MonitorService) {
 
-    @PostMapping(Uris.MONITOR_REGISTER, consumes = ["multipart/form-data"])
-    fun registerMonitor(
-        @RequestParam("credential") credential: MultipartFile,
-        @RequestParam email: String,
-        @RequestParam name: String,
-        @RequestParam password: String,
-        response: HttpServletResponse
-    ): ResponseEntity<RegisterOutput> {
-        val registerMonitorInput = RegisterMonitorInput(
-            email = email,
-            name = name,
-            password = password,
-            credential = credential.bytes
-        )
+    @PostMapping(Uris.MONITOR_REGISTER)
+    fun registerMonitor(@RequestBody registerMonitorInput: RegisterMonitorInput ): ResponseEntity<RegisterOutput> {
 
         val registerOutput = monitorService.registerMonitor(registerMonitorInput)
-
-        addAuthenticationCookies(response = response, token = registerOutput.token)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
 
-    @Authentication
-    @GetMapping(Uris.MONITOR)
-    fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
-        val res = monitorService.getMonitor(monitorID = monitorID)
+    @PostMapping(Uris.MONITOR_CREDENTIAL, consumes = ["application/pdf"])
+    fun postCredentialOfMonitor(
+        @PathVariable monitorID: UUID,
+        @RequestBody credential : MultipartFile,
+        user : User,
+    ) : ResponseEntity<Unit>{
 
-        return ResponseEntity.status(HttpStatus.OK).body(res)
+        if(monitorID != user.id) throw Unauthorized
+
+        monitorService.insertCredential(monitorID = monitorID, credential = credential.bytes)
+
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping(Uris.MONITOR_SEARCH_ALL_AVAILABLE)
@@ -72,6 +54,15 @@ class MonitorsController(private val monitorService: MonitorService) {
         val res : List<MonitorDetails> = monitorService.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
 
         return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
+    }
+
+
+    @Authentication
+    @GetMapping(Uris.MONITOR)
+    fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
+        val res = monitorService.getMonitor(monitorID = monitorID)
+
+        return ResponseEntity.status(HttpStatus.OK).body(res)
     }
 
     @Authentication
@@ -101,6 +92,20 @@ class MonitorsController(private val monitorService: MonitorService) {
         monitorService.updateProfilePicture(monitorID = monitorID, photo = photo.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
+    }
+
+
+    @GetMapping(Uris.MONITOR_PHOTO, produces = ["image/png"])
+    fun getProfilePicture(@PathVariable monitorID: UUID, user : User) : ResponseEntity<ByteArray> {
+        //if (user.id != monitorID) throw Unauthorized
+
+        val profilePicture = monitorService.getProfilePicture(monitorID = monitorID)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.parseMediaType("image/png")
+        headers.contentLength = profilePicture.size.toLong()
+
+        return ResponseEntity.ok().headers(headers).body(profilePicture)
     }
 
     @Authentication

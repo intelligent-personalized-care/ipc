@@ -14,11 +14,13 @@ object Uris {
     const val MONITOR_DECIDE_REQUEST = "/users/monitors/{monitorID}/requests/{requestID}"
     const val MONITOR_RATE = "users/monitors/{monitorID}/rate"
     const val MONITOR_REGISTER = "/users/monitors"
+    const val MONITOR_CREDENTIAL = "/users/monitors/{monitorID}/credential"
     const val MONITOR_SEARCH_ALL_AVAILABLE = "/users/monitors"
     const val MONITOR_PHOTO = "/users/monitors/{monitorID}/profile/photo"
 
     const val EXERCISES = "/exercises"
     const val EXERCISES_INFO = "/exercises/{exerciseID}"
+    const val EXERCISES_INFO_VIDEO = "/exercises/{exerciseID}/video"
 
     const val PLANS = "/users/monitors/{monitorID}/clients/{clientID}/plans"
     const val PLAN_CURRENT = "/users/clients/{clientID}/plans"

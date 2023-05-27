@@ -57,13 +57,10 @@ class ClientsServiceImpl(
     }
 
     override fun addProfilePicture(clientID: UUID, profilePicture: ByteArray) {
-        val pictureID = UUID.randomUUID()
         transactionManager.runBlock(
             block = {
-                it.cloudStorage.uploadProfilePicture(fileName = pictureID, file = profilePicture)
-                it.clientsRepository.updateProfilePictureID(userID = clientID, pictureID)
-            },
-            fileName = pictureID
+                it.cloudStorage.uploadProfilePicture(fileName = clientID, file = profilePicture)
+            }
         )
     }
 

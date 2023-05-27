@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.exceptions.ExerciseNotExists
-import pt.ipc.services.dtos.ExerciseVideo
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
@@ -12,15 +11,10 @@ import java.util.*
 class ExercisesServiceImpl(
     private val transactionManager: TransactionManager
 ) : ExercisesService {
-    override fun getExercisesInfo(exerciseID: UUID): ExerciseVideo {
+    override fun getExercisesInfo(exerciseID: UUID): ExerciseInfo {
         return transactionManager.runBlock(
             block = {
-                val exerciseInfo = it.exerciseRepository.getExercise(exerciseID = exerciseID) ?: throw ExerciseNotExists
-                val video = it.cloudStorage.downloadExampleVideo(exerciseName = exerciseID)
-                ExerciseVideo(
-                    exerciseInfo = exerciseInfo,
-                    exerciseVideo = video
-                )
+                it.exerciseRepository.getExercise(exerciseID = exerciseID) ?: throw ExerciseNotExists
             }
         )
     }
@@ -32,6 +26,14 @@ class ExercisesServiceImpl(
                     it.exerciseRepository.getExercises(skip = skip, limit = limit)
                 else
                     it.exerciseRepository.getExerciseByType(type = exerciseType, skip = skip, limit = limit)
+            }
+        )
+    }
+
+    override fun getExerciseVideo(exerciseID: UUID) : ByteArray{
+        return transactionManager.runBlock(
+            block = {
+                it.cloudStorage.downloadExampleVideo(exerciseID = exerciseID)
             }
         )
     }

@@ -12,9 +12,11 @@ interface CloudStorageUtils {
 
     fun downloadMonitorCredentials(fileName: UUID): ByteArray
 
-    fun downloadExampleVideo(exerciseName: UUID): ByteArray
+    fun downloadExampleVideo(exerciseID: UUID): ByteArray
 
     fun deleteWithID(fileName: UUID)
 
     fun uploadProfilePicture(fileName: UUID, file: ByteArray)
+
+    fun downloadProfilePicture(fileName: UUID) : ByteArray
 }

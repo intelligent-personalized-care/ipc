@@ -14,8 +14,6 @@ interface ClientsRepository {
 
     fun registerClient(input: Client, token: String, physicalCondition: String? = null)
 
-    fun updateProfilePictureID(userID: UUID, profileID: UUID)
-
     fun roleOfUser(id: UUID): Role
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)

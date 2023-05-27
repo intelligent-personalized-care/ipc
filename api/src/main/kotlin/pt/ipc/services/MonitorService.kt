@@ -12,11 +12,15 @@ interface MonitorService {
 
     fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput
 
+    fun insertCredential(monitorID : UUID, credential : ByteArray)
+
     fun getMonitor(monitorID: UUID): MonitorDetails
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
+
+    fun getProfilePicture(monitorID: UUID) : ByteArray
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 

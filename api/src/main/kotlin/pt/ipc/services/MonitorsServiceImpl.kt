@@ -43,16 +43,19 @@ class MonitorsServiceImpl(
 
         transactionManager.runBlock(
             block = {
-                it.cloudStorage.uploadMonitorCredentials(
-                    fileName = userID,
-                    file = registerMonitorInput.credential
-                )
                 it.monitorRepository.registerMonitor(user = user, date = LocalDate.now(), encryptedToken = encryptedToken)
-            },
-            fileName = userID
+            }
         )
 
         return RegisterOutput(id = userID, token = token)
+    }
+
+    override fun insertCredential(monitorID : UUID, credential : ByteArray){
+        transactionManager.runBlock(
+            block = {
+                it.cloudStorage.uploadMonitorCredentials(fileName = monitorID, file = credential)
+            }
+        )
     }
 
     override fun getMonitor(monitorID: UUID): MonitorDetails =
@@ -70,12 +73,18 @@ class MonitorsServiceImpl(
         )
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
-        val photoID = UUID.randomUUID()
 
         transactionManager.runBlock(
             block = {
-                it.clientsRepository.updateProfilePictureID(userID = monitorID, profileID = photoID)
-                it.cloudStorage.uploadProfilePicture(fileName = photoID, file = photo)
+                it.cloudStorage.uploadProfilePicture(fileName = monitorID, file = photo)
+            }
+        )
+    }
+
+    override fun getProfilePicture(monitorID: UUID) : ByteArray{
+       return transactionManager.runBlock(
+            block = {
+                it.cloudStorage.downloadProfilePicture(fileName = monitorID)
             }
         )
     }

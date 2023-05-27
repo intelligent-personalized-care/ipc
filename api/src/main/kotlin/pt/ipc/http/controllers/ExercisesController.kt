@@ -1,5 +1,9 @@
 package pt.ipc.http.controllers
 
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,7 +17,6 @@ import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ExercisesService
-import pt.ipc.services.dtos.ExerciseVideo
 import java.util.*
 
 @RestController
@@ -35,12 +38,25 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     }
 
-    @Authentication
+    //@Authentication
     @GetMapping(Uris.EXERCISES_INFO)
-    fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseVideo> {
-        val exerciseVideo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
-        return ResponseEntity.ok(exerciseVideo)
+    fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseInfo> {
+        val exerciseInfo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
+        return ResponseEntity.ok(exerciseInfo)
     }
+
+      //@Authentication
+      @GetMapping(Uris.EXERCISES_INFO_VIDEO)
+      fun getExerciseVideo(@PathVariable exerciseID: UUID) : ResponseEntity<ByteArray>{
+          val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
+
+          val headers = HttpHeaders()
+          headers.contentType = MediaType.parseMediaType("video/mp4")
+          headers.contentLength = exerciseVideo.size.toLong()
+
+          return ResponseEntity.ok().headers(headers).body(exerciseVideo)
+
+      }
 
     companion object{
         const val DEFAULT_SKIP = "0"
