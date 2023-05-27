@@ -89,20 +89,19 @@ class JdbiPlansRepository(
         )
     }
 
-    override fun getCurrentPlanOfClient(clientID: UUID, date : LocalDate): PlanOutput? {
-
+    override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput? {
         val planId = handle.createQuery(
             """
                 select distinct p.id
                 from dbo.plans p
                 inner join dbo.client_plans cp on p.id = cp.plan_id
                 inner join dbo.daily_lists dl on dl.plan_id = p.id
-                where cp.client_id = :clientID and :today >= cp.dt_start
+                where cp.client_id = :clientID and :date >= cp.dt_start
                 and :date <= (cp.dt_start + dl.index * interval '1 day')
             """.trimIndent()
         )
             .bind("clientID", clientID)
-            .bind("today", date)
+            .bind("date", date)
             .mapTo<Int>()
             .singleOrNull() ?: return null
 
@@ -116,7 +115,13 @@ class JdbiPlansRepository(
             .mapTo<Int>()
             .single() == 1
 
-    override fun checkIfExistsPlanInThisPeriod(period: List<LocalDate>): Boolean {
-        TODO("Not yet implemented")
+    override fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean {
+        return handle.createQuery(
+            """
+                
+            """.trimIndent()
+        )
+            .mapTo<Boolean>()
+            .singleOrNull() ?: false
     }
 }

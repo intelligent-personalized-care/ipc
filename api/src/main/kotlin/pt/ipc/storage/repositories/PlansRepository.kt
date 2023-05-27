@@ -11,9 +11,9 @@ interface PlansRepository {
 
     fun getPlan(planID: Int): PlanOutput
 
-    fun getCurrentPlanOfClient(clientID: UUID, date : LocalDate): PlanOutput?
+    fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput?
 
     fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean
 
-    fun checkIfExistsPlanInThisPeriod(period: List<LocalDate>): Boolean
+    fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean
 }

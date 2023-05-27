@@ -7,6 +7,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.exceptions.NotPlanOfMonitor
@@ -107,6 +108,10 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+
+                val planEndDate = plan.startDate.plusDays((plan.dailyLists.size - 1).toLong())
+
+                if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID, plan.startDate, planEndDate)) throw ClientAlreadyHavePlanInThisPeriod
 
                 it.plansRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
             }
