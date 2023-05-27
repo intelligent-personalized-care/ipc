@@ -1,9 +1,9 @@
 package pt.ipc_app.domain
 
-import java.time.LocalDate
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DailyList(
-    val id: Int,
-    val day: LocalDate,
     val exercises: List<Exercise>
-)
+) : Parcelable

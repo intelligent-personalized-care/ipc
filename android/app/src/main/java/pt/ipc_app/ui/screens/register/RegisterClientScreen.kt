@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Client
 import pt.ipc_app.domain.user.User
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.screens.AppScreen
 

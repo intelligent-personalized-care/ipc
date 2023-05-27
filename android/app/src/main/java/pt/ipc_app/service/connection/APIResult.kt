@@ -1,6 +1,6 @@
 package pt.ipc_app.service.connection
 
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson
 
 /**
  * API Response result.

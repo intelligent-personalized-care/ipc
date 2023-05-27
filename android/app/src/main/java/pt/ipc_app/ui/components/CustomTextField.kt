@@ -22,8 +22,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import pt.ipc_app.service.models.Errors
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.Errors
+import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.theme.Grey
 import java.net.URI
 

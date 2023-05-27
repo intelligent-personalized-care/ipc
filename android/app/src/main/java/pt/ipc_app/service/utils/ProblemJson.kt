@@ -1,4 +1,4 @@
-package pt.ipc_app.service.models
+package pt.ipc_app.service.utils
 
 import okhttp3.MediaType.Companion.toMediaType
 import java.net.URI

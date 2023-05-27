@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson
 import java.net.URI
 
 @Composable

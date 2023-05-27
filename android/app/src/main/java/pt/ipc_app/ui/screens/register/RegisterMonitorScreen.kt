@@ -12,11 +12,12 @@ import androidx.compose.ui.res.stringResource
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.FilePicker
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.RegisterButton
 import pt.ipc_app.ui.screens.AppScreen
+import java.io.File
 
 /**
  * Register monitor screen.
@@ -27,12 +28,12 @@ import pt.ipc_app.ui.screens.AppScreen
 fun RegisterMonitorScreen(
     progressState: ProgressState = ProgressState.IDLE,
     error: ProblemJson? = null,
-    onFileRequest: (Uri) -> ByteArray,
+    onFileRequest: (Uri) -> Unit,
     onSaveRequest: (Monitor) -> Unit
 ) {
     var userInfo: User? by remember { mutableStateOf(null) }
 
-    var credential: ByteArray? by remember { mutableStateOf(null) }
+    var credential: File? by remember { mutableStateOf(null) }
 
     val monitorValidation = userInfo?.let {
         credential?.let { ba ->
@@ -64,7 +65,7 @@ fun RegisterMonitorScreen(
                     text = "Select Credential",
                     fileType = "*/*",
                     onChooseFile = {
-                        credential = onFileRequest(it)
+                        credential = File(it.path)
                     }
                 )
             }

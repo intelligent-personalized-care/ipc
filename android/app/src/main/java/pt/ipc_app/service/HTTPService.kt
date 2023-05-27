@@ -1,15 +1,19 @@
 package pt.ipc_app.service
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import pt.ipc_app.service.connection.*
-import pt.ipc_app.service.models.ProblemJson
-import pt.ipc_app.service.models.ProblemJson.Companion.problemJsonMediaType
+import pt.ipc_app.service.utils.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson.Companion.problemJsonMediaType
+import pt.ipc_app.service.models.register.RegisterMonitorInput
 import java.io.IOException
 
 /**
@@ -102,18 +106,34 @@ abstract class HTTPService(
     protected suspend inline fun <reified T> postWithFile(
         uri: String,
         token: String? = null,
-        body: Any
-    ): APIResult<T> =
-        Request.Builder()
+        body: RegisterMonitorInput
+    ): APIResult<T> {
+        Log.println(Log.WARN, "TAG", "####################################")
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("credential", body.credential.name, body.credential.asRequestBody("image/jpg".toMediaType()))
+            .addFormDataPart("email", body.email)
+            .addFormDataPart("name", body.name)
+            .addFormDataPart("password", body.password)
+            .build()
+
+        Log.println(Log.WARN, "TAG", "####################################")
+
+        val a = Request.Builder()
             .url(apiEndpoint + uri)
             .checkAuthorization(BEARER_TOKEN, token)
             .post(
                 jsonEncoder
-                    .toJson(body)
-                    .toRequestBody("multipart/form-data".toMediaType())
+                    .toJson(requestBody)
+                    .toRequestBody(MultipartBody.FORM)
             )
             .build()
-            .getResponseResult()
+
+        Log.println(Log.WARN, "TAG", a.toString())
+
+        return a.getResponseResult()
+    }
 
     companion object {
         private const val APPLICATION_JSON = "application/json"

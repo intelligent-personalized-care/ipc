@@ -56,7 +56,7 @@ fun MonitorHomeScreen(
 @Composable
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
-        monitor = UserInfo("Test", "", Role.MONITOR),
+        monitor = UserInfo("", "Test", "", Role.MONITOR),
         onClientsRequest = {}
     )
 }

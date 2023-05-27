@@ -1,8 +1,8 @@
 package pt.ipc_app.ui.components
 
 import pt.ipc_app.R
-import pt.ipc_app.service.models.Errors
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.Errors
+import pt.ipc_app.service.utils.ProblemJson
 
 enum class TextFieldType(val labelId: Int) {
     NAME(R.string.register_screen_label_name),

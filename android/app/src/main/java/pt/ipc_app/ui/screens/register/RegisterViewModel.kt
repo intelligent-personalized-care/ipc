@@ -8,6 +8,7 @@ import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
+import java.io.File
 
 /**
  * View model for the [RegisterActivity].
@@ -64,7 +65,7 @@ class RegisterViewModel(
                 }
             },
             onSuccess = {
-                sessionManager.setSession(name, it.token, Role.CLIENT)
+                sessionManager.setSession(it.id.toString(), name, it.token, Role.CLIENT)
             }
         )
     }
@@ -80,7 +81,7 @@ class RegisterViewModel(
         name: String,
         email: String,
         password: String,
-        credential: ByteArray
+        credential: File
     ) {
         launchAndExecuteRequest(
             request = {
@@ -95,7 +96,7 @@ class RegisterViewModel(
                 }
             },
             onSuccess = {
-                sessionManager.setSession(name, it.token, Role.MONITOR)
+                sessionManager.setSession(it.id.toString(), name, it.token, Role.MONITOR)
             }
         )
     }

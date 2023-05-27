@@ -22,6 +22,7 @@ import pt.ipc_app.domain.Exercise
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
+import pt.ipc_app.service.models.register.PlanOutput
 import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.MonitorScreen
 import pt.ipc_app.ui.components.PlanScreen
@@ -32,7 +33,7 @@ import pt.ipc_app.ui.screens.AppScreen
 fun ClientHomeScreen(
     client: UserInfo,
     monitor: Monitor? = null,
-    plan: Plan? = null,
+    plan: PlanOutput? = null,
     onExerciseSelect: (Exercise) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
@@ -116,7 +117,7 @@ fun ClientHomeScreen(
 @Composable
 fun ClientHomeScreenPreview() {
     ClientHomeScreen(
-        client = UserInfo("Test", "", Role.CLIENT),
+        client = UserInfo("", "Test", "", Role.CLIENT),
         monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
         plan = plan
     )

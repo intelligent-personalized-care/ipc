@@ -18,22 +18,25 @@ class SessionManagerSharedPrefs(private val context: Context) {
 
     var userInfo: UserInfo?
         get() {
+            val savedId = prefs.getString(ID, null)
             val savedName = prefs.getString(NAME, null)
             val savedToken = prefs.getString(TOKEN, null)
             val savedRole = prefs.getString(ROLE, null)
 
-            return getUserInfo(savedName, savedToken, savedRole)
+            return getUserInfo(savedId, savedName, savedToken, savedRole)
         }
 
         set(value) {
             if (value == null)
                 prefs.edit()
+                    .remove(ID)
                     .remove(NAME)
                     .remove(TOKEN)
                     .remove(ROLE)
                     .apply()
             else
                 prefs.edit()
+                    .putString(ID, value.id)
                     .putString(NAME, value.name)
                     .putString(TOKEN, value.token)
                     .putString(ROLE, value.role.name)
@@ -55,11 +58,12 @@ class SessionManagerSharedPrefs(private val context: Context) {
      * @param role the user's role
      */
     fun setSession(
+        id: String,
         name: String,
         token: String,
         role: Role
     ) {
-        userInfo = UserInfo(name, token, role)
+        userInfo = UserInfo(id, name, token, role)
     }
 
     /**
@@ -69,10 +73,11 @@ class SessionManagerSharedPrefs(private val context: Context) {
         userInfo = null
     }
 
-    private fun getUserInfo(name: String?, token: String?, role: String?): UserInfo? {
-        return if (name != null && token != null && role != null) {
+    private fun getUserInfo(id: String?, name: String?, token: String?, role: String?): UserInfo? {
+        return if (id != null && name != null && token != null && role != null) {
             val roleValidation = role.toRole() ?: return null
             UserInfo(
+                id = id,
                 name = name,
                 token = token,
                 role = roleValidation
@@ -82,8 +87,10 @@ class SessionManagerSharedPrefs(private val context: Context) {
 
     companion object {
         private const val SESSION_PREFS = "session"
-        private const val TOKEN = "token"
+
+        private const val ID = "id"
         private const val NAME = "name"
+        private const val TOKEN = "token"
         private const val ROLE = "role"
     }
 }

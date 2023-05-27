@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.domain.APIException
 import pt.ipc_app.service.connection.APIResult
-import pt.ipc_app.service.models.ProblemJson
+import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.utils.executeRequest
 
 /**

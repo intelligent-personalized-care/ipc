@@ -60,16 +60,7 @@ class RegisterActivity : ComponentActivity() {
                 RegisterMonitorScreen(
                     progressState = state,
                     error = viewModel.error,
-                    onFileRequest = {
-                        val contentResolver = this.contentResolver
-                        val byteArray = ByteArrayOutputStream().use { output ->
-                            contentResolver.openInputStream(it)?.use { input ->
-                                input.copyTo(output)
-                            }
-                            output.toByteArray()
-                        }
-                        byteArray
-                    },
+                    onFileRequest = { },
                     onSaveRequest = {
                         viewModel.registerMonitor(
                             it.name, it.email, it.password, it.credential!!

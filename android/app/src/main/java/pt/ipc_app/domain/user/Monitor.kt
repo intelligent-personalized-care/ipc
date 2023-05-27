@@ -1,5 +1,7 @@
 package pt.ipc_app.domain.user
 
+import java.io.File
+
 /**
  * Represents the monitor.
  *
@@ -9,7 +11,7 @@ class Monitor(
     name: String,
     email: String,
     password: String,
-    val credential: ByteArray?,
+    val credential: File?,
     val title: String? = null,
     val stars: Float? = 0f
 ): User(name, email, password) {
@@ -24,7 +26,7 @@ class Monitor(
             name: String,
             email: String,
             password: String,
-            credential: ByteArray
+            credential: File
         ): Monitor? =
             if (validateMonitor(name, email, password, credential))
                 Monitor(name, email, password, credential)
@@ -38,7 +40,7 @@ class Monitor(
             name: String,
             email: String,
             password: String,
-            credential: ByteArray
+            credential: File
         ) =
             validateUsername(name) && validateEmail(email) && validatePassword(password)
     }

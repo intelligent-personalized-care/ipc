@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.ipc_app.domain.Exercise
+import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.VideoPlayer
 import pt.ipc_app.ui.screens.AppScreen
 
@@ -53,7 +54,7 @@ fun ExerciseScreen(
                 style = MaterialTheme.typography.caption
             )
 
-            Spacer(modifier = Modifier.padding(top = 200.dp))
+            Spacer(modifier = Modifier.padding(top = 100.dp))
 
             Button(
                 onClick = onRecordClick,
@@ -66,6 +67,12 @@ fun ExerciseScreen(
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
+        }
+
+        Column(
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            BottomBar()
         }
     }
 

@@ -6,6 +6,7 @@ import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
+import java.util.UUID
 
 /**
  * View model for the [SearchClientsActivity].
@@ -22,13 +23,13 @@ class RegisterViewModel(
      * Attempts to connect the monitor with a client.
      */
     fun connectWithClient(
-        client: Int
+        clientId: UUID
     ) {
         launchAndExecuteRequest(
             request = {
                 _state.value = ProgressState.WAITING
                 usersService.connectClient(
-                    client
+                    clientId
                 ).also {
                     _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }

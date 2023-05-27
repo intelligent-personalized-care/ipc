@@ -19,19 +19,20 @@ import androidx.compose.ui.unit.sp
 import pt.ipc_app.domain.DailyList
 import pt.ipc_app.domain.Exercise
 import pt.ipc_app.domain.Plan
+import pt.ipc_app.service.models.register.PlanOutput
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
 
 @Composable
 fun PlanScreen(
-    plan: Plan,
+    plan: PlanOutput,
     onDailyListSelected: (DailyList) -> Unit = {},
     onExerciseSelect: (Exercise) -> Unit = {}
 ) {
 
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
-    var dailyListSelected: DailyList? by remember { mutableStateOf(plan.getListOfDayIfExists(daySelected)) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(plan.plan.getListOfDayIfExists(daySelected)) }
 
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -39,7 +40,7 @@ fun PlanScreen(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "${plan.title} - ${plan.duration} days"
+            text = "${plan.plan.title} - ${plan.plan.duration} days"
         )
         Row(
             modifier = Modifier
@@ -64,7 +65,7 @@ fun PlanScreen(
                         )
                         .clickable {
                             daySelected = it
-                            dailyListSelected = plan.getListOfDayIfExists(daySelected)
+                            dailyListSelected = plan.plan.getListOfDayIfExists(daySelected)
                             dailyListSelected?.let(onDailyListSelected)
                         }
                 ) {
@@ -118,57 +119,52 @@ fun PlanScreenPreview() {
     )
 }
 
-val plan = Plan(
-    id = 1,
-    title = "PlanTest",
-    dailyLists = listOf(
-        DailyList(
-            id = 1,
-            day = LocalDate.of(2023, 5, 20),
-            exercises = listOf(
-                Exercise(1, "Push ups", "", ""),
-                Exercise(2, "Abs", "", ""),
-                Exercise(3, "Leg extension", "", "")
-            )
-        ),
-        DailyList(
-            id = 2,
-            day = LocalDate.of(2023, 5, 21),
-            exercises = listOf(
-                Exercise(1, "Push ups2", "", ""),
-                Exercise(2, "Abs2", "", ""),
-                Exercise(3, "Leg extension2", "", ""),
-                Exercise(4, "Leg extension2", "", ""),
-                Exercise(5, "Leg extension2", "", ""),
-            )
-        ),
-        DailyList(
-            id = 3,
-            day = LocalDate.of(2023, 5, 22),
-            exercises = listOf(
-                Exercise(1, "Push ups3", "", ""),
-                Exercise(2, "Abs3", "", ""),
-                Exercise(3, "Leg extension3", "", "")
-            )
-        ),
-        DailyList(
-            id = 4,
-            day = LocalDate.of(2023, 5, 23),
-            exercises = listOf(
-                Exercise(1, "Push ups4", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
-                        "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
-                        "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", ""),
-                Exercise(2, "Abs4", "", ""),
-                Exercise(3, "Leg extension4", "", "")
-            )
-        ),
-        DailyList(
-            id = 5,
-            day = LocalDate.of(2023, 5, 24),
-            exercises = listOf(
-                Exercise(1, "Push ups5", "", ""),
-                Exercise(2, "Abs5", "", ""),
-                Exercise(3, "Leg extension5", "", "")
+val plan = PlanOutput(
+    1,
+    Plan(
+        title = "PlanTest",
+        startDate = LocalDate.of(2023, 6, 28),
+        dailyLists = listOf(
+            DailyList(
+                exercises = listOf(
+                    Exercise(1, "Push ups", "", ""),
+                    Exercise(2, "Abs", "", ""),
+                    Exercise(3, "Leg extension", "", "")
+                )
+            ),
+            DailyList(
+                exercises = listOf(
+                    Exercise(1, "Push ups2", "", ""),
+                    Exercise(2, "Abs2", "", ""),
+                    Exercise(3, "Leg extension2", "", "")
+                )
+            ),
+            DailyList(
+                exercises = listOf(
+                    Exercise(1, "Push ups3", "", ""),
+                    Exercise(2, "Abs3", "", ""),
+                    Exercise(3, "Squats", "1. Stand with feet a little wider than hip width, toes facing front.\n" +
+                            "2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\n" +
+                            "3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\n" +
+                            "4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\n" +
+                            "5. Press into your heels and straighten legs to return to a standing upright position.", "", 15, 3)
+                )
+            ),
+            DailyList(
+                exercises = listOf(
+                    Exercise(1, "Push ups4", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
+                            "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
+                            "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", ""),
+                    Exercise(2, "Abs4", "", ""),
+                    Exercise(3, "Leg extension4", "", "")
+                )
+            ),
+            DailyList(
+                exercises = listOf(
+                    Exercise(1, "Push ups5", "", ""),
+                    Exercise(2, "Abs5", "", ""),
+                    Exercise(3, "Leg extension5", "", "")
+                )
             )
         )
     )
