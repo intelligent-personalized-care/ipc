@@ -7,12 +7,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
-import pt.ipc.domain.exceptions.MonitorNotFound
-import pt.ipc.domain.exceptions.NotMonitorOfClient
-import pt.ipc.domain.exceptions.NotPlanOfMonitor
-import pt.ipc.domain.exceptions.RequestNotExists
-import pt.ipc.domain.exceptions.Unauthorized
+import pt.ipc.domain.exceptions.*
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -132,6 +127,16 @@ class MonitorsServiceImpl(
             block = {
                 if (!it.plansRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
                 it.plansRepository.getPlan(planID)
+            }
+        )
+    }
+
+    override fun giveFeedbackOfExercise(monitorID: UUID, exerciseID : Int, feedback : String){
+        return transactionManager.runBlock(
+            block = {
+                if(!it.plansRepository.checkIfClientAlreadyUploadedVideo(exerciseID = exerciseID)) throw HasNotUploadedVideo
+                if(!it.plansRepository.checkIfMonitorHasPrescribedExercise(exerciseID = exerciseID, monitorID = monitorID)) throw NotPlanOfMonitor
+                it.plansRepository.giveFeedBackOfVideo(exerciseID = exerciseID, feedback = feedback)
             }
         )
     }

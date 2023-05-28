@@ -11,6 +11,7 @@ import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.ConnectionRequestDecisionInput
 import pt.ipc.http.models.RequestInformation
+import pt.ipc.http.models.FeedbackInput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -134,6 +135,26 @@ class MonitorsController(private val monitorService: MonitorService) {
         if (user.id != monitorID) throw Unauthorized
         val planOutput: PlanOutput = monitorService.getPlan(monitorID = monitorID, planID = planID)
         return ResponseEntity.ok(planOutput)
+    }
+
+    @Authentication
+    @PostMapping(Uris.EXERCISE_FEEDBACK)
+    fun postFeedback(
+        @RequestBody  feedbackInput: FeedbackInput,
+        @PathVariable planID: UUID,
+        @PathVariable clientID: UUID,
+        @PathVariable dailyListID: Int,
+        @PathVariable exerciseID: Int,
+        user : User,
+    ) : ResponseEntity<Unit>{
+
+        monitorService.giveFeedbackOfExercise(
+           monitorID = user.id,
+           exerciseID = exerciseID,
+           feedback = feedbackInput.feedback
+        )
+
+        return ResponseEntity.ok().build()
     }
 
     companion object {

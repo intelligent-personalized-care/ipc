@@ -121,15 +121,22 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    override fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate) {
+    override fun uploadExerciseVideoOfClient(
+        clientID: UUID,
+        exerciseID: Int,
+        exerciseVideoID: UUID,
+        date: LocalDate,
+        clientFeedback: String?
+    ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_monitor) " +
-                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,null)"
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback,monitor_feedback) " +
+                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)
             .bind("exerciseID", exerciseID)
             .bind("clientID", clientID)
             .bind("date", date)
+            .bind("clientFeedback", clientFeedback)
             .execute()
     }
 }

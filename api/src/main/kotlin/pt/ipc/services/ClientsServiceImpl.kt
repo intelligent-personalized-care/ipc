@@ -3,7 +3,6 @@ package pt.ipc.services
 import org.springframework.stereotype.Service
 import pt.ipc.domain.Client
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
@@ -124,7 +123,7 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int) {
+    override fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int,clientFeedback : String?) {
         val exerciseVideoID = UUID.randomUUID()
         transactionManager.runBlock(
             block = {
@@ -134,7 +133,8 @@ class ClientsServiceImpl(
                     clientID = clientID,
                     exerciseID = exerciseID,
                     exerciseVideoID = exerciseVideoID,
-                    date = LocalDate.now()
+                    date = LocalDate.now(),
+                    clientFeedback = clientFeedback
                 )
                 it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video)
             },

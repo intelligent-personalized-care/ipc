@@ -16,4 +16,10 @@ interface PlansRepository {
     fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean
 
     fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean
+
+    fun checkIfClientAlreadyUploadedVideo(exerciseID: Int) : Boolean
+
+    fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID) : Boolean
+
+    fun giveFeedBackOfVideo(exerciseID : Int, feedback: String)
 }

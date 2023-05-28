@@ -16,10 +16,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Unauthorized
-import pt.ipc.http.models.ConnectionRequestInput
-import pt.ipc.http.models.ListOfExercisesOfClient
-import pt.ipc.http.models.MonitorOutput
-import pt.ipc.http.models.RequestIdOutput
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -118,7 +115,8 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
-        @RequestBody  video: MultipartFile,
+        @RequestParam video: MultipartFile,
+        @RequestParam(required = false) feedback: FeedbackInput?,
         @PathVariable clientID: UUID,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
@@ -132,13 +130,12 @@ class ClientsController(private val clientsService: ClientsService) {
             clientID = user.id,
             planID = planID,
             dailyListID = dailyListID,
-            exerciseID = exerciseID
+            exerciseID = exerciseID,
+            clientFeedback = feedback?.feedback
         )
 
         return ResponseEntity.ok().build()
     }
-
-
 
     companion object {
         const val DEFAULT_SKIP = "0"

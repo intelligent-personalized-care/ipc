@@ -135,4 +135,33 @@ class JdbiPlansRepository(
             .mapTo<Boolean>()
             .single()
     }
+
+    override fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID) : Boolean{
+         return handle.createQuery(
+                                "select count(*) from dbo.daily_exercises de " +
+                                    "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
+                                    "inner join dbo.plans p on dl.plan_id = p.id " +
+                                    "where de.ex_id = :exerciseID and p.monitor_id = :monitorID"
+         )
+             .bind("exerciseID",exerciseID)
+             .bind("monitorID",monitorID)
+             .mapTo<Int>()
+             .single() == 1
+
+    }
+
+    override fun checkIfClientAlreadyUploadedVideo(exerciseID: Int) : Boolean{
+        return handle.createQuery("select count(*) from dbo.exercises_video ev " +
+                                      "inner join dbo.daily_exercises de on ev.ex_id = de.id " +
+                                      "where de.ex_id = :exerciseID ")
+            .bind("exerciseID",exerciseID)
+            .mapTo<Int>()
+            .single() == 1
+    }
+
+    override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String){
+        handle.createUpdate("update dbo.exercises_video set monitor_feedback = :feedback where id = :exerciseID")
+              .bind("feedback",feedback)
+              .bind("exerciseID",exerciseID)
+    }
 }

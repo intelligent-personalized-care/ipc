@@ -29,4 +29,6 @@ interface MonitorService {
     fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
+
+    fun giveFeedbackOfExercise(monitorID: UUID, exerciseID : Int, feedback : String)
 }
