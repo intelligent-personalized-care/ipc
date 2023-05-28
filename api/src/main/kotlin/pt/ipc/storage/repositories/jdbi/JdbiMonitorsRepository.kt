@@ -55,6 +55,14 @@ class JdbiMonitorsRepository(
         return getMonitor(monitorId)
     }
 
+    override fun getMonitorRanking(monitorID: UUID): Float =
+        handle.createQuery(
+            "select avg(stars) from dbo.monitor_rating where monitor_id = :monitorID"
+        )
+            .bind("monitorID", monitorID)
+            .mapTo<Float>()
+            .singleOrNull() ?: 0F
+
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
         val queryName = if (name != null) "and u.name like :name" else ""
 

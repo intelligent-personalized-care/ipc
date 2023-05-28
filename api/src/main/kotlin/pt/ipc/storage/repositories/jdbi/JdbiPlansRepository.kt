@@ -109,7 +109,7 @@ class JdbiPlansRepository(
     }
 
     override fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean =
-        handle.createQuery("select * from dbo.plans where id = :planID and monitor_id = :monitorID")
+        handle.createQuery("select count(*) from dbo.plans where id = :planID and monitor_id = :monitorID")
             .bind("planID", planID)
             .bind("monitorID", monitorID)
             .mapTo<Int>()
@@ -118,10 +118,21 @@ class JdbiPlansRepository(
     override fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean {
         return handle.createQuery(
             """
-                
+                select exists (
+                    select 1
+                    from dbo.plans p inner join dbo.client_plans cp on p.id = cp.plan_id
+                    where cp.client_id = :clientID
+                        and ((:startDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)))
+                            or (:endDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id))))
+                        or (cp.dt_start between :startDate and :endDate
+                        and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)) between :startDate and :endDate)
+                )
             """.trimIndent()
         )
+            .bind("clientID", clientID)
+            .bind("startDate", startDate)
+            .bind("endDate", endDate)
             .mapTo<Boolean>()
-            .singleOrNull() ?: false
+            .single()
     }
 }

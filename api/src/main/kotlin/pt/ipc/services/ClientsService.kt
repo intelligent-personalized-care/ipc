@@ -1,7 +1,9 @@
 package pt.ipc.services
 
 import pt.ipc.domain.Exercise
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import java.time.LocalDate
@@ -14,6 +16,8 @@ interface ClientsService {
     fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID
+
+    fun getMonitorOfClient(clientID: UUID): MonitorOutput
 
     fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput
 

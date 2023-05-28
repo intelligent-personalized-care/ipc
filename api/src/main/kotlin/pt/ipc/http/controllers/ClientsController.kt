@@ -3,7 +3,6 @@ package pt.ipc.http.controllers
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,6 +19,7 @@ import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Unauthorized
 import pt.ipc.http.models.ConnectionRequestInput
 import pt.ipc.http.models.ListOfExercisesOfClient
+import pt.ipc.http.models.MonitorOutput
 import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
@@ -41,8 +41,6 @@ class ClientsController(private val clientsService: ClientsService) {
     @PostMapping(Uris.CLIENT_REGISTER)
     fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<RegisterOutput> {
         val registerOutput: RegisterOutput = clientsService.registerClient(registerClientInput)
-
-        addAuthenticationCookies(response, registerOutput.token)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
@@ -69,6 +67,14 @@ class ClientsController(private val clientsService: ClientsService) {
         val requestID = clientsService.requestMonitor(monitorID = connRequest.monitorId, clientID = clientID, requestText = connRequest.text)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
+    }
+
+    @Authentication
+    @GetMapping(Uris.CLIENT_MONITOR)
+    fun getMonitorOfClient(@PathVariable clientID: UUID, user: User): ResponseEntity<MonitorOutput> {
+        val res = clientsService.getMonitorOfClient(clientID = clientID)
+
+        return ResponseEntity.status(HttpStatus.OK).body(res)
     }
 
     @Authentication
@@ -134,22 +140,7 @@ class ClientsController(private val clientsService: ClientsService) {
     }
 
     companion object {
-
         const val DEFAULT_SKIP = "0"
         const val DEFAULT_LIMIT = "10"
-
-        fun addAuthenticationCookies(response: HttpServletResponse, token: String) {
-            val responseCookie = ResponseCookie.from("token", token)
-                .httpOnly(true)
-                .path("/")
-                .sameSite("Strict")
-                .build()
-
-            response.addCookie(responseCookie)
-        }
-
-        private fun HttpServletResponse.addCookie(cookie: ResponseCookie) {
-            this.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
-        }
     }
 }

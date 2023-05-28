@@ -3,6 +3,7 @@ package pt.ipc.services
 import org.springframework.stereotype.Service
 import pt.ipc.domain.Client
 import pt.ipc.domain.Exercise
+import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
@@ -11,8 +12,10 @@ import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
 import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
 import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
+import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.toLocalDate
+import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
@@ -80,6 +83,16 @@ class ClientsServiceImpl(
             }
         )
         return requestID
+    }
+
+    override fun getMonitorOfClient(clientID: UUID): MonitorOutput {
+        return transactionManager.runBlock(
+            block = {
+                val details = it.monitorRepository.getMonitorOfClient(clientID) ?: throw MonitorNotFound
+                val stars = it.monitorRepository.getMonitorRanking(details.id)
+                MonitorOutput(details.id, details.name, details.email, details.photoID, stars)
+            }
+        )
     }
 
     override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput =

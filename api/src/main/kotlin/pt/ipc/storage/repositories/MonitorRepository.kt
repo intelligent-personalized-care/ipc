@@ -14,6 +14,8 @@ interface MonitorRepository {
 
     fun getMonitorOfClient(clientId: UUID): MonitorDetails?
 
+    fun getMonitorRanking(monitorID: UUID): Float
+
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
     fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean)
