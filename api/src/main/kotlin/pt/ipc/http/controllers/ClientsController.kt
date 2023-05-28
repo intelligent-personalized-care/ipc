@@ -1,7 +1,6 @@
 package pt.ipc.http.controllers
 
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -119,7 +118,7 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
-        @RequestBody video: MultipartFile,
+        @RequestBody  video: MultipartFile,
         @PathVariable clientID: UUID,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
@@ -138,6 +137,8 @@ class ClientsController(private val clientsService: ClientsService) {
 
         return ResponseEntity.ok().build()
     }
+
+
 
     companion object {
         const val DEFAULT_SKIP = "0"

@@ -13,7 +13,7 @@ import java.nio.file.Paths
 class CloudStorageConfiguration(
 
     @Value("\${server.config.secrets.google-project-id}")
-    private val projectId: String
+    private val projectID: String
 
 ) {
 
@@ -39,10 +39,13 @@ class CloudStorageConfiguration(
         .newBuilder()
         .setRetrySettings(retryStorageOptions)
         .setCredentials(credentials)
-        .setProjectId(projectId)
+        .setProjectId(projectID)
         .build()
 
     val storage: Storage = storageOptions.service
 
-    val bucketName = "ipc_storage"
+    val userPhotosBucket = "users_photos"
+    val monitorCredentialsBucket = "monitors_credetials"
+    val clientsVideosBucket = "clients_videos"
+    val exercisesPreviewsBucket = "exercises_previews"
 }

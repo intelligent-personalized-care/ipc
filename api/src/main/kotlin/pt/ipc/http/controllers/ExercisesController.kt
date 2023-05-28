@@ -1,17 +1,12 @@
 package pt.ipc.http.controllers
 
-import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
+import pt.ipc.domain.User
 import pt.ipc.http.models.ListOfExercisesInfo
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
@@ -23,7 +18,7 @@ import java.util.*
 @RequestMapping(produces = ["application/json", Problem.PROBLEM_MEDIA_TYPE])
 class ExercisesController(private val exercisesService: ExercisesService) {
 
-    // @Authentication
+    @Authentication
     @GetMapping(Uris.EXERCISES)
     fun getExercises(
         @RequestParam(required = false) exerciseType: ExerciseType?,
@@ -38,16 +33,19 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     }
 
-    //@Authentication
+    @Authentication
     @GetMapping(Uris.EXERCISES_INFO)
     fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseInfo> {
+
         val exerciseInfo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
         return ResponseEntity.ok(exerciseInfo)
+
     }
 
-      //@Authentication
+      @Authentication
       @GetMapping(Uris.EXERCISES_INFO_VIDEO)
       fun getExerciseVideo(@PathVariable exerciseID: UUID) : ResponseEntity<ByteArray>{
+
           val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
 
           val headers = HttpHeaders()
@@ -57,6 +55,18 @@ class ExercisesController(private val exercisesService: ExercisesService) {
           return ResponseEntity.ok().headers(headers).body(exerciseVideo)
 
       }
+
+    @Authentication
+    @GetMapping(Uris.VIDEO_OF_EXERCISE)
+    fun getVideoOfExercise(
+        @PathVariable clientID: UUID,
+        @PathVariable dailyListID: Int,
+        @PathVariable exerciseID: Int,
+        @PathVariable planID: Int,
+        user: User
+    ): ResponseEntity<ByteArray>{
+        TODO()
+    }
 
     companion object{
         const val DEFAULT_SKIP = "0"

@@ -94,10 +94,10 @@ class MonitorsController(private val monitorService: MonitorService) {
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
+    @Authentication
+    @GetMapping(Uris.MONITOR_PHOTO)
+    fun getProfilePicture(@PathVariable monitorID: UUID) : ResponseEntity<ByteArray> {
 
-    @GetMapping(Uris.MONITOR_PHOTO, produces = ["image/png"])
-    fun getProfilePicture(@PathVariable monitorID: UUID, user : User) : ResponseEntity<ByteArray> {
-        //if (user.id != monitorID) throw Unauthorized
 
         val profilePicture = monitorService.getProfilePicture(monitorID = monitorID)
 

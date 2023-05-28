@@ -1,5 +1,6 @@
 package pt.ipc.storage.cloudStorageUtils
 
+import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
@@ -14,19 +15,18 @@ class CloudStorageUtilsImpl(
 ) : CloudStorageUtils {
 
     private val storage: Storage = cloudStorageConfiguration.storage
-    private val bucketName = cloudStorageConfiguration.bucketName
+
+    private val userPhotosBucket = cloudStorageConfiguration.userPhotosBucket
+    private val monitorCredentialsBucket = cloudStorageConfiguration.monitorCredentialsBucket
+    private val clientsVideosBucket = cloudStorageConfiguration.clientsVideosBucket
+    private val exercisesPreviewsBucket = cloudStorageConfiguration.exercisesPreviewsBucket
 
     private val videoContentType = "video/mp4"
     private val pdfContentType = "application/pdf"
     private val pngContenType = "image/png"
 
-    private val clientsVideosFolder = "clients_videos"
-    private val monitorCredentialsFolder = "monitor_certifications"
-    private val exampleVideoFolder = "example_videos"
-    private val userProfilePicturesFolder = "users_profile_pictures"
-
-    private fun upload(fileName: UUID, content: ByteArray, contentType: String, folder: String) {
-        val blobId = BlobId.of(bucketName, "$folder/$fileName")
+    private fun upload(fileName: String, content: ByteArray, contentType: String, bucketName: String) {
+        val blobId = BlobId.of(bucketName, fileName)
 
         val blobInfo = BlobInfo.newBuilder(blobId)
             .setContentType(contentType)
@@ -35,8 +35,8 @@ class CloudStorageUtilsImpl(
         storage.create(blobInfo, content)
     }
 
-    private fun download(fileName: UUID, folder: String): ByteArray {
-        val blob = storage.get(bucketName, "$folder/$fileName") ?: throw ExerciseVideoNotExists
+    private fun download(fileName: String, bucketName: String): ByteArray {
+        val blob = storage.get(bucketName, fileName) ?: throw ExerciseVideoNotExists
 
         val outputStream = ByteArrayOutputStream()
 
@@ -47,34 +47,37 @@ class CloudStorageUtilsImpl(
     }
 
     override fun uploadClientVideo(fileName: UUID, byteArray: ByteArray) =
-        upload(fileName, byteArray, videoContentType, clientsVideosFolder)
+        upload(fileName = fileName.toString(), content = byteArray, contentType = videoContentType, bucketName = clientsVideosBucket)
 
     override fun downloadClientVideo(fileName: UUID): ByteArray =
-        download(fileName, clientsVideosFolder)
+        download(fileName = fileName.toString(), bucketName = clientsVideosBucket)
 
     override fun uploadMonitorCredentials(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName, content = file, contentType = pdfContentType, folder = monitorCredentialsFolder)
+        upload(fileName = fileName.toString(), content = file, contentType = pdfContentType, bucketName = monitorCredentialsBucket)
 
     override fun downloadMonitorCredentials(fileName: UUID): ByteArray =
-        download(fileName = fileName, folder = monitorCredentialsFolder)
+        download(fileName = fileName.toString(), bucketName = monitorCredentialsBucket)
 
     override fun downloadExampleVideo(exerciseID: UUID): ByteArray =
-        download(fileName = exerciseID, folder = exampleVideoFolder)
+        download(fileName = exerciseID.toString(), bucketName = exercisesPreviewsBucket)
 
     override fun deleteWithID(fileName: UUID) {
-        val blobToDelete = storage.list(bucketName)
-            .iterateAll()
-            .find { blob -> blob.name == "$monitorCredentialsFolder/$fileName" || blob.name == "$clientsVideosFolder/$fileName" || blob.name == "$userProfilePicturesFolder/$fileName" }
-            ?.let { BlobId.of(bucketName, it.name) }
+        val buckets = listOf(userPhotosBucket, monitorCredentialsBucket, clientsVideosBucket)
 
-        if (blobToDelete != null) {
-            storage.delete(blobToDelete)
+        for (bucketName in buckets) {
+
+            val blobToDelete : BlobId? = storage.list(userPhotosBucket)
+                .iterateAll()
+                .find { blob -> blob.name == fileName.toString() }
+                ?.let { BlobId.of(userPhotosBucket, it.name) }
+
+            if(blobToDelete != null) storage.delete(blobToDelete)
         }
     }
 
     override fun uploadProfilePicture(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName, content = file, contentType = pngContenType, folder = userProfilePicturesFolder)
+        upload(fileName = fileName.toString(), content = file, contentType = pngContenType, bucketName = userPhotosBucket)
 
     override fun downloadProfilePicture(fileName: UUID) : ByteArray =
-        download(fileName = fileName, folder = userProfilePicturesFolder)
+        download(fileName = fileName.toString(), bucketName = userPhotosBucket)
 }
