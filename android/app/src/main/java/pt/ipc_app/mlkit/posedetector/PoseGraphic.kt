@@ -261,6 +261,9 @@ class PoseGraphic internal constructor(
     tipPaint.textSize = 40f
   }
 
+  /**
+   * Gets the angle between 3 points of the poseLandMark
+   * */
   fun getAngle(firstPoint: PoseLandmark?, midPoint: PoseLandmark?, lastPoint: PoseLandmark?): Double {
     var result = Math.toDegrees(
       atan2(

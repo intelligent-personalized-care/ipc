@@ -22,17 +22,6 @@ class ExerciseActivity: ComponentActivity() {
         }
     }
 
-    companion object {
-        const val EXERCISE = "EXERCISE"
-        fun navigate(context: Context, exercise: Exercise) {
-            with(context) {
-                val intent = Intent(this, ExerciseActivity::class.java)
-                intent.putExtra(EXERCISE, exercise)
-                startActivity(intent)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,6 +42,17 @@ class ExerciseActivity: ComponentActivity() {
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
+    }
+
+    companion object {
+        const val EXERCISE = "EXERCISE"
+        fun navigate(context: Context, exercise: Exercise) {
+            with(context) {
+                val intent = Intent(this, ExerciseActivity::class.java)
+                intent.putExtra(EXERCISE, exercise)
+                startActivity(intent)
+            }
+        }
     }
 
 }

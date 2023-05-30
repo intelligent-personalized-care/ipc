@@ -448,7 +448,7 @@ class CameraXLivePreviewActivity :
         private val REQUIRED_RUNTIME_PERMISSIONS =
             arrayOf(
                 Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,//see if is necessary
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO
             )
 

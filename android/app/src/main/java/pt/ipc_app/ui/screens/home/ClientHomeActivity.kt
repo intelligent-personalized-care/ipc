@@ -47,7 +47,7 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = repo.userInfo!!,
                 monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
-                plan = viewModel.plan.collectAsState().value,
+                plan =  plan,//viewModel.plan.collectAsState().value,
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) }
             )
         }
