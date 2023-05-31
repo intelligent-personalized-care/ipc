@@ -5,7 +5,7 @@
 
     Intelligent Personalized Care
 </h1>
-<h4 align="center">An Android application to promote physical agility and recovery.</h4>
+<h4 align="center">A Solution to promote physical agility and recovery.</h4>
 <br>
 
 > Developed in the scope of a final bachelor degree project in Computer Science and Engineering, at [ISEL](https://www.isel.pt/).
