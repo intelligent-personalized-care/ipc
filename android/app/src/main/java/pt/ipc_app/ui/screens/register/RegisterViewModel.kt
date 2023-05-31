@@ -61,11 +61,12 @@ class RegisterViewModel(
                     birthDate = birthDate.ifEmpty { null },
                     physicalCondition = physicalCondition.ifEmpty { null }
                 ).also {
-                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
+                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
                 }
             },
             onSuccess = {
                 sessionManager.setSession(it.id.toString(), name, it.token, Role.CLIENT)
+                _state.value = ProgressState.FINISHED
             }
         )
     }
@@ -80,8 +81,7 @@ class RegisterViewModel(
     fun registerMonitor(
         name: String,
         email: String,
-        password: String,
-        credential: File
+        password: String
     ) {
         launchAndExecuteRequest(
             request = {
@@ -89,8 +89,7 @@ class RegisterViewModel(
                 usersService.registerMonitor(
                     name = name,
                     email = email,
-                    password = password,
-                    credential = credential
+                    password = password
                 ).also {
                     _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }

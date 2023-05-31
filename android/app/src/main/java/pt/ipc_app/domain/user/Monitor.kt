@@ -1,7 +1,5 @@
 package pt.ipc_app.domain.user
 
-import java.io.File
-
 /**
  * Represents the monitor.
  *
@@ -10,10 +8,7 @@ import java.io.File
 class Monitor(
     name: String,
     email: String,
-    password: String,
-    val credential: File?,
-    val title: String? = null,
-    val stars: Float? = 0f
+    password: String
 ): User(name, email, password) {
 
     companion object {
@@ -26,10 +21,9 @@ class Monitor(
             name: String,
             email: String,
             password: String,
-            credential: File
         ): Monitor? =
-            if (validateMonitor(name, email, password, credential))
-                Monitor(name, email, password, credential)
+            if (validateMonitor(name, email, password))
+                Monitor(name, email, password)
             else null
 
         /**
@@ -39,8 +33,7 @@ class Monitor(
         fun validateMonitor(
             name: String,
             email: String,
-            password: String,
-            credential: File
+            password: String
         ) =
             validateUsername(name) && validateEmail(email) && validatePassword(password)
     }

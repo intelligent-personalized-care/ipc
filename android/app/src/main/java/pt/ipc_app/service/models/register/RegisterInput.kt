@@ -1,8 +1,5 @@
 package pt.ipc_app.service.models.register
 
-import java.io.File
-
-
 data class RegisterClientInput(
     val name: String,
     val email: String,
@@ -16,6 +13,5 @@ data class RegisterClientInput(
 data class RegisterMonitorInput(
     val name: String,
     val email: String,
-    val password: String,
-    val credential: File
+    val password: String
 )

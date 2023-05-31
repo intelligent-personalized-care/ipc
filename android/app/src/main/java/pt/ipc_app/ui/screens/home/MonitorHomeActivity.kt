@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.screens.search_clients.SearchClientsActivity
+import pt.ipc_app.ui.screens.search.SearchClientsActivity
 
 /**
  * The monitor home activity.

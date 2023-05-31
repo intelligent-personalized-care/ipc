@@ -1,39 +1,31 @@
 package pt.ipc_app.ui.screens.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.Exercise
-import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
-import pt.ipc_app.service.models.register.PlanOutput
-import pt.ipc_app.ui.components.BottomBar
-import pt.ipc_app.ui.components.MonitorScreen
-import pt.ipc_app.ui.components.PlanScreen
-import pt.ipc_app.ui.components.plan
+import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.service.models.PlanOutput
+import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.screens.AppScreen
+import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun ClientHomeScreen(
     client: UserInfo,
-    monitor: Monitor? = null,
+    monitor: MonitorOutput? = null,
     plan: PlanOutput? = null,
+    onMonitorClick: () -> Unit = { },
     onExerciseSelect: (Exercise) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
@@ -41,6 +33,8 @@ fun ClientHomeScreen(
     onAboutClick: () -> Unit = { }
 ) {
     var notifications by remember { mutableStateOf(true) }
+
+    var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
 
     AppScreen {
         Row(
@@ -52,52 +46,48 @@ fun ClientHomeScreen(
                 textAlign = TextAlign.End
             )
         }
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.padding(30.dp)
-        ) {
-            BadgedBox(modifier = Modifier.padding(end = 10.dp),
-                badge = {
-                    if (notifications)
-                        Badge(
-                            Modifier
-                                .clip(CircleShape)
-                                .background(Color.Red)
-                                .align(Alignment.BottomEnd)
-                        )
-                }
-            ) {
-                Icon(
-                    imageVector = if (notifications) Icons.Default.Notifications else Icons.Default.NotificationsNone,
-                    contentDescription = "notification icon",
-                    tint = Color.Black,
-                    modifier = Modifier.clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null,
-                        onClick = { if (notifications) notifications = false }
-                    )
-                )
-            }
-        }
+
+        NotificationIcon(
+            notifications = notifications,
+            onClick = { if (notifications) notifications = false }
+        )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(top = 130.dp)
         ) {
+            MonitorRow(
+                monitor = monitor,
+                onMonitorClick = onMonitorClick
+            )
 
-            monitor?.let {
-                MonitorScreen(
-                    monitor = it
-                )
-            }
-            
             Spacer(modifier = Modifier.padding(top = 80.dp))
 
-            plan?.let {
-                PlanScreen(
-                    plan = it,
-                    onExerciseSelect = { ex -> onExerciseSelect(ex) }
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+
+
+                Text(
+                    text = if (plan != null) "${plan.plan.title} - ${plan.plan.duration} days"
+                            else "No current plan assigned"
                 )
+
+
+                DaysOfWeekRow(
+                    daySelected = daySelected,
+                    onDaySelected = { daySelected = it }
+                )
+
+                plan?.let {
+                    PlanScreen(
+                        plan = it,
+                        daySelected = daySelected,
+                        onExerciseSelect = { ex -> onExerciseSelect(ex) }
+                    )
+                }
             }
         }
         Column(
@@ -115,10 +105,27 @@ fun ClientHomeScreen(
 
 @Preview
 @Composable
+fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
+    ClientHomeScreen(
+        client = UserInfo("", "Test", "", Role.CLIENT)
+    )
+}
+
+@Preview
+@Composable
+fun ClientHomeScreenWithoutPlanPreview() {
+    ClientHomeScreen(
+        client = UserInfo("", "Test", "", Role.CLIENT),
+        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F)
+    )
+}
+
+@Preview
+@Composable
 fun ClientHomeScreenPreview() {
     ClientHomeScreen(
         client = UserInfo("", "Test", "", Role.CLIENT),
-        monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
+        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F),
         plan = plan
     )
 }

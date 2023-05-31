@@ -59,13 +59,31 @@
         </activity>
 
         <activity
+            android:name=".ui.screens.info.ClientDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ui.screens.search.SearchMonitorsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".ui.screens.home.MonitorHomeActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".ui.screens.search_clients.SearchClientsActivity"
+            android:name=".ui.screens.info.MonitorDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ui.screens.search.SearchClientsActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>

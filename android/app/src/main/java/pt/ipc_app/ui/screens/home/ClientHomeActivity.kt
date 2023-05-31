@@ -10,11 +10,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.domain.user.*
-import pt.ipc_app.ui.components.plan
+import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
-import pt.ipc_app.ui.screens.splash.ClientHomeViewModel
+import pt.ipc_app.ui.screens.info.ClientDetailsActivity
+import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
+import pt.ipc_app.ui.screens.info.MonitorDetailsActivity
 import pt.ipc_app.utils.viewModelInit
+import java.util.*
 
 /**
  * The client home activity.
@@ -43,17 +45,30 @@ class ClientHomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val userInfo = repo.userInfo!!
+
         setContent {
+            val monitor = viewModel.monitor.collectAsState().value
+
             ClientHomeScreen(
-                client = repo.userInfo!!,
-                monitor = Monitor("Miguel", "miguel@gmail.com", "Aa123456@", null, "Physiotherapist"),
-                plan =  plan,//viewModel.plan.collectAsState().value,
-                onExerciseSelect = { ExerciseActivity.navigate(this, it) }
+                client = userInfo,
+                monitor = monitor,
+                plan = viewModel.plan.collectAsState().value,
+                onMonitorClick = {
+                    if (monitor != null)
+                        MonitorDetailsActivity.navigate(this, monitor)
+                    else
+                        SearchMonitorsActivity.navigate(this)
+                },
+                onExerciseSelect = { ExerciseActivity.navigate(this, it) },
+                onUserInfoClick = { ClientDetailsActivity.navigate(this, ClientOutput(UUID.fromString(userInfo.id), userInfo.name, "tiago@gmail.com")) }
             )
         }
 
         lifecycleScope.launch {
             viewModel.getCurrentPlanOfClient()
+            viewModel.getMonitorOfClient()
         }
     }
 }

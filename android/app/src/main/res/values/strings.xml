@@ -13,7 +13,6 @@
     <string name="register_screen_label_physicalCondition">Physical Condition</string>
     <string name="search">Search…</string>
 
-
     <string name="client">Client</string>
     <string name="monitor">Monitor</string>
     <string name="select">Select</string>
@@ -22,6 +21,8 @@
 
     <string name="clients_search_results">Search Results</string>
     <string name="clients_search_name">Name</string>
+
+    <string name="activity_info_no_suitable_app">Could not find a suitable application</string>
 
     <!-- ########################### ML KIT ########################### -->
 

@@ -19,6 +19,7 @@ interface DependenciesContainer {
     val services: IPCService
 }
 
+const val TAG = "IntelligentPersonalizedCare"
 
 /**
  * The IPC application.
@@ -40,6 +41,6 @@ class IPCApplication : DependenciesContainer, Application() {
     )
 
     companion object {
-        private const val API_ENDPOINT = "https://3e1d-81-84-186-29.ngrok-free.app"
+        private const val API_ENDPOINT = "https://700b-2a01-11-8120-3c10-b830-3ecd-8428-e0bc.ngrok-free.app"
     }
 }

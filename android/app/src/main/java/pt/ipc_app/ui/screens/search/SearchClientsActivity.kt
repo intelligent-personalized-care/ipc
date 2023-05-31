@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.search_clients
+package pt.ipc_app.ui.screens.search
 
 import android.content.Context
 import android.content.Intent

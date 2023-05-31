@@ -4,7 +4,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.ConnectionRequestInput
-import pt.ipc_app.service.models.register.PlanOutput
+import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.service.models.PlanOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
@@ -64,16 +65,14 @@ class UsersService(
     suspend fun registerMonitor(
         name: String,
         email: String,
-        password: String,
-        credential: File
+        password: String
     ): APIResult<RegisterOutput> =
-        postWithFile(
+        post(
             uri = "/users/monitors",
             body = RegisterMonitorInput(
                 name = name,
                 email = email,
-                password = password,
-                credential = credential
+                password = password
             )
         )
 
@@ -85,10 +84,28 @@ class UsersService(
      * @throws IOException if there is an error while sending the request
      */
     suspend fun getMonitorOfClient(
-
-    ): APIResult<RegisterOutput> =
+        clientId: String,
+        token: String
+    ): APIResult<MonitorOutput> =
         get(
-            uri = ""
+            uri = "/users/clients/$clientId/monitor",
+            token = token
+        )
+
+    /**
+     * Search monitors available.
+     *
+     * @return the API result of the register request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun searchMonitorsAvailable(
+        name: String,
+        token: String
+    ): APIResult<MonitorOutput> =
+        get(
+            uri = "/users/monitors?name=$name",
+            token = token
         )
 
     /**
@@ -103,10 +120,9 @@ class UsersService(
         token: String
     ): APIResult<PlanOutput> =
         get(
-            uri = "/users/clients/$clientId/plans",
+            uri = "/users/clients/$clientId/plans?date=2023-05-29",
             token = token
         )
-
 
     /**
      * Connects the monitor with the client.
@@ -124,4 +140,25 @@ class UsersService(
                 id
             )
         )
+
+    /**
+     * Connects the monitor with the client.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun updateProfilePicture(
+        image: File,
+        clientId: UUID,
+        token: String
+    ): APIResult<FileOutput> =
+        postWithFile(
+            uri = "/users/clients/$clientId/profile/photo",
+            token = token,
+            file = image
+        )
+
 }
+
+class FileOutput()

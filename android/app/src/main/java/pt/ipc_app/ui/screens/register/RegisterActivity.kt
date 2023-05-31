@@ -60,10 +60,9 @@ class RegisterActivity : ComponentActivity() {
                 RegisterMonitorScreen(
                     progressState = state,
                     error = viewModel.error,
-                    onFileRequest = { },
                     onSaveRequest = {
                         viewModel.registerMonitor(
-                            it.name, it.email, it.password, it.credential!!
+                            it.name, it.email, it.password
                         )
                     }
                 )

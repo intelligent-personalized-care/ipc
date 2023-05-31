@@ -3,6 +3,7 @@ package pt.ipc_app.ui.components
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,27 +14,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import java.io.ByteArrayOutputStream
+import androidx.documentfile.provider.DocumentFile
 
 @Composable
 fun FilePicker(
     text: String,
     fileType: String = "*/*",
-    onChooseFile: (Uri) -> Unit
+    onChooseFile: () -> Unit
 ) {
     var pickedFileUri by remember { mutableStateOf<Uri?>(null) }
-
+/*
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { pickedFileUri = it }
     )
 
     pickedFileUri?.let {
-        onChooseFile(it)
+
+        val documentFile = DocumentFile.fromSingleUri(LocalContext.current, it)
+
+        onChooseFile()
     }
 
+ */
+
     Button(
-        onClick = { launcher.launch(fileType) },
+        onClick = { onChooseFile() },
         modifier = Modifier.padding(top = 10.dp)
     ) {
         Text(text)

@@ -53,8 +53,3 @@ class Client(
             validateUsername(name) && validateEmail(email) && validatePassword(password)
     }
 }
-
-data class ClientInfo(
-    val name: String,
-
-)
