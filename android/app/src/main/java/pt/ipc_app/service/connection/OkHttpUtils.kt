@@ -1,8 +1,8 @@
 package pt.ipc_app.service.connection
 
+import android.util.Log
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
-import okhttp3.internal.parseCookie
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -26,6 +26,7 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.println(Log.WARN, "TAG", "e: " + e.message)
                 continuation.resumeWithException(e)
             }
 
@@ -33,6 +34,7 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
                 try {
                     continuation.resume(handler(response))
                 } catch (t: Throwable) {
+                    Log.println(Log.WARN, "TAG", "t: " + t.message)
                     continuation.resumeWithException(t)
                 }
             }
