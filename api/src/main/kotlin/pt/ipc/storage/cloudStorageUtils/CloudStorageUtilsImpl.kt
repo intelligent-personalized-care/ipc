@@ -66,10 +66,10 @@ class CloudStorageUtilsImpl(
 
         for (bucketName in buckets) {
 
-            val blobToDelete : BlobId? = storage.list(userPhotosBucket)
+            val blobToDelete : BlobId? = storage.list(bucketName)
                 .iterateAll()
                 .find { blob -> blob.name == fileName.toString() }
-                ?.let { BlobId.of(userPhotosBucket, it.name) }
+                ?.let { BlobId.of(bucketName, it.name) }
 
             if(blobToDelete != null) storage.delete(blobToDelete)
         }
