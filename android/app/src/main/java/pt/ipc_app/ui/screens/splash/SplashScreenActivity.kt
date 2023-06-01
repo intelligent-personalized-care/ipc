@@ -3,7 +3,6 @@ package pt.ipc_app.ui.screens.splash
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
@@ -23,13 +22,28 @@ class SplashScreenActivity: ComponentActivity() {
         (application as DependenciesContainer).sessionManager
     }
 
+    private val viewModel by viewModels<SplashScreenViewModel> {
+        viewModelInit {
+            val app = (application as DependenciesContainer)
+            SplashScreenViewModel(app.services.usersService, app.sessionManager)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        repo.setSession("8e8aaf90-e3ac-41f6-9569-001eaf10fa68","Tiago", "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJ1c2VySUQiOiI4ZThhYWY5MC1lM2FjLTQxZjYtOTU2OS0wMDFlYWYxMGZhNjgiLCJyb2xlIjoiQ0xJRU5UIn0.nWtRiKUtqwpVedwyHOifI6d4f-OnhwfNv5RBdUQM2GpIu65YE8ZoU6Da0Hvwvmeyf7ZB8KbQS7yokZ8UuTrN7w", Role.CLIENT)
+        repo.setSession(
+            id = "0e2843b0-8010-4ac2-970b-dd05a5dd7d81",
+            name = "Tiago",
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0ZTEyM0BnbWFpbC5jb20iLCJ1c2VySUQiOiIwZTI4NDNiMC04MDEwLTRhYzItOTcwYi1kZDA1YTVkZDdkODEiLCJyb2xlIjoiQ0xJRU5UIn0.03Q5Z_XKt-jPNVqyuelpm-zl5zaKdU8VTdHMzpRTC8jTFR8nvmKeNpBkg9HE4DiANEPfrLZC2vyydv-G0w-Jcg",
+            role = Role.CLIENT
+        )
 
         CoroutineScope(Dispatchers.Main).launch {
+
+            viewModel.getMonitorOfClient()
+            viewModel.getCurrentPlanOfClient()
 
             delay(3000)
 
@@ -37,7 +51,7 @@ class SplashScreenActivity: ComponentActivity() {
                 ChooseRoleActivity.navigate(this@SplashScreenActivity)
             } else {
                 if (repo.userInfo?.role!!.isClient()) {
-                    ClientHomeActivity.navigate(this@SplashScreenActivity)
+                    ClientHomeActivity.navigate(this@SplashScreenActivity, viewModel.monitor.value, viewModel.plan.value)
                 } else {
                     MonitorHomeActivity.navigate(this@SplashScreenActivity)
                 }

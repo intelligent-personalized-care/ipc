@@ -10,11 +10,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
+import pt.ipc_app.domain.DailyList
 import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.service.models.PlanOutput
 import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.screens.AppScreen
 import java.time.LocalDate
@@ -24,7 +25,7 @@ import java.util.*
 fun ClientHomeScreen(
     client: UserInfo,
     monitor: MonitorOutput? = null,
-    plan: PlanOutput? = null,
+    plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
     onExerciseSelect: (Exercise) -> Unit = { },
     onHomeClick: () -> Unit = { },
@@ -35,6 +36,7 @@ fun ClientHomeScreen(
     var notifications by remember { mutableStateOf(true) }
 
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(plan?.getListOfDayIfExists(daySelected)) }
 
     AppScreen {
         Row(
@@ -69,25 +71,23 @@ fun ClientHomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-
                 Text(
-                    text = if (plan != null) "${plan.plan.title} - ${plan.plan.duration} days"
+                    text = if (plan != null) "${plan.title} - ${plan.dailyLists.size} days"
                             else "No current plan assigned"
                 )
 
-
                 DaysOfWeekRow(
                     daySelected = daySelected,
-                    onDaySelected = { daySelected = it }
+                    onDaySelected = {
+                        daySelected = it
+                        dailyListSelected = plan?.getListOfDayIfExists(it)
+                    }
                 )
 
-                plan?.let {
-                    PlanScreen(
-                        plan = it,
-                        daySelected = daySelected,
-                        onExerciseSelect = { ex -> onExerciseSelect(ex) }
-                    )
-                }
+                ExercisesList(
+                    dailyListSelected = dailyListSelected,
+                    onExerciseSelect = { ex -> onExerciseSelect(ex) }
+                )
             }
         }
         Column(

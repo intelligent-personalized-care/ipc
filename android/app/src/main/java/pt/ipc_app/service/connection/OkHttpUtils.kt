@@ -7,6 +7,8 @@ import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+const val REQUEST_TAG = "REQUEST"
+
 /**
  * Extension function used to send [this] request using [okHttpClient] and process the
  * received response with the given [handler]. Note that [handler] is called from a
@@ -26,15 +28,16 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.println(Log.WARN, "TAG", "e: " + e.message)
+                Log.println(Log.WARN, REQUEST_TAG, "e: " + e.message)
                 continuation.resumeWithException(e)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 try {
                     continuation.resume(handler(response))
+                    Log.println(Log.WARN, REQUEST_TAG, "Success: " + response.body)
                 } catch (t: Throwable) {
-                    Log.println(Log.WARN, "TAG", "t: " + t.message)
+                    Log.println(Log.WARN, REQUEST_TAG, "t: " + t)
                     continuation.resumeWithException(t)
                 }
             }

@@ -2,10 +2,10 @@ package pt.ipc_app.service
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
+import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.ConnectionRequestInput
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.service.models.PlanOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
@@ -118,9 +118,9 @@ class UsersService(
     suspend fun getCurrentPlanOfClient(
         clientId: String,
         token: String
-    ): APIResult<PlanOutput> =
+    ): APIResult<Plan> =
         get(
-            uri = "/users/clients/$clientId/plans?date=2023-05-29",
+            uri = "/users/clients/$clientId/plans",
             token = token
         )
 

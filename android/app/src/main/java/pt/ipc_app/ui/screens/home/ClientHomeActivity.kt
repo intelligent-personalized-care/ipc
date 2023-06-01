@@ -2,16 +2,15 @@ package pt.ipc_app.ui.screens.home
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.components.plan
+import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
 import pt.ipc_app.ui.screens.info.ClientDetailsActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
@@ -36,9 +35,13 @@ class ClientHomeActivity : ComponentActivity() {
     }
 
     companion object {
-        fun navigate(context: Context) {
+        const val MONITOR = "MONITOR"
+        const val PLAN = "PLAN"
+        fun navigate(context: Context, monitor: MonitorOutput? = null, plan: Plan? = null) {
             with(context) {
                 val intent = Intent(this, ClientHomeActivity::class.java)
+                intent.putExtra(MONITOR, monitor)
+                intent.putExtra(PLAN, plan)
                 startActivity(intent)
             }
         }
@@ -50,15 +53,13 @@ class ClientHomeActivity : ComponentActivity() {
         val userInfo = repo.userInfo!!
 
         setContent {
-            val monitor = viewModel.monitor.collectAsState().value
-
             ClientHomeScreen(
                 client = userInfo,
                 monitor = monitor,
-                plan = plan,//viewModel.plan.collectAsState().value,
+                plan = plan,
                 onMonitorClick = {
                     if (monitor != null)
-                        MonitorDetailsActivity.navigate(this, monitor)
+                        MonitorDetailsActivity.navigate(this, monitor!!)
                     else
                         SearchMonitorsActivity.navigate(this)
                 },
@@ -66,10 +67,21 @@ class ClientHomeActivity : ComponentActivity() {
                 onUserInfoClick = { ClientDetailsActivity.navigate(this, ClientOutput(UUID.fromString(userInfo.id), userInfo.name, "tiago@gmail.com")) }
             )
         }
+    }
 
-        lifecycleScope.launch {
-            viewModel.getCurrentPlanOfClient()
-            viewModel.getMonitorOfClient()
-        }
+    @Suppress("deprecation")
+    private val monitor: MonitorOutput? by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(MONITOR, MonitorOutput::class.java)
+        else
+            intent.getParcelableExtra(MONITOR)
+    }
+
+    @Suppress("deprecation")
+    private val plan: Plan? by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(PLAN, Plan::class.java)
+        else
+            intent.getParcelableExtra(PLAN)
     }
 }

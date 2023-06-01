@@ -51,6 +51,7 @@ abstract class HTTPService(
                     throw IllegalArgumentException()
 
             } catch (e: JsonSyntaxException) {
+                e.printStackTrace()
                 throw IllegalArgumentException()
             }
         }
