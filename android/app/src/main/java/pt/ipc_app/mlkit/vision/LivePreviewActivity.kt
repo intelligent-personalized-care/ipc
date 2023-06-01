@@ -23,6 +23,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +39,7 @@ import com.google.android.gms.common.annotation.KeepName
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.R
+import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.CameraSource
 import pt.ipc_app.mlkit.CameraSourcePreview
 import pt.ipc_app.mlkit.GraphicOverlay
@@ -189,7 +191,8 @@ class LivePreviewActivity :
             PoseDetectorProcessor(
               this,
               poseDetectorOptions as PoseDetectorOptions,
-              shouldShowInFrameLikelihood
+              shouldShowInFrameLikelihood,
+              exercise
               //visualizeZ,
               //rescaleZ,
               //runClassification,
@@ -294,6 +297,15 @@ class LivePreviewActivity :
     return false
   }
 
+  @Suppress("deprecation")
+  private val exercise: Exercise by lazy {
+    val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+      intent.getParcelableExtra(EXERCISE, Exercise::class.java)
+    else
+      intent.getParcelableExtra(EXERCISE)
+    checkNotNull(exe)
+  }
+
   companion object {
     private const val POSE_DETECTION = "Pose Detection"
 
@@ -306,9 +318,11 @@ class LivePreviewActivity :
         Manifest.permission.WRITE_EXTERNAL_STORAGE,//see if is necessary
         Manifest.permission.READ_EXTERNAL_STORAGE//see if is necessary
       )
-    fun navigate(context: Context) {
+    const val EXERCISE = "EXERCISE_TYPE"
+    fun navigate(context: Context, exercise: Exercise) {
       with(context) {
         val intent = Intent(this, LivePreviewActivity::class.java)
+        intent.putExtra(EXERCISE, exercise)
         startActivity(intent)
       }
     }

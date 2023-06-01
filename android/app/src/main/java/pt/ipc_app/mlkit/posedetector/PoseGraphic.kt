@@ -24,6 +24,7 @@ import android.text.TextUtils
 
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
+import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.InferenceInfoGraphic
 import java.util.Locale
@@ -34,13 +35,15 @@ import kotlin.math.atan2
 class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
-  private val showInFrameLikelihood: Boolean
+  private val showInFrameLikelihood: Boolean,
+  private val exercise: Exercise
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint
   private val rightPaint: Paint
   private val whitePaint: Paint
   private val tipPaint: Paint
+  private var toDraw = false
   override fun draw(canvas: Canvas) {
     val landmarks = pose.allPoseLandmarks
     if (landmarks.isEmpty()) return
@@ -81,113 +84,128 @@ class PoseGraphic internal constructor(
     val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
     val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
-    //Calculate whether the hand exceeds the shoulder
-    val yRightHand = rightWrist!!.position.y - rightShoulder!!.position.y
-    val yLeftHand = leftWrist!!.position.y - leftShoulder!!.position.y
-    //Calculate whether the distance between the shoulder and the foot is the same width
-    val shoulderDistance = leftShoulder.position.x - rightShoulder.position.x
-    val footDistance = leftAnkle!!.position.x - rightAnkle!!.position.x
-    val ratio = footDistance/shoulderDistance
-    //angle of point 24-26-28
-    val angle24_26_28 = getAngle(rightHip, rightKnee, rightAnkle)
 
-    if(((180- abs(angle24_26_28)) > 5) && !isCount){
-      reInitParams()
-      lineOneText = "Please stand up straight"
-    }else if(yLeftHand>0 || yRightHand>0){
-      reInitParams()
-      lineOneText = "Please hold your hands behind your head"
-    }else if(ratio < 0.5 && !isCount){
-      reInitParams()
-      lineOneText = "Please spread your feet shoulder-width apart"
-    }else{
-      val currentHeight =  (rightShoulder.position.y + leftShoulder.position.y)/2 //Judging up and down by shoulder height
+    //to divide each exercise logic
+    when(exercise.title){
+        "Squats" -> {
+          //Calculate whether the hand exceeds the shoulder
+          val yRightHand = rightWrist!!.position.y - rightShoulder!!.position.y
+          val yLeftHand = leftWrist!!.position.y - leftShoulder!!.position.y
+          //Calculate whether the distance between the shoulder and the foot is the same width
+          val shoulderDistance = leftShoulder.position.x - rightShoulder.position.x
+          val footDistance = leftAnkle!!.position.x - rightAnkle!!.position.x
+          val ratio = footDistance / shoulderDistance
+          //angle of point 24-26-28
+          val angle24_26_28 = getAngle(rightHip, rightKnee, rightAnkle)
 
-      if (!isCount) {
-        shoulderHeight = currentHeight
-        minSize = (rightAnkle.position.y - rightHip!!.position.y)/5
-        isCount = true
-        lastHeight = currentHeight
-        lineOneText = "Gesture ready"
-      }
-      if (!isDown && (currentHeight - lastHeight) > minSize) {
-        isDown = true
-        isUp = false
-        downCount++
-        lastHeight = currentHeight
-        lineTwoText = "start down"
-      } else if ((currentHeight - lastHeight) > minSize) {
-        lineTwoText = "downing"
-        lastHeight = currentHeight
-      }
-      if (!isUp && (upCount < downCount) && ( lastHeight - currentHeight ) > minSize ) {
-        isUp = true
-        isDown = false
-        upCount++
-        lastHeight = currentHeight
-        lineTwoText = "start up"
-      } else if ((lastHeight - currentHeight ) >minSize) {
-        lineTwoText = "uping"
-        lastHeight = currentHeight
-      }
+          if (((180 - abs(angle24_26_28)) > 5) && !isCount) {
+            reInitParams()
+            lineOneText = "Please stand up straight"
+          } else if (yLeftHand > 0 || yRightHand > 0) {
+            reInitParams()
+            lineOneText = "Please hold your hands behind your head"
+          } else if (ratio < 0.5 && !isCount) {
+            reInitParams()
+            lineOneText = "Please spread your feet shoulder-width apart"
+          } else {
+            val currentHeight =
+              (rightShoulder.position.y + leftShoulder.position.y) / 2 //Judging up and down by shoulder height
+
+            if (!isCount) {
+              shoulderHeight = currentHeight
+              minSize = (rightAnkle.position.y - rightHip!!.position.y) / 5
+              isCount = true
+              lastHeight = currentHeight
+              lineOneText = "Gesture ready"
+            }
+            if (!isDown && (currentHeight - lastHeight) > minSize) {
+              isDown = true
+              isUp = false
+              downCount++
+              lastHeight = currentHeight
+              lineTwoText = "start down"
+            } else if ((currentHeight - lastHeight) > minSize) {
+              lineTwoText = "downing"
+              lastHeight = currentHeight
+            }
+            if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
+              isUp = true
+              isDown = false
+              upCount++
+              lastHeight = currentHeight
+              lineTwoText = "start up"
+            } else if ((lastHeight - currentHeight) > minSize) {
+              lineTwoText = "uping"
+              lastHeight = currentHeight
+            }
+          }
+          drawText(canvas, lineOneText, 1)
+          drawText(canvas, lineTwoText, 2)
+          drawText(canvas, "count: $upCount", 3)
+          toDraw = !toDraw
+        }
+        "...." -> {}
+        else -> {
+
+        }
     }
-    drawText(canvas, lineOneText,1)
-    drawText(canvas, lineTwoText,2)
-    drawText(canvas, "count: $upCount", 3)
 
-    // Face
-    drawLine(canvas, nose!!.position, lefyEyeInner!!.position, whitePaint)
-    drawLine(canvas, lefyEyeInner.position, lefyEye!!.position, whitePaint)
-    drawLine(canvas, lefyEye.position, leftEyeOuter!!.position, whitePaint)
-    drawLine(canvas, leftEyeOuter.position, leftEar!!.position, whitePaint)
-    drawLine(canvas, nose.position, rightEyeInner!!.position, whitePaint)
-    drawLine(canvas, rightEyeInner.position, rightEye!!.position, whitePaint)
-    drawLine(canvas, rightEye.position, rightEyeOuter!!.position, whitePaint)
-    drawLine(canvas, rightEyeOuter.position, rightEar!!.position, whitePaint)
-    drawLine(canvas, leftMouth!!.position, rightMouth!!.position, whitePaint)
 
-    drawLine(canvas, leftShoulder.position, rightShoulder.position, whitePaint)
-    drawLine(canvas, leftHip!!.position, rightHip!!.position, whitePaint)
+    if(toDraw) {
+      // Face
+      drawLine(canvas, nose!!.position, lefyEyeInner!!.position, whitePaint)
+      drawLine(canvas, lefyEyeInner.position, lefyEye!!.position, whitePaint)
+      drawLine(canvas, lefyEye.position, leftEyeOuter!!.position, whitePaint)
+      drawLine(canvas, leftEyeOuter.position, leftEar!!.position, whitePaint)
+      drawLine(canvas, nose.position, rightEyeInner!!.position, whitePaint)
+      drawLine(canvas, rightEyeInner.position, rightEye!!.position, whitePaint)
+      drawLine(canvas, rightEye.position, rightEyeOuter!!.position, whitePaint)
+      drawLine(canvas, rightEyeOuter.position, rightEar!!.position, whitePaint)
+      drawLine(canvas, leftMouth!!.position, rightMouth!!.position, whitePaint)
 
-    // Left body
-    drawLine(canvas, leftShoulder.position, leftElbow!!.position, leftPaint)
-    drawLine(canvas, leftElbow.position, leftWrist.position, leftPaint)
-    drawLine(canvas, leftShoulder.position, leftHip.position, leftPaint)
-    drawLine(canvas, leftHip.position, leftKnee!!.position, leftPaint)
-    drawLine(canvas, leftKnee.position, leftAnkle.position, leftPaint)
-    drawLine(canvas, leftWrist.position, leftThumb!!.position, leftPaint)
-    drawLine(canvas, leftWrist.position, leftPinky!!.position, leftPaint)
-    drawLine(canvas, leftWrist.position, leftIndex!!.position, leftPaint)
-    drawLine(canvas, leftIndex.position, leftPinky.position, leftPaint)
-    drawLine(canvas, leftAnkle.position, leftHeel!!.position, leftPaint)
-    drawLine(canvas, leftHeel.position, leftFootIndex!!.position, leftPaint)
+      drawLine(canvas, leftShoulder!!.position, rightShoulder!!.position, whitePaint)
+      drawLine(canvas, leftHip!!.position, rightHip!!.position, whitePaint)
 
-    // Right body
-    drawLine(canvas, rightShoulder.position, rightElbow!!.position, rightPaint)
-    drawLine(canvas, rightElbow.position, rightWrist.position, rightPaint)
-    drawLine(canvas, rightShoulder.position, rightHip.position, rightPaint)
-    drawLine(canvas, rightHip.position, rightKnee!!.position, rightPaint)
-    drawLine(canvas, rightKnee.position, rightAnkle.position, rightPaint)
-    drawLine(canvas, rightWrist.position, rightThumb!!.position, rightPaint)
-    drawLine(canvas, rightWrist.position, rightPinky!!.position, rightPaint)
-    drawLine(canvas, rightWrist.position, rightIndex!!.position, rightPaint)
-    drawLine(canvas, rightIndex.position, rightPinky.position, rightPaint)
-    drawLine(canvas, rightAnkle.position, rightHeel!!.position, rightPaint)
-    drawLine(canvas, rightHeel.position, rightFootIndex!!.position, rightPaint)
+      // Left body
+      drawLine(canvas, leftShoulder.position, leftElbow!!.position, leftPaint)
+      drawLine(canvas, leftElbow.position, leftWrist!!.position, leftPaint)
+      drawLine(canvas, leftShoulder.position, leftHip.position, leftPaint)
+      drawLine(canvas, leftHip.position, leftKnee!!.position, leftPaint)
+      drawLine(canvas, leftKnee.position, leftAnkle!!.position, leftPaint)
+      drawLine(canvas, leftWrist.position, leftThumb!!.position, leftPaint)
+      drawLine(canvas, leftWrist.position, leftPinky!!.position, leftPaint)
+      drawLine(canvas, leftWrist.position, leftIndex!!.position, leftPaint)
+      drawLine(canvas, leftIndex.position, leftPinky.position, leftPaint)
+      drawLine(canvas, leftAnkle.position, leftHeel!!.position, leftPaint)
+      drawLine(canvas, leftHeel.position, leftFootIndex!!.position, leftPaint)
 
-    // Draw inFrameLikelihood for all points
-    if (showInFrameLikelihood) {
-      for (landmark in landmarks) {
-        canvas.drawText(
-          String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
-          translateX(landmark.position.x),
-          translateY(landmark.position.y),
-          whitePaint
-        )
+      // Right body
+      drawLine(canvas, rightShoulder.position, rightElbow!!.position, rightPaint)
+      drawLine(canvas, rightElbow.position, rightWrist!!.position, rightPaint)
+      drawLine(canvas, rightShoulder.position, rightHip.position, rightPaint)
+      drawLine(canvas, rightHip.position, rightKnee!!.position, rightPaint)
+      drawLine(canvas, rightKnee.position, rightAnkle!!.position, rightPaint)
+      drawLine(canvas, rightWrist.position, rightThumb!!.position, rightPaint)
+      drawLine(canvas, rightWrist.position, rightPinky!!.position, rightPaint)
+      drawLine(canvas, rightWrist.position, rightIndex!!.position, rightPaint)
+      drawLine(canvas, rightIndex.position, rightPinky.position, rightPaint)
+      drawLine(canvas, rightAnkle.position, rightHeel!!.position, rightPaint)
+      drawLine(canvas, rightHeel.position, rightFootIndex!!.position, rightPaint)
+
+      // Draw inFrameLikelihood for all points
+      if (showInFrameLikelihood) {
+        for (landmark in landmarks) {
+          canvas.drawText(
+            String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
+            translateX(landmark.position.x),
+            translateY(landmark.position.y),
+            whitePaint
+          )
+        }
       }
     }
   }
-
+  
   fun reInitParams() {
     lineOneText = ""
     lineTwoText = ""

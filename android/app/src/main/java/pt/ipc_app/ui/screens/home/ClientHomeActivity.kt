@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.ui.components.plan
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
 import pt.ipc_app.ui.screens.info.ClientDetailsActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
@@ -54,7 +55,7 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = userInfo,
                 monitor = monitor,
-                plan = viewModel.plan.collectAsState().value,
+                plan = plan,//viewModel.plan.collectAsState().value,
                 onMonitorClick = {
                     if (monitor != null)
                         MonitorDetailsActivity.navigate(this, monitor)

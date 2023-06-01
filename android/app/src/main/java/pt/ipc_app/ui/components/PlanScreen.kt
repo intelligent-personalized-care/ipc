@@ -66,7 +66,7 @@ val plan = PlanOutput(
                 exercises = listOf(
                     Exercise(1, "Push ups", "", ""),
                     Exercise(2, "Abs", "", ""),
-                    Exercise(3, "Leg extension", "", "")
+                    Exercise(3, "Squats", "", "")
                 )
             ),
             DailyList(

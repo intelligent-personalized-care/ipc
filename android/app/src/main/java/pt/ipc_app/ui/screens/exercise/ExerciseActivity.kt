@@ -29,7 +29,7 @@ class ExerciseActivity: ComponentActivity() {
             ExerciseScreen(
                 exercise = exercise,
                 //onRecordClick = { LivePreviewActivity.navigate(this) }
-                onRecordClick = { CameraXLivePreviewActivity.navigate(this) }
+                onRecordClick = { CameraXLivePreviewActivity.navigate(this, exercise) }
             )
 
         }

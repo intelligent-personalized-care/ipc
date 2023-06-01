@@ -24,6 +24,7 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.vision.VisionProcessorBase
 
@@ -31,7 +32,8 @@ import pt.ipc_app.mlkit.vision.VisionProcessorBase
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
-  private val showInFrameLikelihood: Boolean
+  private val showInFrameLikelihood: Boolean,
+  private val exercise: Exercise
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {
@@ -47,7 +49,8 @@ class PoseDetectorProcessor(
     results: Pose,
     graphicOverlay: GraphicOverlay
   ) {
-    graphicOverlay.add(PoseGraphic(graphicOverlay, results, showInFrameLikelihood))
+    //added exercise to monitor the different exercises in PoseGraphic
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, showInFrameLikelihood, exercise))
   }
 
   override fun onFailure(e: Exception) {

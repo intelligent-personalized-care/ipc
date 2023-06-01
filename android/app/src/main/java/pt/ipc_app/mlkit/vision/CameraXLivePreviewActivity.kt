@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
@@ -38,10 +39,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
-import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.R
+import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.CameraXViewModel
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.VisionImageProcessor
@@ -72,7 +73,6 @@ class CameraXLivePreviewActivity :
     private lateinit var outputDirectory: File
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
-    //private lateinit var cameraProviderFuture : ListenableFuture<ProcessCameraProvider>
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,16 +114,6 @@ class CameraXLivePreviewActivity :
             intent.putExtra(SettingsActivity.EXTRA_LAUNCH_SOURCE, SettingsActivity.LaunchSource.CAMERAX_LIVE_PREVIEW)
             startActivity(intent)
         }
-
-
-        //nao apagar ainda
-       /* cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            videoCapture = VideoCapture.Builder().build()
-            bindAllCameraUseCases()
-        }, ContextCompat.getMainExecutor(this))*/
-
 
         //verifies all permissions before acessing camera
         if (!allRuntimePermissionsGranted()) {
@@ -262,6 +252,7 @@ class CameraXLivePreviewActivity :
                             this,
                             poseDetectorOptions as PoseDetectorOptions,
                             shouldShowInFrameLikelihood,
+                            exercise
                             /*visualizeZ,
                             rescaleZ,
                             runClassification,
@@ -436,6 +427,18 @@ class CameraXLivePreviewActivity :
         return false
     }
 
+
+    //--------------------------- for different exercices -------------------------------
+
+    @Suppress("deprecation")
+    private val exercise: Exercise by lazy {
+        val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            intent.getParcelableExtra(EXERCISE, Exercise::class.java)
+        else
+            intent.getParcelableExtra(EXERCISE)
+        checkNotNull(exe)
+    }
+
     companion object {
         private const val TAG = "CameraXLivePreview"
 
@@ -452,9 +455,12 @@ class CameraXLivePreviewActivity :
                 Manifest.permission.RECORD_AUDIO
             )
 
-        fun navigate(context: Context) {
+        const val EXERCISE = "EXERCISE_TYPE"
+
+        fun navigate(context: Context, exercise: Exercise) {
             with(context) {
                 val intent = Intent(this, CameraXLivePreviewActivity::class.java)
+                intent.putExtra(EXERCISE, exercise)
                 startActivity(intent)
             }
         }
