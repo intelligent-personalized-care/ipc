@@ -1,22 +1,27 @@
 package pt.ipc_app.ui.screens.info
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.net.toFile
+import androidx.compose.runtime.collectAsState
+import androidx.core.content.ContextCompat
+import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.components.getFileNameFromUri
 import pt.ipc_app.ui.components.openSendEmail
 import pt.ipc_app.utils.viewModelInit
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 /**
@@ -48,41 +53,57 @@ class ClientDetailsActivity : ComponentActivity() {
             ClientDetailsScreen(
                 client = client,
                 onSendEmailRequest = { openSendEmail(client.email) },
-                onUpdateProfilePicture = { imageChooser() }
+                updateProfilePictureState = viewModel.state.collectAsState().value,
+                onUpdateProfilePicture = { checkReadStoragePermission() },
+                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
             )
         }
     }
 
-    // constant to compare
-    // the activity result code
-    var SELECT_PICTURE = 200
-
-    fun imageChooser() {
-
-        // create an instance of the
-        // intent of the type image
-        val i = Intent()
-        i.type = "image/*"
-        i.action = Intent.ACTION_GET_CONTENT
-
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE)
+    private fun checkReadStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            requestReadStoragePermissionLauncher.launch(READ_EXTERNAL_STORAGE)
+        else
+            openGallery()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            val selectedImageUri = data?.data
-            Log.d("Picture Path", selectedImageUri?.path.toString())
+    private fun openGallery() {
+        imageChooserLauncher.launch("image/*")
+    }
 
-            val path: File = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            )
-            viewModel.updatePicture(File(path, "IMG_20230520_205825.jpg"))
+    private val requestReadStoragePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted)
+                openGallery()
+        }
+
+    private val imageChooserLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            try {
+                println(uri)
+                val file = getImageFile(uri)
+
+                viewModel.updatePicture(file!!)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
+    private fun getImageFile(imageUri: Uri): File? {
+        val documentFile = DocumentFile.fromSingleUri(this, imageUri)
+        return documentFile?.let { file ->
+            val inputStream = contentResolver.openInputStream(file.uri)
+            val outputFile = File(this.cacheDir, file.name!!)
+            val outputStream = FileOutputStream(outputFile)
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+            outputFile
+        }
+    }
 
     @Suppress("deprecation")
     private val client: ClientOutput by lazy {
