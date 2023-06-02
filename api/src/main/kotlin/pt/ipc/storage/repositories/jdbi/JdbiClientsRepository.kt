@@ -129,7 +129,7 @@ class JdbiClientsRepository(
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback,monitor_feedback) " +
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)

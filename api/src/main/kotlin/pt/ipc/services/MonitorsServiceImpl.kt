@@ -2,7 +2,7 @@ package pt.ipc.services
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
@@ -108,7 +108,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int {
+    override fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int {
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient

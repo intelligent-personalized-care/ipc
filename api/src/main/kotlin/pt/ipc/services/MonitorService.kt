@@ -1,7 +1,7 @@
 package pt.ipc.services
 
 import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
@@ -26,7 +26,7 @@ interface MonitorService {
 
     fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean)
 
-    fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int
+    fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

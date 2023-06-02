@@ -37,7 +37,7 @@ class JdbiMonitorsRepository(
     }
 
     override fun getMonitor(monitorID: UUID): MonitorDetails? =
-        handle.createQuery("select id, name, email, photo_id from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
+        handle.createQuery("select id, name, email from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
             .bind("monitorID", monitorID)
             .mapTo<MonitorDetails>()
             .singleOrNull()
@@ -68,7 +68,7 @@ class JdbiMonitorsRepository(
 
         return handle.createQuery(
             """
-                    select id, name, email, photo_id from dbo.monitors m
+                    select id, name, email from dbo.monitors m
                     inner join dbo.users u on u.id = m.m_id
                     inner join dbo.docs_authenticity da on m.m_id = da.monitor_id
                     where da.state = 'valid' $queryName

@@ -121,7 +121,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable clientID: UUID, @PathVariable monitorID: UUID, user: User, @RequestBody plan: Plan): ResponseEntity<PlanID> {
+    fun createPlanForClient(@PathVariable clientID: UUID, @PathVariable monitorID: UUID, user: User, @RequestBody plan: PlanInput): ResponseEntity<PlanID> {
         if (user.id != monitorID) throw Unauthorized
 
         val planID = monitorService.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)

@@ -89,7 +89,7 @@ class ClientsServiceImpl(
             block = {
                 val details = it.monitorRepository.getMonitorOfClient(clientID) ?: throw MonitorNotFound
                 val stars = it.monitorRepository.getMonitorRanking(details.id)
-                MonitorOutput(details.id, details.name, details.email, details.photoID, stars)
+                MonitorOutput(details.id, details.name, details.email, stars)
             }
         )
     }
@@ -127,7 +127,7 @@ class ClientsServiceImpl(
         val exerciseVideoID = UUID.randomUUID()
         transactionManager.runBlock(
             block = {
-                if (it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
+                if (!it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
                 if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID, exerciseID = exerciseID)) throw ExerciseAlreadyUploaded
                 it.clientsRepository.uploadExerciseVideoOfClient(
                     clientID = clientID,

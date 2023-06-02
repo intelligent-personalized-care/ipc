@@ -1,13 +1,13 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.Plan
+import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import java.time.LocalDate
 import java.util.*
 
 interface PlansRepository {
 
-    fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int
+    fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int
 
     fun getPlan(planID: Int): PlanOutput
 

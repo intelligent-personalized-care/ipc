@@ -124,5 +124,6 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
     ex_id               INT NOT NULL REFERENCES dbo.daily_exercises (id),
     client_id           UUID NOT NULL REFERENCES dbo.clients (c_id),
     dt_submit           DATE NOT NULL,
+    feedback_client     VARCHAR(200),
     feedback_monitor    VARCHAR(200)-- can be null, no answer or waiting
 )

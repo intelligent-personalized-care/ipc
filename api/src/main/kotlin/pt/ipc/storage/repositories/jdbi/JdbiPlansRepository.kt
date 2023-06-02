@@ -2,9 +2,9 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.DailyList
-import pt.ipc.domain.Exercise
-import pt.ipc.domain.Plan
+import pt.ipc.domain.DailyListOutput
+import pt.ipc.domain.ExerciseTotalInfo
+import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.storage.repositories.PlansRepository
 import java.time.LocalDate
@@ -14,7 +14,7 @@ class JdbiPlansRepository(
     private val handle: Handle
 ) : PlansRepository {
 
-    override fun createPlan(monitorID: UUID, clientID: UUID, plan: Plan): Int {
+    override fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int {
         val planID = handle.createQuery("insert into dbo.plans (monitor_id, title) values(:monitorID, :title) returning id")
             .bind("monitorID", monitorID)
             .bind("title", plan.title)
@@ -31,7 +31,7 @@ class JdbiPlansRepository(
 
             dailyListCreation?.exercises?.forEach { exerciseCreation ->
                 handle.createUpdate("insert into dbo.daily_exercises (ex_id, daily_list_id, sets, reps) values (:exID,:dailyListID,:sets,:reps)")
-                    .bind("exID", exerciseCreation.exerciseID)
+                    .bind("exID", exerciseCreation.exerciseInfoID)
                     .bind("dailyListID", dailyListID)
                     .bind("sets", exerciseCreation.sets)
                     .bind("reps", exerciseCreation.reps)
@@ -65,27 +65,28 @@ class JdbiPlansRepository(
                 .mapTo<Int>()
                 .toList()
 
-        val dailyLists = mutableListOf<DailyList?>()
+        val dailyLists = mutableListOf<DailyListOutput?>()
 
         dailyListsID.forEachIndexed { index, dailyListID ->
 
-            val exercises: List<Exercise>? =
-                handle.createQuery("select ex_id,sets,reps from dbo.daily_exercises where daily_list_id = :dailyListID")
+            val exercises: List<ExerciseTotalInfo>? =
+                handle.createQuery("""
+                    select de.id, de.ex_id, title, description, type, sets, reps from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    where daily_list_id = :dailyListID
+                    """.trimIndent())
                     .bind("dailyListID", dailyListID)
-                    .mapTo<Exercise>()
+                    .mapTo<ExerciseTotalInfo>()
                     .toList()
                     .ifEmpty { null }
 
-            exercises?.let { dailyLists.add(index, DailyList(it)) } ?: dailyLists.add(index, null)
+            exercises?.let { dailyLists.add(index, DailyListOutput(it)) } ?: dailyLists.add(index, null)
         }
 
         return PlanOutput(
-            planID = planID,
-            plan = Plan(
-                title = title,
-                startDate = dtStart,
-                dailyLists = dailyLists
-            )
+            id = planID,
+            title = title,
+            startDate = dtStart,
+            dailyLists = dailyLists
         )
     }
 
@@ -160,7 +161,7 @@ class JdbiPlansRepository(
     }
 
     override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String){
-        handle.createUpdate("update dbo.exercises_video set monitor_feedback = :feedback where id = :exerciseID")
+        handle.createUpdate("update dbo.exercises_video set feedback_monitor = :feedback where id = :exerciseID")
               .bind("feedback",feedback)
               .bind("exerciseID",exerciseID)
     }

@@ -45,7 +45,7 @@ class CloudStorageConfiguration(
     val storage: Storage = storageOptions.service
 
     val userPhotosBucket = "users_photos"
-    val monitorCredentialsBucket = "monitors_credetials"
+    val monitorCredentialsBucket = "monitors_credentials"
     val clientsVideosBucket = "clients_videos"
     val exercisesPreviewsBucket = "exercises_previews"
 }
