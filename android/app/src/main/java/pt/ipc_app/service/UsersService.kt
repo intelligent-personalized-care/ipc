@@ -120,7 +120,7 @@ class UsersService(
         token: String
     ): APIResult<Plan> =
         get(
-            uri = "/users/clients/$clientId/plans",
+            uri = "/users/clients/$clientId/plans?date=2023-06-03",
             token = token
         )
 
@@ -142,7 +142,7 @@ class UsersService(
         )
 
     /**
-     * Connects the monitor with the client.
+     * Updates the profile picture of a client.
      *
      * @return the API result of the request
      *
@@ -156,7 +156,9 @@ class UsersService(
         postWithFile(
             uri = "/users/clients/$clientId/profile/photo",
             token = token,
-            file = image
+            multipartPropName = "profilePicture",
+            file = image,
+            contentType = "image/jpeg"
         )
 
 }

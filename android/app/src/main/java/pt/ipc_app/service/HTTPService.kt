@@ -107,13 +107,15 @@ abstract class HTTPService(
     protected suspend inline fun <reified T> postWithFile(
         uri: String,
         token: String? = null,
-        file: File
+        multipartPropName: String,
+        file: File,
+        contentType: String
     ): APIResult<T> {
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart(
-                "profilePicture",
+                multipartPropName,
                 file.name,
-                file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                file.asRequestBody(contentType.toMediaTypeOrNull())
             )
             .build()
 
