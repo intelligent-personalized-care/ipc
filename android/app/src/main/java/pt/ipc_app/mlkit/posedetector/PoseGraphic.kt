@@ -205,7 +205,7 @@ class PoseGraphic internal constructor(
       }
     }
   }
-  
+
   fun reInitParams() {
     lineOneText = ""
     lineTwoText = ""

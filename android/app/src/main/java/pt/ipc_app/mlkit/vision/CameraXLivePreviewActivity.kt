@@ -29,6 +29,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -41,6 +42,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
 import pt.ipc_app.domain.Exercise
 import pt.ipc_app.mlkit.CameraXViewModel
@@ -49,6 +51,8 @@ import pt.ipc_app.mlkit.VisionImageProcessor
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
+import pt.ipc_app.ui.screens.exercise.ExerciseViewModel
+import pt.ipc_app.utils.viewModelInit
 import java.io.File
 import java.util.*
 
@@ -73,6 +77,13 @@ class CameraXLivePreviewActivity :
     private lateinit var outputDirectory: File
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
+
+    private val viewModel by viewModels<ExerciseViewModel> {
+        viewModelInit {
+            val app = (application as DependenciesContainer)
+            ExerciseViewModel(app.services.exercisesService, app.sessionManager)
+        }
+    }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +133,7 @@ class CameraXLivePreviewActivity :
 
         outputDirectory = getOutputDirectory()
         createVideoCapture()
-        setupRecordingButton()
+        setupRecordingButton { viewModel.submitExerciseVideo(it, 1, 1, exercise.id) }
 
     }
 
@@ -329,8 +340,8 @@ class CameraXLivePreviewActivity :
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
-    private fun startRecording() {
-        val file = File(outputDirectory, "${UUID.randomUUID()}.mp4")
+    private fun startRecording(onSubmission: (File) -> Unit) {
+        val file = File(outputDirectory, "${exercise.id}.mp4")
         val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
 
         videoCapture.startRecording(
@@ -339,6 +350,7 @@ class CameraXLivePreviewActivity :
             object : VideoCapture.OnVideoSavedCallback {
                 override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
                     Log.d(TAG, "Video saved: ${file.absolutePath}")
+                    onSubmission(file)
                 }
 
                 override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
@@ -370,14 +382,14 @@ class CameraXLivePreviewActivity :
 
     }
 
-    private fun setupRecordingButton() {
+    private fun setupRecordingButton(onSubmission: (File) -> Unit) {
         val recordButton: Button = findViewById(R.id.camera_button)
         recordButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()
                 recordButton.text = "R"//"Start Recording"
             } else {
-                startRecording()
+                startRecording(onSubmission)
                 recordButton.text = "NR"//Stop Recording
             }
 
