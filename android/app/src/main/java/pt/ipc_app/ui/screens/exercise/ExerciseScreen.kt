@@ -13,14 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.VideoPlayer
 import pt.ipc_app.ui.screens.AppScreen
+import java.util.*
 
 @Composable
 fun ExerciseScreen(
-    exercise: Exercise,
+    exercise: DailyExercise,
     onRecordClick: () -> Unit = {}
 ) {
     AppScreen {
@@ -82,7 +83,7 @@ fun ExerciseScreen(
 @Composable
 fun ExerciseScreenPreview() {
     ExerciseScreen(
-        exercise = Exercise(1, "Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
+        exercise = DailyExercise(1, UUID.randomUUID(), "Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
                 "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
                 "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", "", 15, 3)
     )

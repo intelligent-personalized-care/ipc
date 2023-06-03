@@ -74,6 +74,7 @@ fun RegisterClientScreen(
                     onDateSelected = { birthDate = it }
                 )
                 MyDatePicker(
+                    fieldType = TextFieldType.BIRTH_DATE,
                     value = birthDate,
                     onValueChange = { birthDate = it },
                     onClick = { dt.show() }

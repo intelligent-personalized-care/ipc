@@ -64,6 +64,7 @@ fun DatePickerPreview() {
 
 @Composable
 fun MyDatePicker(
+    fieldType: TextFieldType,
     value: String,
     onValueChange: (String) -> Unit,
     onClick: () -> Unit,
@@ -74,7 +75,7 @@ fun MyDatePicker(
         CustomTextField(
             textToDisplay = value,
             readOnly = true,
-            fieldType = TextFieldType.DATE,
+            fieldType = fieldType,
             iconImageVector = Icons.Default.DateRange,
             updateText = onValueChange,
             modifier = Modifier

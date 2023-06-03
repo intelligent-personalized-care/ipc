@@ -24,9 +24,8 @@ import android.text.TextUtils
 
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.mlkit.GraphicOverlay
-import pt.ipc_app.mlkit.InferenceInfoGraphic
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -36,7 +35,7 @@ class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val showInFrameLikelihood: Boolean,
-  private val exercise: Exercise
+  private val exercise: DailyExercise
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint

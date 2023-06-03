@@ -39,7 +39,7 @@ import com.google.android.gms.common.annotation.KeepName
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.R
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.mlkit.CameraSource
 import pt.ipc_app.mlkit.CameraSourcePreview
 import pt.ipc_app.mlkit.GraphicOverlay
@@ -298,9 +298,9 @@ class LivePreviewActivity :
   }
 
   @Suppress("deprecation")
-  private val exercise: Exercise by lazy {
+  private val exercise: DailyExercise by lazy {
     val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-      intent.getParcelableExtra(EXERCISE, Exercise::class.java)
+      intent.getParcelableExtra(EXERCISE, DailyExercise::class.java)
     else
       intent.getParcelableExtra(EXERCISE)
     checkNotNull(exe)
@@ -319,7 +319,7 @@ class LivePreviewActivity :
         Manifest.permission.READ_EXTERNAL_STORAGE//see if is necessary
       )
     const val EXERCISE = "EXERCISE_TYPE"
-    fun navigate(context: Context, exercise: Exercise) {
+    fun navigate(context: Context, exercise: DailyExercise) {
       with(context) {
         val intent = Intent(this, LivePreviewActivity::class.java)
         intent.putExtra(EXERCISE, exercise)

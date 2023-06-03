@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.DailyList
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
@@ -27,7 +27,7 @@ fun ClientHomeScreen(
     monitor: MonitorOutput? = null,
     plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
-    onExerciseSelect: (Exercise) -> Unit = { },
+    onExerciseSelect: (DailyExercise) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
@@ -77,6 +77,7 @@ fun ClientHomeScreen(
                 )
 
                 DaysOfWeekRow(
+                    centerDay = LocalDate.now(),
                     daySelected = daySelected,
                     onDaySelected = {
                         daySelected = it
@@ -84,7 +85,7 @@ fun ClientHomeScreen(
                     }
                 )
 
-                ExercisesList(
+                DailyExercisesList(
                     dailyListSelected = dailyListSelected,
                     onExerciseSelect = { ex -> onExerciseSelect(ex) }
                 )

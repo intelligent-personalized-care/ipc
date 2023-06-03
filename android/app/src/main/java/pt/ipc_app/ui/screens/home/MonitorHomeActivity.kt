@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.ui.screens.plan.CreatePlanActivity
 import pt.ipc_app.ui.screens.search.SearchClientsActivity
 
 /**
@@ -31,7 +32,7 @@ class MonitorHomeActivity : ComponentActivity() {
         setContent {
             MonitorHomeScreen(
                 monitor = repo.userInfo!!,
-                onClientsRequest = { SearchClientsActivity.navigate(this) }
+                onPlansRequest = { CreatePlanActivity.navigate(this) }
             )
         }
     }

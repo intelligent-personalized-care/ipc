@@ -44,7 +44,7 @@ import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.mlkit.CameraXViewModel
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.VisionImageProcessor
@@ -443,9 +443,9 @@ class CameraXLivePreviewActivity :
     //--------------------------- for different exercices -------------------------------
 
     @Suppress("deprecation")
-    private val exercise: Exercise by lazy {
+    private val exercise: DailyExercise by lazy {
         val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(EXERCISE, Exercise::class.java)
+            intent.getParcelableExtra(EXERCISE, DailyExercise::class.java)
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
@@ -469,7 +469,7 @@ class CameraXLivePreviewActivity :
 
         const val EXERCISE = "EXERCISE_TYPE"
 
-        fun navigate(context: Context, exercise: Exercise) {
+        fun navigate(context: Context, exercise: DailyExercise) {
             with(context) {
                 val intent = Intent(this, CameraXLivePreviewActivity::class.java)
                 intent.putExtra(EXERCISE, exercise)

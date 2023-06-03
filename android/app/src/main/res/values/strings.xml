@@ -18,6 +18,11 @@
 
     <string name="hello">Hello</string>
 
+    <string name="create_plan_screen_title">Create Plan</string>
+
+    <string name="create_plan_screen_label_name">Plan Name</string>
+    <string name="create_plan_screen_label_startDate">Start Date</string>
+
     <string name="search_label">Search…</string>
     <string name="search_monitors">Search Monitors</string>
     <string name="search_clients">Search Clients</string>

@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +19,7 @@ import java.util.*
 
 @Composable
 fun DaysOfWeekRow(
+    centerDay: LocalDate = LocalDate.now(),
     daySelected: LocalDate,
     onDaySelected: (LocalDate) -> Unit
 ) {
@@ -28,7 +29,7 @@ fun DaysOfWeekRow(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        daysOfWeek().forEach {
+        daysOfWeek(centerDay).forEach {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -55,14 +56,46 @@ fun DaysOfWeekRow(
     }
 }
 
-fun daysOfWeek(): List<LocalDate> {
-    val today = LocalDate.now()
-
-    return listOf(
-        today.minusDays(2),
-        today.minusDays(1),
-        today,
-        today.plusDays(1),
-        today.plusDays(2),
-    )
+@Composable
+fun DaysOfWeekRowWithoutLocalDate(
+    daySelected: Int,
+    onDaySelected: (Int) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(28.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        repeat(5) {
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .size(56.dp)
+                    .border(1.dp, Color(131, 129, 129, 255), RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        when (it) {
+                            daySelected -> Color(174, 237, 245, 255)
+                            else -> Color(231, 231, 231, 255)
+                        }
+                    )
+                    .clickable { onDaySelected(it) }
+            ) {
+                Text("Day ${it + 1}")
+            }
+        }
+    }
 }
+
+fun daysOfWeek(
+    centerDay: LocalDate
+): List<LocalDate> =
+    listOf(
+        centerDay.minusDays(2),
+        centerDay.minusDays(1),
+        centerDay,
+        centerDay.plusDays(1),
+        centerDay.plusDays(2),
+    )

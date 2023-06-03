@@ -19,7 +19,10 @@ import pt.ipc_app.ui.screens.AppScreen
 @Composable
 fun MonitorHomeScreen(
     monitor: UserInfo,
-    onClientsRequest: () -> Unit
+    onHomeClick: () -> Unit = { },
+    onPlansRequest: () -> Unit = { },
+    onUserInfoClick: () -> Unit = { },
+    onAboutClick: () -> Unit = { }
 ) {
 
     AppScreen {
@@ -45,7 +48,10 @@ fun MonitorHomeScreen(
             verticalArrangement = Arrangement.Bottom
         ) {
             BottomBar(
-                onExercisesClick = onClientsRequest
+                onHomeClick = onHomeClick,
+                onExercisesClick = onPlansRequest,
+                onUserInfoClick = onUserInfoClick,
+                onAboutClick = onAboutClick
             )
         }
 
@@ -57,6 +63,6 @@ fun MonitorHomeScreen(
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
         monitor = UserInfo("", "Test", "", Role.MONITOR),
-        onClientsRequest = {}
+        onPlansRequest = {}
     )
 }

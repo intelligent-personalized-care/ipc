@@ -34,23 +34,28 @@ class SplashScreenActivity: ComponentActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         repo.setSession(
-            id = "0e2843b0-8010-4ac2-970b-dd05a5dd7d81",
+            id = "b48faf56-2c85-455d-98ea-97ee4fcdf97e",
             name = "Tiago",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0ZTEyM0BnbWFpbC5jb20iLCJ1c2VySUQiOiIwZTI4NDNiMC04MDEwLTRhYzItOTcwYi1kZDA1YTVkZDdkODEiLCJyb2xlIjoiQ0xJRU5UIn0.03Q5Z_XKt-jPNVqyuelpm-zl5zaKdU8VTdHMzpRTC8jTFR8nvmKeNpBkg9HE4DiANEPfrLZC2vyydv-G0w-Jcg",
-            role = Role.CLIENT
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJtb25pdG9yQGdtYWlsLmNvbSIsInVzZXJJRCI6ImI0OGZhZjU2LTJjODUtNDU1ZC05OGVhLTk3ZWU0ZmNkZjk3ZSIsInJvbGUiOiJNT05JVE9SIn0.DtjpwWywt8thg0eZf9dY-r5EYq2dAiYDkCsTvZcZ6AHJg3bioSJBHRoj-U9T9beo8Cn-_HiT1e_qjbUVqh0N0A",
+            role = Role.MONITOR
         )
 
         CoroutineScope(Dispatchers.Main).launch {
+            repo.userInfo?.let {
+                if (it.role.isClient()) {
+                    viewModel.getMonitorOfClient()
+                    viewModel.getCurrentPlanOfClient()
+                } else {
 
-            viewModel.getMonitorOfClient()
-            viewModel.getCurrentPlanOfClient()
+                }
+            }
 
             delay(3000)
 
             if (!repo.isLoggedIn()) {
                 ChooseRoleActivity.navigate(this@SplashScreenActivity)
             } else {
-                if (repo.userInfo?.role!!.isClient()) {
+                if (repo.userInfo!!.role.isClient()) {
                     ClientHomeActivity.navigate(this@SplashScreenActivity, viewModel.monitor.value, viewModel.plan.value)
                 } else {
                     MonitorHomeActivity.navigate(this@SplashScreenActivity)

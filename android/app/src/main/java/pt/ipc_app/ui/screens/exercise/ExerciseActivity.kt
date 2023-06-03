@@ -8,9 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.mlkit.vision.CameraXLivePreviewActivity
-import pt.ipc_app.mlkit.vision.LivePreviewActivity
 import pt.ipc_app.utils.viewModelInit
 
 class ExerciseActivity: ComponentActivity() {
@@ -36,9 +35,9 @@ class ExerciseActivity: ComponentActivity() {
     }
 
     @Suppress("deprecation")
-    private val exercise: Exercise by lazy {
+    private val exercise: DailyExercise by lazy {
         val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(EXERCISE, Exercise::class.java)
+            intent.getParcelableExtra(EXERCISE, DailyExercise::class.java)
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
@@ -46,7 +45,7 @@ class ExerciseActivity: ComponentActivity() {
 
     companion object {
         const val EXERCISE = "EXERCISE"
-        fun navigate(context: Context, exercise: Exercise) {
+        fun navigate(context: Context, exercise: DailyExercise) {
             with(context) {
                 val intent = Intent(this, ExerciseActivity::class.java)
                 intent.putExtra(EXERCISE, exercise)

@@ -14,12 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.domain.Exercise
+import pt.ipc_app.domain.exercise.DailyExercise
 
 @Composable
-fun ExerciseRow(
-    exercise: Exercise,
-    onExerciseSelect: (Exercise) -> Unit = {}
+fun DailyExerciseRow(
+    exercise: DailyExercise,
+    onExerciseSelect: (DailyExercise) -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -47,7 +47,7 @@ fun ExerciseRow(
 }
 
 @Composable
-fun ExerciseIconDone(ex: Exercise) {
+fun ExerciseIconDone(ex: DailyExercise) {
     val isDone = ex.isDone()
     Icon(
         imageVector = if (isDone) Icons.Default.Check else Icons.Default.HourglassBottom,
