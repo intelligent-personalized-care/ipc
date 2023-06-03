@@ -9,6 +9,7 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
+import pt.ipc_app.service.models.users.ListMonitorsOutput
 import java.io.File
 import java.io.IOException
 import java.util.UUID
@@ -100,11 +101,11 @@ class UsersService(
      * @throws IOException if there is an error while sending the request
      */
     suspend fun searchMonitorsAvailable(
-        name: String,
+        name: String?,
         token: String
-    ): APIResult<MonitorOutput> =
+    ): APIResult<ListMonitorsOutput> =
         get(
-            uri = "/users/monitors?name=$name",
+            uri = "/users/monitors" + if (name != null) "?name=$name" else "",
             token = token
         )
 
@@ -131,14 +132,15 @@ class UsersService(
      *
      * @throws IOException if there is an error while sending the request
      */
-    suspend fun connectClient(
-        id: UUID
-    ): APIResult<RegisterOutput> =
+    suspend fun connectMonitor(
+        monitorId: UUID,
+        clientId: UUID,
+        token: String
+    ): APIResult<Any> =
         post(
-            uri = "/users/monitors",
-            body = ConnectionRequestInput(
-                id
-            )
+            uri = "/users/clients/$clientId/requests",
+            token = token,
+            body = ConnectionRequestInput(monitorId)
         )
 
     /**

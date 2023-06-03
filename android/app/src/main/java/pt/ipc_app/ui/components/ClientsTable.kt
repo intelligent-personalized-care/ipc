@@ -34,7 +34,7 @@ fun ClientsTable(
     ) {
         stickyHeader {
             Row(modifier = Modifier.background(DarkBlue)) {
-                ClientInfoEntry(text = stringResource(id = R.string.clients_search_name), weight = usernameWeight)
+                ClientInfoEntry(text = stringResource(id = R.string.search_clients), weight = usernameWeight)
             }
         }
 
@@ -56,7 +56,6 @@ fun RowScope.ClientInfoEntry(
 ) {
     Text(
         text = text,
-        color = Color.White,
         modifier = Modifier
             .weight(weight)
             .padding(8.dp)

@@ -26,7 +26,7 @@ fun SearchClientsScreen(
                 .fillMaxSize()
         ) {
             Text(
-                text = stringResource(id = R.string.clients_search_results),
+                text = stringResource(id = R.string.search_results),
                 style = MaterialTheme.typography.h4,
             )
             ClientsTable(

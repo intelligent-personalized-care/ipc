@@ -27,13 +27,6 @@ class ClientHomeActivity : ComponentActivity() {
         (application as DependenciesContainer).sessionManager
     }
 
-    private val viewModel by viewModels<ClientHomeViewModel> {
-        viewModelInit {
-            val app = (application as DependenciesContainer)
-            ClientHomeViewModel(app.services.usersService, app.sessionManager)
-        }
-    }
-
     companion object {
         const val MONITOR = "MONITOR"
         const val PLAN = "PLAN"

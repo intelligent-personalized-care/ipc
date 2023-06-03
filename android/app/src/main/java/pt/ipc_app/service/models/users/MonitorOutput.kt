@@ -11,3 +11,7 @@ data class MonitorOutput(
     val email: String,
     val stars: Float
 ): Parcelable
+
+data class ListMonitorsOutput(
+    val monitors: List<MonitorOutput>
+)

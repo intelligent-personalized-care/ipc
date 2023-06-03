@@ -1,22 +1,19 @@
-package pt.ipc_app.ui.screens.info
+package pt.ipc_app.ui.screens.search
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.io.File
-import java.util.*
+import java.util.UUID
 
 /**
- * View model for the [ClientDetailsActivity].
- *
- * @param sessionManager the manager used to handle the user session
+ * View model for the [SearchClientsActivity] or the [SearchMonitorsActivity].
  */
-class ClientDetailsViewModel(
+class SearchViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
@@ -25,26 +22,32 @@ class ClientDetailsViewModel(
     val state
         get() = _state.asStateFlow()
 
+    private val _monitors = MutableStateFlow(listOf<MonitorOutput>())
+    val monitors
+        get() = _monitors.asStateFlow()
+
     /**
-     * Attempts to update the profile picture of client.
+     * Attempts to get all monitors available.
      */
-    fun updatePicture(
-        image: File
+    fun searchMonitors(
+        name: String? = null
     ) {
         launchAndExecuteRequest(
             request = {
                 _state.value = ProgressState.WAITING
-                usersService.updateProfilePicture(
-                    image = image,
-                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
+                usersService.searchMonitorsAvailable(
+                    name = name,
                     token = sessionManager.userInfo!!.token
                 ).also {
-                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
+                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }
+
             },
             onSuccess = {
                 _state.value = ProgressState.FINISHED
+                _monitors.value = it.monitors
             }
         )
     }
+
 }

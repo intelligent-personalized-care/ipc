@@ -12,7 +12,7 @@ enum class TextFieldType(val labelId: Int) {
     WEIGHT(R.string.register_screen_label_weight),
     HEIGHT(R.string.register_screen_label_height),
     PHYSICAL_CONDITION(R.string.register_screen_label_physicalCondition),
-    SEARCH(R.string.search)
+    SEARCH(R.string.search_label)
 }
 
 fun TextFieldType.errorToShow(error: ProblemJson): String? =

@@ -29,10 +29,10 @@ import java.io.IOException
  */
 class ClientDetailsActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<ClientDetailsViewModel> {
+    private val viewModel by viewModels<UserDetailsViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ClientDetailsViewModel(app.services.usersService, app.sessionManager)
+            UserDetailsViewModel(app.services.usersService, app.sessionManager)
         }
     }
 

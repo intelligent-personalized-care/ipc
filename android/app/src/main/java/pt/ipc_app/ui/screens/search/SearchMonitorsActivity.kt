@@ -6,7 +6,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.R
+import pt.ipc_app.ui.screens.info.MonitorDetailsActivity
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -14,10 +17,10 @@ import pt.ipc_app.utils.viewModelInit
  */
 class SearchMonitorsActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<SearchClientsViewModel> {
+    private val viewModel by viewModels<SearchViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            SearchClientsViewModel(app.services.usersService, app.sessionManager)
+            SearchViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
@@ -32,14 +35,22 @@ class SearchMonitorsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            ListClientsScreen(
-                clients = listOf(),
-                onSearchRequest = {
-                    viewModel.searchMonitors(it)
-                },
-                onClientClick = { }
-            )
+            val monitors = viewModel.monitors.collectAsState().value
+
+            if (monitors.isEmpty()) {
+                SearchScreen(
+                    labelId = R.string.search_monitors,
+                    onSearchRequest = { viewModel.searchMonitors(it) }
+                )
+            } else {
+                SearchMonitorsScreen(
+                    monitors = monitors,
+                    requestState = viewModel.state.collectAsState().value,
+                    onMonitorClick = { MonitorDetailsActivity.navigate(this, it) }
+                )
+            }
         }
     }
 }

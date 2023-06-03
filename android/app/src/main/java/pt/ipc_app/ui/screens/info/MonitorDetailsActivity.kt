@@ -6,13 +6,23 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.components.openSendEmail
+import pt.ipc_app.utils.viewModelInit
 
 /**
  * The monitor details activity.
  */
 class MonitorDetailsActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<UserDetailsViewModel> {
+        viewModelInit {
+            val app = (application as DependenciesContainer)
+            UserDetailsViewModel(app.services.usersService, app.sessionManager)
+        }
+    }
 
     companion object {
         const val MONITOR = "MONITOR"
@@ -30,7 +40,8 @@ class MonitorDetailsActivity : ComponentActivity() {
         setContent {
             MonitorDetailsScreen(
                 monitor = monitor,
-                onSendEmailRequest = { openSendEmail(monitor.email) }
+                onSendEmailRequest = { openSendEmail(monitor.email) },
+                onRequestedConnection = { viewModel.connectWithMonitor(monitor.id) }
             )
         }
     }
