@@ -25,6 +25,14 @@ class ExerciseViewModel(
         get() = _state.asStateFlow()
 
     /**
+     * Attempts to get a preview url of an exercise.
+     */
+    fun getExercisePreviewUrl(
+        exerciseInfoId: UUID
+    ): String =
+        exercisesService.getExercisePreviewUrl(exerciseInfoId)
+
+    /**
      * Attempts to submit an exercise of client.
      */
     fun submitExerciseVideo(

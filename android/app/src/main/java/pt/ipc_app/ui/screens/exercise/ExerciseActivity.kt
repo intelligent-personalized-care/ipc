@@ -21,16 +21,26 @@ class ExerciseActivity: ComponentActivity() {
         }
     }
 
+    companion object {
+        const val EXERCISE = "EXERCISE"
+        fun navigate(context: Context, exercise: DailyExercise) {
+            with(context) {
+                val intent = Intent(this, ExerciseActivity::class.java)
+                intent.putExtra(EXERCISE, exercise)
+                startActivity(intent)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             ExerciseScreen(
                 exercise = exercise,
-                //onRecordClick = { LivePreviewActivity.navigate(this) }
+                exercisePreviewUrl = viewModel.getExercisePreviewUrl(exercise.exerciseInfoID),
                 onRecordClick = { CameraXLivePreviewActivity.navigate(this, exercise) }
             )
-
         }
     }
 
@@ -41,17 +51,6 @@ class ExerciseActivity: ComponentActivity() {
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
-    }
-
-    companion object {
-        const val EXERCISE = "EXERCISE"
-        fun navigate(context: Context, exercise: DailyExercise) {
-            with(context) {
-                val intent = Intent(this, ExerciseActivity::class.java)
-                intent.putExtra(EXERCISE, exercise)
-                startActivity(intent)
-            }
-        }
     }
 
 }

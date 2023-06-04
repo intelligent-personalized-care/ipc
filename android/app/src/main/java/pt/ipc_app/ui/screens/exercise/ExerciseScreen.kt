@@ -7,7 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,8 +22,11 @@ import java.util.*
 @Composable
 fun ExerciseScreen(
     exercise: DailyExercise,
+    exercisePreviewUrl: String,
     onRecordClick: () -> Unit = {}
 ) {
+    var isPlaying by remember { mutableStateOf(true) }
+
     AppScreen {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -41,10 +44,9 @@ fun ExerciseScreen(
                 )
             }
 
-            VideoPlayer(url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
+            VideoPlayer(url = exercisePreviewUrl, playing = isPlaying)
 
             Spacer(modifier = Modifier.padding(top = 100.dp))
-
 
             Text(
                 text = "Description",
@@ -58,7 +60,10 @@ fun ExerciseScreen(
             Spacer(modifier = Modifier.padding(top = 100.dp))
 
             Button(
-                onClick = onRecordClick,
+                onClick = {
+                    isPlaying = false
+                    onRecordClick()
+                },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
@@ -85,6 +90,7 @@ fun ExerciseScreenPreview() {
     ExerciseScreen(
         exercise = DailyExercise(1, UUID.randomUUID(), "Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
                 "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
-                "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", "", 15, 3)
+                "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", "", 15, 3),
+        exercisePreviewUrl = ""
     )
 }

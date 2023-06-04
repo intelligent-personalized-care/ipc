@@ -37,6 +37,11 @@ class ExercisesService(
             token = token
         )
 
+    fun getExercisePreviewUrl(
+        exerciseInfoId: UUID
+    ): String =
+        "$apiEndpoint/exercises/$exerciseInfoId/video"
+
     /**
      * Submit an exercise video of Client.
      *
