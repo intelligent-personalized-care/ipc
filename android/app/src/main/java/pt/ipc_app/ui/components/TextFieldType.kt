@@ -18,6 +18,9 @@ enum class TextFieldType(val labelId: Int) {
 
     PLAN_NAME(R.string.create_plan_screen_label_name),
     PLAN_START_DATE(R.string.create_plan_screen_label_startDate),
+
+    EXERCISE_SETS(R.string.create_plan_screen_label_exercise_sets),
+    EXERCISE_REPS(R.string.create_plan_screen_label_exercise_reps)
 }
 
 fun TextFieldType.errorToShow(error: ProblemJson): String? =

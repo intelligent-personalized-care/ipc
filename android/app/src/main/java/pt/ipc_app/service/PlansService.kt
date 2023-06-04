@@ -5,7 +5,6 @@ import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.plans.CreatePlanOutput
 import pt.ipc_app.service.models.plans.PlanInput
-import pt.ipc_app.service.models.register.RegisterOutput
 import java.io.IOException
 import java.util.UUID
 
@@ -35,11 +34,9 @@ class PlansService(
         token: String
     ): APIResult<CreatePlanOutput> =
         post(
-            uri = "/users/monitors/$monitorId/clients/fb97992c-6195-4822-8499-eedb629cbbe5/plans",
+            uri = "/users/monitors/$monitorId/plans",
             token = token,
             body = plan
         )
-
-
 
 }

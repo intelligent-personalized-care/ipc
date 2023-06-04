@@ -1,13 +1,10 @@
 package pt.ipc_app.ui.screens.plan
 
-import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.exercise.ExerciseInfo
-import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.ExercisesService
 import pt.ipc_app.service.PlansService
-import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.session.SessionManagerSharedPrefs

@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.service.models.dailyList.DailyListInput
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -42,10 +43,6 @@ class CreatePlanActivity : ComponentActivity() {
                 exercises = viewModel.exercises.collectAsState().value,
                 onPlanCreation = { viewModel.createPlan(it) }
             )
-            viewModel.error?.let {
-                Log.println(Log.WARN, "ERROR", it.title)
-            }
-
         }
     }
 }

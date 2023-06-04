@@ -1,5 +1,6 @@
 package pt.ipc_app.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -32,7 +33,10 @@ abstract class AppViewModel : ViewModel() {
             try {
                 onSuccess(executeRequest(request))
             } catch (e: Exception) {
-                if (e is APIException) _error = e.error
+                if (e is APIException) {
+                    _error = e.error
+                    Log.println(Log.WARN, "ERROR", e.error.title)
+                }
             }
         }
     }

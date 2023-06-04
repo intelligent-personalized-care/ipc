@@ -9,13 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
+import pt.ipc_app.service.models.dailyList.DailyListInput
 
 @Composable
 fun ExercisesInfoList(
     exercises: List<ExerciseInfo>,
     isExerciseAlreadyInDailyList: (ExerciseInfo) -> Boolean,
-    onExerciseAdd: (ExerciseInfo) -> Unit
+    onExerciseAdd: (Exercise) -> Unit
 ) {
 
     Spacer(modifier = Modifier.padding(top = 20.dp))

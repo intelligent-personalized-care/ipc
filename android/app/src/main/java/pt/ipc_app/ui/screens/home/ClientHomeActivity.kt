@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.ClientOutput
@@ -15,7 +15,6 @@ import pt.ipc_app.ui.screens.exercise.ExerciseActivity
 import pt.ipc_app.ui.screens.info.ClientDetailsActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.info.MonitorDetailsActivity
-import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
 /**

@@ -48,11 +48,10 @@ fun DailyExerciseRow(
 
 @Composable
 fun ExerciseIconDone(ex: DailyExercise) {
-    val isDone = ex.isDone()
     Icon(
-        imageVector = if (isDone) Icons.Default.Check else Icons.Default.HourglassBottom,
+        imageVector = if (ex.isDone) Icons.Default.Check else Icons.Default.HourglassBottom,
         contentDescription = "Exercise is done",
-        tint = if (isDone) Color(131, 204, 46, 255)
+        tint = if (ex.isDone) Color(131, 204, 46, 255)
         else Color(255, 217, 102, 255)
     )
 }

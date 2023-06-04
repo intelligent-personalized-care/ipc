@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -66,12 +69,12 @@ fun DaysOfWeekRowWithoutLocalDate(
     onDaySelected: (Int) -> Unit,
     onDayAdded: () -> Unit
 ) {
-    Row(
+    LazyRow(
         modifier = Modifier
             .padding(28.dp)
             .fillMaxWidth()
     ) {
-        repeat(totalDays) {
+        items(totalDays) {
             BoxDay(
                 day = it,
                 daySelected = daySelected,
@@ -79,9 +82,11 @@ fun DaysOfWeekRowWithoutLocalDate(
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
-        BoxDay(
-            onClick = { onDayAdded() }
-        )
+        item {
+            BoxDay(
+                onClick = { onDayAdded() }
+            )
+        }
     }
 }
 

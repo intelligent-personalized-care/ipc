@@ -39,7 +39,10 @@ class ExerciseActivity: ComponentActivity() {
             ExerciseScreen(
                 exercise = exercise,
                 exercisePreviewUrl = viewModel.getExercisePreviewUrl(exercise.exerciseInfoID),
-                onRecordClick = { CameraXLivePreviewActivity.navigate(this, exercise) }
+                onRecordClick = {
+                    finish()
+                    CameraXLivePreviewActivity.navigate(this, exercise)
+                }
             )
         }
     }

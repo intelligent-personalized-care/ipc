@@ -3,7 +3,6 @@ package pt.ipc_app.domain.exercise
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.util.*
-import kotlin.random.Random
 
 data class Exercise(
     val exerciseInfoID: UUID,
@@ -19,7 +18,6 @@ data class DailyExercise(
     val description: String,
     val type: String,
     val sets: Int = 0,
-    val reps: Int = 0
-): Parcelable {
-    fun isDone() = Random.nextBoolean()
-}
+    val reps: Int = 0,
+    val isDone: Boolean = false
+): Parcelable

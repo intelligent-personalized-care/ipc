@@ -81,7 +81,6 @@ fun ExerciseScreen(
             BottomBar()
         }
     }
-
 }
 
 @Preview
