@@ -2,6 +2,8 @@ package pt.ipc.storage.repositories
 
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.ListOfPlans
+import pt.ipc.http.models.PlansOutput
 import java.time.LocalDate
 import java.util.*
 
@@ -12,6 +14,8 @@ interface PlansRepository {
     fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate)
 
     fun getPlan(planID: Int): PlanOutput
+
+    fun getPlans(monitorID: UUID) : List<PlansOutput>
 
     fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput?
 

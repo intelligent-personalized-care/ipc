@@ -3,6 +3,8 @@ package pt.ipc.services
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.ListOfPlans
+import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -32,6 +34,8 @@ interface MonitorService {
     fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate : LocalDate, planID: Int)
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
+
+    fun getPlans(monitorID: UUID) : List<PlansOutput>
 
     fun giveFeedbackOfExercise(monitorID: UUID, exerciseID : Int, feedback : String)
 }

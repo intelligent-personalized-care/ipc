@@ -6,6 +6,8 @@ import pt.ipc.domain.DailyListOutput
 import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.ListOfPlans
+import pt.ipc.http.models.PlansOutput
 import pt.ipc.storage.repositories.PlansRepository
 import java.time.LocalDate
 import java.util.*
@@ -89,6 +91,13 @@ class JdbiPlansRepository(
             startDate = dtStart,
             dailyLists = dailyLists
         )
+    }
+
+    override fun getPlans(monitorID: UUID) : List<PlansOutput>{
+        return handle.createQuery("select p.id,p.title from dbo.plans p inner join dbo.monitors m on p.monitor_id = m.m_id where m.m_id = :monitorID")
+            .bind("monitorID",monitorID)
+            .mapTo<PlansOutput>()
+            .toList()
     }
 
     override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput? {

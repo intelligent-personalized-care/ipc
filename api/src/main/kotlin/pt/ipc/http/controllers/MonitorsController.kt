@@ -127,8 +127,18 @@ class MonitorsController(private val monitorService: MonitorService) {
     }
 
     @Authentication
+    @GetMapping(Uris.PLANS_OF_MONITOR)
+    fun getPlansOfMonitor(@PathVariable monitorID: UUID, user: User) : ResponseEntity<ListOfPlans>{
+        if(monitorID != user.id) throw Unauthorized
+
+        val plans = monitorService.getPlans(monitorID = monitorID)
+
+        return ResponseEntity.ok(ListOfPlans(plans = plans))
+    }
+
+    @Authentication
     @PostMapping(Uris.PLANS_OF_CLIENT)
-    fun asscocitePlanForClient(
+    fun associatePlanForClient(
         @PathVariable clientID: UUID,
         @PathVariable monitorID: UUID,
         @RequestBody planInfo: PlanToClient,

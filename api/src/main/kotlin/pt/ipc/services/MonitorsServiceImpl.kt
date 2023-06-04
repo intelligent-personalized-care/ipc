@@ -8,6 +8,8 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.*
+import pt.ipc.http.models.ListOfPlans
+import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -138,6 +140,14 @@ class MonitorsServiceImpl(
             block = {
                 if (!it.plansRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
                 it.plansRepository.getPlan(planID)
+            }
+        )
+    }
+
+    override fun getPlans(monitorID: UUID) : List<PlansOutput>{
+        return transactionManager.runBlock(
+            block = {
+                it.plansRepository.getPlans(monitorID = monitorID)
             }
         )
     }
