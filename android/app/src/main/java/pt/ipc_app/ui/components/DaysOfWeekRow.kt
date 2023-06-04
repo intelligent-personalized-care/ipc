@@ -5,7 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,33 +62,58 @@ fun DaysOfWeekRow(
 @Composable
 fun DaysOfWeekRowWithoutLocalDate(
     daySelected: Int,
-    onDaySelected: (Int) -> Unit
+    totalDays: Int,
+    onDaySelected: (Int) -> Unit,
+    onDayAdded: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .padding(28.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .fillMaxWidth()
     ) {
-        repeat(5) {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .size(56.dp)
-                    .border(1.dp, Color(131, 129, 129, 255), RoundedCornerShape(10.dp))
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(
-                        when (it) {
-                            daySelected -> Color(174, 237, 245, 255)
-                            else -> Color(231, 231, 231, 255)
-                        }
-                    )
-                    .clickable { onDaySelected(it) }
-            ) {
-                Text("Day ${it + 1}")
-            }
+        repeat(totalDays) {
+            BoxDay(
+                day = it,
+                daySelected = daySelected,
+                onClick = onDaySelected,
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
+        BoxDay(
+            onClick = { onDayAdded() }
+        )
+    }
+}
+
+@Composable
+fun BoxDay(
+    day: Int = -1,
+    daySelected: Int = -1,
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .size(56.dp)
+            .border(1.dp, Color(131, 129, 129, 255), RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .background(
+                when {
+                    day != -1 && day == daySelected -> Color(174, 237, 245, 255)
+                    else -> Color(231, 231, 231, 255)
+                }
+            )
+            .clickable { onClick(day) }
+    ) {
+        if (day != -1)
+            Text("Day ${day + 1}")
+        else
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add Day"
+            )
     }
 }
 

@@ -47,7 +47,6 @@ fun AddExerciseIcon(alreadyInDailyList: Boolean) {
     Icon(
         imageVector = if (alreadyInDailyList) Icons.Default.Check else Icons.Default.Add,
         contentDescription = "Exercise Info",
-        tint = if (alreadyInDailyList) Color(131, 204, 46, 255)
-        else Color(255, 217, 102, 255)
+        tint = Color(131, 204, 46, 255)
     )
 }

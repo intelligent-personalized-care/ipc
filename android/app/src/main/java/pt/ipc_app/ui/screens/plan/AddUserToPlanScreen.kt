@@ -42,7 +42,7 @@ fun AddUserToPlanScreen(
             )
 
             if (startDate.isNotEmpty()) {
-                val plan = PlanInput(plan.title, startDate.toLocalDate(), plan.dailyLists)
+                val plan = PlanInput(plan.title, startDate, plan.dailyLists)
 
 
             }

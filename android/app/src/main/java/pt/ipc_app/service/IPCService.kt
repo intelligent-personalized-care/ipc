@@ -22,13 +22,7 @@ open class IPCService(
 ) : HTTPService(apiEndpoint, httpClient, jsonEncoder) {
 
     val usersService = UsersService(apiEndpoint, httpClient, jsonEncoder)
+    val plansService = PlansService(apiEndpoint, httpClient, jsonEncoder)
     val exercisesService = ExercisesService(apiEndpoint, httpClient, jsonEncoder)
-
-    /**
-     * Gets the home information.
-     *
-     * @return the API result of the get home request
-     */
-    suspend fun getHome(): APIResult<GetHomeOutputModel> = get(Uris.USER_HOME)
 
 }

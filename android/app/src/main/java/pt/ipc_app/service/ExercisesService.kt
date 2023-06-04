@@ -3,6 +3,8 @@ package pt.ipc_app.service
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.exercises.ListOfExercisesInfo
+import pt.ipc_app.service.models.users.MonitorOutput
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -19,6 +21,21 @@ class ExercisesService(
     httpClient: OkHttpClient,
     jsonEncoder: Gson
 ) : HTTPService(apiEndpoint, httpClient, jsonEncoder) {
+
+    /**
+     * Gets all the exercises.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getExercises(
+        token: String
+    ): APIResult<ListOfExercisesInfo> =
+        get(
+            uri = "/exercises",
+            token = token
+        )
 
     /**
      * Submit an exercise video of Client.

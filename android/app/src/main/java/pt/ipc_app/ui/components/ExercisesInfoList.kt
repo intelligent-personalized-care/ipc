@@ -14,7 +14,8 @@ import pt.ipc_app.domain.exercise.ExerciseInfo
 @Composable
 fun ExercisesInfoList(
     exercises: List<ExerciseInfo>,
-    isExerciseAlreadyInDailyList: (ExerciseInfo) -> Boolean
+    isExerciseAlreadyInDailyList: (ExerciseInfo) -> Boolean,
+    onExerciseAdd: (ExerciseInfo) -> Unit
 ) {
 
     Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -27,7 +28,8 @@ fun ExercisesInfoList(
         exercises.forEach { ex ->
             ExerciseInfoRow(
                 exercise = ex,
-                alreadyInDailyList = isExerciseAlreadyInDailyList(ex)
+                alreadyInDailyList = isExerciseAlreadyInDailyList(ex),
+                onExerciseAdd = onExerciseAdd
             )
         }
     }
