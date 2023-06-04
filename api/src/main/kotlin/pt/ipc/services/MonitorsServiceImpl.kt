@@ -108,16 +108,27 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int {
+    override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
+
+        return transactionManager.runBlock(
+            block = {
+                it.plansRepository.createPlan(monitorID = monitorID, plan = planInput)
+            }
+        )
+    }
+
+    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int){
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
 
-                val planEndDate = plan.startDate.plusDays((plan.dailyLists.size - 1).toLong())
+                val plan = it.plansRepository.getPlan(planID = planID)
 
-                if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID, plan.startDate, planEndDate)) throw ClientAlreadyHavePlanInThisPeriod
+                val planEndDate = startDate.plusDays((plan.dailyLists.size - 1).toLong())
 
-                it.plansRepository.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
+                if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID, startDate, planEndDate)) throw ClientAlreadyHavePlanInThisPeriod
+
+                it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate )
             }
         )
     }

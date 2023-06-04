@@ -4,13 +4,12 @@ import java.time.LocalDate
 
 data class PlanInput(
     val title: String,
-    val startDate: LocalDate,
     val dailyLists: List<DailyListInput?>
 )
 
 data class PlanOutput(
     val id: Int,
     val title: String,
-    val startDate: LocalDate,
+    val startDate: LocalDate? = null,
     val dailyLists: List<DailyListOutput?>
 )

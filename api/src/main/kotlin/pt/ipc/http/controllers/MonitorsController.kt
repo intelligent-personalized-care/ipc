@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.Unauthorized
-import pt.ipc.http.models.AllMonitorsAvailableOutput
-import pt.ipc.http.models.ConnectionRequestDecisionInput
-import pt.ipc.http.models.RequestInformation
-import pt.ipc.http.models.FeedbackInput
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -120,13 +117,28 @@ class MonitorsController(private val monitorService: MonitorService) {
     }
 
     @Authentication
-    @PostMapping(Uris.PLANS)
-    fun createPlanForClient(@PathVariable clientID: UUID, @PathVariable monitorID: UUID, user: User, @RequestBody plan: PlanInput): ResponseEntity<PlanID> {
+    @PostMapping(Uris.PLANS_OF_MONITOR)
+    fun createPlanOfMonitor(@PathVariable monitorID: UUID, @RequestBody planInput: PlanInput, user: User): ResponseEntity<PlanID>{
         if (user.id != monitorID) throw Unauthorized
 
-        val planID = monitorService.createPlan(monitorID = monitorID, clientID = clientID, plan = plan)
+        val planID = monitorService.createPlan(monitorID = monitorID, planInput = planInput)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(PlanID(id = planID))
+        return ResponseEntity.status(HttpStatus.CREATED).body(PlanID(planID))
+    }
+
+    @Authentication
+    @PostMapping(Uris.PLANS_OF_CLIENT)
+    fun asscocitePlanForClient(
+        @PathVariable clientID: UUID,
+        @PathVariable monitorID: UUID,
+        @RequestBody planInfo: PlanToClient,
+        user: User,
+      ): ResponseEntity<Unit> {
+        if (user.id != monitorID) throw Unauthorized
+
+        monitorService.associatePlanToClient(monitorID = monitorID, clientID = clientID, startDate = planInfo.startDate, planID = planInfo.planID)
+
+        return ResponseEntity.ok().build()
     }
 
     @Authentication

@@ -134,7 +134,7 @@ class ClientsController(private val clientsService: ClientsService) {
             clientFeedback = feedback?.feedback
         )
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     companion object {

@@ -6,6 +6,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
 import pt.ipc.services.dtos.RegisterOutput
+import java.time.LocalDate
 import java.util.*
 
 interface MonitorService {
@@ -26,7 +27,9 @@ interface MonitorService {
 
     fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean)
 
-    fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int
+    fun createPlan(monitorID: UUID, planInput: PlanInput) : Int
+
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate : LocalDate, planID: Int)
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

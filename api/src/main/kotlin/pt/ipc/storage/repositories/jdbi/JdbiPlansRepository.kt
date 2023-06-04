@@ -14,7 +14,7 @@ class JdbiPlansRepository(
     private val handle: Handle
 ) : PlansRepository {
 
-    override fun createPlan(monitorID: UUID, clientID: UUID, plan: PlanInput): Int {
+    override fun createPlan(monitorID: UUID, plan: PlanInput): Int {
         val planID = handle.createQuery("insert into dbo.plans (monitor_id, title) values(:monitorID, :title) returning id")
             .bind("monitorID", monitorID)
             .bind("title", plan.title)
@@ -38,14 +38,15 @@ class JdbiPlansRepository(
                     .execute()
             }
         }
-
-        handle.createUpdate("insert into dbo.client_plans (plan_id, client_id, dt_start) values(:planID,:clientID,:dtStart)")
-            .bind("planID", planID)
-            .bind("clientID", clientID)
-            .bind("dtStart", plan.startDate)
-            .execute()
-
         return planID
+    }
+
+    override fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate) {
+        handle.createUpdate("insert into dbo.client_plans (plan_id,client_id,dt_start) values(:planID, :clientID, :startDate)")
+            .bind("planID",planID)
+            .bind("clientID",clientID)
+            .bind("startDate",startDate)
+            .execute()
     }
 
     override fun getPlan(planID: Int): PlanOutput {
@@ -57,7 +58,7 @@ class JdbiPlansRepository(
         val dtStart = handle.createQuery("select dt_start from dbo.client_plans where plan_id = :planID ")
             .bind("planID", planID)
             .mapTo<LocalDate>()
-            .single()
+            .singleOrNull()
 
         val dailyListsID: List<Int> =
             handle.createQuery("select id from dbo.daily_lists where plan_id = :planID")
@@ -119,15 +120,16 @@ class JdbiPlansRepository(
     override fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean {
         return handle.createQuery(
             """
-                select exists (
-                    select 1
-                    from dbo.plans p inner join dbo.client_plans cp on p.id = cp.plan_id
-                    where cp.client_id = :clientID
-                        and ((:startDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)))
-                            or (:endDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id))))
-                        or (cp.dt_start between :startDate and :endDate
-                        and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)) between :startDate and :endDate)
-                )
+               select exists (
+               select 1
+               from dbo.plans p inner join dbo.client_plans cp on p.id = cp.plan_id
+               where cp.client_id = :clientID
+                   and
+                     (((:startDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)))
+                       or (:endDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id))))
+                  or (cp.dt_start between :startDate and :endDate
+                   and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)) between :startDate and :endDate)
+           ))
             """.trimIndent()
         )
             .bind("clientID", clientID)
@@ -161,7 +163,7 @@ class JdbiPlansRepository(
     }
 
     override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String){
-        handle.createUpdate("update dbo.exercises_video set feedback_monitor = :feedback where id = :exerciseID")
+        handle.createUpdate("update dbo.exercises_video set monitor_feedback = :feedback where id = :exerciseID")
               .bind("feedback",feedback)
               .bind("exerciseID",exerciseID)
     }
