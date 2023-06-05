@@ -12,6 +12,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.ClientsOfMonitor
+import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
 import pt.ipc_app.ui.screens.plan.CreatePlanActivity
 import pt.ipc_app.ui.screens.userInfo.MonitorInfoActivity
@@ -50,8 +51,8 @@ class MonitorHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var clientsList by remember { mutableStateOf(clients.clients) }
-            var requestsList by remember { mutableStateOf(requests.requests) }
+            var clientsList by remember { mutableStateOf(clients?.clients ?: listOf()) }
+            var requestsList by remember { mutableStateOf(requests?.requests ?: listOf()) }
 
             MonitorHomeScreen(
                 monitor = repo.userInfo!!,
@@ -63,27 +64,26 @@ class MonitorHomeActivity : ComponentActivity() {
                     clientsList = clientsList + ClientOutput(request.clientID, request.clientName, request.clientEmail)
                     requestsList = requestsList - requestsList.first {it == request}
                 },
-                onPlansRequest = { CreatePlanActivity.navigate(this) },
-                onUserInfoClick = { MonitorInfoActivity.navigate(this) }
+                onPlanCreateClick = { CreatePlanActivity.navigate(this) },
+                onUserInfoClick = { MonitorInfoActivity.navigate(this) },
+                onAboutClick = { AboutActivity.navigate(this) }
             )
         }
     }
 
     @Suppress("deprecation")
-    private val clients: ClientsOfMonitor by lazy {
-        val clients = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+    private val clients: ClientsOfMonitor? by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             intent.getParcelableExtra(CLIENTS, ClientsOfMonitor::class.java)
         else
             intent.getParcelableExtra(CLIENTS)
-        checkNotNull(clients)
     }
 
     @Suppress("deprecation")
-    private val requests: RequestsOfMonitor by lazy {
-        val requests = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+    private val requests: RequestsOfMonitor? by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             intent.getParcelableExtra(REQUESTS, RequestsOfMonitor::class.java)
         else
             intent.getParcelableExtra(REQUESTS)
-        checkNotNull(requests)
     }
 }

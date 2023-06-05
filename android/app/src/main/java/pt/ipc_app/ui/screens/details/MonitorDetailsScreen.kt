@@ -1,15 +1,19 @@
 package pt.ipc_app.ui.screens.details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import pt.ipc_app.R
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
@@ -22,11 +26,26 @@ fun MonitorDetailsScreen(
     onRequestedConnection: () -> Unit = { }
 ) {
     AppScreen {
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(30.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.monitor_details_title),
+                style = MaterialTheme.typography.h4
+            )
+        }
+        Column(
+            modifier = Modifier.padding(start = 40.dp, top = 100.dp)
+        ) {
             Text(monitor.name)
-            Button(onClick = onSendEmailRequest) {
-                Text(monitor.email)
-            }
+            Text(
+                text = monitor.email,
+                modifier = Modifier.clickable {
+                    onSendEmailRequest()
+                }
+            )
+
             if (requestEnable) {
                 Button(
                     onClick = { onRequestedConnection() },

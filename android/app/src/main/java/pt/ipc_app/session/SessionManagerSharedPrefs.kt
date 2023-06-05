@@ -3,8 +3,6 @@ package pt.ipc_app.session
 import android.content.Context
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.domain.user.toRole
-import pt.ipc_app.preferences.UserInfo
-import java.util.*
 
 /**
  * Session manager that uses shared preferences to store the session.

@@ -15,7 +15,7 @@ open class User(
     }
 
     companion object {
-        val NAME_LENGTH_RANGE = 5..30
+        val NAME_LENGTH_RANGE = 3..30
         val EMAIL_LENGTH_RANGE = 5..255
 
         private const val PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}\$"

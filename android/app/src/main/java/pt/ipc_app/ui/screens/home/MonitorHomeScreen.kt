@@ -3,6 +3,8 @@ package pt.ipc_app.ui.screens.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,13 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
-import pt.ipc_app.preferences.UserInfo
+import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestInformation
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.ClientsTable
 import pt.ipc_app.ui.components.NotificationIcon
+import pt.ipc_app.ui.components.bottomBar.MonitorBottomBar
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
@@ -29,8 +31,7 @@ fun MonitorHomeScreen(
     requestsOfMonitor: List<RequestInformation>,
     onClientSelected: (ClientOutput) -> Unit = { },
     onClientRequestAccepted: (RequestInformation, ConnectionRequestDecisionInput) -> Unit = { _,_ -> },
-    onHomeClick: () -> Unit = { },
-    onPlansRequest: () -> Unit = { },
+    onPlanCreateClick: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
     onAboutClick: () -> Unit = { }
 ) {
@@ -61,6 +62,7 @@ fun MonitorHomeScreen(
         ) {
             ClientsTable(
                 columnText = stringResource(id = R.string.client_requests),
+                icon = Icons.Default.Add,
                 clients = requestsOfMonitor.map { ClientOutput(it.clientID, it.clientName, it.clientEmail) },
                 onClientClick = { client ->
                     onClientRequestAccepted(
@@ -78,17 +80,12 @@ fun MonitorHomeScreen(
             )
         }
 
-        Column(
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            BottomBar(
-                onHomeClick = onHomeClick,
-                onExercisesClick = onPlansRequest,
-                onUserInfoClick = onUserInfoClick,
-                onAboutClick = onAboutClick
-            )
-        }
 
+        MonitorBottomBar(
+            onPlanCreateClick = onPlanCreateClick,
+            onUserInfoClick = onUserInfoClick,
+            onAboutClick = onAboutClick
+        )
     }
 }
 

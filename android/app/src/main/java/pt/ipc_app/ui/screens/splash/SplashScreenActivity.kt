@@ -1,6 +1,7 @@
 package pt.ipc_app.ui.screens.splash
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import kotlinx.coroutines.*
@@ -12,7 +13,6 @@ import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.ui.screens.role.ChooseRoleActivity
 import pt.ipc_app.utils.viewModelInit
-import java.util.*
 
 /**
  * The start screen.
@@ -35,13 +35,16 @@ class SplashScreenActivity: ComponentActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         repo.setSession(
-            id = "b48faf56-2c85-455d-98ea-97ee4fcdf97e",
-            name = "Tiago",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJtb25pdG9yQGdtYWlsLmNvbSIsInVzZXJJRCI6ImI0OGZhZjU2LTJjODUtNDU1ZC05OGVhLTk3ZWU0ZmNkZjk3ZSIsInJvbGUiOiJNT05JVE9SIn0.DtjpwWywt8thg0eZf9dY-r5EYq2dAiYDkCsTvZcZ6AHJg3bioSJBHRoj-U9T9beo8Cn-_HiT1e_qjbUVqh0N0A",
-            role = Role.MONITOR
+            id = "6acf5755-a520-4fda-bd99-69b9fdc6b1eb",
+            name = "Client",
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0ZWVlQGdtYWlsLmNvbSIsInVzZXJJRCI6IjZhY2Y1NzU1LWE1MjAtNGZkYS1iZDk5LTY5YjlmZGM2YjFlYiIsInJvbGUiOiJDTElFTlQifQ.NoBC5Wx_FkXQYVsbEk71jeBpd-4BHGNAGnNYojV6JR7cQse7WWiGUl9jiAZ50bvhXwX3B_0zvlTSaghBCU_6Vg",
+            role = Role.CLIENT
         )
 
         //repo.clearSession()
+        //Log.println(Log.WARN, "TOKEN", repo.userInfo!!.token)
+
+        // CLIENT: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJjbGllbnQxQGdtYWlsLmNvbSIsInVzZXJJRCI6IjRlYWUzZDVlLTNiMzAtNGM3Zi1iMWJmLTU4NDEzMTQ3YmY2NiIsInJvbGUiOiJDTElFTlQifQ.hMt5lBZzCFnIG7OQyZpd2TGNevRHermn9KVsMvPImquBnLh2xdy8APfbBXTF663Ia-Ml2Ra70IQsBgvHrUZ0Jw
 
         CoroutineScope(Dispatchers.Main).launch {
             repo.userInfo?.let {

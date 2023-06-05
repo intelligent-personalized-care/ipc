@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.ipc_app.domain.exercise.DailyExercise
-import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.VideoPlayer
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
@@ -23,7 +22,7 @@ import java.util.*
 fun ExerciseScreen(
     exercise: DailyExercise,
     exercisePreviewUrl: String,
-    onRecordClick: () -> Unit = {}
+    onRecordClick: () -> Unit = { }
 ) {
     var isPlaying by remember { mutableStateOf(true) }
 
@@ -73,12 +72,6 @@ fun ExerciseScreen(
                     modifier = Modifier.padding(start = 5.dp)
                 )
             }
-        }
-
-        Column(
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            BottomBar()
         }
     }
 }

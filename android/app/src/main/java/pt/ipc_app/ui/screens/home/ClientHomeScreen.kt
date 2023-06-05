@@ -11,13 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.DailyList
-import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.domain.user.*
-import pt.ipc_app.preferences.UserInfo
+import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.components.*
+import pt.ipc_app.ui.components.bottomBar.ClientBottomBar
 import pt.ipc_app.ui.screens.AppScreen
 import java.time.LocalDate
 import java.util.*
@@ -29,7 +29,6 @@ fun ClientHomeScreen(
     plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
     onExerciseSelect: (ExerciseTotalInfo) -> Unit = { },
-    onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
     onAboutClick: () -> Unit = { }
@@ -100,16 +99,12 @@ fun ClientHomeScreen(
                 )
             }
         }
-        Column(
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            BottomBar(
-                onHomeClick = onHomeClick,
-                onExercisesClick = onExercisesClick,
-                onUserInfoClick = onUserInfoClick,
-                onAboutClick = onAboutClick
-            )
-        }
+
+        ClientBottomBar(
+            onExercisesClick = onExercisesClick,
+            onUserInfoClick = onUserInfoClick,
+            onAboutClick = onAboutClick
+        )
     }
 }
 

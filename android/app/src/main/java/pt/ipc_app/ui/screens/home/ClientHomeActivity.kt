@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
 import pt.ipc_app.ui.screens.userInfo.ClientInfoActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
@@ -53,7 +55,9 @@ class ClientHomeActivity : ComponentActivity() {
                         SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) },
-                onUserInfoClick = { ClientInfoActivity.navigate(this) }
+                onExercisesClick = { Toast.makeText(this, "Available soon", Toast.LENGTH_SHORT).show() },
+                onUserInfoClick = { ClientInfoActivity.navigate(this) },
+                onAboutClick = { AboutActivity.navigate(this) }
             )
         }
     }
