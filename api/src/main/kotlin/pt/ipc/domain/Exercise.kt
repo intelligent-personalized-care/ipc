@@ -18,5 +18,6 @@ data class ExerciseTotalInfo(
     val description: String,
     val type: String,
     val sets: Int,
-    val reps: Int
+    val reps: Int,
+    val isDone: Boolean
 )

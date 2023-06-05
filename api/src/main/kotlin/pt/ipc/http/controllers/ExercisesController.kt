@@ -42,19 +42,17 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     }
 
-      @Authentication
-      @GetMapping(Uris.EXERCISES_INFO_VIDEO)
-      fun getExerciseVideo(@PathVariable exerciseID: UUID) : ResponseEntity<ByteArray>{
+    @GetMapping(Uris.EXERCISES_INFO_VIDEO)
+    fun getExerciseVideo(@PathVariable exerciseID: UUID) : ResponseEntity<ByteArray>{
+        val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
+        val headers = HttpHeaders()
 
-          val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
+        headers.contentType = MediaType.parseMediaType("video/mp4")
+        headers.contentLength = exerciseVideo.size.toLong()
 
-          val headers = HttpHeaders()
-          headers.contentType = MediaType.parseMediaType("video/mp4")
-          headers.contentLength = exerciseVideo.size.toLong()
+        return ResponseEntity.ok().headers(headers).body(exerciseVideo)
 
-          return ResponseEntity.ok().headers(headers).body(exerciseVideo)
-
-      }
+    }
 
     @Authentication
     @GetMapping(Uris.VIDEO_OF_EXERCISE)

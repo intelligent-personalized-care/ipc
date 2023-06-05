@@ -2,6 +2,7 @@ package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.ExerciseInfo
+import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.ExerciseType
 import java.time.LocalDate
 import java.util.UUID

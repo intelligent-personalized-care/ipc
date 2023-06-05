@@ -4,8 +4,10 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.ExerciseInfo
+import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.storage.repositories.ExerciseRepository
+import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 
@@ -74,7 +76,7 @@ class JdbiExercisesRepository(
             .mapTo<LocalDate>()
             .single()
 
-        val dayIndex = java.time.temporal.ChronoUnit.DAYS.between(dtStart, date).toInt()
+        val dayIndex = Duration.between(dtStart.atStartOfDay(), date.atStartOfDay()).toDays().toInt()
 
         return handle.createQuery(sql)
             .bind("clientID", clientID)

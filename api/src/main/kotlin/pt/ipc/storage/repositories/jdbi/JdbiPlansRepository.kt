@@ -6,7 +6,6 @@ import pt.ipc.domain.DailyListOutput
 import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
-import pt.ipc.http.models.ListOfPlans
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.storage.repositories.PlansRepository
 import java.time.LocalDate
@@ -74,7 +73,10 @@ class JdbiPlansRepository(
 
             val exercises: List<ExerciseTotalInfo>? =
                 handle.createQuery("""
-                    select de.id, de.ex_id, title, description, type, sets, reps from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    select de.id, de.ex_id, title, description, type, sets, reps,
+                        case when ev.dt_submit is null then 0 else 1 end as is_done
+                    from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    left join dbo.exercises_video ev on de.id = ev.ex_id
                     where daily_list_id = :dailyListID
                     """.trimIndent())
                     .bind("dailyListID", dailyListID)
@@ -82,7 +84,11 @@ class JdbiPlansRepository(
                     .toList()
                     .ifEmpty { null }
 
-            exercises?.let { dailyLists.add(index, DailyListOutput(it)) } ?: dailyLists.add(index, null)
+            dailyLists.add(
+                index,
+                if (exercises != null) DailyListOutput(exercises)
+                else null
+            )
         }
 
         return PlanOutput(
@@ -172,7 +178,7 @@ class JdbiPlansRepository(
     }
 
     override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String){
-        handle.createUpdate("update dbo.exercises_video set monitor_feedback = :feedback where id = :exerciseID")
+        handle.createUpdate("update dbo.exercises_video set feedback_monitor = :feedback where id = :exerciseID")
               .bind("feedback",feedback)
               .bind("exerciseID",exerciseID)
     }
