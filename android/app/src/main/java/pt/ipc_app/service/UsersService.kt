@@ -9,6 +9,8 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
+import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
+import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.ListMonitorsOutput
@@ -160,6 +162,42 @@ class UsersService(
             token = token,
             body = ConnectionRequestInput(monitorId)
         )
+
+    /**
+     * Gets all monitor requests of monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getMonitorRequests(
+        monitorId: UUID,
+        token: String
+    ): APIResult<RequestsOfMonitor> =
+        get(
+            uri = "/users/monitors/$monitorId/requests",
+            token = token
+        )
+
+    /**
+     * Decide connection request.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun decideConnectionRequest(
+        monitorId: UUID,
+        requestId: UUID,
+        requestDecision: ConnectionRequestDecisionInput,
+        token: String
+    ): APIResult<RequestsOfMonitor> =
+        post(
+            uri = "/users/monitors/$monitorId/requests/$requestId",
+            token = token,
+            body = requestDecision
+        )
+
 
     /**
      * Updates the profile picture of a client.

@@ -29,8 +29,10 @@
     <string name="search_label">Search…</string>
     <string name="search_monitors">Search Monitors</string>
     <string name="search_clients">Search Clients</string>
-    <string name="my_clients">My Clients</string>
     <string name="search_results">Results</string>
+
+    <string name="client_requests">Client Requests</string>
+    <string name="my_clients">My Clients</string>
 
     <string name="activity_info_no_suitable_app">Could not find a suitable application</string>
 

@@ -13,9 +13,12 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.preferences.UserInfo
+import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
+import pt.ipc_app.service.models.requests.RequestInformation
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.BottomBar
 import pt.ipc_app.ui.components.ClientsTable
+import pt.ipc_app.ui.components.NotificationIcon
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
@@ -23,12 +26,15 @@ import java.util.*
 fun MonitorHomeScreen(
     monitor: UserInfo,
     clientsOfMonitor: List<ClientOutput>,
+    requestsOfMonitor: List<RequestInformation>,
     onClientSelected: (ClientOutput) -> Unit = { },
+    onClientRequestAccepted: (RequestInformation, ConnectionRequestDecisionInput) -> Unit = { _,_ -> },
     onHomeClick: () -> Unit = { },
     onPlansRequest: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
     onAboutClick: () -> Unit = { }
 ) {
+    var notifications by remember { mutableStateOf(true) }
 
     AppScreen {
         Row(
@@ -41,11 +47,30 @@ fun MonitorHomeScreen(
             )
         }
 
+        NotificationIcon(
+            notifications = notifications,
+            onClick = { if (notifications) notifications = false }
+        )
+
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 130.dp)
         ) {
+            ClientsTable(
+                columnText = stringResource(id = R.string.client_requests),
+                clients = requestsOfMonitor.map { ClientOutput(it.clientID, it.clientName, it.clientEmail) },
+                onClientClick = { client ->
+                    onClientRequestAccepted(
+                        requestsOfMonitor.first { it.clientID == client.id },
+                        ConnectionRequestDecisionInput(true)
+                    )
+                },
+                modifier = Modifier.height(200.dp)
+            )
+
             ClientsTable(
                 columnText = stringResource(id = R.string.my_clients),
                 clients = clientsOfMonitor,
@@ -72,6 +97,7 @@ fun MonitorHomeScreen(
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
         monitor = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.MONITOR),
-        clientsOfMonitor = listOf(ClientOutput(UUID.randomUUID(), "Tiago", ""))
+        clientsOfMonitor = listOf(ClientOutput(UUID.randomUUID(), "Tiago", "")),
+        requestsOfMonitor = listOf()
     )
 }
