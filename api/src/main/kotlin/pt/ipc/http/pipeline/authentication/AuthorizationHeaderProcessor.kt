@@ -10,8 +10,7 @@ class AuthorizationHeaderProcessor(
     private val usersServiceUtils: UsersServiceUtils
 ) {
 
-    fun process(authorizationValue : String?): Pair<User, Role>? {
-
+    fun process(authorizationValue: String?): Pair<User, Role>? {
         if (authorizationValue == null) {
             return null
         }

@@ -9,4 +9,4 @@ data class MonitorOutput(
     val rating: Rating
 )
 
-data class Rating(val starsAverage : Float, val nrOfReviews : Int)
+data class Rating(val starsAverage: Float, val nrOfReviews: Int)

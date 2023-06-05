@@ -32,5 +32,4 @@ object Uris {
 
     const val VIDEO_OF_EXERCISE = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}"
     const val EXERCISE_FEEDBACK = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}/feedback"
-
 }

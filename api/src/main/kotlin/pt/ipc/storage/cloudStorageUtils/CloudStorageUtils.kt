@@ -18,5 +18,5 @@ interface CloudStorageUtils {
 
     fun uploadProfilePicture(fileName: UUID, file: ByteArray)
 
-    fun downloadProfilePicture(fileName: UUID) : ByteArray
+    fun downloadProfilePicture(fileName: UUID): ByteArray
 }

@@ -26,5 +26,5 @@ interface ClientsRepository {
 
     fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int): Boolean
 
-    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate,clientFeedback : String?)
+    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, clientFeedback: String?)
 }

@@ -19,18 +19,19 @@ class ExercisesServiceImpl(
         )
     }
 
-    override fun getExercises(exerciseType: ExerciseType?, skip : Int, limit : Int): List<ExerciseInfo> {
+    override fun getExercises(exerciseType: ExerciseType?, skip: Int, limit: Int): List<ExerciseInfo> {
         return transactionManager.runBlock(
             block = {
-                if (exerciseType == null)
+                if (exerciseType == null) {
                     it.exerciseRepository.getExercises(skip = skip, limit = limit)
-                else
+                } else {
                     it.exerciseRepository.getExerciseByType(type = exerciseType, skip = skip, limit = limit)
+                }
             }
         )
     }
 
-    override fun getExerciseVideo(exerciseID: UUID) : ByteArray{
+    override fun getExerciseVideo(exerciseID: UUID): ByteArray {
         return transactionManager.runBlock(
             block = {
                 it.cloudStorage.downloadExampleVideo(exerciseID = exerciseID)

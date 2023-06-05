@@ -7,9 +7,13 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.*
+import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
+import pt.ipc.domain.exceptions.HasNotUploadedVideo
+import pt.ipc.domain.exceptions.MonitorNotFound
+import pt.ipc.domain.exceptions.NotMonitorOfClient
+import pt.ipc.domain.exceptions.NotPlanOfMonitor
+import pt.ipc.domain.exceptions.RequestNotExists
 import pt.ipc.http.models.ClientOutput
-import pt.ipc.http.models.ListOfPlans
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
@@ -48,7 +52,7 @@ class MonitorsServiceImpl(
         return RegisterOutput(id = userID, token = token)
     }
 
-    override fun insertCredential(monitorID : UUID, credential : ByteArray){
+    override fun insertCredential(monitorID: UUID, credential: ByteArray) {
         transactionManager.runBlock(
             block = {
                 it.cloudStorage.uploadMonitorCredentials(fileName = monitorID, file = credential)
@@ -63,7 +67,7 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun getClientsOfMonitor(monitorID: UUID) : List<ClientOutput> =
+    override fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput> =
         transactionManager.runBlock(
             block = {
                 it.monitorRepository.getClientOfMonitor(monitorID = monitorID)
@@ -73,7 +77,7 @@ class MonitorsServiceImpl(
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.searchMonitorsAvailable(name = name, skip =  skip, limit = limit)
+                it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
             }
         )
 
@@ -85,8 +89,8 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun getProfilePicture(monitorID: UUID) : ByteArray{
-       return transactionManager.runBlock(
+    override fun getProfilePicture(monitorID: UUID): ByteArray {
+        return transactionManager.runBlock(
             block = {
                 it.cloudStorage.downloadProfilePicture(fileName = monitorID)
             }
@@ -116,7 +120,6 @@ class MonitorsServiceImpl(
     }
 
     override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
-
         return transactionManager.runBlock(
             block = {
                 it.plansRepository.createPlan(monitorID = monitorID, plan = planInput)
@@ -124,7 +127,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int){
+    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int) {
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
@@ -135,7 +138,7 @@ class MonitorsServiceImpl(
 
                 if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID, startDate, planEndDate)) throw ClientAlreadyHavePlanInThisPeriod
 
-                it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate )
+                it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate)
             }
         )
     }
@@ -149,7 +152,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun getPlans(monitorID: UUID) : List<PlansOutput>{
+    override fun getPlans(monitorID: UUID): List<PlansOutput> {
         return transactionManager.runBlock(
             block = {
                 it.plansRepository.getPlans(monitorID = monitorID)
@@ -157,11 +160,11 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun giveFeedbackOfExercise(monitorID: UUID, exerciseID : Int, feedback : String){
+    override fun giveFeedbackOfExercise(monitorID: UUID, exerciseID: Int, feedback: String) {
         return transactionManager.runBlock(
             block = {
-                if(!it.plansRepository.checkIfClientAlreadyUploadedVideo(exerciseID = exerciseID)) throw HasNotUploadedVideo
-                if(!it.plansRepository.checkIfMonitorHasPrescribedExercise(exerciseID = exerciseID, monitorID = monitorID)) throw NotPlanOfMonitor
+                if (!it.plansRepository.checkIfClientAlreadyUploadedVideo(exerciseID = exerciseID)) throw HasNotUploadedVideo
+                if (!it.plansRepository.checkIfMonitorHasPrescribedExercise(exerciseID = exerciseID, monitorID = monitorID)) throw NotPlanOfMonitor
                 it.plansRepository.giveFeedBackOfVideo(exerciseID = exerciseID, feedback = feedback)
             }
         )

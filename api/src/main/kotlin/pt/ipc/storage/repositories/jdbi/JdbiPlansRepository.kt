@@ -44,9 +44,9 @@ class JdbiPlansRepository(
 
     override fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate) {
         handle.createUpdate("insert into dbo.client_plans (plan_id,client_id,dt_start) values(:planID, :clientID, :startDate)")
-            .bind("planID",planID)
-            .bind("clientID",clientID)
-            .bind("startDate",startDate)
+            .bind("planID", planID)
+            .bind("clientID", clientID)
+            .bind("startDate", startDate)
             .execute()
     }
 
@@ -72,13 +72,15 @@ class JdbiPlansRepository(
         dailyListsID.forEachIndexed { index, dailyListID ->
 
             val exercises: List<ExerciseTotalInfo>? =
-                handle.createQuery("""
+                handle.createQuery(
+                    """
                     select de.id, de.ex_id, title, description, type, sets, reps,
                         case when ev.dt_submit is null then 0 else 1 end as is_done
                     from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
                     left join dbo.exercises_video ev on de.id = ev.ex_id
                     where daily_list_id = :dailyListID
-                    """.trimIndent())
+                    """.trimIndent()
+                )
                     .bind("dailyListID", dailyListID)
                     .mapTo<ExerciseTotalInfo>()
                     .toList()
@@ -86,8 +88,11 @@ class JdbiPlansRepository(
 
             dailyLists.add(
                 index,
-                if (exercises != null) DailyListOutput(exercises)
-                else null
+                if (exercises != null) {
+                    DailyListOutput(exercises)
+                } else {
+                    null
+                }
             )
         }
 
@@ -99,9 +104,9 @@ class JdbiPlansRepository(
         )
     }
 
-    override fun getPlans(monitorID: UUID) : List<PlansOutput>{
+    override fun getPlans(monitorID: UUID): List<PlansOutput> {
         return handle.createQuery("select p.id,p.title from dbo.plans p inner join dbo.monitors m on p.monitor_id = m.m_id where m.m_id = :monitorID")
-            .bind("monitorID",monitorID)
+            .bind("monitorID", monitorID)
             .mapTo<PlansOutput>()
             .toList()
     }
@@ -154,32 +159,33 @@ class JdbiPlansRepository(
             .single()
     }
 
-    override fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID) : Boolean{
-         return handle.createQuery(
-                                "select count(*) from dbo.daily_exercises de " +
-                                    "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
-                                    "inner join dbo.plans p on dl.plan_id = p.id " +
-                                    "where de.ex_id = :exerciseID and p.monitor_id = :monitorID"
-         )
-             .bind("exerciseID",exerciseID)
-             .bind("monitorID",monitorID)
-             .mapTo<Int>()
-             .single() == 1
-
-    }
-
-    override fun checkIfClientAlreadyUploadedVideo(exerciseID: Int) : Boolean{
-        return handle.createQuery("select count(*) from dbo.exercises_video ev " +
-                                      "inner join dbo.daily_exercises de on ev.ex_id = de.id " +
-                                      "where de.ex_id = :exerciseID ")
-            .bind("exerciseID",exerciseID)
+    override fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID): Boolean {
+        return handle.createQuery(
+            "select count(*) from dbo.daily_exercises de " +
+                "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
+                "inner join dbo.plans p on dl.plan_id = p.id " +
+                "where de.ex_id = :exerciseID and p.monitor_id = :monitorID"
+        )
+            .bind("exerciseID", exerciseID)
+            .bind("monitorID", monitorID)
             .mapTo<Int>()
             .single() == 1
     }
 
-    override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String){
+    override fun checkIfClientAlreadyUploadedVideo(exerciseID: Int): Boolean {
+        return handle.createQuery(
+            "select count(*) from dbo.exercises_video ev " +
+                "inner join dbo.daily_exercises de on ev.ex_id = de.id " +
+                "where de.ex_id = :exerciseID "
+        )
+            .bind("exerciseID", exerciseID)
+            .mapTo<Int>()
+            .single() == 1
+    }
+
+    override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String) {
         handle.createUpdate("update dbo.exercises_video set feedback_monitor = :feedback where id = :exerciseID")
-              .bind("feedback",feedback)
-              .bind("exerciseID",exerciseID)
+            .bind("feedback", feedback)
+            .bind("exerciseID", exerciseID)
     }
 }

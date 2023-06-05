@@ -4,7 +4,6 @@ import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.ClientOutput
-import pt.ipc.http.models.ListOfPlans
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterMonitorInput
@@ -16,29 +15,29 @@ interface MonitorService {
 
     fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput
 
-    fun insertCredential(monitorID : UUID, credential : ByteArray)
+    fun insertCredential(monitorID: UUID, credential: ByteArray)
 
     fun getMonitor(monitorID: UUID): MonitorDetails
 
-    fun getClientsOfMonitor(monitorID: UUID) : List<ClientOutput>
+    fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput>
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
-    fun getProfilePicture(monitorID: UUID) : ByteArray
+    fun getProfilePicture(monitorID: UUID): ByteArray
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
     fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean)
 
-    fun createPlan(monitorID: UUID, planInput: PlanInput) : Int
+    fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 
-    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate : LocalDate, planID: Int)
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int)
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 
-    fun getPlans(monitorID: UUID) : List<PlansOutput>
+    fun getPlans(monitorID: UUID): List<PlansOutput>
 
-    fun giveFeedbackOfExercise(monitorID: UUID, exerciseID : Int, feedback : String)
+    fun giveFeedbackOfExercise(monitorID: UUID, exerciseID: Int, feedback: String)
 }

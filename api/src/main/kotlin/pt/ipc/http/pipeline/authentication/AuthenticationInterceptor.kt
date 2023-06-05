@@ -19,8 +19,6 @@ class AuthenticationInterceptor(
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
-
-
             val authorizationValue = request.getHeader(NAME_AUTHORIZATION_HEADER)
 
             val (user, role) = authorizationHeaderProcessor.process(authorizationValue = authorizationValue) ?: throw Unauthenticated

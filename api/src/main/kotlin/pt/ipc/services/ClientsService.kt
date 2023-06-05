@@ -1,7 +1,6 @@
 package pt.ipc.services
 
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
@@ -21,9 +20,9 @@ interface ClientsService {
 
     fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput
 
-    fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip : Int, limit : Int): List<Exercise>
+    fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip: Int, limit: Int): List<Exercise>
 
     fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int)
 
-    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, clientFeedback : String?)
+    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, clientFeedback: String?)
 }

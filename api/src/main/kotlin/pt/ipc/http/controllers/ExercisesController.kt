@@ -3,7 +3,11 @@ package pt.ipc.http.controllers
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.User
@@ -25,25 +29,21 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
         @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
     ): ResponseEntity<ListOfExercisesInfo> {
-
-        val exercises = exercisesService.getExercises(exerciseType = exerciseType, skip = skip, limit = limit )
+        val exercises = exercisesService.getExercises(exerciseType = exerciseType, skip = skip, limit = limit)
         return ResponseEntity.ok(
             ListOfExercisesInfo(exercises = exercises)
         )
-
     }
 
     @Authentication
     @GetMapping(Uris.EXERCISES_INFO)
     fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseInfo> {
-
         val exerciseInfo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
         return ResponseEntity.ok(exerciseInfo)
-
     }
 
     @GetMapping(Uris.EXERCISES_INFO_VIDEO)
-    fun getExerciseVideo(@PathVariable exerciseID: UUID) : ResponseEntity<ByteArray>{
+    fun getExerciseVideo(@PathVariable exerciseID: UUID): ResponseEntity<ByteArray> {
         val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
         val headers = HttpHeaders()
 
@@ -51,7 +51,6 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         headers.contentLength = exerciseVideo.size.toLong()
 
         return ResponseEntity.ok().headers(headers).body(exerciseVideo)
-
     }
 
     @Authentication
@@ -62,11 +61,11 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         @PathVariable exerciseID: Int,
         @PathVariable planID: Int,
         user: User
-    ): ResponseEntity<ByteArray>{
+    ): ResponseEntity<ByteArray> {
         TODO()
     }
 
-    companion object{
+    companion object {
         const val DEFAULT_SKIP = "0"
         const val DEFAULT_LIMIT = "10"
     }

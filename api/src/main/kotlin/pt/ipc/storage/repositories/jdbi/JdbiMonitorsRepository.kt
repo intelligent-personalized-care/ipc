@@ -46,9 +46,9 @@ class JdbiMonitorsRepository(
             .mapTo<MonitorDetails>()
             .singleOrNull()
 
-    override fun getClientOfMonitor(monitorID: UUID) : List<ClientOutput> =
+    override fun getClientOfMonitor(monitorID: UUID): List<ClientOutput> =
         handle.createQuery("select u.id,u.name, u.email from dbo.users u inner join dbo.client_to_monitor cm on u.id = cm.client_id where cm.monitor_id = :monitorID ")
-            .bind("monitorID",monitorID)
+            .bind("monitorID", monitorID)
             .mapTo<ClientOutput>()
             .toList()
 
@@ -106,25 +106,27 @@ class JdbiMonitorsRepository(
         }
     }
 
-    override fun getRequestInformation(requestID: UUID): RequestInformation? {
-        return handle.createQuery("select client_id,monitor_id,request_id,request_text from dbo.client_requests where request_id = :requestID")
-            .bind("requestID", requestID)
-            .mapTo<RequestInformation>()
-            .singleOrNull()
-    }
-
-    override fun monitorRequests(monitorID: UUID): List<RequestInformation> =
-        handle.createQuery("""
+    override fun getRequestInformation(requestID: UUID): RequestInformation? =
+        handle.createQuery(
+            """
             select request_id, request_text, client_id, u.name, u.email from dbo.client_requests 
             inner join dbo.clients c on c.c_id = client_requests.client_id
             inner join dbo.users u on u.id = c.c_id
-            where monitor_id = :monitorID
-        """.trimIndent()
+            where request_id = :requestID
+            """.trimIndent()
         )
-            .bind("monitorID", monitorID)
+            .bind("requestID", requestID)
             .mapTo<RequestInformation>()
+            .singleOrNull()
+
+    override fun monitorRequests(monitorID: UUID): List<RequestInformation> {
+        val requestIds = handle.createQuery("select request_id from dbo.client_requests where monitor_id = :monitorID")
+            .bind("monitorID", monitorID)
+            .mapTo<UUID>()
             .toList()
 
+        return requestIds.map { getRequestInformation(it)!! }
+    }
 
     override fun checkIfMonitorIsVerified(monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.docs_authenticity where monitor_id = :monitorID and state = 'valid' ")

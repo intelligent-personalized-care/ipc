@@ -4,7 +4,6 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.ExerciseInfo
-import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.storage.repositories.ExerciseRepository
 import java.time.Duration
@@ -22,24 +21,24 @@ class JdbiExercisesRepository(
             .singleOrNull()
     }
 
-    override fun getExercises(skip : Int, limit : Int): List<ExerciseInfo> {
+    override fun getExercises(skip: Int, limit: Int): List<ExerciseInfo> {
         return handle.createQuery("select * from dbo.exercises_info offset :skip limit :limit")
-            .bind("skip",skip)
-            .bind("limit",limit)
+            .bind("skip", skip)
+            .bind("limit", limit)
             .mapTo<ExerciseInfo>()
             .toList()
     }
 
-    override fun getExerciseByType(type: ExerciseType, skip : Int, limit : Int): List<ExerciseInfo> {
+    override fun getExerciseByType(type: ExerciseType, skip: Int, limit: Int): List<ExerciseInfo> {
         return handle.createQuery("select * from dbo.exercises_info where type = :type offset :skip limit :limit")
             .bind("type", type)
-            .bind("skip",skip)
-            .bind("limit",limit)
+            .bind("skip", skip)
+            .bind("limit", limit)
             .mapTo<ExerciseInfo>()
             .toList()
     }
 
-    override fun getAllExercisesOfClient(clientID: UUID, skip : Int, limit : Int): List<Exercise> {
+    override fun getAllExercisesOfClient(clientID: UUID, skip: Int, limit: Int): List<Exercise> {
         val sql = """
         SELECT de.ex_id, de.sets, de.reps
         FROM dbo.daily_exercises de
@@ -52,8 +51,8 @@ class JdbiExercisesRepository(
     """
         return handle.createQuery(sql)
             .bind("clientID", clientID)
-            .bind("skip",skip)
-            .bind("limit",limit)
+            .bind("skip", skip)
+            .bind("limit", limit)
             .mapTo<Exercise>()
             .list()
     }

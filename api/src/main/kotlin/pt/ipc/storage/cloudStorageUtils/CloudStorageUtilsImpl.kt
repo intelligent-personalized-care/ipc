@@ -1,6 +1,5 @@
 package pt.ipc.storage.cloudStorageUtils
 
-import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
@@ -65,19 +64,18 @@ class CloudStorageUtilsImpl(
         val buckets = listOf(userPhotosBucket, monitorCredentialsBucket, clientsVideosBucket)
 
         for (bucketName in buckets) {
-
-            val blobToDelete : BlobId? = storage.list(bucketName)
+            val blobToDelete: BlobId? = storage.list(bucketName)
                 .iterateAll()
                 .find { blob -> blob.name == fileName.toString() }
                 ?.let { BlobId.of(bucketName, it.name) }
 
-            if(blobToDelete != null) storage.delete(blobToDelete)
+            if (blobToDelete != null) storage.delete(blobToDelete)
         }
     }
 
     override fun uploadProfilePicture(fileName: UUID, file: ByteArray) =
         upload(fileName = fileName.toString(), content = file, contentType = pngContenType, bucketName = userPhotosBucket)
 
-    override fun downloadProfilePicture(fileName: UUID) : ByteArray =
+    override fun downloadProfilePicture(fileName: UUID): ByteArray =
         download(fileName = fileName.toString(), bucketName = userPhotosBucket)
 }

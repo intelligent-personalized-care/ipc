@@ -101,7 +101,7 @@ class ClientsServiceImpl(
             }
         )
 
-    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip : Int, limit : Int): List<Exercise> {
+    override fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip: Int, limit: Int): List<Exercise> {
         return transactionManager.runBlock(
             block = {
                 if (date == null) {
@@ -123,7 +123,7 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int,clientFeedback : String?) {
+    override fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, clientFeedback: String?) {
         val exerciseVideoID = UUID.randomUUID()
         transactionManager.runBlock(
             block = {
