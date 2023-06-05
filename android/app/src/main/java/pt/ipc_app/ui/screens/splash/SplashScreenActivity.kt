@@ -12,6 +12,7 @@ import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.ui.screens.role.ChooseRoleActivity
 import pt.ipc_app.utils.viewModelInit
+import java.util.*
 
 /**
  * The start screen.
@@ -34,7 +35,7 @@ class SplashScreenActivity: ComponentActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         repo.setSession(
-            id = "b48faf56-2c85-455d-98ea-97ee4fcdf97e",
+            id = UUID.fromString("b48faf56-2c85-455d-98ea-97ee4fcdf97e"),
             name = "Tiago",
             token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJtb25pdG9yQGdtYWlsLmNvbSIsInVzZXJJRCI6ImI0OGZhZjU2LTJjODUtNDU1ZC05OGVhLTk3ZWU0ZmNkZjk3ZSIsInJvbGUiOiJNT05JVE9SIn0.DtjpwWywt8thg0eZf9dY-r5EYq2dAiYDkCsTvZcZ6AHJg3bioSJBHRoj-U9T9beo8Cn-_HiT1e_qjbUVqh0N0A",
             role = Role.MONITOR
@@ -46,7 +47,7 @@ class SplashScreenActivity: ComponentActivity() {
                     viewModel.getMonitorOfClient()
                     viewModel.getCurrentPlanOfClient()
                 } else {
-
+                    viewModel.getClientsOfMonitor()
                 }
             }
 
@@ -58,7 +59,7 @@ class SplashScreenActivity: ComponentActivity() {
                 if (repo.userInfo!!.role.isClient()) {
                     ClientHomeActivity.navigate(this@SplashScreenActivity, viewModel.monitor.value, viewModel.plan.value)
                 } else {
-                    MonitorHomeActivity.navigate(this@SplashScreenActivity)
+                    MonitorHomeActivity.navigate(this@SplashScreenActivity, viewModel.clients.value)
                 }
             }
             finish()

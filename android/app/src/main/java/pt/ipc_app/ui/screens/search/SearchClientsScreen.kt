@@ -30,6 +30,7 @@ fun SearchClientsScreen(
                 style = MaterialTheme.typography.h4,
             )
             ClientsTable(
+                columnText = stringResource(id = R.string.search_clients),
                 clients = clients,
                 modifier = Modifier.weight(weight = 1f, fill = false)
             )

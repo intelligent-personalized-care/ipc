@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name=".ui.screens.info.ClientDetailsActivity"
+            android:name=".ui.screens.userInfo.ClientInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>
@@ -77,7 +77,13 @@
         </activity>
 
         <activity
-            android:name=".ui.screens.info.MonitorDetailsActivity"
+            android:name=".ui.screens.details.ClientDetailsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ui.screens.details.MonitorDetailsActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>

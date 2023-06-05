@@ -4,8 +4,11 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.plans.CreatePlanOutput
+import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.service.models.plans.PlanInput
+import pt.ipc_app.service.models.plans.PlanToClient
 import java.io.IOException
+import java.time.LocalDate
 import java.util.UUID
 
 /**
@@ -37,6 +40,42 @@ class PlansService(
             uri = "/users/monitors/$monitorId/plans",
             token = token,
             body = plan
+        )
+
+    /**
+     * Associates plan to a client.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun associatePlanToClient(
+        monitorId: UUID,
+        clientId: UUID,
+        token: String,
+        planId: Int,
+        startDate: String
+    ): APIResult<Any> =
+        post(
+            uri = "/users/monitors/$monitorId/clients/$clientId/plans",
+            token = token,
+            body = PlanToClient(planId, startDate)
+        )
+
+    /**
+     * Gets plans of monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getMonitorPlans(
+        monitorId: UUID,
+        token: String
+    ): APIResult<ListOfPlans> =
+        get(
+            uri = "/users/monitors/$monitorId/plans",
+            token = token
         )
 
 }

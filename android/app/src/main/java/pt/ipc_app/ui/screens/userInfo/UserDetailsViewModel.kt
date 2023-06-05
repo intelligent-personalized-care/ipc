@@ -1,8 +1,8 @@
-package pt.ipc_app.ui.screens.exercise
+package pt.ipc_app.ui.screens.userInfo
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import pt.ipc_app.service.ExercisesService
+import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
@@ -11,12 +11,12 @@ import java.io.File
 import java.util.*
 
 /**
- * View model for the [ExerciseActivity].
+ * View model for the [ClientInfoActivity] or [MonitorDetailsActivity].
  *
  * @param sessionManager the manager used to handle the user session
  */
-class ExerciseViewModel(
-    private val exercisesService: ExercisesService,
+class UserDetailsViewModel(
+    private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
@@ -25,33 +25,18 @@ class ExerciseViewModel(
         get() = _state.asStateFlow()
 
     /**
-     * Attempts to get a preview url of an exercise.
+     * Attempts to update the profile picture of client.
      */
-    fun getExercisePreviewUrl(
-        exerciseInfoId: UUID
-    ): String =
-        exercisesService.getExercisePreviewUrl(exerciseInfoId)
-
-    /**
-     * Attempts to submit an exercise of client.
-     */
-    fun submitExerciseVideo(
-        video: File,
-        planId: Int,
-        dailyListId: Int,
-        exerciseId: Int,
+    fun updatePicture(
+        image: File
     ) {
-        val userInfo = sessionManager.userInfo!!
         launchAndExecuteRequest(
             request = {
                 _state.value = ProgressState.WAITING
-                exercisesService.submitExerciseVideo(
-                    video = video,
-                    clientId = userInfo.id,
-                    planId = planId,
-                    dailyListId = dailyListId,
-                    exerciseId = exerciseId,
-                    token = userInfo.token
+                usersService.updateProfilePicture(
+                    image = image,
+                    clientId = sessionManager.userInfo!!.id,
+                    token = sessionManager.userInfo!!.token
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE
                 }

@@ -9,6 +9,8 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
+import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.ListMonitorsOutput
 import java.io.File
 import java.io.IOException
@@ -80,12 +82,12 @@ class UsersService(
     /**
      * Gets the monitor of client.
      *
-     * @return the API result of the register request
+     * @return the API result of the request
      *
      * @throws IOException if there is an error while sending the request
      */
     suspend fun getMonitorOfClient(
-        clientId: String,
+        clientId: UUID,
         token: String
     ): APIResult<MonitorOutput> =
         get(
@@ -94,9 +96,25 @@ class UsersService(
         )
 
     /**
+     * Gets clients of monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getClientsOfMonitor(
+        monitorId: UUID,
+        token: String
+    ): APIResult<ClientsOfMonitor> =
+        get(
+            uri = "/users/monitors/$monitorId/clients",
+            token = token
+        )
+
+    /**
      * Search monitors available.
      *
-     * @return the API result of the register request
+     * @return the API result of the request
      *
      * @throws IOException if there is an error while sending the request
      */
@@ -112,12 +130,12 @@ class UsersService(
     /**
      * Gets the current plan of client.
      *
-     * @return the API result of the register request
+     * @return the API result of the request
      *
      * @throws IOException if there is an error while sending the request
      */
     suspend fun getCurrentPlanOfClient(
-        clientId: String,
+        clientId: UUID,
         token: String
     ): APIResult<Plan> =
         get(

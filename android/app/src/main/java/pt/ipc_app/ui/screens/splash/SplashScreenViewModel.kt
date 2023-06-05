@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.UsersService
+import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
@@ -26,6 +27,10 @@ class SplashScreenViewModel(
     val plan
         get() = _plan.asStateFlow()
 
+    private val _clients = MutableStateFlow<ClientsOfMonitor?>(null)
+    val clients
+        get() = _clients.asStateFlow()
+
     fun getCurrentPlanOfClient() {
         val user = sessionManager.userInfo ?: throw IllegalArgumentException()
 
@@ -34,7 +39,6 @@ class SplashScreenViewModel(
                 usersService.getCurrentPlanOfClient(user.id, user.token)
             },
             onSuccess = {
-
                 _plan.value = it
             }
         )
@@ -49,6 +53,19 @@ class SplashScreenViewModel(
             },
             onSuccess = {
                 _monitor.value = it
+            }
+        )
+    }
+
+    fun getClientsOfMonitor() {
+        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+
+        launchAndExecuteRequest(
+            request = {
+                usersService.getClientsOfMonitor(user.id, user.token)
+            },
+            onSuccess = {
+                _clients.value = it
             }
         )
     }

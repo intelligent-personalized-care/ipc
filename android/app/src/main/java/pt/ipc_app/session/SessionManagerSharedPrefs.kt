@@ -4,6 +4,7 @@ import android.content.Context
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.domain.user.toRole
 import pt.ipc_app.preferences.UserInfo
+import java.util.*
 
 /**
  * Session manager that uses shared preferences to store the session.
@@ -18,7 +19,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
 
     var userInfo: UserInfo?
         get() {
-            val savedId = prefs.getString(ID, null)
+            val savedId = UUID.fromString(prefs.getString(ID, null))
             val savedName = prefs.getString(NAME, null)
             val savedToken = prefs.getString(TOKEN, null)
             val savedRole = prefs.getString(ROLE, null)
@@ -36,7 +37,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
                     .apply()
             else
                 prefs.edit()
-                    .putString(ID, value.id)
+                    .putString(ID, value.id.toString())
                     .putString(NAME, value.name)
                     .putString(TOKEN, value.token)
                     .putString(ROLE, value.role.name)
@@ -58,7 +59,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
      * @param role the user's role
      */
     fun setSession(
-        id: String,
+        id: UUID,
         name: String,
         token: String,
         role: Role
@@ -73,7 +74,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
         userInfo = null
     }
 
-    private fun getUserInfo(id: String?, name: String?, token: String?, role: String?): UserInfo? {
+    private fun getUserInfo(id: UUID?, name: String?, token: String?, role: String?): UserInfo? {
         return if (id != null && name != null && token != null && role != null) {
             val roleValidation = role.toRole() ?: return null
             UserInfo(

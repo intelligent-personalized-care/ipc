@@ -13,12 +13,17 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.preferences.UserInfo
+import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.BottomBar
+import pt.ipc_app.ui.components.ClientsTable
 import pt.ipc_app.ui.screens.AppScreen
+import java.util.*
 
 @Composable
 fun MonitorHomeScreen(
     monitor: UserInfo,
+    clientsOfMonitor: List<ClientOutput>,
+    onClientSelected: (ClientOutput) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onPlansRequest: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
@@ -41,7 +46,11 @@ fun MonitorHomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-
+            ClientsTable(
+                columnText = stringResource(id = R.string.my_clients),
+                clients = clientsOfMonitor,
+                onClientClick = { onClientSelected(it) }
+            )
         }
 
         Column(
@@ -62,7 +71,7 @@ fun MonitorHomeScreen(
 @Composable
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
-        monitor = UserInfo("", "Test", "", Role.MONITOR),
-        onPlansRequest = {}
+        monitor = UserInfo(UUID.randomUUID(), "Test", "", Role.MONITOR),
+        clientsOfMonitor = listOf(ClientOutput(UUID.randomUUID(), "Tiago", ""))
     )
 }

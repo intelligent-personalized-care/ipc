@@ -9,12 +9,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
-import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
-import pt.ipc_app.ui.screens.info.ClientDetailsActivity
+import pt.ipc_app.ui.screens.userInfo.ClientInfoActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
-import pt.ipc_app.ui.screens.info.MonitorDetailsActivity
+import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
 import java.util.*
 
 /**
@@ -42,11 +41,9 @@ class ClientHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val userInfo = repo.userInfo!!
-
         setContent {
             ClientHomeScreen(
-                client = userInfo,
+                client = repo.userInfo!!,
                 monitor = monitor,
                 plan = plan,
                 onMonitorClick = {
@@ -56,7 +53,7 @@ class ClientHomeActivity : ComponentActivity() {
                         SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) },
-                onUserInfoClick = { ClientDetailsActivity.navigate(this, ClientOutput(UUID.fromString(userInfo.id), userInfo.name, "tiago@gmail.com")) }
+                onUserInfoClick = { ClientInfoActivity.navigate(this) }
             )
         }
     }

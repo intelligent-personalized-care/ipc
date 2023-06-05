@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.info
+package pt.ipc_app.ui.screens.details
 
 import android.content.Context
 import android.content.Intent
@@ -17,10 +17,10 @@ import pt.ipc_app.utils.viewModelInit
  */
 class MonitorDetailsActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<UserDetailsViewModel> {
+    private val viewModel by viewModels<MonitorDetailsViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            UserDetailsViewModel(app.services.usersService, app.sessionManager)
+            MonitorDetailsViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
@@ -48,10 +48,10 @@ class MonitorDetailsActivity : ComponentActivity() {
 
     @Suppress("deprecation")
     private val monitor: MonitorOutput by lazy {
-        val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        val monitor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             intent.getParcelableExtra(MONITOR, MonitorOutput::class.java)
         else
             intent.getParcelableExtra(MONITOR)
-        checkNotNull(exe)
+        checkNotNull(monitor)
     }
 }

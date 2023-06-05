@@ -1,21 +1,19 @@
-package pt.ipc_app.ui.screens.info
+package pt.ipc_app.ui.screens.details
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.UsersService
-import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.io.File
 import java.util.*
 
 /**
- * View model for the [ClientDetailsActivity] or [MonitorDetailsActivity].
+ * View model for the [MonitorDetailsActivity].
  *
  * @param sessionManager the manager used to handle the user session
  */
-class UserDetailsViewModel(
+class MonitorDetailsViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
@@ -23,30 +21,6 @@ class UserDetailsViewModel(
     private val _state = MutableStateFlow(ProgressState.IDLE)
     val state
         get() = _state.asStateFlow()
-
-    /**
-     * Attempts to update the profile picture of client.
-     */
-    fun updatePicture(
-        image: File
-    ) {
-        launchAndExecuteRequest(
-            request = {
-                _state.value = ProgressState.WAITING
-                usersService.updateProfilePicture(
-                    image = image,
-                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
-                    token = sessionManager.userInfo!!.token
-                ).also {
-                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
-                }
-            },
-            onSuccess = {
-                _state.value = ProgressState.FINISHED
-            }
-        )
-    }
-
 
     /**
      * Attempts to connect the monitor with a client.
@@ -58,7 +32,7 @@ class UserDetailsViewModel(
             request = {
                 usersService.connectMonitor(
                     monitorId = monitorId,
-                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
+                    clientId = sessionManager.userInfo!!.id,
                     token = sessionManager.userInfo!!.token
                 )
             },

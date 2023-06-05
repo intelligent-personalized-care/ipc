@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.info
+package pt.ipc_app.ui.screens.userInfo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,14 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
-fun ClientDetailsScreen(
-    client: ClientOutput,
-    onSendEmailRequest: () -> Unit = { },
+fun ClientInfoScreen(
+    client: UserInfo,
     updateProfilePictureState: ProgressState,
     onUpdateProfilePicture: () -> Unit = { },
     onSuccessUpdateProfilePicture: () -> Unit = { }
@@ -24,9 +23,6 @@ fun ClientDetailsScreen(
     AppScreen {
         Column {
             Text(client.name)
-            Button(onClick = onSendEmailRequest) {
-                Text(client.email)
-            }
 
             Button(
                 onClick = onUpdateProfilePicture,
@@ -50,6 +46,6 @@ fun ClientDetailsScreen(
 
 @Preview
 @Composable
-fun ClientDetailsScreenPreview() {
+fun ClientInfoScreenPreview() {
 
 }

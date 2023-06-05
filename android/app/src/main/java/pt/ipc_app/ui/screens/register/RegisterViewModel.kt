@@ -65,7 +65,7 @@ class RegisterViewModel(
                 }
             },
             onSuccess = {
-                sessionManager.setSession(it.id.toString(), name, it.token, Role.CLIENT)
+                sessionManager.setSession(it.id, name, it.token, Role.CLIENT)
                 _state.value = ProgressState.FINISHED
             }
         )
@@ -95,7 +95,7 @@ class RegisterViewModel(
                 }
             },
             onSuccess = {
-                sessionManager.setSession(it.id.toString(), name, it.token, Role.MONITOR)
+                sessionManager.setSession(it.id, name, it.token, Role.MONITOR)
             }
         )
     }

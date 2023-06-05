@@ -20,6 +20,7 @@ import pt.ipc_app.ui.theme.DarkBlue
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClientsTable(
+    columnText: String,
     clients: List<ClientOutput>,
     modifier: Modifier = Modifier,
     onClientClick: (ClientOutput) -> Unit = { }
@@ -34,13 +35,23 @@ fun ClientsTable(
     ) {
         stickyHeader {
             Row(modifier = Modifier.background(DarkBlue)) {
-                ClientInfoEntry(text = stringResource(id = R.string.search_clients), weight = usernameWeight)
+                ClientInfoEntry(
+                    text = columnText,
+                    textColor = Color.White,
+                    weight = usernameWeight
+                )
             }
         }
 
         items(clients) {
             Row(modifier = modifier.fillMaxWidth()) {
-                ClientInfoEntry(text = it.name, weight = usernameWeight, textAlign = TextAlign.Left, { onClientClick(it) }, true)
+                ClientInfoEntry(
+                    text = it.name,
+                    weight = usernameWeight,
+                    textAlign = TextAlign.Left,
+                    onPersonClick = { onClientClick(it) },
+                    enable = true
+                )
             }
         }
     }
@@ -49,6 +60,7 @@ fun ClientsTable(
 @Composable
 fun RowScope.ClientInfoEntry(
     text: String,
+    textColor: Color = Color.Black,
     weight: Float,
     textAlign: TextAlign = TextAlign.Center,
     onPersonClick: () -> Unit = { },
@@ -56,6 +68,7 @@ fun RowScope.ClientInfoEntry(
 ) {
     Text(
         text = text,
+        color = textColor,
         modifier = Modifier
             .weight(weight)
             .padding(8.dp)
