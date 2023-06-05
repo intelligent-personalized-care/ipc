@@ -89,7 +89,7 @@ class JdbiPlansRepository(
             dailyLists.add(
                 index,
                 if (exercises != null) {
-                    DailyListOutput(exercises)
+                    DailyListOutput(dailyListID, exercises)
                 } else {
                     null
                 }

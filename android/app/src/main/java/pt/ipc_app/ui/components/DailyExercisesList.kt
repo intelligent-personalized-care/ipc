@@ -57,35 +57,35 @@ val plan = Plan(
     title = "PlanTest",
     startDate = LocalDate.of(2023, 6, 28).toString(),
     dailyLists = listOf(
-        DailyList(
+        DailyList(0,
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs", "", ""),
                 DailyExercise(3, UUID.randomUUID(), "Leg extension", "", "")
             )
         ),
-        DailyList(
+        DailyList(1,
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups2", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs2", "", ""),
                 DailyExercise(3, UUID.randomUUID(), "Leg extension2", "", "")
             )
         ),
-        DailyList(
+        DailyList(2,
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups3", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs3", "", ""),
                 DailyExercise(3, UUID.randomUUID(), "Squats", "", "")
             )
         ),
-        DailyList(
+        DailyList(3,
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups4", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs4", "", ""),
                 DailyExercise(3, UUID.randomUUID(), "Leg extension4", "", "")
             )
         ),
-        DailyList(
+        DailyList(4,
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups5", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs5", "", ""),

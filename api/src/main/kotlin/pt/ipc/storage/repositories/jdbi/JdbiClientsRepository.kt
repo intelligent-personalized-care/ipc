@@ -98,19 +98,22 @@ class JdbiClientsRepository(
     }
 
     override fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int): Boolean {
-        return handle.createQuery(
-            "select count(*) from dbo.plans p " +
-                "inner join dbo.daily_lists dl on p.id = dl.plan_id " +
-                "inner join dbo.daily_exercises de on dl.id = de.daily_list_id " +
-                "inner join dbo.client_plans cp on cp.plan_id = p.id " +
-                "where p.id = :planID and dl.id = :dailyListID and de.id = :exerciseID and cp.client_id = :clientID "
+        return handle.createQuery("""
+            select exists(
+                select * from dbo.plans p
+                inner join dbo.daily_lists dl on p.id = dl.plan_id
+                inner join dbo.daily_exercises de on dl.id = de.daily_list_id
+                inner join dbo.client_plans cp on cp.plan_id = p.id
+                where p.id = :planID and dl.id = :dailyListID and de.id = :exerciseID and cp.client_id = :clientID
+            )
+        """.trimIndent()
         )
             .bind("planID", planID)
             .bind("dailyListID", dailyList)
             .bind("exerciseID", exerciseID)
             .bind("clientID", clientID)
-            .mapTo<Int>()
-            .single() == 1
+            .mapTo<Boolean>()
+            .single()
     }
 
     override fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int): Boolean {
@@ -129,7 +132,7 @@ class JdbiClientsRepository(
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback, monitor_feedback) " +
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)

@@ -6,5 +6,6 @@ import pt.ipc_app.domain.exercise.DailyExercise
 
 @Parcelize
 data class DailyList(
+    val id: Int,
     val exercises: List<DailyExercise>
 ) : Parcelable

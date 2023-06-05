@@ -50,18 +50,18 @@ class MonitorHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var clientsA by remember { mutableStateOf(clients.clients) }
-            var requestsA by remember { mutableStateOf(requests.requests) }
+            var clientsList by remember { mutableStateOf(clients.clients) }
+            var requestsList by remember { mutableStateOf(requests.requests) }
 
             MonitorHomeScreen(
                 monitor = repo.userInfo!!,
-                clientsOfMonitor = clientsA,
-                requestsOfMonitor = requestsA,
+                clientsOfMonitor = clientsList,
+                requestsOfMonitor = requestsList,
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
                 onClientRequestAccepted = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)
-                    clientsA = clientsA + ClientOutput(request.clientID, request.clientName, request.clientEmail)
-                    requestsA = requestsA - requestsA.first {it.requestID == request.requestID}
+                    clientsList = clientsList + ClientOutput(request.clientID, request.clientName, request.clientEmail)
+                    requestsList = requestsList - requestsList.first {it == request}
                 },
                 onPlansRequest = { CreatePlanActivity.navigate(this) },
                 onUserInfoClick = { MonitorInfoActivity.navigate(this) }

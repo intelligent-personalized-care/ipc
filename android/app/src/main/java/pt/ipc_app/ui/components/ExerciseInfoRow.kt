@@ -73,7 +73,10 @@ fun ExerciseInfoRow(
             )
             Box(
                 modifier = Modifier
-                    .clickable { onExerciseAdd(Exercise(exercise.id, sets, reps)) }
+                    .clickable {
+                        onExerciseAdd(Exercise(exercise.id, sets, reps))
+                        clicked = !clicked
+                    }
                     .padding(start = 16.dp)
             ) {
                 AddExerciseIcon(false)

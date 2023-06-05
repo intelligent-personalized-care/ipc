@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -42,9 +43,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import kotlinx.parcelize.Parcelize
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.mlkit.CameraXViewModel
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.VisionImageProcessor
@@ -133,7 +136,7 @@ class CameraXLivePreviewActivity :
 
         outputDirectory = getOutputDirectory()
         createVideoCapture()
-        setupRecordingButton { viewModel.submitExerciseVideo(it, 1, 1, exercise.id) }
+        setupRecordingButton { viewModel.submitExerciseVideo(it, exercise.planId, exercise.dailyListId, exercise.exercise.id) }
 
     }
 
@@ -263,7 +266,7 @@ class CameraXLivePreviewActivity :
                             this,
                             poseDetectorOptions as PoseDetectorOptions,
                             shouldShowInFrameLikelihood,
-                            exercise
+                            exercise.exercise
                             /*visualizeZ,
                             rescaleZ,
                             runClassification,
@@ -341,7 +344,7 @@ class CameraXLivePreviewActivity :
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     private fun startRecording(onSubmission: (File) -> Unit) {
-        val file = File(outputDirectory, "${exercise.id}.mp4")
+        val file = File(outputDirectory, "${exercise.exercise.id}.mp4")
         val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
 
         videoCapture.startRecording(
@@ -443,9 +446,9 @@ class CameraXLivePreviewActivity :
     //--------------------------- for different exercices -------------------------------
 
     @Suppress("deprecation")
-    private val exercise: DailyExercise by lazy {
+    private val exercise: ExerciseTotalInfo by lazy {
         val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(EXERCISE, DailyExercise::class.java)
+            intent.getParcelableExtra(EXERCISE, ExerciseTotalInfo::class.java)
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
@@ -467,12 +470,12 @@ class CameraXLivePreviewActivity :
                 Manifest.permission.RECORD_AUDIO
             )
 
-        const val EXERCISE = "EXERCISE_TYPE"
+        const val EXERCISE = "EXERCISE_TO_RECORD"
 
-        fun navigate(context: Context, exercise: DailyExercise) {
+        fun navigate(context: Context, exerciseToRecord: ExerciseTotalInfo) {
             with(context) {
                 val intent = Intent(this, CameraXLivePreviewActivity::class.java)
-                intent.putExtra(EXERCISE, exercise)
+                intent.putExtra(EXERCISE, exerciseToRecord)
                 startActivity(intent)
             }
         }

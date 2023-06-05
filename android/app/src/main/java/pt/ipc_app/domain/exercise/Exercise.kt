@@ -21,3 +21,10 @@ data class DailyExercise(
     val reps: Int = 0,
     val isDone: Boolean = false
 ): Parcelable
+
+@Parcelize
+data class ExerciseTotalInfo(
+    val planId: Int,
+    val dailyListId: Int,
+    val exercise: DailyExercise
+): Parcelable

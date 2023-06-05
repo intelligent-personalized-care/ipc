@@ -13,6 +13,7 @@ import pt.ipc_app.R
 import pt.ipc_app.domain.DailyList
 import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.domain.Plan
+import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
@@ -27,7 +28,7 @@ fun ClientHomeScreen(
     monitor: MonitorOutput? = null,
     plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
-    onExerciseSelect: (DailyExercise) -> Unit = { },
+    onExerciseSelect: (ExerciseTotalInfo) -> Unit = { },
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
     onUserInfoClick: () -> Unit = { },
@@ -87,7 +88,15 @@ fun ClientHomeScreen(
 
                 DailyExercisesList(
                     dailyListSelected = dailyListSelected,
-                    onExerciseSelect = { ex -> onExerciseSelect(ex) }
+                    onExerciseSelect = { ex ->
+                        onExerciseSelect(
+                            ExerciseTotalInfo(
+                                planId = plan!!.id,
+                                dailyListId = dailyListSelected!!.id,
+                                exercise = ex
+                            )
+                        )
+                    }
                 )
             }
         }

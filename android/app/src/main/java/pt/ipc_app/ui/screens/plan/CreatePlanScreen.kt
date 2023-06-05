@@ -32,7 +32,7 @@ fun CreatePlanScreen(
 ) {
     var planTitle by remember { mutableStateOf("") }
 
-    val plan: PlanInput by remember { mutableStateOf(PlanInput(planTitle, mutableListOf(DailyListInput()))) }
+    var plan: PlanInput by remember { mutableStateOf(PlanInput(planTitle, listOf(DailyListInput()))) }
 
     var daySelected: Int by remember { mutableStateOf(0) }
     var dayCounter: Int by remember { mutableStateOf(1) }
@@ -64,7 +64,7 @@ fun CreatePlanScreen(
                 totalDays = dayCounter,
                 onDaySelected = { daySelected = it },
                 onDayAdded = {
-                    plan.addDailyList(DailyListInput())
+                    plan = plan.addDailyList(DailyListInput())
                     dayCounter++
                 }
             )
@@ -72,7 +72,9 @@ fun CreatePlanScreen(
             ExercisesInfoList(
                 exercises = exercises,
                 isExerciseAlreadyInDailyList = { plan.dailyLists[daySelected]!!.containsExercise(it.id) },
-                onExerciseAdd = { plan.dailyLists[daySelected]!!.addExercise(it) }
+                onExerciseAdd = {
+                    plan = plan.addExerciseInDailyList(daySelected, it)
+                }
             )
 
             Button(
