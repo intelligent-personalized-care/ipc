@@ -121,12 +121,12 @@ class MonitorsController(private val monitorService: MonitorService) {
 
     @Authentication
     @GetMapping(Uris.MONITOR_REQUESTS)
-    fun getMonitorRequests(@PathVariable monitorID: UUID, user: User): ResponseEntity<List<RequestInformation>> {
+    fun getMonitorRequests(@PathVariable monitorID: UUID, user: User): ResponseEntity<RequestsOfMonitor> {
         if (monitorID != user.id) throw Unauthorized
 
-        val requests: List<RequestInformation> = monitorService.monitorRequests(monitorID = monitorID)
+        val requests = monitorService.monitorRequests(monitorID = monitorID)
 
-        return ResponseEntity.ok(requests)
+        return ResponseEntity.ok(RequestsOfMonitor(requests))
     }
 
     @Authentication

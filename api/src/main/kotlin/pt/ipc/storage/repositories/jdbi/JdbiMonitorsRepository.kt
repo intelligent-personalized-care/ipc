@@ -114,10 +114,17 @@ class JdbiMonitorsRepository(
     }
 
     override fun monitorRequests(monitorID: UUID): List<RequestInformation> =
-        handle.createQuery("select client_id, monitor_id, request_id from dbo.client_requests where monitor_id = :monitorID")
+        handle.createQuery("""
+            select request_id, request_text, client_id, u.name, u.email from dbo.client_requests 
+            inner join dbo.clients c on c.c_id = client_requests.client_id
+            inner join dbo.users u on u.id = c.c_id
+            where monitor_id = :monitorID
+        """.trimIndent()
+        )
             .bind("monitorID", monitorID)
             .mapTo<RequestInformation>()
             .toList()
+
 
     override fun checkIfMonitorIsVerified(monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.docs_authenticity where monitor_id = :monitorID and state = 'valid' ")

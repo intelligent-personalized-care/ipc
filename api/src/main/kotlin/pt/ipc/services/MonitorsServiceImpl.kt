@@ -105,8 +105,6 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
 
-                if (requestInformation.monitorID != monitorID) throw Unauthorized
-
                 it.monitorRepository.decideRequest(
                     requestID = requestID,
                     clientID = requestInformation.clientID,
