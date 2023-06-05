@@ -3,6 +3,7 @@ package pt.ipc.services
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.ListOfPlans
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
@@ -18,6 +19,8 @@ interface MonitorService {
     fun insertCredential(monitorID : UUID, credential : ByteArray)
 
     fun getMonitor(monitorID: UUID): MonitorDetails
+
+    fun getClientsOfMonitor(monitorID: UUID) : List<ClientOutput>
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 

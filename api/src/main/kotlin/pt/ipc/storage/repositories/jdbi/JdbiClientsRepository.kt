@@ -63,7 +63,7 @@ class JdbiClientsRepository(
             .bind("id", input.id)
             .bind("u_name", input.name)
             .bind("u_email", input.email)
-            .bind("password_hash", input.id)
+            .bind("password_hash", input.password)
             .execute()
 
         handle.createUpdate(
@@ -129,7 +129,7 @@ class JdbiClientsRepository(
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback, monitor_feedback) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)

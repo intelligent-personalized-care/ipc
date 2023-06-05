@@ -4,6 +4,8 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
+import pt.ipc.http.models.ClientOutput
+import pt.ipc.http.models.Rating
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.storage.repositories.MonitorRepository
 import java.time.LocalDate
@@ -12,6 +14,8 @@ import java.util.*
 class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
+
+    private val DEFAULT_RATING = Rating(starsAverage = 5F, nrOfReviews = 0)
 
     override fun registerMonitor(user: User, date: LocalDate, encryptedToken: String) {
         handle.createUpdate("insert into dbo.users values(:id,:u_name,:u_email,:password_hash)")
@@ -42,6 +46,12 @@ class JdbiMonitorsRepository(
             .mapTo<MonitorDetails>()
             .singleOrNull()
 
+    override fun getClientOfMonitor(monitorID: UUID) : List<ClientOutput> =
+        handle.createQuery("select u.id,u.name, u.email from dbo.users u inner join dbo.client_to_monitor cm on u.id = cm.client_id where cm.monitor_id = :monitorID ")
+            .bind("monitorID",monitorID)
+            .mapTo<ClientOutput>()
+            .toList()
+
     override fun getMonitorOfClient(clientId: UUID): MonitorDetails? {
         val monitorId = handle.createQuery(
             """
@@ -55,13 +65,13 @@ class JdbiMonitorsRepository(
         return getMonitor(monitorId)
     }
 
-    override fun getMonitorRanking(monitorID: UUID): Float =
+    override fun getMonitorRating(monitorID: UUID): Rating =
         handle.createQuery(
-            "select avg(stars) from dbo.monitor_rating where monitor_id = :monitorID"
+            "SELECT avg(stars) AS starsAverage, count(*) AS nrOfReviews FROM dbo.monitor_rating WHERE monitor_id = :monitorID"
         )
             .bind("monitorID", monitorID)
-            .mapTo<Float>()
-            .singleOrNull() ?: 0F
+            .mapTo<Rating>()
+            .singleOrNull() ?: DEFAULT_RATING
 
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
         val queryName = if (name != null) "and u.name like :name" else ""

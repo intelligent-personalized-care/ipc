@@ -88,8 +88,8 @@ class ClientsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 val details = it.monitorRepository.getMonitorOfClient(clientID) ?: throw MonitorNotFound
-                val stars = it.monitorRepository.getMonitorRanking(details.id)
-                MonitorOutput(details.id, details.name, details.email, stars)
+                val stars = it.monitorRepository.getMonitorRating(details.id)
+                MonitorOutput(id = details.id, name = details.name, email = details.email, rating = stars)
             }
         )
     }

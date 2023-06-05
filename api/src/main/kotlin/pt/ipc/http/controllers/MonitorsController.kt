@@ -29,7 +29,8 @@ class MonitorsController(private val monitorService: MonitorService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
 
-    @PostMapping(Uris.MONITOR_CREDENTIAL, consumes = ["application/pdf"])
+    @Authentication
+    @PostMapping(Uris.MONITOR_CREDENTIAL)
     fun postCredentialOfMonitor(
         @PathVariable monitorID: UUID,
         @RequestBody credential : MultipartFile,
@@ -52,6 +53,18 @@ class MonitorsController(private val monitorService: MonitorService) {
         val res : List<MonitorDetails> = monitorService.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
 
         return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
+    }
+
+
+    @Authentication
+    @GetMapping(Uris.CLIENTS_OF_MONITOR)
+    fun getClientsOfMonitor(@PathVariable monitorID: UUID, user: User) : ResponseEntity<ListOfClients>{
+
+        if(user.id != monitorID) throw Unauthorized
+
+        val clients = monitorService.getClientsOfMonitor(monitorID = user.id)
+
+        return ResponseEntity.ok(ListOfClients(clients = clients))
     }
 
 

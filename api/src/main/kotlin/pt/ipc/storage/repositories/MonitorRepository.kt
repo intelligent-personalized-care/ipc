@@ -2,6 +2,8 @@ package pt.ipc.storage.repositories
 
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
+import pt.ipc.http.models.ClientOutput
+import pt.ipc.http.models.Rating
 import pt.ipc.http.models.RequestInformation
 import java.time.LocalDate
 import java.util.*
@@ -12,9 +14,11 @@ interface MonitorRepository {
 
     fun getMonitor(monitorID: UUID): MonitorDetails?
 
+    fun getClientOfMonitor(monitorID: UUID) : List<ClientOutput>
+
     fun getMonitorOfClient(clientId: UUID): MonitorDetails?
 
-    fun getMonitorRanking(monitorID: UUID): Float
+    fun getMonitorRating(monitorID: UUID): Rating
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
 

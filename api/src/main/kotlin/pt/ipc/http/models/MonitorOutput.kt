@@ -6,5 +6,7 @@ data class MonitorOutput(
     val id: UUID,
     val name: String,
     val email: String,
-    val stars: Float
+    val rating: Rating
 )
+
+data class Rating(val starsAverage : Float, val nrOfReviews : Int)

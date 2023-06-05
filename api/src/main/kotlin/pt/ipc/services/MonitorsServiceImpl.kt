@@ -8,6 +8,7 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.*
+import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.ListOfPlans
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
@@ -62,6 +63,13 @@ class MonitorsServiceImpl(
             }
         )
 
+    override fun getClientsOfMonitor(monitorID: UUID) : List<ClientOutput> =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.getClientOfMonitor(monitorID = monitorID)
+            }
+        )
+
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
         transactionManager.runBlock(
             block = {
@@ -70,7 +78,6 @@ class MonitorsServiceImpl(
         )
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
-
         transactionManager.runBlock(
             block = {
                 it.cloudStorage.uploadProfilePicture(fileName = monitorID, file = photo)
