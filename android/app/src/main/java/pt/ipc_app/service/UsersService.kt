@@ -172,7 +172,7 @@ class UsersService(
         image: File,
         clientId: UUID,
         token: String
-    ): APIResult<FileOutput> =
+    ): APIResult<Any> =
         postWithFile(
             uri = "/users/clients/$clientId/profile/photo",
             token = token,
@@ -181,6 +181,25 @@ class UsersService(
             contentType = "image/jpeg"
         )
 
+    /**
+     * Submits the credential document of a monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun submitCredentialDocument(
+        doc: File,
+        monitorId: UUID,
+        token: String
+    ): APIResult<Any> =
+        postWithFile(
+            uri = "/users/monitors/$monitorId/credential",
+            token = token,
+            multipartPropName = "credential",
+            file = doc,
+            contentType = "application/pdf"
+        )
+
 }
 
-class FileOutput()

@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.ui.components.openSendEmail
+import pt.ipc_app.ui.openSendEmail
 import pt.ipc_app.utils.viewModelInit
 
 /**

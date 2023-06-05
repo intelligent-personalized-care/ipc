@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.components
+package pt.ipc_app.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -6,8 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
+import java.io.File
+import java.io.FileOutputStream
 
 fun Context.openSendEmail(email: String) {
     try {
@@ -26,5 +29,20 @@ fun Context.openSendEmail(email: String) {
                 Toast.LENGTH_LONG
             )
             .show()
+    }
+}
+
+fun Context.getFileFromUri(imageUri: Uri): File? {
+    val documentFile = DocumentFile.fromSingleUri(this, imageUri)
+    return documentFile?.let { file ->
+        val inputStream = contentResolver.openInputStream(file.uri)
+        val outputFile = File(this.cacheDir, file.name!!)
+        val outputStream = FileOutputStream(outputFile)
+        inputStream?.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+        outputFile
     }
 }

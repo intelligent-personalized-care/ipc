@@ -11,6 +11,7 @@ import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
 import pt.ipc_app.ui.screens.plan.CreatePlanActivity
+import pt.ipc_app.ui.screens.userInfo.MonitorInfoActivity
 import java.util.*
 
 /**
@@ -38,9 +39,10 @@ class MonitorHomeActivity : ComponentActivity() {
         setContent {
             MonitorHomeScreen(
                 monitor = repo.userInfo!!,
-                clientsOfMonitor = listOf(ClientOutput(UUID.fromString("fb97992c-6195-4822-8499-eedb629cbbe5"), "Tiago", "")),//clients.clients,
+                clientsOfMonitor = clients.clients,
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
-                onPlansRequest = { CreatePlanActivity.navigate(this) }
+                onPlansRequest = { CreatePlanActivity.navigate(this) },
+                onUserInfoClick = { MonitorInfoActivity.navigate(this) }
             )
         }
     }

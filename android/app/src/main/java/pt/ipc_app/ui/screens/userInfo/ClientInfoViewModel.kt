@@ -11,11 +11,11 @@ import java.io.File
 import java.util.*
 
 /**
- * View model for the [ClientInfoActivity] or [MonitorDetailsActivity].
+ * View model for the [ClientInfoActivity].
  *
  * @param sessionManager the manager used to handle the user session
  */
-class UserDetailsViewModel(
+class ClientInfoViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {

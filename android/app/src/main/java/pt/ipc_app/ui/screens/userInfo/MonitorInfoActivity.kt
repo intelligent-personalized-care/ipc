@@ -20,25 +20,25 @@ import java.io.IOException
 
 
 /**
- * The client info activity.
+ * The monitor info activity.
  */
-class ClientInfoActivity : ComponentActivity() {
+class MonitorInfoActivity : ComponentActivity() {
 
     private val repo by lazy {
         (application as DependenciesContainer).sessionManager
     }
 
-    private val viewModel by viewModels<ClientInfoViewModel> {
+    private val viewModel by viewModels<MonitorInfoViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ClientInfoViewModel(app.services.usersService, app.sessionManager)
+            MonitorInfoViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
     companion object {
         fun navigate(context: Context) {
             with(context) {
-                val intent = Intent(this, ClientInfoActivity::class.java)
+                val intent = Intent(this, MonitorInfoActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -47,11 +47,11 @@ class ClientInfoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ClientInfoScreen(
-                client = repo.userInfo!!,
-                updateProfilePictureState = viewModel.state.collectAsState().value,
-                onUpdateProfilePicture = { checkReadStoragePermission() },
-                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
+            MonitorInfoScreen(
+                monitor = repo.userInfo!!,
+                submitCredentialDocumentState = viewModel.state.collectAsState().value,
+                onSubmitCredentialDocument = { checkReadStoragePermission() },
+                onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
             )
         }
     }
@@ -60,25 +60,25 @@ class ClientInfoActivity : ComponentActivity() {
         if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestReadStoragePermissionLauncher.launch(READ_EXTERNAL_STORAGE)
         else
-            openGallery()
+            openFileManager()
     }
 
-    private fun openGallery() {
-        imageChooserLauncher.launch("image/*")
+    private fun openFileManager() {
+        fileChooserLauncher.launch("application/pdf")
     }
 
     private val requestReadStoragePermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted)
-                openGallery()
+                openFileManager()
         }
 
-    private val imageChooserLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private val fileChooserLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             try {
                 val file = getFileFromUri(uri)
 
-                viewModel.updatePicture(file!!)
+                viewModel.submitCredentialDocument(file!!)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

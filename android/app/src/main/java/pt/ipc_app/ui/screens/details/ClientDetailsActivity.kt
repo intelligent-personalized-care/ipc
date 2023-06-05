@@ -10,7 +10,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.components.openSendEmail
+import pt.ipc_app.ui.openSendEmail
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 

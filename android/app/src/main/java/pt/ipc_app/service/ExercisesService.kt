@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.exercises.ListOfExercisesInfo
-import pt.ipc_app.service.models.users.MonitorOutput
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -56,7 +55,7 @@ class ExercisesService(
         dailyListId: Int,
         exerciseId: Int,
         token: String
-    ): APIResult<FileOutput> =
+    ): APIResult<Any> =
         postWithFile(
             uri = "/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId",
             token = token,
