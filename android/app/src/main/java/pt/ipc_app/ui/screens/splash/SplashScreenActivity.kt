@@ -33,13 +33,16 @@ class SplashScreenActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
+/*
         repo.setSession(
             id = UUID.fromString("b48faf56-2c85-455d-98ea-97ee4fcdf97e"),
             name = "Tiago",
             token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJtb25pdG9yQGdtYWlsLmNvbSIsInVzZXJJRCI6ImI0OGZhZjU2LTJjODUtNDU1ZC05OGVhLTk3ZWU0ZmNkZjk3ZSIsInJvbGUiOiJNT05JVE9SIn0.DtjpwWywt8thg0eZf9dY-r5EYq2dAiYDkCsTvZcZ6AHJg3bioSJBHRoj-U9T9beo8Cn-_HiT1e_qjbUVqh0N0A",
             role = Role.MONITOR
         )
+
+ */
+        repo.clearSession()
 
         CoroutineScope(Dispatchers.Main).launch {
             repo.userInfo?.let {

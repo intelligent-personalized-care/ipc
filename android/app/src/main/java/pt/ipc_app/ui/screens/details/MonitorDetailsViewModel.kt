@@ -32,7 +32,7 @@ class MonitorDetailsViewModel(
             request = {
                 usersService.connectMonitor(
                     monitorId = monitorId,
-                    clientId = sessionManager.userInfo!!.id,
+                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
                     token = sessionManager.userInfo!!.token
                 )
             },

@@ -47,7 +47,7 @@ class ExerciseViewModel(
                 _state.value = ProgressState.WAITING
                 exercisesService.submitExerciseVideo(
                     video = video,
-                    clientId = userInfo.id,
+                    clientId = UUID.fromString(userInfo.id),
                     planId = planId,
                     dailyListId = dailyListId,
                     exerciseId = exerciseId,

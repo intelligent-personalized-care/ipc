@@ -63,7 +63,7 @@ class CreatePlanViewModel(
                 _state.value = ProgressState.WAITING
                 plansService.createPlan(
                     plan = plan,
-                    monitorId = sessionManager.userInfo!!.id,
+                    monitorId = UUID.fromString(sessionManager.userInfo!!.id),
                     token = sessionManager.userInfo!!.token
                 ).also {
                     _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE

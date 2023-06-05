@@ -8,6 +8,7 @@ import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
+import java.util.*
 
 /**
  * View model for the [SplashScreenViewModel].
@@ -36,7 +37,7 @@ class SplashScreenViewModel(
 
         launchAndExecuteRequest(
             request = {
-                usersService.getCurrentPlanOfClient(user.id, user.token)
+                usersService.getCurrentPlanOfClient(UUID.fromString(user.id), user.token)
             },
             onSuccess = {
                 _plan.value = it
@@ -49,7 +50,7 @@ class SplashScreenViewModel(
 
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorOfClient(user.id, user.token)
+                usersService.getMonitorOfClient(UUID.fromString(user.id), user.token)
             },
             onSuccess = {
                 _monitor.value = it
@@ -62,7 +63,7 @@ class SplashScreenViewModel(
 
         launchAndExecuteRequest(
             request = {
-                usersService.getClientsOfMonitor(user.id, user.token)
+                usersService.getClientsOfMonitor(UUID.fromString(user.id), user.token)
             },
             onSuccess = {
                 _clients.value = it

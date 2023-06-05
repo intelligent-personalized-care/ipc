@@ -71,7 +71,7 @@ fun MonitorHomeScreen(
 @Composable
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
-        monitor = UserInfo(UUID.randomUUID(), "Test", "", Role.MONITOR),
+        monitor = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.MONITOR),
         clientsOfMonitor = listOf(ClientOutput(UUID.randomUUID(), "Tiago", ""))
     )
 }

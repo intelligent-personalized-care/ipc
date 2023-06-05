@@ -19,7 +19,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
 
     var userInfo: UserInfo?
         get() {
-            val savedId = UUID.fromString(prefs.getString(ID, null))
+            val savedId = prefs.getString(ID, null)
             val savedName = prefs.getString(NAME, null)
             val savedToken = prefs.getString(TOKEN, null)
             val savedRole = prefs.getString(ROLE, null)
@@ -37,7 +37,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
                     .apply()
             else
                 prefs.edit()
-                    .putString(ID, value.id.toString())
+                    .putString(ID, value.id)
                     .putString(NAME, value.name)
                     .putString(TOKEN, value.token)
                     .putString(ROLE, value.role.name)
@@ -59,7 +59,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
      * @param role the user's role
      */
     fun setSession(
-        id: UUID,
+        id: String,
         name: String,
         token: String,
         role: Role
@@ -74,7 +74,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
         userInfo = null
     }
 
-    private fun getUserInfo(id: UUID?, name: String?, token: String?, role: String?): UserInfo? {
+    private fun getUserInfo(id: String?, name: String?, token: String?, role: String?): UserInfo? {
         return if (id != null && name != null && token != null && role != null) {
             val roleValidation = role.toRole() ?: return null
             UserInfo(

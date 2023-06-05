@@ -108,7 +108,7 @@ fun ClientHomeScreen(
 @Composable
 fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID(), "Test", "", Role.CLIENT)
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT)
     )
 }
 
@@ -116,7 +116,7 @@ fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
 @Composable
 fun ClientHomeScreenWithoutPlanPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID(), "Test", "", Role.CLIENT),
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
         monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F)
     )
 }
@@ -125,7 +125,7 @@ fun ClientHomeScreenWithoutPlanPreview() {
 @Composable
 fun ClientHomeScreenPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID(), "Test", "", Role.CLIENT),
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
         monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F),
         plan = plan
     )

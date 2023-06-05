@@ -12,6 +12,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.openSendEmail
 import pt.ipc_app.utils.viewModelInit
+import java.util.*
 
 /**
  * The client details activity.
@@ -43,7 +44,7 @@ class ClientDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val monitorId = repo.userInfo!!.id
+        val monitorId = UUID.fromString(repo.userInfo!!.id)
 
         viewModel.getMonitorPlans(monitorId)
 
