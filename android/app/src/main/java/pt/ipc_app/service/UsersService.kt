@@ -141,7 +141,7 @@ class UsersService(
         token: String
     ): APIResult<Plan> =
         get(
-            uri = "/users/clients/$clientId/plans?date=2023-06-06",
+            uri = "/users/clients/$clientId/plans",
             token = token
         )
 

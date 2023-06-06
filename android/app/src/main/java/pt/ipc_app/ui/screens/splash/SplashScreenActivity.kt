@@ -34,18 +34,6 @@ class SplashScreenActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        repo.setSession(
-            id = "6acf5755-a520-4fda-bd99-69b9fdc6b1eb",
-            name = "Client",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0ZWVlQGdtYWlsLmNvbSIsInVzZXJJRCI6IjZhY2Y1NzU1LWE1MjAtNGZkYS1iZDk5LTY5YjlmZGM2YjFlYiIsInJvbGUiOiJDTElFTlQifQ.NoBC5Wx_FkXQYVsbEk71jeBpd-4BHGNAGnNYojV6JR7cQse7WWiGUl9jiAZ50bvhXwX3B_0zvlTSaghBCU_6Vg",
-            role = Role.CLIENT
-        )
-
-        //repo.clearSession()
-        //Log.println(Log.WARN, "TOKEN", repo.userInfo!!.token)
-
-        // CLIENT: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyRW1haWwiOiJjbGllbnQxQGdtYWlsLmNvbSIsInVzZXJJRCI6IjRlYWUzZDVlLTNiMzAtNGM3Zi1iMWJmLTU4NDEzMTQ3YmY2NiIsInJvbGUiOiJDTElFTlQifQ.hMt5lBZzCFnIG7OQyZpd2TGNevRHermn9KVsMvPImquBnLh2xdy8APfbBXTF663Ia-Ml2Ra70IQsBgvHrUZ0Jw
-
         CoroutineScope(Dispatchers.Main).launch {
             repo.userInfo?.let {
                 if (it.role.isClient()) {

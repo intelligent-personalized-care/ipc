@@ -1,0 +1,807 @@
+{
+	"info": {
+		"_postman_id": "b3e60ab4-87eb-4be8-8925-883f549cdc87",
+		"name": "IPC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18705234",
+		"_collection_link": "https://rtg-team.postman.co/workspace/RTG-Team~0e5880bd-ef1e-47b6-a6fa-4da8f065d710/collection/18705234-b3e60ab4-87eb-4be8-8925-883f549cdc87?action=share&creator=18705234&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Monitors",
+			"item": [
+				{
+					"name": "Register Monitor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"monitor111@gmail.com\",\r\n    \"name\" : \"monitor\",\r\n    \"password\" : \"@Password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Credential Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "credential",
+									"type": "file",
+									"src": "bjwVuUZDf/curriculum-vitae-bernardo-fragoso.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/credential",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"credential"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Monitors Available",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "monitor",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Connection Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accept\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests/4dbecfbb-0e23-45e6-a3be-55d95acfd59a",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"requests",
+								"4dbecfbb-0e23-45e6-a3be-55d95acfd59a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rate Monitor",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monitor Profile Picture",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/picture",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"profile",
+								"picture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Profile Picture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "Mz3HVBlWc/Simplified-diagram-of-the-paper-plant-production-process.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/photo",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"profile",
+								"photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clients Of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Requests of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Register Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\"  : \"testeee\",\r\n    \"email\" : \"testeee@gmail.com\",\r\n    \"password\" : \"Password1@\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Profile Picture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profilePicture",
+									"type": "file",
+									"src": "D9eS12kp2/Poster (2).png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile/photo",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"profile",
+								"photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Connection Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"monitorId\": \"c284382e-dffc-4a75-8c98-c78c5e6f97e3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/requests",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monitor of Client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/monitor",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"monitor"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Plans",
+			"item": [
+				{
+					"name": "Create Plan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"This is a plan for testing\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 5,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 7,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 8,\r\n                    \"reps\": 13\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Plan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans/1",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"plans",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Plan of Client on Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans?date=2023-06-06",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"plans"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2023-06-06"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User to Plan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"planID\" : 6,\r\n    \"startDate\" : \"2035-01-01\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}/plans",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients",
+								"{{idClient}}",
+								"plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Plans of Monitor",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercises",
+			"item": [
+				{
+					"name": "Get Exercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/exercises",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"exercises"
+							],
+							"query": [
+								{
+									"key": "exerciseType",
+									"value": "Chest",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercises of Client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/exercises",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercise Info",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Exercise Video",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": "dSirZmy3g/2023-03-13 22-14-51.mkv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/2",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"plans",
+								"1",
+								"daily_lists",
+								"1",
+								"exercises",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercise Video",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/exercises/40c806c4-d4e7-472f-88f8-ed547e8afd12/video",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"exercises",
+								"40c806c4-d4e7-472f-88f8-ed547e8afd12",
+								"video"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "serverDomainName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idClient",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tokenClient",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idMonitor",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tokenMonitor",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
