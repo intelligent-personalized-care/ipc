@@ -43,11 +43,9 @@ class UsersServiceUtils(
         return Pair(token.token, id)
     }
 
-    fun isValidEmail(email: String) =
-        email.matches(Regex(EMAIL_REGEX))
+    fun isValidEmail(email: String) = email.matches(Regex(EMAIL_REGEX))
 
-    private fun isPasswordSafe(password: String) =
-        password.matches(Regex(PASSWORD_REGEX))
+    private fun isPasswordSafe(password: String) = password.matches(Regex(PASSWORD_REGEX))
 
     fun checkDetails(email: String, password: String) {
         if (!isValidEmail(email)) throw BadEmail
