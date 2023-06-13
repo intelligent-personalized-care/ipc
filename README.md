@@ -1,8 +1,6 @@
 <h1 align="center">
     <img src="docs/imgs/logo.png" alt="Intelligent Personalized Care" width="150">
-
 <br>
-
     Intelligent Personalized Care
 </h1>
 <h4 align="center">A Solution to promote physical agility and recovery.</h4>
@@ -16,9 +14,18 @@ This project is based on an Android application to promote physical agility and 
 
 ---
 
+The beta demo of the application can be found [here](https://github.com/intelligent-personalized-care/ipc/tree/main/docs).
+
+## Documentation
+
+A beta version of the project's final report is
+available [here](https://github.com/intelligent-personalized-care/ipc/blob/main/docs/rfG23.pdf).
+
+You can find additional documentation in the [docs](https://github.com/intelligent-personalized-care/ipc/tree/main/docs) folder.
+
 ## Languages
 
-We focused on choosing **_Kotlin_** as the master language, both in the backend and frontend. We are using **_Postgresql_** in the database.
+We focused on choosing **_Kotlin_** as the master language, both in the backend and frontend. There are some **_Java_** classes created by Google, which are used to handle the ML Kit Pose Detection. We are using **_PostgreSQL_** in the database.
 
 ## Frameworks / Libraries
 

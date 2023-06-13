@@ -98,7 +98,8 @@ class JdbiClientsRepository(
     }
 
     override fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int): Boolean {
-        return handle.createQuery("""
+        return handle.createQuery(
+            """
             select exists(
                 select * from dbo.plans p
                 inner join dbo.daily_lists dl on p.id = dl.plan_id
@@ -106,7 +107,7 @@ class JdbiClientsRepository(
                 inner join dbo.client_plans cp on cp.plan_id = p.id
                 where p.id = :planID and dl.id = :dailyListID and de.id = :exerciseID and cp.client_id = :clientID
             )
-        """.trimIndent()
+            """.trimIndent()
         )
             .bind("planID", planID)
             .bind("dailyListID", dailyList)
