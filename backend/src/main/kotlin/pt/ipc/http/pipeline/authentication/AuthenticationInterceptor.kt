@@ -6,7 +6,7 @@ import org.springframework.web.servlet.HandlerInterceptor
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Unauthenticated
-import pt.ipc.domain.exceptions.Unauthorized
+import pt.ipc.domain.exceptions.Forbbiden
 import pt.ipc.http.controllers.ClientsController
 import pt.ipc.http.controllers.MonitorsController
 import javax.servlet.http.HttpServletRequest
@@ -27,7 +27,7 @@ class AuthenticationInterceptor(
                 handler.method.declaringClass == ClientsController::class.java && role != Role.CLIENT ||
                 handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
             ) {
-                throw Unauthorized
+                throw Forbbiden
             } else {
                 if (handler.methodParameters.any { it.parameterType == User::class.java }) {
                     UserArgumentResolver.addUserTo(user, request)

@@ -6,6 +6,7 @@ import pt.ipc.domain.Client
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
 import java.util.*
@@ -82,6 +83,15 @@ class JdbiClientsRepository(
             .execute()
     }
 
+    override fun login(email: String, passwordHash: String): RegisterOutput? =
+        handle.createQuery("select id,token_hash from dbo.users inner join dbo.tokens on users.id = tokens.user_id where email = :email  and password_hash = :passwordHash")
+            .bind("email",email)
+            .bind("passwordHash",passwordHash)
+            .mapTo<RegisterOutput>()
+            .singleOrNull()
+
+
+
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")
             .bind("clientID", clientID)
@@ -133,7 +143,7 @@ class JdbiClientsRepository(
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback, monitor_feedback) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)

@@ -3,6 +3,7 @@ package pt.ipc.storage.repositories
 import pt.ipc.domain.Client
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import pt.ipc.services.dtos.RegisterOutput
 import java.time.LocalDate
 import java.util.*
 
@@ -13,6 +14,8 @@ interface ClientsRepository {
     fun getUserByToken(token: String): Pair<User, Role>?
 
     fun registerClient(input: Client, token: String, physicalCondition: String? = null)
+
+    fun login(email : String, passwordHash : String) : RegisterOutput?
 
     fun roleOfUser(id: UUID): Role
 

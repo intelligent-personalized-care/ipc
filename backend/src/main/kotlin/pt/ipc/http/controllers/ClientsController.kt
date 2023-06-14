@@ -15,12 +15,8 @@ import pt.ipc.domain.Exercise
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.Unauthorized
-import pt.ipc.http.models.ConnectionRequestInput
-import pt.ipc.http.models.FeedbackInput
-import pt.ipc.http.models.ListOfExercisesOfClient
-import pt.ipc.http.models.MonitorOutput
-import pt.ipc.http.models.RequestIdOutput
+import pt.ipc.domain.exceptions.Forbbiden
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -45,6 +41,13 @@ class ClientsController(private val clientsService: ClientsService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
 
+    @PostMapping(Uris.USERS_LOGIN)
+    fun login(@RequestBody loginInput : LoginInput) : ResponseEntity<RegisterOutput>{
+        val loginOutput = clientsService.loggin(email = loginInput.email, password = loginInput.password)
+        return ResponseEntity.ok(loginOutput)
+    }
+
+
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
@@ -52,7 +55,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @RequestParam profilePicture: MultipartFile,
         user: User
     ): ResponseEntity<String> {
-        if (user.id != clientID) throw Unauthorized
+        if (user.id != clientID) throw Forbbiden
 
         clientsService.addProfilePicture(clientID = clientID, profilePicture = profilePicture.bytes)
 
@@ -62,7 +65,7 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.CLIENT_REQUESTS)
     fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
-        if (user.id != clientID) throw Unauthorized
+        if (user.id != clientID) throw Forbbiden
 
         val requestID = clientsService.requestMonitor(monitorID = connRequest.monitorId, clientID = clientID, requestText = connRequest.text)
 
@@ -72,9 +75,9 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @GetMapping(Uris.CLIENT_MONITOR)
     fun getMonitorOfClient(@PathVariable clientID: UUID, user: User): ResponseEntity<MonitorOutput> {
-        val res = clientsService.getMonitorOfClient(clientID = clientID)
+        val monitorOutput = clientsService.getMonitorOfClient(clientID = clientID)
 
-        return ResponseEntity.status(HttpStatus.OK).body(res)
+        return ResponseEntity.status(HttpStatus.OK).body(monitorOutput)
     }
 
     @Authentication
@@ -85,9 +88,9 @@ class ClientsController(private val clientsService: ClientsService) {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         date: LocalDate?
     ): ResponseEntity<PlanOutput> {
-        val res: PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
+        val planOutput : PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
 
-        return ResponseEntity.ok(res)
+        return ResponseEntity.ok(planOutput)
     }
 
     @Authentication
@@ -111,7 +114,7 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.MONITOR_RATE)
     fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
-        if (rating.user != user.id) throw Unauthorized
+        if (rating.user != user.id) throw Forbbiden
         clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = rating.rating)
         return ResponseEntity.ok().build()
     }
@@ -127,7 +130,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @PathVariable planID: Int,
         user: User
     ): ResponseEntity<Unit> {
-        if (user.id != clientID) throw Unauthorized
+        if (user.id != clientID) throw Forbbiden
 
         clientsService.uploadVideoOfClient(
             video = video.bytes,

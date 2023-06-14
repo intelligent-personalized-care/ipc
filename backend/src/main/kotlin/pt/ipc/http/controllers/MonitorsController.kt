@@ -17,7 +17,7 @@ import pt.ipc.domain.PlanID
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.Unauthorized
+import pt.ipc.domain.exceptions.Forbbiden
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.ConnectionRequestDecisionInput
 import pt.ipc.http.models.FeedbackInput
@@ -51,7 +51,7 @@ class MonitorsController(private val monitorService: MonitorService) {
         @RequestBody credential: MultipartFile,
         user: User
     ): ResponseEntity<Unit> {
-        if (monitorID != user.id) throw Unauthorized
+        if (monitorID != user.id) throw Forbbiden
 
         monitorService.insertCredential(monitorID = monitorID, credential = credential.bytes)
 
@@ -72,7 +72,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.CLIENTS_OF_MONITOR)
     fun getClientsOfMonitor(@PathVariable monitorID: UUID, user: User): ResponseEntity<ListOfClients> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
 
         val clients = monitorService.getClientsOfMonitor(monitorID = user.id)
 
@@ -82,9 +82,9 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.MONITOR)
     fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
-        val res = monitorService.getMonitor(monitorID = monitorID)
+        val monitorDetails = monitorService.getMonitor(monitorID = monitorID)
 
-        return ResponseEntity.status(HttpStatus.OK).body(res)
+        return ResponseEntity.status(HttpStatus.OK).body(monitorDetails)
     }
 
     @Authentication
@@ -95,7 +95,7 @@ class MonitorsController(private val monitorService: MonitorService) {
         @RequestBody decision: ConnectionRequestDecisionInput,
         user: User
     ): ResponseEntity<String> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
 
         monitorService.decideRequest(
             requestID = requestID,
@@ -109,7 +109,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @PostMapping(Uris.MONITOR_PHOTO)
     fun addProfilePicture(@PathVariable monitorID: UUID, @RequestParam photo: MultipartFile, user: User): ResponseEntity<String> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
 
         monitorService.updateProfilePicture(monitorID = monitorID, photo = photo.bytes)
 
@@ -131,7 +131,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.MONITOR_REQUESTS)
     fun getMonitorRequests(@PathVariable monitorID: UUID, user: User): ResponseEntity<RequestsOfMonitor> {
-        if (monitorID != user.id) throw Unauthorized
+        if (monitorID != user.id) throw Forbbiden
 
         val requests = monitorService.monitorRequests(monitorID = monitorID)
 
@@ -141,7 +141,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @PostMapping(Uris.PLANS_OF_MONITOR)
     fun createPlanOfMonitor(@PathVariable monitorID: UUID, @RequestBody planInput: PlanInput, user: User): ResponseEntity<PlanID> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
 
         val planID = monitorService.createPlan(monitorID = monitorID, planInput = planInput)
 
@@ -151,7 +151,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.PLANS_OF_MONITOR)
     fun getPlansOfMonitor(@PathVariable monitorID: UUID, user: User): ResponseEntity<ListOfPlans> {
-        if (monitorID != user.id) throw Unauthorized
+        if (monitorID != user.id) throw Forbbiden
 
         val plans = monitorService.getPlans(monitorID = monitorID)
 
@@ -166,7 +166,7 @@ class MonitorsController(private val monitorService: MonitorService) {
         @RequestBody planInfo: PlanToClient,
         user: User
     ): ResponseEntity<Unit> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
 
         monitorService.associatePlanToClient(monitorID = monitorID, clientID = clientID, startDate = planInfo.startDate, planID = planInfo.planID)
 
@@ -176,7 +176,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     @Authentication
     @GetMapping(Uris.PLAN_BY_ID)
     fun getPlanOfMonitorByID(@PathVariable monitorID: UUID, @PathVariable planID: Int, user: User): ResponseEntity<PlanOutput> {
-        if (user.id != monitorID) throw Unauthorized
+        if (user.id != monitorID) throw Forbbiden
         val planOutput: PlanOutput = monitorService.getPlan(monitorID = monitorID, planID = planID)
         return ResponseEntity.ok(planOutput)
     }

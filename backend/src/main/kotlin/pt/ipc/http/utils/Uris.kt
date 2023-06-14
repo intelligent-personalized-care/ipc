@@ -8,7 +8,8 @@ object Uris {
     const val CLIENT_REGISTER = "/users/clients"
     const val CLIENT_REQUESTS = "/users/clients/{clientID}/requests"
     const val CLIENT_PHOTO = "/users/clients/{clientID}/profile/photo"
-    const val CLIENT_MONITOR = "users/clients/{clientID}/monitor"
+    const val CLIENT_MONITOR = "/users/clients/{clientID}/monitor"
+    const val USERS_LOGIN = "/users/login"
 
     const val MONITOR = "/users/monitors/{monitorID}"
     const val MONITOR_REQUESTS = "/users/monitors/{monitorID}/requests"
