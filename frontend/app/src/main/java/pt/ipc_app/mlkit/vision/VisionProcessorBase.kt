@@ -56,7 +56,6 @@ import java.util.TimerTask
 abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
 
   companion object {
-    const val MANUAL_TESTING_LOG = "LogTagForTest"
     private const val TAG = "VisionProcessorBase"
   }
 
@@ -98,32 +97,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
       },
       0,
       1000
-    )
-  }
-
-  // -----------------Code for processing single still image----------------------------------------
-  override fun processBitmap(bitmap: Bitmap?, graphicOverlay: GraphicOverlay) {
-    val frameStartMs = SystemClock.elapsedRealtime()
-
-    if (isMlImageEnabled(graphicOverlay.context)) {
-      val mlImage = BitmapMlImageBuilder(bitmap!!).build()
-      requestDetectInImage(
-        mlImage,
-        graphicOverlay,
-        /* originalCameraImage= */ null,
-        /* shouldShowFps= */ false,
-        frameStartMs
-      )
-      mlImage.close()
-      return
-    }
-
-    requestDetectInImage(
-      InputImage.fromBitmap(bitmap!!, 0),
-      graphicOverlay,
-      /* originalCameraImage= */ null,
-      /* shouldShowFps= */ false,
-      frameStartMs
     )
   }
 
@@ -174,7 +147,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
           )
           .setRotation(frameMetadata.rotation)
           .build()
-      requestDetectInImage(mlImage, graphicOverlay, bitmap, /* shouldShowFps= */ true, frameStartMs)
+      requestDetectInImage(mlImage, graphicOverlay, bitmap, frameStartMs)
         .addOnSuccessListener(executor) { processLatestImage(graphicOverlay) }
 
       // This is optional. Java Garbage collection can also close it eventually.
@@ -192,7 +165,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
       ),
       graphicOverlay,
       bitmap,
-      /* shouldShowFps= */ true,
       frameStartMs
     )
       .addOnSuccessListener(executor) { processLatestImage(graphicOverlay) }
@@ -218,7 +190,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
         mlImage,
         graphicOverlay,
         /* originalCameraImage= */ bitmap,
-        /* shouldShowFps= */ true,
         frameStartMs
       )
         // When the image is from CameraX analysis use case, must call image.close() on received
@@ -235,7 +206,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
       InputImage.fromMediaImage(image.image!!, image.imageInfo.rotationDegrees),
       graphicOverlay,
       /* originalCameraImage= */ bitmap,
-      /* shouldShowFps= */ true,
       frameStartMs
     )
       // When the image is from CameraX analysis use case, must call image.close() on received
@@ -249,14 +219,12 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     image: InputImage,
     graphicOverlay: GraphicOverlay,
     originalCameraImage: Bitmap?,
-    shouldShowFps: Boolean,
     frameStartMs: Long
   ): Task<T> {
     return setUpListener(
       detectInImage(image),
       graphicOverlay,
       originalCameraImage,
-      shouldShowFps,
       frameStartMs
     )
   }
@@ -265,14 +233,12 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     image: MlImage,
     graphicOverlay: GraphicOverlay,
     originalCameraImage: Bitmap?,
-    shouldShowFps: Boolean,
     frameStartMs: Long
   ): Task<T> {
     return setUpListener(
       detectInImage(image),
       graphicOverlay,
       originalCameraImage,
-      shouldShowFps,
       frameStartMs
     )
   }
@@ -281,7 +247,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     task: Task<T>,
     graphicOverlay: GraphicOverlay,
     originalCameraImage: Bitmap?,
-    shouldShowFps: Boolean,
     frameStartMs: Long
   ): Task<T> {
     val detectorStartMs = SystemClock.elapsedRealtime()
@@ -336,16 +301,9 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
             graphicOverlay.add(CameraImageGraphic(graphicOverlay, originalCameraImage))
           }
           this@VisionProcessorBase.onSuccess(results, graphicOverlay)
-          if (!PreferenceUtils.shouldHideDetectionInfo(graphicOverlay.context)) {
-            graphicOverlay.add(
-              InferenceInfoGraphic(
-                graphicOverlay,
-                currentFrameLatencyMs,
-                currentDetectorLatencyMs,
-                if (shouldShowFps) framesPerSecond else null
-              )
-            )
-          }
+       /*   if (!PreferenceUtils.shouldHideDetectionInfo(graphicOverlay.context)) {
+
+          }*/
           graphicOverlay.postInvalidate()
         }
       )
@@ -387,7 +345,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     maxDetectorMs = 0
     minDetectorMs = Long.MAX_VALUE
   }
-
   protected abstract fun detectInImage(image: InputImage): Task<T>
 
   protected open fun detectInImage(image: MlImage): Task<T> {
