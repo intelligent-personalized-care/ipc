@@ -15,7 +15,7 @@ interface ClientsRepository {
 
     fun registerClient(input: Client, token: String, physicalCondition: String? = null)
 
-    fun login(email : String, passwordHash : String) : RegisterOutput?
+    fun login(email: String, passwordHash: String): RegisterOutput?
 
     fun roleOfUser(id: UUID): Role
 

@@ -16,7 +16,12 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Forbbiden
-import pt.ipc.http.models.*
+import pt.ipc.http.models.ConnectionRequestInput
+import pt.ipc.http.models.FeedbackInput
+import pt.ipc.http.models.ListOfExercisesOfClient
+import pt.ipc.http.models.LoginInput
+import pt.ipc.http.models.MonitorOutput
+import pt.ipc.http.models.RequestIdOutput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -42,11 +47,10 @@ class ClientsController(private val clientsService: ClientsService) {
     }
 
     @PostMapping(Uris.USERS_LOGIN)
-    fun login(@RequestBody loginInput : LoginInput) : ResponseEntity<RegisterOutput>{
+    fun login(@RequestBody loginInput: LoginInput): ResponseEntity<RegisterOutput> {
         val loginOutput = clientsService.loggin(email = loginInput.email, password = loginInput.password)
         return ResponseEntity.ok(loginOutput)
     }
-
 
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
@@ -88,7 +92,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         date: LocalDate?
     ): ResponseEntity<PlanOutput> {
-        val planOutput : PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
+        val planOutput: PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
 
         return ResponseEntity.ok(planOutput)
     }

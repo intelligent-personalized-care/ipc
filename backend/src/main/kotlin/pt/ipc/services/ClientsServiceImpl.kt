@@ -6,7 +6,14 @@ import pt.ipc.domain.Exercise
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.*
+import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
+import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
+import pt.ipc.domain.exceptions.ClientDontHavePlan
+import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
+import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
+import pt.ipc.domain.exceptions.LoginFailed
+import pt.ipc.domain.exceptions.MonitorNotFound
+import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.toLocalDate
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
@@ -69,8 +76,6 @@ class ClientsServiceImpl(
                 credentials.copy(token = encryptionUtils.decrypt(encryptedText = credentials.token))
             }
         )
-
-
 
     override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID {
         val requestID = UUID.randomUUID()

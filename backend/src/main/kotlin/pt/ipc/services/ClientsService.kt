@@ -14,7 +14,7 @@ interface ClientsService {
 
     fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
-    fun loggin(email : String, password : String) : RegisterOutput
+    fun loggin(email: String, password: String): RegisterOutput
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID
 
