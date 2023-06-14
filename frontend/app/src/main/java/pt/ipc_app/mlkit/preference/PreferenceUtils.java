@@ -88,11 +88,11 @@ public class PreferenceUtils {
     }
   }
 
-  public static boolean shouldHideDetectionInfo(Context context) {
+/*  public static boolean shouldHideDetectionInfo(Context context) {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey = context.getString(R.string.pref_key_info_hide);
     return sharedPreferences.getBoolean(prefKey, false);
-  }
+  }*/
 
   public static PoseDetectorOptionsBase getPoseDetectorOptionsForLivePreview(Context context) {
     int performanceMode =
@@ -126,19 +126,13 @@ public class PreferenceUtils {
     return sharedPreferences.getBoolean(prefKey, true);
   }
 
-  public static boolean shouldShowPoseDetectionInFrameLikelihoodLivePreview(Context context) {
+  /*public static boolean shouldShowPoseDetectionInFrameLikelihoodLivePreview(Context context) {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey =
         context.getString(R.string.pref_key_live_preview_pose_detector_show_in_frame_likelihood);
     return sharedPreferences.getBoolean(prefKey, true);
-  }
+  }*/
 
-  public static boolean shouldShowPoseDetectionInFrameLikelihoodStillImage(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey =
-        context.getString(R.string.pref_key_still_image_pose_detector_show_in_frame_likelihood);
-    return sharedPreferences.getBoolean(prefKey, true);
-  }
 
   public static boolean shouldPoseDetectionVisualizeZ(Context context) {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
