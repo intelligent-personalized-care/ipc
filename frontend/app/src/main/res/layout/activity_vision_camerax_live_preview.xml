@@ -50,13 +50,13 @@
 
         <Button
             android:id="@+id/camera_button"
-            android:background="@drawable/camera_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:translationX="130dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center|center"
+            android:background="@drawable/camera_button"
             android:textOff=""
-            android:textOn="" />
+            android:textOn=""
+            android:translationX="130dp" />
 
 
     </LinearLayout>

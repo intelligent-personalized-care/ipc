@@ -34,7 +34,6 @@ import kotlin.math.atan2
 class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
-  private val showInFrameLikelihood: Boolean,
   private val exercise: DailyExercise
 ): GraphicOverlay.Graphic(overlay) {
 
@@ -190,18 +189,6 @@ class PoseGraphic internal constructor(
       drawLine(canvas, rightIndex.position, rightPinky.position, rightPaint)
       drawLine(canvas, rightAnkle.position, rightHeel!!.position, rightPaint)
       drawLine(canvas, rightHeel.position, rightFootIndex!!.position, rightPaint)
-
-      // Draw inFrameLikelihood for all points
-      if (showInFrameLikelihood) {
-        for (landmark in landmarks) {
-          canvas.drawText(
-            String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
-            translateX(landmark.position.x),
-            translateY(landmark.position.y),
-            whitePaint
-          )
-        }
-      }
     }
   }
 
@@ -232,10 +219,12 @@ class PoseGraphic internal constructor(
     canvas: Canvas,
     start: PointF?,
     end: PointF?,
-    paint: Paint?
+    paint: Paint?,
+    strokeWidth: Float = 7f //to get adjustable and thicker lines
   ) {
     if (start == null || end == null) return
 
+    paint?.strokeWidth = strokeWidth
     canvas.drawLine(
       translateX(start.x), translateY(start.y), translateX(end.x), translateY(end.y), paint!!
     )
@@ -244,7 +233,7 @@ class PoseGraphic internal constructor(
   fun drawText(canvas: Canvas, text:String, line:Int) {
     if (TextUtils.isEmpty(text)) return
 
-    canvas.drawText(text, TEXT_SIZE * 0.5f, TEXT_SIZE * 3 + TEXT_SIZE * line, tipPaint)
+    canvas.drawText(text, TEXT_SIZE * 1.5f, TEXT_SIZE * 3*2 + TEXT_SIZE * line, tipPaint)
   }
 
   companion object {

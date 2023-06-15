@@ -47,7 +47,7 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = repo.userInfo!!,
                 monitor = monitor,
-                plan = plan,
+                //planTest = plan,
                 onMonitorClick = {
                     if (monitor != null)
                         MonitorDetailsActivity.navigate(this, monitor!!)

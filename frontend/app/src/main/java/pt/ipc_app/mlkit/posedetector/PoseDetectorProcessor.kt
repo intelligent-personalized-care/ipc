@@ -17,6 +17,7 @@
 package pt.ipc_app.mlkit.posedetector
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
@@ -32,7 +33,6 @@ import pt.ipc_app.mlkit.vision.VisionProcessorBase
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
-  private val showInFrameLikelihood: Boolean,
   private val exercise: DailyExercise
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
@@ -50,12 +50,13 @@ class PoseDetectorProcessor(
     graphicOverlay: GraphicOverlay
   ) {
     //added exercise to monitor the different exercises in PoseGraphic
-    graphicOverlay.add(PoseGraphic(graphicOverlay, results, showInFrameLikelihood, exercise))
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise))
   }
 
   override fun onFailure(e: Exception) {
     Log.e(TAG, "Pose detection failed!", e)
   }
+
 
   companion object {
     private const val TAG = "PoseDetectorProcessor"

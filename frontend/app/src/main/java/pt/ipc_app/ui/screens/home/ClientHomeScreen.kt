@@ -26,7 +26,7 @@ import java.util.*
 fun ClientHomeScreen(
     client: UserInfo,
     monitor: MonitorOutput? = null,
-    plan: Plan? = null,
+    planTest: Plan? = plan,//null,
     onMonitorClick: () -> Unit = { },
     onExerciseSelect: (ExerciseTotalInfo) -> Unit = { },
     onExercisesClick: () -> Unit = { },
@@ -36,7 +36,7 @@ fun ClientHomeScreen(
     var notifications by remember { mutableStateOf(true) }
 
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
-    var dailyListSelected: DailyList? by remember { mutableStateOf(plan?.getListOfDayIfExists(daySelected)) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(planTest?.getListOfDayIfExists(daySelected)) }
 
     AppScreen {
         Row(
@@ -72,7 +72,7 @@ fun ClientHomeScreen(
             ) {
 
                 Text(
-                    text = if (plan != null) "${plan.title} - ${plan.dailyLists.size} days"
+                    text = if (planTest != null) "${planTest.title} - ${planTest.dailyLists.size} days"
                             else "No current plan assigned"
                 )
 
@@ -81,7 +81,7 @@ fun ClientHomeScreen(
                     daySelected = daySelected,
                     onDaySelected = {
                         daySelected = it
-                        dailyListSelected = plan?.getListOfDayIfExists(it)
+                        dailyListSelected = planTest?.getListOfDayIfExists(it)
                     }
                 )
 
@@ -90,7 +90,7 @@ fun ClientHomeScreen(
                     onExerciseSelect = { ex ->
                         onExerciseSelect(
                             ExerciseTotalInfo(
-                                planId = plan!!.id,
+                                planId = planTest!!.id,
                                 dailyListId = dailyListSelected!!.id,
                                 exercise = ex
                             )
@@ -131,6 +131,6 @@ fun ClientHomeScreenPreview() {
     ClientHomeScreen(
         client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
         monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F),
-        plan = plan
+        planTest = plan
     )
 }
