@@ -126,31 +126,6 @@ public class PreferenceUtils {
     return sharedPreferences.getBoolean(prefKey, true);
   }
 
-  /*public static boolean shouldShowPoseDetectionInFrameLikelihoodLivePreview(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey =
-        context.getString(R.string.pref_key_live_preview_pose_detector_show_in_frame_likelihood);
-    return sharedPreferences.getBoolean(prefKey, true);
-  }*/
-
-
-  public static boolean shouldPoseDetectionVisualizeZ(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey = context.getString(R.string.pref_key_pose_detector_visualize_z);
-    return sharedPreferences.getBoolean(prefKey, true);
-  }
-
-  public static boolean shouldPoseDetectionRescaleZForVisualization(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey = context.getString(R.string.pref_key_pose_detector_rescale_z);
-    return sharedPreferences.getBoolean(prefKey, true);
-  }
-
-  public static boolean shouldPoseDetectionRunClassification(Context context) {
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String prefKey = context.getString(R.string.pref_key_pose_detector_run_classification);
-    return sharedPreferences.getBoolean(prefKey, false);
-  }
 
   /**
    * Mode type preference is backed by {@link android.preference.ListPreference} which only support

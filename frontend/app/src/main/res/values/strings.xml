@@ -87,22 +87,6 @@
     <string name="pref_entry_values_pose_detector_performance_mode_fast" translatable="false">1</string>
     <string name="pref_entry_values_pose_detector_performance_mode_accurate" translatable="false">2</string>
 
-    <!-- Strings for pose detector showInFrameLikelihood preference. -->
-    <string name="pref_title_pose_detector_show_in_frame_likelihood">Show In-Frame Likelihood </string>
-    <string name="pref_key_live_preview_pose_detector_show_in_frame_likelihood" translatable="false">lppdsifl</string>
-    <string name="pref_key_still_image_pose_detector_show_in_frame_likelihood" translatable="false">sipdsifl</string>
-
-    <!-- Strings for pose detector z value visualization preference. -->
-    <string name="pref_title_pose_detector_visualize_z" translatable="false">Visualize z value</string>
-    <string name="pref_key_pose_detector_visualize_z" translatable="false">pdvz</string>
-    <string name="pref_title_pose_detector_rescale_z" translatable="false">Rescale z value for visualization</string>
-    <string name="pref_key_pose_detector_rescale_z" translatable="false">pdrz</string>
-
-    <!-- Strings for pose classification preference. -->
-    <string name="pref_title_pose_detector_run_classification" translatable="false">Run Classification</string>
-    <string name="pref_key_pose_detector_run_classification" translatable="false">pdrc</string>
-    <string name="pref_summary_pose_detector_run_classification" translatable="false">Classify squat and pushup poses. Count reps in streaming mode. To get the best classification results based on the current sample data, face the camera side way and make sure your full body is in the frame.</string>
-
     <string name="menu_item_settings" translatable="false">Settings</string>
 
     <string name="pref_category_info" translatable="false">Detection Info</string>

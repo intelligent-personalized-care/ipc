@@ -134,6 +134,8 @@ class CameraXLivePreviewActivity :
             getRuntimePermissions()
         }
 
+        //Creates a file directory for the video to be saved locally
+        //creates a video capture and the record button action
         outputDirectory = getOutputDirectory()
         createVideoCapture()
         setupRecordingButton { viewModel.submitExerciseVideo(it, exercise.planId, exercise.dailyListId, exercise.exercise.id) }
@@ -257,20 +259,10 @@ class CameraXLivePreviewActivity :
                 when (selectedModel) {
                     POSE_DETECTION -> {
                         val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
-                        val shouldShowInFrameLikelihood =
-                            PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
-                        val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
-                        val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
-                        val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
                         PoseDetectorProcessor(
                             this,
                             poseDetectorOptions as PoseDetectorOptions,
-                            shouldShowInFrameLikelihood,
                             exercise.exercise
-                            /*visualizeZ,
-                            rescaleZ,
-                            runClassification,
-                            *//* isStreamMode = *//* true*/
                         )
                     }
 
@@ -370,12 +362,6 @@ class CameraXLivePreviewActivity :
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     private fun createVideoCapture() {
-        /*val videoCaptureConfig = VideoCaptureConfig.Builder().apply {
-            setLensFacing(lensFacing)
-            setTargetRotation(previewView.display.rotation)
-            setTargetAspectRatio(AspectRatio.RATIO_16_9)
-            setVideoFrameRate(30)
-        }.build()*/
         videoCapture = VideoCapture.Builder().apply {
             setTargetAspectRatio(AspectRatio.RATIO_16_9)
             //setVideoFrameRate(30)
