@@ -14,7 +14,7 @@ This project is based on an Android application to promote physical agility and 
 
 ---
 
-The beta demo of the application can be found [here](https://github.com/intelligent-personalized-care/ipc/tree/main/docs).
+The beta demo of the application can be found [here](https://github.com/intelligent-personalized-care/ipc/tree/main/docs/demo_beta.mp4).
 
 ## Documentation
 
