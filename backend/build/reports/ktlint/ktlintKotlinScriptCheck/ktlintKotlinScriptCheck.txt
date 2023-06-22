@@ -1,1 +1,0 @@
-[90mC:\Users\rodri\IdeaProjects\ipc\backend\[0msettings.gradle.kts[90m:[0m4[90m:1:[0m Needless blank line(s) [90m(no-consecutive-blank-lines)[0m
