@@ -19,7 +19,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Forbbiden
 import pt.ipc.http.models.AllMonitorsAvailableOutput
-import pt.ipc.http.models.ConnectionRequestDecisionInput
+import pt.ipc.http.models.Decision
 import pt.ipc.http.models.FeedbackInput
 import pt.ipc.http.models.ListOfClients
 import pt.ipc.http.models.ListOfPlans
@@ -29,7 +29,7 @@ import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.MonitorService
-import pt.ipc.services.dtos.RegisterMonitorInput
+import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.RegisterOutput
 import java.util.*
 
@@ -38,8 +38,8 @@ import java.util.*
 class MonitorsController(private val monitorService: MonitorService) {
 
     @PostMapping(Uris.MONITOR_REGISTER)
-    fun registerMonitor(@RequestBody registerMonitorInput: RegisterMonitorInput): ResponseEntity<RegisterOutput> {
-        val registerOutput = monitorService.registerMonitor(registerMonitorInput)
+    fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<RegisterOutput> {
+        val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
@@ -55,7 +55,7 @@ class MonitorsController(private val monitorService: MonitorService) {
 
         monitorService.insertCredential(monitorID = monitorID, credential = credential.bytes)
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping(Uris.MONITOR_SEARCH_ALL_AVAILABLE)
@@ -92,7 +92,7 @@ class MonitorsController(private val monitorService: MonitorService) {
     fun decideRequest(
         @PathVariable monitorID: UUID,
         @PathVariable requestID: UUID,
-        @RequestBody decision: ConnectionRequestDecisionInput,
+        @RequestBody decision: Decision,
         user: User
     ): ResponseEntity<String> {
         if (user.id != monitorID) throw Forbbiden

@@ -2,11 +2,11 @@ package pt.ipc.http.models
 
 import java.util.*
 
-data class ConnectionRequestInput(
+data class ConnectionRequest(
     val monitorId: UUID,
     val text: String? = null
 )
 
-data class ConnectionRequestDecisionInput(
+data class Decision(
     val accept: Boolean
 )

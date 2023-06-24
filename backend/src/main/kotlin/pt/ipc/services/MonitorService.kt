@@ -6,14 +6,14 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
-import pt.ipc.services.dtos.RegisterMonitorInput
+import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.RegisterOutput
 import java.time.LocalDate
 import java.util.*
 
 interface MonitorService {
 
-    fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput
+    fun registerMonitor(registerInput: RegisterInput): RegisterOutput
 
     fun insertCredential(monitorID: UUID, credential: ByteArray)
 

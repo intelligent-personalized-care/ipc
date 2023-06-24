@@ -1,9 +1,10 @@
-package pt.ipc.services
+package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.exceptions.ExerciseNotExists
+import pt.ipc.services.ExercisesService
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 

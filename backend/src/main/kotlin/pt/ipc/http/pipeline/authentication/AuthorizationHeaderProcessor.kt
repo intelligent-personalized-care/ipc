@@ -3,7 +3,8 @@ package pt.ipc.http.pipeline.authentication
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.services.UsersServiceUtils
+import pt.ipc.services.serviceImpl.UsersServiceUtils
+import java.util.UUID
 
 @Component
 class AuthorizationHeaderProcessor(
@@ -25,6 +26,8 @@ class AuthorizationHeaderProcessor(
 
         return usersServiceUtils.getUserByToken(parts[1])
     }
+
+    fun checkIfMonitorIsVerified(monitorID : UUID) = usersServiceUtils.checkIfMonitorIsVerified(monitorID = monitorID)
 
     companion object {
         const val SCHEME = "bearer"

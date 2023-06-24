@@ -1,4 +1,4 @@
-package pt.ipc.services
+package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
@@ -27,18 +27,22 @@ class UsersServiceUtils(
         return transactionManager.runBlock(
             block = {
                 val (user, role) = it.clientsRepository.getUserByToken(token = hashedToken) ?: return@runBlock null
-                if (role == Role.MONITOR) {
-                    if (!it.monitorRepository.checkIfMonitorIsVerified(user.id)) throw MonitorNotVerified
-                }
                 Pair(user, role)
             }
         )
     }
 
-    fun createCredentials(email: String, role: Role): Pair<String, UUID> {
+    fun checkIfMonitorIsVerified(monitorID : UUID) =
+        transactionManager.runBlock(
+            block = {
+                if (!it.monitorRepository.checkIfMonitorIsVerified(monitorID = monitorID)) throw MonitorNotVerified
+            }
+        )
+
+    fun createCredentials(role: Role): Pair<String, UUID> {
         val id = UUID.randomUUID()
 
-        val token = jwtUtils.createJWToken(email = email, id = id, role = role)
+        val token = jwtUtils.createJWToken(id = id, role = role)
 
         return Pair(token.token, id)
     }

@@ -17,11 +17,20 @@ class AuthenticationInterceptor(
     private val authorizationHeaderProcessor: AuthorizationHeaderProcessor
 ) : HandlerInterceptor {
 
+    private val uuidRegex = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+    private val monitorCredentialRegex = "/users/monitors/$uuidRegex/credential".toRegex()
+
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
             val authorizationValue = request.getHeader(NAME_AUTHORIZATION_HEADER)
 
             val (user, role) = authorizationHeaderProcessor.process(authorizationValue = authorizationValue) ?: throw Unauthenticated
+
+            val uri = request.requestURI
+
+            if(role == Role.MONITOR && !(uri.matches(monitorCredentialRegex) && request.method == "POST")){
+                authorizationHeaderProcessor.checkIfMonitorIsVerified(monitorID = user.id)
+            }
 
             if (
                 handler.method.declaringClass == ClientsController::class.java && role != Role.CLIENT ||

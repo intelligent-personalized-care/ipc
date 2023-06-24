@@ -2,8 +2,13 @@ package pt.ipc.domain
 
 enum class Role {
     CLIENT,
-    MONITOR;
+    MONITOR,
+    ADMIN;
 }
 
 fun String.toRole(): Role =
-    if (this == "CLIENT") Role.CLIENT else Role.MONITOR
+    when(this){
+      "CLIENT" -> Role.CLIENT
+      "MONITOR" -> Role.MONITOR
+      else -> Role.ADMIN
+    }

@@ -10,7 +10,9 @@ import java.util.*
 
 interface MonitorRepository {
 
-    fun registerMonitor(user: User, date: LocalDate, encryptedToken: String)
+    fun registerMonitor(user: User, encryptedToken: String)
+
+    fun insertCredential(monitorID: UUID, dtSubmit : LocalDate)
 
     fun getMonitor(monitorID: UUID): MonitorDetails?
 

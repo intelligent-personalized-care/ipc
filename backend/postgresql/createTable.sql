@@ -126,4 +126,8 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
     dt_submit           DATE NOT NULL,
     feedback_client     VARCHAR(200),
     feedback_monitor    VARCHAR(200)-- can be null, no answer or waiting
+);
+
+CREATE TABLE IF NOT EXISTS dbo.admin(
+    id                  UUID references dbo.users(id)
 )

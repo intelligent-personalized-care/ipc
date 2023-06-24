@@ -5,7 +5,6 @@ import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
@@ -27,16 +26,18 @@ class JdbiClientsRepository(
         val maybeClient = handle.createQuery("select count(*) from dbo.clients where c_id = :id")
             .bind("id", id)
             .mapTo<Int>()
-            .singleOrNull()
+            .single()
 
         if (maybeClient != 0) return Role.CLIENT
 
-        handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
+       val maybeMonitor = handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
             .bind("id", id)
             .mapTo<Int>()
-            .singleOrNull() ?: throw UserNotExists
+            .single()
 
-        return Role.MONITOR
+       if(maybeMonitor != 0) return Role.MONITOR
+
+        return Role.ADMIN
     }
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
@@ -141,7 +142,7 @@ class JdbiClientsRepository(
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, client_feedback, monitor_feedback) " +
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
         )
             .bind("exerciseVideoID", exerciseVideoID)

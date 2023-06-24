@@ -1,4 +1,4 @@
-package pt.ipc.services
+package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.Client
@@ -16,6 +16,7 @@ import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.toLocalDate
 import pt.ipc.http.models.MonitorOutput
+import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
@@ -32,7 +33,7 @@ class ClientsServiceImpl(
     override fun registerClient(input: RegisterClientInput): RegisterOutput {
         usersServiceUtils.checkDetails(email = input.email, password = input.password)
 
-        val (token, id) = usersServiceUtils.createCredentials(email = input.email, role = Role.CLIENT)
+        val (token, id) = usersServiceUtils.createCredentials(role = Role.CLIENT)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 

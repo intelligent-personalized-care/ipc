@@ -10,7 +10,6 @@ import javax.crypto.spec.SecretKeySpec
 @Component
 class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
-    private val userEmail = "userEmail"
     private val userID = "userID"
     private val userRole = "role"
 
@@ -21,16 +20,15 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
     data class JwtPayload(val claims: Claims)
 
-    private fun createJwtPayload(email: String, id: UUID, role: Role): JwtPayload {
+    private fun createJwtPayload( id: UUID, role: Role): JwtPayload {
         val claims = Jwts.claims()
-        claims[userEmail] = email
         claims[userID] = id
         claims[userRole] = role
         return JwtPayload(claims = claims)
     }
 
-    fun createJWToken(email: String, id: UUID, role: Role): JWToken {
-        val jwtPayload = createJwtPayload(email = email, id = id, role = role)
+    fun createJWToken(id: UUID, role: Role): JWToken {
+        val jwtPayload = createJwtPayload(id = id, role = role)
 
         return JWToken(
             token = Jwts.builder()

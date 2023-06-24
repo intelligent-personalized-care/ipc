@@ -16,7 +16,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Forbbiden
-import pt.ipc.http.models.ConnectionRequestInput
+import pt.ipc.http.models.ConnectionRequest
 import pt.ipc.http.models.FeedbackInput
 import pt.ipc.http.models.ListOfExercisesOfClient
 import pt.ipc.http.models.LoginInput
@@ -68,7 +68,7 @@ class ClientsController(private val clientsService: ClientsService) {
 
     @Authentication
     @PostMapping(Uris.CLIENT_REQUESTS)
-    fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequestInput, user: User): ResponseEntity<RequestIdOutput> {
+    fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {
         if (user.id != clientID) throw Forbbiden
 
         val requestID = clientsService.requestMonitor(monitorID = connRequest.monitorId, clientID = clientID, requestText = connRequest.text)

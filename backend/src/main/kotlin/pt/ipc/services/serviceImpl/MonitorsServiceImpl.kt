@@ -1,4 +1,4 @@
-package pt.ipc.services
+package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.MonitorDetails
@@ -16,7 +16,8 @@ import pt.ipc.domain.exceptions.RequestNotExists
 import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
-import pt.ipc.services.dtos.RegisterMonitorInput
+import pt.ipc.services.MonitorService
+import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
@@ -29,23 +30,24 @@ class MonitorsServiceImpl(
     private val usersServiceUtils: UsersServiceUtils
 ) : MonitorService {
 
-    override fun registerMonitor(registerMonitorInput: RegisterMonitorInput): RegisterOutput {
-        val (token, userID) = usersServiceUtils.createCredentials(email = registerMonitorInput.email, role = Role.MONITOR)
+    override fun registerMonitor(registerInput: RegisterInput): RegisterOutput {
+
+        usersServiceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
+
+        val (token, userID) = usersServiceUtils.createCredentials(role = Role.MONITOR)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 
         val user = User(
             id = userID,
-            name = registerMonitorInput.name,
-            email = registerMonitorInput.email,
-            passwordHash = encryptionUtils.encrypt(registerMonitorInput.password)
+            name = registerInput.name,
+            email = registerInput.email,
+            passwordHash = encryptionUtils.encrypt(registerInput.password)
         )
-
-        usersServiceUtils.checkDetails(email = registerMonitorInput.email, password = registerMonitorInput.password)
 
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.registerMonitor(user = user, date = LocalDate.now(), encryptedToken = encryptedToken)
+                it.monitorRepository.registerMonitor(user = user, encryptedToken = encryptedToken)
             }
         )
 
@@ -56,6 +58,7 @@ class MonitorsServiceImpl(
         transactionManager.runBlock(
             block = {
                 it.cloudStorage.uploadMonitorCredentials(fileName = monitorID, file = credential)
+                it.monitorRepository.insertCredential(monitorID = monitorID, dtSubmit = LocalDate.now())
             }
         )
     }

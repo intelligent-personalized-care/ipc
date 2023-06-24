@@ -15,9 +15,9 @@ class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
 
-    private val DEFAULT_RATING = Rating(starsAverage = 5F, nrOfReviews = 0)
+    private val defaultRating = Rating(starsAverage = 5F, nrOfReviews = 0)
 
-    override fun registerMonitor(user: User, date: LocalDate, encryptedToken: String) {
+    override fun registerMonitor(user: User, encryptedToken: String) {
         handle.createUpdate("insert into dbo.users values(:id,:u_name,:u_email,:password_hash)")
             .bind("id", user.id)
             .bind("u_name", user.name)
@@ -34,9 +34,12 @@ class JdbiMonitorsRepository(
             .bind("user_id", user.id)
             .execute()
 
-        handle.createUpdate("insert into dbo.docs_authenticity values(:monitor_id,'waiting',:dt_submit)")
-            .bind("monitor_id", user.id)
-            .bind("dt_submit", date)
+        }
+
+    override fun insertCredential(monitorID: UUID, dtSubmit : LocalDate){
+        handle.createUpdate("insert into dbo.docs_authenticity(monitor_id, state, dt_submit) values (:monitorID,'waiting',:dtSubmit)")
+            .bind("monitorID",monitorID)
+            .bind("dtSubmit",dtSubmit)
             .execute()
     }
 
@@ -71,7 +74,7 @@ class JdbiMonitorsRepository(
         )
             .bind("monitorID", monitorID)
             .mapTo<Rating>()
-            .singleOrNull() ?: DEFAULT_RATING
+            .singleOrNull() ?: defaultRating
 
     override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
         val queryName = if (name != null) "and u.name like :name" else ""

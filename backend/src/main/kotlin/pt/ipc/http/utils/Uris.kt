@@ -31,6 +31,12 @@ object Uris {
     const val PLANS_OF_MONITOR = "/users/monitors/{monitorID}/plans"
     const val PLAN_BY_ID = "/users/monitors/{monitorID}/plans/{planID}"
 
-    const val VIDEO_OF_EXERCISE = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}"
-    const val EXERCISE_FEEDBACK = "users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}/feedback"
+    const val VIDEO_OF_EXERCISE = "/users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}"
+    const val EXERCISE_FEEDBACK = "/users/clients/{clientID}/plans/{planID}/daily_lists/{dailyListID}/exercises/{exerciseID}/feedback"
+
+    const val ADMIN_CREATION = "/admin"
+    const val UNVERIFIED_MONITORS = "/admin/unverified_monitors"
+    const val UNVERIFIED_MONITOR = "/admin/unverified_monitors/{monitorID}"
+
+
 }
