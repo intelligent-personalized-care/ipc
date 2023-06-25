@@ -43,6 +43,12 @@ class JdbiMonitorsRepository(
             .execute()
     }
 
+    override fun getUserByID(id: UUID): User? =
+        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.monitors m on u.id = m.m_id where u.id = :id")
+            .bind("id",id)
+            .mapTo<User>()
+            .singleOrNull()
+
     override fun getMonitor(monitorID: UUID): MonitorDetails? =
         handle.createQuery("select id, name, email from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
             .bind("monitorID", monitorID)

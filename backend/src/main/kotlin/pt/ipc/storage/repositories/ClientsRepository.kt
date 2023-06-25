@@ -11,13 +11,11 @@ interface ClientsRepository {
 
     fun existsEmail(email: String): Boolean
 
-    fun getUserByToken(token: String): Pair<User, Role>?
+    fun getUserByID(id : UUID) : User?
 
     fun registerClient(input: Client, token: String, physicalCondition: String? = null)
 
     fun login(email: String, passwordHash: String): RegisterOutput?
-
-    fun roleOfUser(id: UUID): Role
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 

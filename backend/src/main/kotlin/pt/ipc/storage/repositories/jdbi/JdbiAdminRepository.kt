@@ -2,11 +2,21 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import pt.ipc.domain.User
 import pt.ipc.services.dtos.MonitorInfo
 import pt.ipc.storage.repositories.AdminRepository
 import java.util.*
 
-class JdbiAdminRepository(private val handle : Handle) : AdminRepository {
+class JdbiAdminRepository(
+    private val handle : Handle
+    ) : AdminRepository {
+
+    override fun getUserByID(id: UUID): User? =
+        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.admin a on u.id = a.id where u.id = :id")
+            .bind("id",id)
+            .mapTo<User>()
+            .singleOrNull()
+
 
     override fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, tokenHash: String) {
 

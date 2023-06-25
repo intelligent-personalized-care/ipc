@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
+import pt.ipc.domain.toRole
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
@@ -18,7 +19,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
         SECRET_KEY_ALGORITHM
     )
 
-    data class JwtPayload(val claims: Claims)
+    private data class JwtPayload(val claims: Claims)
 
     private fun createJwtPayload( id: UUID, role: Role): JwtPayload {
         val claims = Jwts.claims()
@@ -36,6 +37,23 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
                 .signWith(acessTokenKey)
                 .compact()
         )
+    }
+
+    fun getUserInfo(token : String) : Pair<UUID,Role>{
+        val claims = getClaimsOfToken(token = token)
+
+        val id = UUID.fromString(claims[userID].toString())
+        val role = claims[userRole].toString().toRole()
+
+        return Pair(first = id, second = role)
+
+    }
+
+    private fun getClaimsOfToken(token : String) : Claims{
+        return Jwts.parserBuilder()
+                   .setSigningKey(acessTokenKey)
+                   .build()
+                   .parseClaimsJws(token).body
     }
 
     companion object {

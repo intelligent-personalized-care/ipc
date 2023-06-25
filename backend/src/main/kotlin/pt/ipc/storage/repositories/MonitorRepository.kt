@@ -14,6 +14,8 @@ interface MonitorRepository {
 
     fun insertCredential(monitorID: UUID, dtSubmit : LocalDate)
 
+    fun getUserByID(id: UUID) : User?
+
     fun getMonitor(monitorID: UUID): MonitorDetails?
 
     fun getClientOfMonitor(monitorID: UUID): List<ClientOutput>

@@ -18,7 +18,7 @@ import java.util.UUID
 class AdminController(private val adminService: AdminService) {
 
 
-    //@Authentication
+    @Authentication
     @PostMapping(Uris.ADMIN_CREATION)
     fun createAdminAccount(@RequestBody registerInput: RegisterInput) : ResponseEntity<RegisterOutput>{
 
@@ -28,7 +28,7 @@ class AdminController(private val adminService: AdminService) {
 
     }
 
-    //@Authentication
+    @Authentication
     @GetMapping(Uris.UNVERIFIED_MONITORS)
     fun getUnverifiedMonitors() : ResponseEntity<ListOfUnverifiedMonitors>{
         val monitors = adminService.getUnverifiedMonitors()

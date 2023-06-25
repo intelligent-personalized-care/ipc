@@ -22,15 +22,26 @@ class UsersServiceUtils(
         private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
     }
 
-    fun getUserByToken(token: String): Pair<User, Role>? {
-        val hashedToken = encryptionUtils.encrypt(token)
-        return transactionManager.runBlock(
-            block = {
-                val (user, role) = it.clientsRepository.getUserByToken(token = hashedToken) ?: return@runBlock null
-                Pair(user, role)
-            }
-        )
-    }
+    fun getUser(id : UUID, role : Role) : User? =
+       when(role){
+           Role.MONITOR -> transactionManager.runBlock(
+                            block = {
+                                it.monitorRepository.getUserByID(id = id)
+                            }
+                        )
+           Role.CLIENT -> transactionManager.runBlock(
+                            block = {
+                                it.clientsRepository.getUserByID(id = id)
+                            }
+                        )
+           Role.ADMIN -> transactionManager.runBlock(
+                            block = {
+                                it.monitorRepository.getUserByID(id = id)
+                            }
+                        )
+              }
+
+
 
     fun checkIfMonitorIsVerified(monitorID : UUID) =
         transactionManager.runBlock(

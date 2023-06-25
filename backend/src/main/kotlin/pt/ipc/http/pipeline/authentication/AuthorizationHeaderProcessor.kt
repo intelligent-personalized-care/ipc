@@ -3,12 +3,15 @@ package pt.ipc.http.pipeline.authentication
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.domain.jwt.JwtUtils
 import pt.ipc.services.serviceImpl.UsersServiceUtils
 import java.util.UUID
 
 @Component
 class AuthorizationHeaderProcessor(
-    private val usersServiceUtils: UsersServiceUtils
+    private val usersServiceUtils: UsersServiceUtils,
+    private val jwtUtils: JwtUtils
 ) {
 
     fun process(authorizationValue: String?): Pair<User, Role>? {
@@ -24,7 +27,13 @@ class AuthorizationHeaderProcessor(
             return null
         }
 
-        return usersServiceUtils.getUserByToken(parts[1])
+        val token : String = parts[1]
+
+        val (id,role) = jwtUtils.getUserInfo(token = token)
+
+        val user = usersServiceUtils.getUser(id = id, role = role) ?: throw UserNotExists
+
+        return Pair(first = user, second = role)
     }
 
     fun checkIfMonitorIsVerified(monitorID : UUID) = usersServiceUtils.checkIfMonitorIsVerified(monitorID = monitorID)

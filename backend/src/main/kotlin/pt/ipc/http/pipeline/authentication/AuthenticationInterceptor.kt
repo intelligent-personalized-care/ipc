@@ -7,6 +7,7 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.Forbbiden
 import pt.ipc.domain.exceptions.Unauthenticated
+import pt.ipc.http.controllers.AdminController
 import pt.ipc.http.controllers.ClientsController
 import pt.ipc.http.controllers.MonitorsController
 import javax.servlet.http.HttpServletRequest
@@ -28,13 +29,14 @@ class AuthenticationInterceptor(
 
             val uri = request.requestURI
 
-            if(role == Role.MONITOR && !(uri.matches(monitorCredentialRegex) && request.method == "POST")){
+            if(role.isMonitor() && !(uri.matches(monitorCredentialRegex) && request.method == "POST")){ // Monitor does not need to be verified when inputing credentials
                 authorizationHeaderProcessor.checkIfMonitorIsVerified(monitorID = user.id)
             }
 
             if (
-                handler.method.declaringClass == ClientsController::class.java && role != Role.CLIENT ||
-                handler.method.declaringClass == MonitorsController::class.java && role != Role.MONITOR
+                handler.method.declaringClass == ClientsController::class.java && role.notClient() ||
+                handler.method.declaringClass == MonitorsController::class.java && role.notMonitor() ||
+                handler.method.declaringClass == AdminController::class.java && role.notAdmin()
             ) {
                 throw Forbbiden
             } else {

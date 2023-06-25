@@ -3,7 +3,6 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
-import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.services.dtos.RegisterOutput
 import pt.ipc.storage.repositories.ClientsRepository
@@ -22,23 +21,11 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    override fun roleOfUser(id: UUID): Role {
-        val maybeClient = handle.createQuery("select count(*) from dbo.clients where c_id = :id")
-            .bind("id", id)
-            .mapTo<Int>()
-            .single()
-
-        if (maybeClient != 0) return Role.CLIENT
-
-       val maybeMonitor = handle.createQuery("select count(*) from dbo.monitors where m_id = :id")
-            .bind("id", id)
-            .mapTo<Int>()
-            .single()
-
-       if(maybeMonitor != 0) return Role.MONITOR
-
-        return Role.ADMIN
-    }
+    override fun getUserByID(id: UUID): User? =
+        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.clients c on u.id = c.c_id where c.c_id = :id")
+              .bind("id",id)
+              .mapTo<User>()
+              .singleOrNull()
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
         handle.createUpdate("insert into dbo.client_requests (monitor_id, client_id, request_id, request_text) VALUES (:monitorID,:clientID,:requestID,:requestText)")
@@ -49,16 +36,6 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun getUserByToken(token: String): Pair<User, Role>? {
-        val user = handle.createQuery("select id, name, email, password_hash from dbo.users u inner join dbo.tokens t on u.id = t.user_id where token_hash = :token")
-            .bind("token", token)
-            .mapTo<User>()
-            .singleOrNull() ?: return null
-
-        val role = roleOfUser(id = user.id)
-
-        return Pair(user, role)
-    }
 
     override fun registerClient(input: Client, token: String, physicalCondition: String?) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
