@@ -45,8 +45,8 @@ class CloudStorageUtilsImpl(
         return outputStream.toByteArray()
     }
 
-    override fun uploadClientVideo(fileName: UUID, byteArray: ByteArray) =
-        upload(fileName = fileName.toString(), content = byteArray, contentType = videoContentType, bucketName = clientsVideosBucket)
+    override fun uploadClientVideo(fileName: UUID, video: ByteArray) =
+        upload(fileName = fileName.toString(), content = video, contentType = videoContentType, bucketName = clientsVideosBucket)
 
     override fun downloadClientVideo(fileName: UUID): ByteArray =
         download(fileName = fileName.toString(), bucketName = clientsVideosBucket)
@@ -78,4 +78,7 @@ class CloudStorageUtilsImpl(
 
     override fun downloadProfilePicture(fileName: UUID): ByteArray =
         download(fileName = fileName.toString(), bucketName = userPhotosBucket)
+
+    override fun uploadVideoPreview(fileName: UUID, file: ByteArray) =
+        upload(fileName = fileName.toString(),file, contentType = videoContentType, exercisesPreviewsBucket)
 }

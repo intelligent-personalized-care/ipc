@@ -3,7 +3,6 @@ package pt.ipc.services.serviceImpl
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.BadEmail
 import pt.ipc.domain.exceptions.MonitorNotVerified
 import pt.ipc.domain.exceptions.WeakPassword
@@ -13,7 +12,6 @@ import java.util.*
 
 @Component
 class UsersServiceUtils(
-    private val encryptionUtils: EncryptionUtils,
     private val transactionManager: TransactionManager,
     private val jwtUtils: JwtUtils
 ) {
@@ -36,7 +34,7 @@ class UsersServiceUtils(
                         )
            Role.ADMIN -> transactionManager.runBlock(
                             block = {
-                                it.monitorRepository.getUserByID(id = id)
+                                it.adminRepository.getUserByID(id = id)
                             }
                         )
               }

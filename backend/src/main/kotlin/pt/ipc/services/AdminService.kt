@@ -1,5 +1,6 @@
 package pt.ipc.services
 
+import pt.ipc.domain.ExerciseType
 import pt.ipc.services.dtos.MonitorInfo
 import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.RegisterOutput
@@ -14,5 +15,7 @@ interface AdminService {
     fun getCredentialOfMonitor(monitorID : UUID) : ByteArray
 
     fun decideMonitorCredential(monitorID: UUID, accept : Boolean)
+
+    fun addExerciseInfoPreview(title : String, description : String, type : ExerciseType, video : ByteArray)
 
 }

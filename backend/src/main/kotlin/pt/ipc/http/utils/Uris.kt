@@ -37,6 +37,7 @@ object Uris {
     const val ADMIN_CREATION = "/admin"
     const val UNVERIFIED_MONITORS = "/admin/unverified_monitors"
     const val UNVERIFIED_MONITOR = "/admin/unverified_monitors/{monitorID}"
+    const val ADD_VIDEO_PREVIEW = "/admin/video_preview"
 
 
 }

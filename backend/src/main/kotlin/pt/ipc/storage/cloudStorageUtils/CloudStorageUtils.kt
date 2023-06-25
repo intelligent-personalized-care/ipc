@@ -4,7 +4,7 @@ import java.util.*
 
 interface CloudStorageUtils {
 
-    fun uploadClientVideo(fileName: UUID, byteArray: ByteArray)
+    fun uploadClientVideo(fileName: UUID, video: ByteArray)
 
     fun downloadClientVideo(fileName: UUID): ByteArray
 
@@ -19,4 +19,6 @@ interface CloudStorageUtils {
     fun uploadProfilePicture(fileName: UUID, file: ByteArray)
 
     fun downloadProfilePicture(fileName: UUID): ByteArray
+
+    fun uploadVideoPreview(fileName: UUID, file: ByteArray)
 }

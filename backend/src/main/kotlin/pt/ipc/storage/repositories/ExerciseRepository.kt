@@ -17,4 +17,6 @@ interface ExerciseRepository {
     fun getAllExercisesOfClient(clientID: UUID, skip: Int, limit: Int): List<Exercise>
 
     fun getExercisesOfDay(clientID: UUID, date: LocalDate): List<Exercise>
+
+    fun addExerciseInfoPreview(exerciseID: UUID, title : String, description : String, type : ExerciseType)
 }

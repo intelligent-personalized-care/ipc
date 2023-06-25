@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.ExerciseType
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -50,7 +52,7 @@ class AdminController(private val adminService: AdminService) {
 
     }
 
-    //@Authentication
+    @Authentication
     @PostMapping(Uris.UNVERIFIED_MONITOR)
     fun decideCredentialOfMonitor(@PathVariable monitorID : UUID, @RequestBody decision : Decision) : ResponseEntity<Unit>{
 
@@ -58,6 +60,25 @@ class AdminController(private val adminService: AdminService) {
 
         return ResponseEntity.ok().build()
 
+    }
+
+    @Authentication
+    @PostMapping(Uris.ADD_VIDEO_PREVIEW)
+    fun addVideoPreview(
+        @RequestParam video: MultipartFile,
+        @RequestParam title: String,
+        @RequestParam description: String,
+        @RequestParam type: ExerciseType,
+
+    ) : ResponseEntity<Unit>{
+        adminService.addExerciseInfoPreview(
+            title = title,
+            description = description,
+            type = type,
+            video = video.bytes
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
 

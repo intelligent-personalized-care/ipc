@@ -83,4 +83,13 @@ class JdbiExercisesRepository(
             .mapTo<Exercise>()
             .list()
     }
+
+    override fun addExerciseInfoPreview(exerciseID: UUID, title: String, description: String, type: ExerciseType) {
+        handle.createUpdate("insert into dbo.exercises_info(id, title, description, type) values(:id,:title,:description,:type)")
+            .bind("id",exerciseID)
+            .bind("title",title)
+            .bind("description",description)
+            .bind("type",type)
+            .execute()
+    }
 }

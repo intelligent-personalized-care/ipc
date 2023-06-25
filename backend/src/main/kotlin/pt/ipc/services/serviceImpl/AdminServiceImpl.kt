@@ -1,6 +1,7 @@
 package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
+import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.AdminService
@@ -46,7 +47,6 @@ class AdminServiceImpl(
             }
         )
 
-
     override fun getCredentialOfMonitor(monitorID: UUID): ByteArray =
         transactionManager.runBlock(
             block = {
@@ -61,4 +61,21 @@ class AdminServiceImpl(
                 it.adminRepository.decideMonitorVerification(monitorID = monitorID, decision = accept)
             }
         )
+
+    override fun addExerciseInfoPreview(title: String, description: String, type: ExerciseType, video: ByteArray) {
+
+        val exerciseID = UUID.randomUUID()
+
+        transactionManager.runBlock(
+            block = {
+                it.exerciseRepository.addExerciseInfoPreview(
+                    exerciseID = exerciseID,
+                    title = title,
+                    description = description,
+                    type = type
+                )
+                it.cloudStorage.uploadVideoPreview(fileName = exerciseID, file = video)
+            }
+        )
     }
+}
