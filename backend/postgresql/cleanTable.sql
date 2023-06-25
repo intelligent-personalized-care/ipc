@@ -11,7 +11,7 @@ TRUNCATE TABLE dbo.DAILY_LISTS cascade;
 TRUNCATE TABLE dbo.client_to_monitor cascade;
 TRUNCATE TABLE dbo.DAILY_EXERCISES cascade;
 TRUNCATE TABLE dbo.EXERCISES_VIDEO cascade;
-TRUNCATE TABLE dbo.client_requests cascade;
+TRUNCATE TABLE dbo.monitor_requests cascade;
 
 ALTER SEQUENCE dbo.daily_exercises_id_seq RESTART WITH 1;
 ALTER SEQUENCE dbo.daily_lists_id_seq RESTART WITH 1;

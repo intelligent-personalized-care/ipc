@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS dbo.client_to_monitor(
 
 );
 
-CREATE TABLE IF NOT EXISTS dbo.client_requests(
+CREATE TABLE IF NOT EXISTS dbo.monitor_requests(
     request_id      UUID PRIMARY KEY,
     monitor_id      UUID REFERENCES dbo.monitors (m_id),
     client_id       UUID REFERENCES dbo.clients (c_id),

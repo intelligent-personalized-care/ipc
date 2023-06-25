@@ -28,7 +28,7 @@ class JdbiClientsRepository(
               .singleOrNull()
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
-        handle.createUpdate("insert into dbo.client_requests (monitor_id, client_id, request_id, request_text) VALUES (:monitorID,:clientID,:requestID,:requestText)")
+        handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) VALUES (:monitorID,:clientID,:requestID,:requestText)")
             .bind("monitorID", monitorID)
             .bind("clientID", clientID)
             .bind("requestID", requestID)

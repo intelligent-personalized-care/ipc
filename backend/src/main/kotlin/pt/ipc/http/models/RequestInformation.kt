@@ -10,9 +10,7 @@ data class RequestsOfMonitor(
 data class RequestInformation(
     val requestID: UUID,
     val requestText: String? = null,
-    val clientID: UUID,
-    @ColumnName("name")
-    val clientName: String,
-    @ColumnName("email")
-    val clientEmail: String
+    @ColumnName("client_id") val clientID: UUID,
+    @ColumnName("name") val clientName: String,
+    @ColumnName("email") val clientEmail: String
 )

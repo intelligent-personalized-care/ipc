@@ -103,7 +103,7 @@ class JdbiMonitorsRepository(
     }
 
     override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean) {
-        handle.createUpdate("delete from dbo.client_requests where request_id = :requestID ")
+        handle.createUpdate("delete from dbo.monitor_requests where request_id = :requestID ")
             .bind("requestID", requestID)
             .execute()
 
@@ -118,8 +118,8 @@ class JdbiMonitorsRepository(
     override fun getRequestInformation(requestID: UUID): RequestInformation? =
         handle.createQuery(
             """
-            select request_id, request_text, client_id, u.name, u.email from dbo.client_requests 
-            inner join dbo.clients c on c.c_id = client_requests.client_id
+            select request_id, request_text, client_id, u.name, u.email from dbo.monitor_requests 
+            inner join dbo.clients c on c.c_id = monitor_requests.client_id
             inner join dbo.users u on u.id = c.c_id
             where request_id = :requestID
             """.trimIndent()
@@ -128,14 +128,11 @@ class JdbiMonitorsRepository(
             .mapTo<RequestInformation>()
             .singleOrNull()
 
-    override fun monitorRequests(monitorID: UUID): List<RequestInformation> {
-        val requestIds = handle.createQuery("select request_id from dbo.client_requests where monitor_id = :monitorID")
+    override fun monitorRequests(monitorID: UUID): List<RequestInformation> =
+        handle.createQuery("select mr.request_id,mr.request_text,mr.client_id, u.name,u.email from dbo.monitor_requests mr inner join dbo.users u on u.id = mr.client_id where monitor_id = :monitorID")
             .bind("monitorID", monitorID)
-            .mapTo<UUID>()
+            .mapTo<RequestInformation>()
             .toList()
-
-        return requestIds.map { getRequestInformation(it)!! }
-    }
 
     override fun checkIfMonitorIsVerified(monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.docs_authenticity where monitor_id = :monitorID and state = 'valid' ")
