@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS dbo.daily_lists(
     index       INT NOT NULL,
     plan_id     INT NOT NULL REFERENCES dbo.plans (id),
 
-    UNIQUE (index, plan_id),
+    CONSTRAINT unique_index UNIQUE (index, plan_id),
 
     CONSTRAINT index_is_valid CHECK ( index >= 0 )
 );
@@ -125,7 +125,11 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
     client_id           UUID NOT NULL REFERENCES dbo.clients (c_id),
     dt_submit           DATE NOT NULL,
     feedback_client     VARCHAR(200),
-    feedback_monitor    VARCHAR(200)-- can be null, no answer or waiting
+    feedback_monitor    VARCHAR(200),-- can be null, no answer or waiting
+    nr_set              INT NOT NULL,
+
+    CONSTRAINT unique_nr_set UNIQUE(nr_set,id)
+
 );
 
 CREATE TABLE IF NOT EXISTS dbo.admin(

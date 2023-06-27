@@ -26,5 +26,5 @@ interface ClientsService {
 
     fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int)
 
-    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, clientFeedback: String?)
+    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, set : Int, feedback : String? = null)
 }

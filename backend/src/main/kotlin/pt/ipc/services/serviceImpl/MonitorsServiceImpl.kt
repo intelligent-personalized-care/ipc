@@ -133,7 +133,7 @@ class MonitorsServiceImpl(
     override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int) {
         return transactionManager.runBlock(
             block = {
-                if (!it.monitorRepository.checkIfIsMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
 
                 val plan = it.plansRepository.getPlan(planID = planID)
 
@@ -163,12 +163,36 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun giveFeedbackOfExercise(monitorID: UUID, exerciseID: Int, feedback: String) {
+    override fun giveFeedbackOfExercise(
+        monitorID: UUID,
+        planID: Int,
+        dailyListID: Int,
+        dailyExerciseID: Int,
+        set: Int,
+        feedback: String,
+        clientID: UUID
+    ) {
         return transactionManager.runBlock(
             block = {
-                if (!it.plansRepository.checkIfClientAlreadyUploadedVideo(exerciseID = exerciseID)) throw HasNotUploadedVideo
-                if (!it.plansRepository.checkIfMonitorHasPrescribedExercise(exerciseID = exerciseID, monitorID = monitorID)) throw NotPlanOfMonitor
-                it.plansRepository.giveFeedBackOfVideo(exerciseID = exerciseID, feedback = feedback)
+                if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                if (!it.plansRepository.checkIfClientAlreadyUploadedVideo(
+                        clientID = clientID,
+                        planID = planID,
+                        dailyListID = dailyListID,
+                        exerciseID = dailyExerciseID,
+                        set = set
+                    )) throw HasNotUploadedVideo
+                if (!it.plansRepository.checkIfMonitorHasPrescribedExercise(
+                        planID = planID,
+                        exerciseID = dailyExerciseID,
+                        monitorID = monitorID
+                    )) throw NotPlanOfMonitor
+                it.plansRepository.giveFeedBackOfVideo(
+                    clientID = clientID,
+                    exerciseID = dailyExerciseID,
+                    set = set,
+                    feedBack = feedback
+                )
             }
         )
     }

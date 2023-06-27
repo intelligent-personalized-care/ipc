@@ -5,6 +5,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
+import pt.ipc.http.models.VideoFeedBack
 import pt.ipc.storage.repositories.ExerciseRepository
 import java.time.Duration
 import java.time.LocalDate
@@ -92,4 +93,26 @@ class JdbiExercisesRepository(
             .bind("type",type)
             .execute()
     }
-}
+
+    override fun getClientVideoID(clientID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int): UUID? =
+        handle.createQuery(
+            "select ev.id from dbo.exercises_video ev " +
+                "inner join dbo.daily_exercises de on de.id = ev.ex_id " +
+                "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
+                "where de.id = :dailyExerciseID and dl.id = :dailyListID and dl.plan_id = :planID and ev.client_id = :clientID and ev.nr_set = :set")
+            .bind("dailyExerciseID",dailyExerciseID)
+            .bind("dailyListID",dailyListID)
+            .bind("planID",planID)
+            .bind("clientID",clientID)
+            .bind("set",set)
+            .mapTo<UUID>()
+            .singleOrNull()
+
+
+    override fun getVideoFeedback(videoID : UUID) : VideoFeedBack =
+        handle.createQuery("select feedback_client,feedback_monitor from dbo.exercises_video where id = :videoID")
+            .bind("videoID",videoID)
+            .mapTo<VideoFeedBack>()
+            .single()
+    }
+

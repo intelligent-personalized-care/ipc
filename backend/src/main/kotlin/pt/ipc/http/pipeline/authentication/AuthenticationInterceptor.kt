@@ -3,9 +3,8 @@ package pt.ipc.http.pipeline.authentication
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
-import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.Forbbiden
+import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.domain.exceptions.Unauthenticated
 import pt.ipc.http.controllers.AdminController
 import pt.ipc.http.controllers.ClientsController
@@ -38,7 +37,7 @@ class AuthenticationInterceptor(
                 handler.method.declaringClass == MonitorsController::class.java && role.notMonitor() ||
                 handler.method.declaringClass == AdminController::class.java && role.notAdmin()
             ) {
-                throw Forbbiden
+                throw ForbiddenRequest
             } else {
                 if (handler.methodParameters.any { it.parameterType == User::class.java }) {
                     UserArgumentResolver.addUserTo(user, request)

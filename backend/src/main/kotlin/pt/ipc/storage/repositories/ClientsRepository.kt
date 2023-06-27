@@ -1,7 +1,6 @@
 package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Client
-import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.services.dtos.RegisterOutput
 import java.time.LocalDate
@@ -25,7 +24,7 @@ interface ClientsRepository {
 
     fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int): Boolean
 
-    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int): Boolean
+    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int, set : Int): Boolean
 
-    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, clientFeedback: String?)
+    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, set : Int, clientFeedback: String?)
 }

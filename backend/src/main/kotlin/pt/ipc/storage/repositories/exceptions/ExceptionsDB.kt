@@ -27,6 +27,7 @@ object ExceptionsDB {
         "users_pkey" to "This ID is already in use",
         "client_to_monitor_client_id_key" to "Can't have more than a monitor",
         "daily_exercises_ex_id_fkey" to "Exercise not found",
-        "client_requests_monitor_id_client_id_key" to "You have already sent a request to this monitor"
+        "client_requests_monitor_id_client_id_key" to "You have already sent a request to this monitor",
+        "unique_nr_set" to "you already post a video for this set"
     )
 }

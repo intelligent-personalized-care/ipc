@@ -45,7 +45,7 @@ class AdminController(private val adminService: AdminService) {
         val credential = adminService.getCredentialOfMonitor(monitorID = monitorID)
 
         val headers = HttpHeaders()
-        headers.contentType = MediaType.parseMediaType("image/png")
+        headers.contentType = MediaType.parseMediaType("application/pdf")
         headers.contentLength = credential.size.toLong()
 
         return ResponseEntity.ok().headers(headers).body(credential)

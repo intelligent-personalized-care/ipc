@@ -3,12 +3,14 @@ package pt.ipc.http.pipeline.exceptionHandler
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import io.jsonwebtoken.JwtException
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
@@ -18,6 +20,7 @@ import pt.ipc.domain.exceptions.Conflict
 import pt.ipc.domain.exceptions.Forbidden
 import pt.ipc.domain.exceptions.NotFound
 import pt.ipc.domain.exceptions.UnauthorizedRequest
+import pt.ipc.domain.jwt.message
 import pt.ipc.storage.repositories.exceptions.ExceptionsDB
 import java.net.URI
 import javax.servlet.http.HttpServletRequest
@@ -65,7 +68,7 @@ class ExceptionHandler {
     ): ResponseEntity<Any> =
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
-            title = "This Argument does not exists",
+            title = "${ex.message}",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
 
@@ -85,16 +88,43 @@ class ExceptionHandler {
         ).toResponseEntity()
     }
 
+    @ExceptionHandler(value = [MissingServletRequestParameterException::class])
+    fun handleMissingMethodParameter(
+        request: HttpServletRequest,
+        ex : MissingServletRequestParameterException
+    ) : ResponseEntity<Any> =
+        Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
+            title = ex.message,
+            status = HttpStatus.BAD_REQUEST.value()
+        ).toResponseEntity()
+
     @ExceptionHandler(value = [MultipartException::class])
     fun handleMultipartException(
         request: HttpServletRequest,
         ex: Exception
-    ): ResponseEntity<Any> =
-        Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + "file-too-big"),
-            title = "Input file too big. Max size 10MB",
+    ): ResponseEntity<Any> {
+
+
+    return Problem(
+    type = URI.create(PROBLEMS_DOCS_URI + "multipart"),
+    title = ex.message ?: "Multipart File Problem without message",
+    status = HttpStatus.BAD_REQUEST.value ()
+    ).toResponseEntity()
+
+}
+
+    @ExceptionHandler(value = [JwtException::class])
+    fun handleJWTException(
+        request: HttpServletRequest,
+        ex: JwtException
+    ) : ResponseEntity<Any>{
+        return Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + "JWT"),
+            title = ex.message(),
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
+    }
 
     @ExceptionHandler(value = [UnauthorizedRequest::class])
     fun handleUnauthorizedRequest(

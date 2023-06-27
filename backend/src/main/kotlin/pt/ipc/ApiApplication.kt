@@ -15,8 +15,8 @@ import java.io.File
 @Configuration
 class AppConfig {
 
-    private val maxVideoSize: Long = 33_868_800
-    private val maxInMemory: Int = 1
+    private val maxVideoSize: Long = -1
+    private val maxInMemory: Int = -1
 
     @Bean
     fun multipartResolver(): CommonsMultipartResolver {

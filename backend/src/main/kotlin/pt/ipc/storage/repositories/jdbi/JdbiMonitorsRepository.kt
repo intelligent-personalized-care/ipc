@@ -140,7 +140,7 @@ class JdbiMonitorsRepository(
             .mapTo<Int>()
             .single() == 1
 
-    override fun checkIfIsMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean =
+    override fun isMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.client_to_monitor where monitor_id = :monitorID and client_id = :clientID")
             .bind("monitorID", monitorID)
             .bind("clientID", clientID)

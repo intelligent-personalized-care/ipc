@@ -34,5 +34,5 @@ interface MonitorRepository {
 
     fun checkIfMonitorIsVerified(monitorID: UUID): Boolean
 
-    fun checkIfIsMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean
+    fun isMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean
 }

@@ -159,33 +159,48 @@ class JdbiPlansRepository(
             .single()
     }
 
-    override fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID): Boolean {
+    override fun checkIfMonitorHasPrescribedExercise(planID: Int, exerciseID: Int, monitorID: UUID): Boolean {
         return handle.createQuery(
             "select count(*) from dbo.daily_exercises de " +
                 "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
                 "inner join dbo.plans p on dl.plan_id = p.id " +
-                "where de.ex_id = :exerciseID and p.monitor_id = :monitorID"
+                "where de.id = :exerciseID and p.monitor_id = :monitorID and p.id = :planID"
         )
             .bind("exerciseID", exerciseID)
             .bind("monitorID", monitorID)
+            .bind("planID",planID)
             .mapTo<Int>()
             .single() == 1
     }
 
-    override fun checkIfClientAlreadyUploadedVideo(exerciseID: Int): Boolean {
+    override fun checkIfClientAlreadyUploadedVideo(
+        clientID: UUID,
+        planID: Int,
+        dailyListID: Int,
+        exerciseID: Int,
+        set: Int
+    ): Boolean {
         return handle.createQuery(
             "select count(*) from dbo.exercises_video ev " +
                 "inner join dbo.daily_exercises de on ev.ex_id = de.id " +
-                "where de.ex_id = :exerciseID "
+                "inner join dbo.daily_lists dl on dl.id = de.daily_list_id " +
+                "where ev.nr_set = :set and ev.ex_id = :exerciseID and dl.id = :dailyListID and dl.plan_id = :planID"
         )
+            .bind("set",set)
             .bind("exerciseID", exerciseID)
+            .bind("dailyListID", dailyListID)
+            .bind("planID", planID)
             .mapTo<Int>()
             .single() == 1
     }
 
-    override fun giveFeedBackOfVideo(exerciseID: Int, feedback: String) {
-        handle.createUpdate("update dbo.exercises_video set feedback_monitor = :feedback where id = :exerciseID")
-            .bind("feedback", feedback)
+    override fun giveFeedBackOfVideo(clientID: UUID, exerciseID: Int, set: Int, feedBack: String) {
+        handle.createUpdate(
+            "update dbo.exercises_video set feedback_monitor = :feedBack where ex_id = :exerciseID and client_id = :clientID and nr_set = :set")
+            .bind("feedBack", feedBack)
             .bind("exerciseID", exerciseID)
+            .bind("clientID", clientID)
+            .bind("set", set)
+            .execute()
     }
 }

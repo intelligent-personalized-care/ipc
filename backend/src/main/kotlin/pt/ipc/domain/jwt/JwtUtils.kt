@@ -40,6 +40,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
     }
 
     fun getUserInfo(token : String) : Pair<UUID,Role>{
+
         val claims = getClaimsOfToken(token = token)
 
         val id = UUID.fromString(claims[userID].toString())
@@ -50,6 +51,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
     }
 
     private fun getClaimsOfToken(token : String) : Claims{
+
         return Jwts.parserBuilder()
                    .setSigningKey(acessTokenKey)
                    .build()
@@ -60,3 +62,27 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
         private const val SECRET_KEY_ALGORITHM = "HmacSHA512"
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

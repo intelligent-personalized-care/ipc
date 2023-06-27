@@ -103,10 +103,11 @@ class JdbiClientsRepository(
             .single()
     }
 
-    override fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int): Boolean {
-        return handle.createQuery("select count(*) from dbo.exercises_video where client_id = :client and ex_id = :exerciseID")
+    override fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int, set: Int): Boolean {
+        return handle.createQuery("select count(*) from dbo.exercises_video where client_id = :client and ex_id = :exerciseID and nr_set = :set")
             .bind("client", clientID)
             .bind("exerciseID", exerciseID)
+            .bind("set",set)
             .mapTo<Int>()
             .single() == 1
     }
@@ -116,17 +117,18 @@ class JdbiClientsRepository(
         exerciseID: Int,
         exerciseVideoID: UUID,
         date: LocalDate,
+        set: Int,
         clientFeedback: String?
     ) {
         handle.createUpdate(
-            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor) " +
-                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null)"
-        )
+            "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor,nr_set) " +
+                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null,:set)")
             .bind("exerciseVideoID", exerciseVideoID)
             .bind("exerciseID", exerciseID)
             .bind("clientID", clientID)
             .bind("date", date)
             .bind("clientFeedback", clientFeedback)
+            .bind("set",set)
             .execute()
     }
 }

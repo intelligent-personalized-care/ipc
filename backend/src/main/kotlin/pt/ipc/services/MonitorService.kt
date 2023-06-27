@@ -39,5 +39,5 @@ interface MonitorService {
 
     fun getPlans(monitorID: UUID): List<PlansOutput>
 
-    fun giveFeedbackOfExercise(monitorID: UUID, exerciseID: Int, feedback: String)
+    fun giveFeedbackOfExercise(monitorID: UUID, planID : Int,dailyListID : Int,dailyExerciseID : Int,set : Int, feedback: String, clientID: UUID)
 }

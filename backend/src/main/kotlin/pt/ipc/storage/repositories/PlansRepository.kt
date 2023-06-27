@@ -22,9 +22,9 @@ interface PlansRepository {
 
     fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean
 
-    fun checkIfClientAlreadyUploadedVideo(exerciseID: Int): Boolean
+    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, planID: Int, dailyListID: Int ,exerciseID: Int, set : Int): Boolean
 
-    fun checkIfMonitorHasPrescribedExercise(exerciseID: Int, monitorID: UUID): Boolean
+    fun checkIfMonitorHasPrescribedExercise(planID : Int,exerciseID: Int, monitorID: UUID): Boolean
 
-    fun giveFeedBackOfVideo(exerciseID: Int, feedback: String)
+    fun giveFeedBackOfVideo(clientID: UUID, exerciseID: Int, set: Int, feedBack: String)
 }

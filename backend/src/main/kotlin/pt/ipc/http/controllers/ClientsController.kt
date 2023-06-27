@@ -15,13 +15,8 @@ import pt.ipc.domain.Exercise
 import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.Forbbiden
-import pt.ipc.http.models.ConnectionRequest
-import pt.ipc.http.models.FeedbackInput
-import pt.ipc.http.models.ListOfExercisesOfClient
-import pt.ipc.http.models.LoginInput
-import pt.ipc.http.models.MonitorOutput
-import pt.ipc.http.models.RequestIdOutput
+import pt.ipc.domain.exceptions.ForbiddenRequest
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.Uris
@@ -59,7 +54,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @RequestParam profilePicture: MultipartFile,
         user: User
     ): ResponseEntity<String> {
-        if (user.id != clientID) throw Forbbiden
+        if (user.id != clientID) throw ForbiddenRequest
 
         clientsService.addProfilePicture(clientID = clientID, profilePicture = profilePicture.bytes)
 
@@ -69,7 +64,7 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.CLIENT_REQUESTS)
     fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {
-        if (user.id != clientID) throw Forbbiden
+        if (user.id != clientID) throw ForbiddenRequest
 
         val requestID = clientsService.requestMonitor(monitorID = connRequest.monitorId, clientID = clientID, requestText = connRequest.text)
 
@@ -118,7 +113,7 @@ class ClientsController(private val clientsService: ClientsService) {
     @Authentication
     @PostMapping(Uris.MONITOR_RATE)
     fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
-        if (rating.user != user.id) throw Forbbiden
+        if (rating.user != user.id) throw ForbiddenRequest
         clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = rating.rating)
         return ResponseEntity.ok().build()
     }
@@ -127,25 +122,29 @@ class ClientsController(private val clientsService: ClientsService) {
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
         @RequestParam video: MultipartFile,
-        @RequestParam(required = false) feedback: FeedbackInput?,
+        @RequestParam set : Int,
+        @RequestParam(required = false) feedBack : String?,
         @PathVariable clientID: UUID,
+        @PathVariable planID: Int,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
-        @PathVariable planID: Int,
         user: User
     ): ResponseEntity<Unit> {
-        if (user.id != clientID) throw Forbbiden
+
+        if(user.id != clientID) throw ForbiddenRequest
 
         clientsService.uploadVideoOfClient(
             video = video.bytes,
-            clientID = user.id,
+            clientID = clientID,
             planID = planID,
             dailyListID = dailyListID,
             exerciseID = exerciseID,
-            clientFeedback = feedback?.feedback
+            set = set,
+            feedback = feedBack
         )
 
-        return ResponseEntity.status(HttpStatus.CREATED).build()
+        return ResponseEntity.ok().build()
+
     }
 
     companion object {

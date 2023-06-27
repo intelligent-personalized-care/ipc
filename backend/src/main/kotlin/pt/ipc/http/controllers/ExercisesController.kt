@@ -12,6 +12,7 @@ import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.User
 import pt.ipc.http.models.ListOfExercisesInfo
+import pt.ipc.http.models.VideoFeedBack
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris
@@ -19,10 +20,10 @@ import pt.ipc.services.ExercisesService
 import java.util.*
 
 @RestController
-@RequestMapping(produces = ["application/json", Problem.PROBLEM_MEDIA_TYPE])
+@RequestMapping(produces = ["application/json", "video/mp4",Problem.PROBLEM_MEDIA_TYPE])
 class ExercisesController(private val exercisesService: ExercisesService) {
 
-    @Authentication
+
     @GetMapping(Uris.EXERCISES)
     fun getExercises(
         @RequestParam(required = false) exerciseType: ExerciseType?,
@@ -35,7 +36,6 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         )
     }
 
-    @Authentication
     @GetMapping(Uris.EXERCISES_INFO)
     fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseInfo> {
         val exerciseInfo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
@@ -44,7 +44,7 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     @GetMapping(Uris.EXERCISES_INFO_VIDEO)
     fun getExerciseVideo(@PathVariable exerciseID: UUID): ResponseEntity<ByteArray> {
-        val exerciseVideo = exercisesService.getExerciseVideo(exerciseID = exerciseID)
+        val exerciseVideo = exercisesService.getExercisePreviewVideo(exerciseID = exerciseID)
         val headers = HttpHeaders()
 
         headers.contentType = MediaType.parseMediaType("video/mp4")
@@ -55,14 +55,53 @@ class ExercisesController(private val exercisesService: ExercisesService) {
 
     @Authentication
     @GetMapping(Uris.VIDEO_OF_EXERCISE)
-    fun getVideoOfExercise(
+    fun getClientVideoOfExercise(
+        @PathVariable clientID: UUID,
+        @PathVariable planID: Int,
+        @PathVariable dailyListID: Int,
+        @PathVariable exerciseID: Int,
+        @RequestParam(required = true) set : Int,
+        user: User
+    ): ResponseEntity<ByteArray> {
+
+        val clientVideo = exercisesService.getClientVideo(
+            clientID = clientID,
+            userID = user.id,
+            planID = planID,
+            dailyList = dailyListID,
+            dailyExercise = exerciseID,
+            set = set
+        )
+
+        val headers = HttpHeaders()
+
+        headers.contentType = MediaType.parseMediaType("video/mp4")
+        headers.contentLength = clientVideo.size.toLong()
+
+        return ResponseEntity.ok().headers(headers).body(clientVideo)
+    }
+
+    @Authentication
+    @GetMapping(Uris.EXERCISE_FEEDBACK)
+    fun getVideoFeedBack(
         @PathVariable clientID: UUID,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
         @PathVariable planID: Int,
+        @RequestParam(required = true) set : Int,
         user: User
-    ): ResponseEntity<ByteArray> {
-        TODO()
+    ) : ResponseEntity<VideoFeedBack>{
+
+        val videoFeedBack = exercisesService.getVideoFeedback(
+            clientID = clientID,
+            userID = user.id,
+            planID = planID,
+            dailyList = dailyListID,
+            dailyExercise = exerciseID,
+            set = set
+        )
+
+        return ResponseEntity.ok(videoFeedBack)
     }
 
     companion object {
