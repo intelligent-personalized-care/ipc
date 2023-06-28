@@ -92,14 +92,29 @@ class PoseGraphic internal constructor(
           val shoulderDistance = differenceBetweenCoordinates(leftShoulder.position.x, rightShoulder.position.x)
           val footDistance = differenceBetweenCoordinates(leftAnkle!!.position.x, rightAnkle!!.position.x)
           val ratio = footDistance / shoulderDistance
-          //angle of point 24-26-28( right hip, right knee and right ankle)
+          //angle of point 27-25-23( right hip, right knee and right ankle)
           val angleRhRkRa = getAngle(rightHip, rightKnee, rightAnkle)
 
           squatLogic(canvas,angleRhRkRa,yLeftHand,yRightHand, ratio, rightShoulder, leftShoulder, rightHip!!, rightAnkle)
 
           toDraw = !toDraw
         }
-        "Push ups" -> {}
+        "Push ups" -> {
+          //Calculate whether the hand is in front of the shoulder
+          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
+          //Calculate whether the distance between the shoulder and the foot is the same width
+          val shoulderDistance = differenceBetweenCoordinates(leftShoulder.position.x, rightShoulder.position.x)
+          val footDistance = differenceBetweenCoordinates(leftAnkle!!.position.x, rightAnkle!!.position.x)
+          val ratio = footDistance / shoulderDistance
+          //angle of point 15-13-11( rightWrist, rightElbow, rightShoulder)
+          val angleRwReRs = getAngle(rightWrist, rightElbow, rightShoulder)
+
+          pushUpLogic(canvas,angleRwReRs,yLeftHand,yRightHand, ratio, rightShoulder, leftShoulder, rightWrist)
+
+          toDraw = !toDraw
+
+        }
         else -> {
 
         }
@@ -252,7 +267,7 @@ class PoseGraphic internal constructor(
   /**
    * Implements the squat exercise logic
    * */
-   fun squatLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightHip: PoseLandmark, rightAnkle : PoseLandmark){
+  private fun squatLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightHip: PoseLandmark, rightAnkle : PoseLandmark){
 
       if (((180 - abs(angle)) > 5) && !isCount) {
         reInitParams()
@@ -299,4 +314,55 @@ class PoseGraphic internal constructor(
       drawText(canvas, lineTwoText, 2)
       drawText(canvas, "count: $upCount", 3)
      }
+
+  /**
+   * Implements the push-up exercise logic
+   * */
+  private fun pushUpLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightWrist: PoseLandmark){
+
+    if (((180 - abs(angle)) > 5) && !isCount) {
+      reInitParams()
+      lineOneText = "Please keep in a plank position with the arms straight out"
+    } else if (yLeftHand > 0 || yRightHand > 0) {
+      reInitParams()
+      lineOneText = "Please hold your hands straight out in front of your body "
+    } else if (ratio < 0.5 && !isCount) {
+      reInitParams()
+      lineOneText = "Please spread your feet shoulder-width apart"
+    } else {
+      val currentHeight =
+        (rightShoulder.position.y + leftShoulder.position.y) / 4 //Judging up and down by shoulder height
+
+      if (!isCount) {
+        shoulderHeight = currentHeight
+        minSize = (rightWrist.position.y - rightShoulder!!.position.y) / 3
+        isCount = true
+        lastHeight = currentHeight
+        lineOneText = "Gesture ready"
+      }
+      if (!isDown && (currentHeight - lastHeight) > minSize) {
+        isDown = true
+        isUp = false
+        downCount++
+        lastHeight = currentHeight
+        lineTwoText = "start down"
+      } else if ((currentHeight - lastHeight) > minSize) {
+        lineTwoText = "downing"
+        lastHeight = currentHeight
+      }
+      if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
+        isUp = true
+        isDown = false
+        upCount++
+        lastHeight = currentHeight
+        lineTwoText = "start up"
+      } else if ((lastHeight - currentHeight) > minSize) {
+        lineTwoText = "uping"
+        lastHeight = currentHeight
+      }
+    }
+    drawText(canvas, lineOneText, 1)
+    drawText(canvas, lineTwoText, 2)
+    drawText(canvas, "count: $upCount", 3)
+  }
 }
