@@ -1,5 +1,6 @@
 package pt.ipc.domain
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 
 data class PlanInput(
@@ -10,6 +11,6 @@ data class PlanInput(
 data class PlanOutput(
     val id: Int,
     val title: String,
-    val startDate: LocalDate? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL) val startDate: LocalDate? = null,
     val dailyLists: List<DailyListOutput?>
 )

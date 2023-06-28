@@ -12,7 +12,7 @@ interface PlansRepository {
 
     fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate)
 
-    fun getPlan(planID: Int): PlanOutput
+    fun getPlan(planID: Int): PlanOutput?
 
     fun getPlans(monitorID: UUID): List<PlansOutput>
 

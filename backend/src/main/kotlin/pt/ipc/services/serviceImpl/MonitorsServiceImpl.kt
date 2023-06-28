@@ -12,6 +12,7 @@ import pt.ipc.domain.exceptions.HasNotUploadedVideo
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.exceptions.NotPlanOfMonitor
+import pt.ipc.domain.exceptions.PlanNotFound
 import pt.ipc.domain.exceptions.RequestNotExists
 import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.PlansOutput
@@ -135,7 +136,7 @@ class MonitorsServiceImpl(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
 
-                val plan = it.plansRepository.getPlan(planID = planID)
+                val plan = it.plansRepository.getPlan(planID = planID) ?: throw PlanNotFound
 
                 val planEndDate = startDate.plusDays((plan.dailyLists.size - 1).toLong())
 
@@ -150,7 +151,7 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.plansRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
-                it.plansRepository.getPlan(planID)
+                it.plansRepository.getPlan(planID) ?: throw PlanNotFound
             }
         )
     }

@@ -50,16 +50,11 @@ class JdbiPlansRepository(
             .execute()
     }
 
-    override fun getPlan(planID: Int): PlanOutput {
+    override fun getPlan(planID: Int): PlanOutput? {
         val title = handle.createQuery("select title from dbo.plans where id = :planID")
             .bind("planID", planID)
             .mapTo<String>()
-            .single()
-
-        val dtStart = handle.createQuery("select dt_start from dbo.client_plans where plan_id = :planID ")
-            .bind("planID", planID)
-            .mapTo<LocalDate>()
-            .singleOrNull()
+            .singleOrNull() ?: return null
 
         val dailyListsID: List<Int> =
             handle.createQuery("select id from dbo.daily_lists where plan_id = :planID")
@@ -99,7 +94,6 @@ class JdbiPlansRepository(
         return PlanOutput(
             id = planID,
             title = title,
-            startDate = dtStart,
             dailyLists = dailyLists
         )
     }
