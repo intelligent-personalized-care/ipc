@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.ForbiddenRequest
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.FeedbackInput
@@ -33,13 +35,17 @@ import java.util.*
 
 @RestController
 @RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
-class MonitorsController(private val monitorService: MonitorService) {
+class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils : SseEmitterUtils) {
 
     @PostMapping(Uris.MONITOR_REGISTER)
-    fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<RegisterOutput> {
+    fun registerMonitor(@RequestBody registerInput: RegisterInput): SseEmitter {
         val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
+        val emitter = sseEmitterUtils.createConnection(registerOutput.id)
+
+        sseEmitterUtils.send(userID = registerOutput.id, obj = registerOutput)
+
+        return emitter
     }
 
     @Authentication

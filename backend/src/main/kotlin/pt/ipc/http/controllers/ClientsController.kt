@@ -16,6 +16,7 @@ import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Rating
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.ForbiddenRequest
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
@@ -29,10 +30,8 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping(produces = ["application/json", PROBLEM_MEDIA_TYPE])
-class ClientsController(private val clientsService: ClientsService) {
+class ClientsController(private val clientsService: ClientsService, private val sseEmitterUtils: SseEmitterUtils) {
 
-    @GetMapping(Uris.USER_HOME)
-    fun getUserHome(): ResponseEntity<String> = ResponseEntity.accepted().body("Hello User")
 
     @PostMapping(Uris.CLIENT_REGISTER)
     fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<RegisterOutput> {

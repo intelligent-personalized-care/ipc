@@ -29,6 +29,7 @@ object ExceptionsDB {
         "daily_exercises_ex_id_fkey" to "Exercise not found",
         "client_requests_monitor_id_client_id_key" to "You have already sent a request to this monitor",
         "monitor_requests_monitor_id_fkey" to "This monitor doesn't exists",
-        "unique_nr_set" to "you already post a video for this set"
+        "unique_nr_set" to "you already post a video for this set",
+        "docs_authenticity_pkey" to "You already inserted a credential"
     )
 }

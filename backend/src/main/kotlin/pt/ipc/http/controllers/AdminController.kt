@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.ExerciseType
+import pt.ipc.http.models.AdminSSE
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
 import pt.ipc.http.pipeline.authentication.Authentication
@@ -17,7 +19,7 @@ import pt.ipc.services.dtos.RegisterOutput
 import java.util.UUID
 
 @RestController
-class AdminController(private val adminService: AdminService) {
+class AdminController(private val adminService: AdminService, private val sseEmitterUtils: SseEmitterUtils) {
 
 
     @Authentication
@@ -57,6 +59,13 @@ class AdminController(private val adminService: AdminService) {
     fun decideCredentialOfMonitor(@PathVariable monitorID : UUID, @RequestBody decision : Decision) : ResponseEntity<Unit>{
 
         adminService.decideMonitorCredential(monitorID = monitorID, accept = decision.accept)
+
+        val message = if(decision.accept) "Your credential has been accepted" else "Your credential has not been accepted"
+
+        val response = AdminSSE(message = message)
+
+
+        sseEmitterUtils.send(userID = monitorID, response)
 
         return ResponseEntity.ok().build()
 

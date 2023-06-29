@@ -2,7 +2,10 @@ package pt.ipc.http.utils
 
 object Uris {
 
-    const val USER_HOME = "/users/home"
+    const val CLIENT_HOME = "/clients/home"
+    const val ADMIN_HOME = "/admins/home"
+    const val MONITOR_HOME = "/monitors/home"
+    const val EXERCISES_HOME = "/exercises/home"
 
     const val CLIENT_REGISTER = "/users/clients"
     const val CLIENT_REQUESTS = "/users/clients/{clientID}/requests"
