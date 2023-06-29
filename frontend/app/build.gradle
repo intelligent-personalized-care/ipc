@@ -73,6 +73,7 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
 
+    implementation 'io.coil-kt:coil-compose:2.4.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.18.7'
 
     //------------------------------------------------------------------

@@ -33,10 +33,23 @@ class SplashScreenActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
+        /*
+        repo.setSession(
+            id = "54729911-225f-41dc-a6de-a230bf6e0c07",
+            name = "Tiago",
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI1NDcyOTkxMS0yMjVmLTQxZGMtYTZkZS1hMjMwYmY2ZTBjMDciLCJyb2xlIjoiTU9OSVRPUiJ9.pX37fZ0lF1EINdtu-4719NCVdNJxGdNY3076FdTIPDtGm1Orz3cdgVgUBHsSYnriicqc5ngeOE5C2OcNV2Dbmw",
+            role = Role.MONITOR
+        )
+         */
+        repo.setSession(
+            id = "9eb13cff-28a6-4510-880e-6b64a7a4b7f5",
+            name = "Tiago",
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI5ZWIxM2NmZi0yOGE2LTQ1MTAtODgwZS02YjY0YTdhNGI3ZjUiLCJyb2xlIjoiQ0xJRU5UIn0.cRXp0VeFbHtald-QHR3znL2pxOipQDBv2_umt8y2iAYq0PWFdo3EjmLv_R0kxtUP4BsnVxvfnKHrL_0kTcNqFA",
+            role = Role.CLIENT
+        )
         CoroutineScope(Dispatchers.Main).launch {
-            repo.userInfo?.let {
-                if (it.role.isClient()) {
+            if (repo.isLoggedIn()) {
+                if (repo.userLoggedIn.role.isClient()) {
                     viewModel.getMonitorOfClient()
                     viewModel.getCurrentPlanOfClient()
                 } else {
@@ -50,7 +63,7 @@ class SplashScreenActivity: ComponentActivity() {
             if (!repo.isLoggedIn()) {
                 ChooseRoleActivity.navigate(this@SplashScreenActivity)
             } else {
-                if (repo.userInfo!!.role.isClient()) {
+                if (repo.userLoggedIn.role.isClient()) {
                     ClientHomeActivity.navigate(this@SplashScreenActivity, viewModel.monitor.value, viewModel.plan.value)
                 } else {
                     MonitorHomeActivity.navigate(this@SplashScreenActivity, viewModel.clients.value, viewModel.requests.value)

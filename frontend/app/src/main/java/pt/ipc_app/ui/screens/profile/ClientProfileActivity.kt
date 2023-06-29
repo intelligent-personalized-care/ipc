@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.userInfo
+package pt.ipc_app.ui.screens.profile
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
@@ -20,25 +20,25 @@ import java.io.IOException
 
 
 /**
- * The client info activity.
+ * The client profile activity.
  */
-class ClientInfoActivity : ComponentActivity() {
+class ClientProfileActivity : ComponentActivity() {
 
     private val repo by lazy {
         (application as DependenciesContainer).sessionManager
     }
 
-    private val viewModel by viewModels<ClientInfoViewModel> {
+    private val viewModel by viewModels<ClientProfileViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ClientInfoViewModel(app.services.usersService, app.sessionManager)
+            ClientProfileViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
     companion object {
         fun navigate(context: Context) {
             with(context) {
-                val intent = Intent(this, ClientInfoActivity::class.java)
+                val intent = Intent(this, ClientProfileActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -47,8 +47,9 @@ class ClientInfoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ClientInfoScreen(
-                client = repo.userInfo!!,
+            ClientProfileScreen(
+                client = repo.userLoggedIn,
+                profilePictureUrl = viewModel.getProfilePictureUrl(),
                 updateProfilePictureState = viewModel.state.collectAsState().value,
                 onUpdateProfilePicture = { checkReadStoragePermission() },
                 onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
@@ -76,9 +77,9 @@ class ClientInfoActivity : ComponentActivity() {
     private val imageChooserLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             try {
-                val file = getFileFromUri(uri)
+                val file = getFileFromUri(uri) ?: throw IllegalArgumentException()
 
-                viewModel.updatePicture(file!!)
+                viewModel.updatePicture(file)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

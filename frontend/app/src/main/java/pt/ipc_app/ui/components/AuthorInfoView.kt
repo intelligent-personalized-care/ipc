@@ -55,12 +55,6 @@ fun AuthorInfoView(
                 .background(Color.LightGray)
         ) {
             Text(
-                text = author.number,
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
                 text = author.name,
                 style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center

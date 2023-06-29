@@ -20,13 +20,10 @@ import pt.ipc_app.ui.screens.AppScreen
 import pt.ipc_app.ui.components.AuthorInfo
 import pt.ipc_app.ui.components.AuthorInfoView
 
-private val githubRepoUrl = Uri.parse("https://github.com/intelligent-personalized-care/ipc")
-
 /**
  * About screen.
  *
  * Information shown for each author:
- * - Student number
  * - First and last name
  * - Personal github profile link
  * - Email contact
@@ -49,7 +46,7 @@ fun AboutScreen(
             Text(
                 text = stringResource(R.string.about_title),
                 style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(top = 60.dp)
+                modifier = Modifier.padding(top = 60.dp, bottom = 20.dp)
             )
 
             authors.forEach { author ->
@@ -72,21 +69,20 @@ fun AboutScreen(
     }
 }
 
+private val githubRepoUrl = Uri.parse("https://github.com/intelligent-personalized-care/ipc")
+
 private val authors = listOf(
     AuthorInfo(
-        number = "47531",
         name = "Guilherme Cepeda",
         githubLink = Uri.parse("https://github.com/bodeborder"),
         email = "47531@alunos.isel.pt"
     ),
     AuthorInfo(
-        number = "46536",
         name = "Rodrigo Neves",
         githubLink = Uri.parse("https://github.com/RodrigoNevesWork"),
         email = "46536@alunos.isel.pt"
     ),
     AuthorInfo(
-        number = "48256",
         name = "Tiago Martinho",
         githubLink = Uri.parse("https://github.com/tiagomartinhoo"),
         email = "48256@alunos.isel.pt"

@@ -15,7 +15,7 @@ import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
 import pt.ipc_app.ui.screens.plan.CreatePlanActivity
-import pt.ipc_app.ui.screens.userInfo.MonitorInfoActivity
+import pt.ipc_app.ui.screens.profile.MonitorProfileActivity
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
@@ -55,7 +55,7 @@ class MonitorHomeActivity : ComponentActivity() {
             var requestsList by remember { mutableStateOf(requests?.requests ?: listOf()) }
 
             MonitorHomeScreen(
-                monitor = repo.userInfo!!,
+                monitor = repo.userLoggedIn,
                 clientsOfMonitor = clientsList,
                 requestsOfMonitor = requestsList,
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
@@ -65,7 +65,7 @@ class MonitorHomeActivity : ComponentActivity() {
                     requestsList = requestsList - requestsList.first {it == request}
                 },
                 onPlanCreateClick = { CreatePlanActivity.navigate(this) },
-                onUserInfoClick = { MonitorInfoActivity.navigate(this) },
+                onUserInfoClick = { MonitorProfileActivity.navigate(this) },
                 onAboutClick = { AboutActivity.navigate(this) }
             )
         }

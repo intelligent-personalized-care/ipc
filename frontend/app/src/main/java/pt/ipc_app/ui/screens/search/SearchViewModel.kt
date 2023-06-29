@@ -8,7 +8,6 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.util.UUID
 
 /**
  * View model for the [SearchClientsActivity] or the [SearchMonitorsActivity].
@@ -37,7 +36,7 @@ class SearchViewModel(
                 _state.value = ProgressState.WAITING
                 usersService.searchMonitorsAvailable(
                     name = name,
-                    token = sessionManager.userInfo!!.token
+                    token = sessionManager.userLoggedIn.token
                 ).also {
                     _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }

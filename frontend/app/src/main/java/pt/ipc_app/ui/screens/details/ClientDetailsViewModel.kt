@@ -3,12 +3,9 @@ package pt.ipc_app.ui.screens.details
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.PlansService
-import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.session.SessionManagerSharedPrefs
-import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.time.LocalDate
 import java.util.*
 
 /**
@@ -20,10 +17,6 @@ class ClientDetailsViewModel(
     private val plansService: PlansService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
-
-    private val _state = MutableStateFlow(ProgressState.IDLE)
-    val state
-        get() = _state.asStateFlow()
 
     private val _plans = MutableStateFlow(ListOfPlans(listOf()))
     val plans
@@ -39,7 +32,7 @@ class ClientDetailsViewModel(
             request = {
                 plansService.getMonitorPlans(
                     monitorId = monitorId,
-                    token = sessionManager.userInfo!!.token
+                    token = sessionManager.userLoggedIn.token
                 )
             },
             onSuccess = {
@@ -62,7 +55,7 @@ class ClientDetailsViewModel(
                 plansService.associatePlanToClient(
                     monitorId = monitorId,
                     clientId = clientId,
-                    token = sessionManager.userInfo!!.token,
+                    token = sessionManager.userLoggedIn.token,
                     planId = planId,
                     startDate = startDate
                 )

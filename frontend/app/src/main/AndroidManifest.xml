@@ -59,13 +59,13 @@
         </activity>
 
         <activity
-            android:name=".ui.screens.userInfo.ClientInfoActivity"
+            android:name=".ui.screens.profile.ClientProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".ui.screens.userInfo.MonitorInfoActivity"
+            android:name=".ui.screens.profile.MonitorProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>

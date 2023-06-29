@@ -15,7 +15,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
         context.getSharedPreferences(SESSION_PREFS, Context.MODE_PRIVATE)
     }
 
-    var userInfo: UserInfo?
+    private var userInfo: UserInfo?
         get() {
             val savedId = prefs.getString(ID, null)
             val savedName = prefs.getString(NAME, null)
@@ -42,6 +42,8 @@ class SessionManagerSharedPrefs(private val context: Context) {
                     .apply()
         }
 
+    lateinit var userLoggedIn: UserInfo
+
     /**
      * Checks if the user is logged in.
      *
@@ -63,6 +65,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
         role: Role
     ) {
         userInfo = UserInfo(id, name, token, role)
+        userLoggedIn = userInfo!!
     }
 
     /**

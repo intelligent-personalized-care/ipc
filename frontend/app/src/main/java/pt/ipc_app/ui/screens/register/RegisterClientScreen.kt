@@ -79,7 +79,9 @@ fun RegisterClientScreen(
                     onValueChange = { birthDate = it },
                     onClick = { dt.show() }
                 )
-                Row {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
                     CustomTextField(
                         fieldType = TextFieldType.WEIGHT,
                         textToDisplay = if (weight != 0) "$weight$WEIGHT_METRIC" else "",

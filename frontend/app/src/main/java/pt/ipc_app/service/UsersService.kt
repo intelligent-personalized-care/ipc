@@ -3,6 +3,7 @@ package pt.ipc_app.service
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.domain.Plan
+import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.ConnectionRequestInput
 import pt.ipc_app.service.models.users.MonitorOutput
@@ -198,6 +199,11 @@ class UsersService(
             body = requestDecision
         )
 
+    fun getProfilePictureUrl(
+        userId: UUID,
+        role: Role
+    ): String =
+        "$apiEndpoint/users/${role.name.lowercase()}s/$userId/profile/photo"
 
     /**
      * Updates the profile picture of a client.

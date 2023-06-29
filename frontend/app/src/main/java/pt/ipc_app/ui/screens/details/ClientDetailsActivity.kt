@@ -44,7 +44,7 @@ class ClientDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val monitorId = UUID.fromString(repo.userInfo!!.id)
+        val monitorId = UUID.fromString(repo.userLoggedIn.id)
 
         viewModel.getMonitorPlans(monitorId)
 

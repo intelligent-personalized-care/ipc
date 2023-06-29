@@ -36,7 +36,7 @@
 
     <string name="monitor_details_title">Monitor Details</string>
     <string name="client_details_title">Client Details</string>
-    <string name="userInfo_title">User Info</string>
+    <string name="profile_title">Profile</string>
     <string name="about_title">Authors</string>
     <string name="about_repo_github">"Code for this app is available at: "</string>
 

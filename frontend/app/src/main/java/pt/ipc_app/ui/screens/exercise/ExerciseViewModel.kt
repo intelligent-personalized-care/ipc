@@ -41,7 +41,7 @@ class ExerciseViewModel(
         dailyListId: Int,
         exerciseId: Int,
     ) {
-        val userInfo = sessionManager.userInfo!!
+        val userInfo = sessionManager.userLoggedIn
         launchAndExecuteRequest(
             request = {
                 _state.value = ProgressState.WAITING

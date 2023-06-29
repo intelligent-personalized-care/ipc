@@ -23,9 +23,13 @@ class CreatePlanViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
-    private val _state = MutableStateFlow(ProgressState.IDLE)
-    val state
-        get() = _state.asStateFlow()
+    private val _planState = MutableStateFlow(ProgressState.IDLE)
+    val planState
+        get() = _planState.asStateFlow()
+
+    private val _exercisesState = MutableStateFlow(ProgressState.IDLE)
+    val exercisesState
+        get() = _exercisesState.asStateFlow()
 
     private val _exercises = MutableStateFlow(listOf<ExerciseInfo>())
     val exercises
@@ -37,16 +41,16 @@ class CreatePlanViewModel(
     fun getExercises() {
         launchAndExecuteRequest(
             request = {
-                _state.value = ProgressState.WAITING
+                _exercisesState.value = ProgressState.WAITING
                 exercisesService.getExercises(
-                    token = sessionManager.userInfo!!.token
+                    token = sessionManager.userLoggedIn.token
                 ).also {
-                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
+                    _exercisesState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }
 
             },
             onSuccess = {
-                _state.value = ProgressState.FINISHED
+                _exercisesState.value = ProgressState.FINISHED
                 _exercises.value = it.exercises
             }
         )
@@ -60,18 +64,18 @@ class CreatePlanViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                _state.value = ProgressState.WAITING
+                _planState.value = ProgressState.WAITING
                 plansService.createPlan(
                     plan = plan,
-                    monitorId = UUID.fromString(sessionManager.userInfo!!.id),
-                    token = sessionManager.userInfo!!.token
+                    monitorId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    token = sessionManager.userLoggedIn.token
                 ).also {
-                    _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
+                    _planState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }
 
             },
             onSuccess = {
-                _state.value = ProgressState.FINISHED
+                _planState.value = ProgressState.FINISHED
             }
         )
     }

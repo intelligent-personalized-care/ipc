@@ -36,7 +36,7 @@ fun Context.getFileFromUri(imageUri: Uri): File? {
     val documentFile = DocumentFile.fromSingleUri(this, imageUri)
     return documentFile?.let { file ->
         val inputStream = contentResolver.openInputStream(file.uri)
-        val outputFile = File(this.cacheDir, file.name!!)
+        val outputFile = file.name?.let { File(this.cacheDir, it) }
         val outputStream = FileOutputStream(outputFile)
         inputStream?.use { input ->
             outputStream.use { output ->

@@ -18,10 +18,6 @@ class MonitorDetailsViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
-    private val _state = MutableStateFlow(ProgressState.IDLE)
-    val state
-        get() = _state.asStateFlow()
-
     /**
      * Attempts to connect the monitor with a client.
      */
@@ -32,8 +28,8 @@ class MonitorDetailsViewModel(
             request = {
                 usersService.connectMonitor(
                     monitorId = monitorId,
-                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
-                    token = sessionManager.userInfo!!.token
+                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    token = sessionManager.userLoggedIn.token
                 )
             },
             onSuccess = { }

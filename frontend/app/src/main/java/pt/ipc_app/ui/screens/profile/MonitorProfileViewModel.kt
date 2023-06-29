@@ -1,7 +1,8 @@
-package pt.ipc_app.ui.screens.userInfo
+package pt.ipc_app.ui.screens.profile
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
@@ -11,18 +12,25 @@ import java.io.File
 import java.util.*
 
 /**
- * View model for the [MonitorInfoActivity].
+ * View model for the [MonitorProfileActivity].
  *
  * @param sessionManager the manager used to handle the user session
  */
-class MonitorInfoViewModel(
+class MonitorProfileViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
-    private val _state = MutableStateFlow(ProgressState.IDLE)
-    val state
-        get() = _state.asStateFlow()
+    private val _documentState = MutableStateFlow(ProgressState.IDLE)
+    val documentState
+        get() = _documentState.asStateFlow()
+
+    private val _pictureState = MutableStateFlow(ProgressState.IDLE)
+    val pictureState
+        get() = _pictureState.asStateFlow()
+
+    fun getProfilePictureUrl(): String =
+        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id), Role.MONITOR)
 
     /**
      * Attempts to update the profile picture of client.
@@ -32,17 +40,17 @@ class MonitorInfoViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                _state.value = ProgressState.WAITING
+                _pictureState.value = ProgressState.WAITING
                 usersService.updateProfilePicture(
                     image = image,
-                    clientId = UUID.fromString(sessionManager.userInfo!!.id),
-                    token = sessionManager.userInfo!!.token
+                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    token = sessionManager.userLoggedIn.token
                 ).also {
-                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
+                    if (it !is APIResult.Success) _pictureState.value = ProgressState.IDLE
                 }
             },
             onSuccess = {
-                _state.value = ProgressState.FINISHED
+                _pictureState.value = ProgressState.FINISHED
             }
         )
     }
@@ -55,17 +63,17 @@ class MonitorInfoViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                _state.value = ProgressState.WAITING
+                _documentState.value = ProgressState.WAITING
                 usersService.submitCredentialDocument(
                     doc = doc,
-                    monitorId = UUID.fromString(sessionManager.userInfo!!.id),
-                    token = sessionManager.userInfo!!.token
+                    monitorId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    token = sessionManager.userLoggedIn.token
                 ).also {
-                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
+                    if (it !is APIResult.Success) _documentState.value = ProgressState.IDLE
                 }
             },
             onSuccess = {
-                _state.value = ProgressState.FINISHED
+                _documentState.value = ProgressState.FINISHED
             }
         )
     }

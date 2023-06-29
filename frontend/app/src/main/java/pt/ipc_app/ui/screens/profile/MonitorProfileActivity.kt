@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.userInfo
+package pt.ipc_app.ui.screens.profile
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context
@@ -20,25 +20,25 @@ import java.io.IOException
 
 
 /**
- * The monitor info activity.
+ * The monitor profile activity.
  */
-class MonitorInfoActivity : ComponentActivity() {
+class MonitorProfileActivity : ComponentActivity() {
 
     private val repo by lazy {
         (application as DependenciesContainer).sessionManager
     }
 
-    private val viewModel by viewModels<MonitorInfoViewModel> {
+    private val viewModel by viewModels<MonitorProfileViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            MonitorInfoViewModel(app.services.usersService, app.sessionManager)
+            MonitorProfileViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
     companion object {
         fun navigate(context: Context) {
             with(context) {
-                val intent = Intent(this, MonitorInfoActivity::class.java)
+                val intent = Intent(this, MonitorProfileActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -47,9 +47,11 @@ class MonitorInfoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MonitorInfoScreen(
-                monitor = repo.userInfo!!,
-                submitCredentialDocumentState = viewModel.state.collectAsState().value,
+            MonitorProfileScreen(
+                monitor = repo.userLoggedIn,
+                profilePictureUrl = viewModel.getProfilePictureUrl(),
+                updateProfilePictureState = viewModel.pictureState.collectAsState().value,
+                submitCredentialDocumentState = viewModel.documentState.collectAsState().value,
                 onSubmitCredentialDocument = { checkReadStoragePermission() },
                 onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
             )
@@ -76,9 +78,9 @@ class MonitorInfoActivity : ComponentActivity() {
     private val fileChooserLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
             try {
-                val file = getFileFromUri(uri)
+                val file = getFileFromUri(uri) ?: throw IllegalArgumentException()
 
-                viewModel.submitCredentialDocument(file!!)
+                viewModel.submitCredentialDocument(file)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

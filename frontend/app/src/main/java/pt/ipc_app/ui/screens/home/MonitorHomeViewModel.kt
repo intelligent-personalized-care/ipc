@@ -24,7 +24,7 @@ class MonitorHomeViewModel(
         get() = _requests.asStateFlow()
 
     fun getRequestsOfMonitor() {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {
@@ -40,7 +40,7 @@ class MonitorHomeViewModel(
         requestId: UUID,
         requestDecision: ConnectionRequestDecisionInput
     ) {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {

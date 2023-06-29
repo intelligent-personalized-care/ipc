@@ -38,7 +38,7 @@ class SplashScreenViewModel(
         get() = _requests.asStateFlow()
 
     fun getCurrentPlanOfClient() {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {
@@ -51,7 +51,7 @@ class SplashScreenViewModel(
     }
 
     fun getMonitorOfClient() {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {
@@ -64,7 +64,7 @@ class SplashScreenViewModel(
     }
 
     fun getClientsOfMonitor() {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {
@@ -77,7 +77,7 @@ class SplashScreenViewModel(
     }
 
     fun getRequestsOfMonitor() {
-        val user = sessionManager.userInfo ?: throw IllegalArgumentException()
+        val user = sessionManager.userLoggedIn
 
         launchAndExecuteRequest(
             request = {

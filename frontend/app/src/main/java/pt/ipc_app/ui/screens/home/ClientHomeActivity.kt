@@ -13,7 +13,7 @@ import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.exercise.ExerciseActivity
-import pt.ipc_app.ui.screens.userInfo.ClientInfoActivity
+import pt.ipc_app.ui.screens.profile.ClientProfileActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
 import java.util.*
@@ -44,19 +44,20 @@ class ClientHomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val mon = monitor
             ClientHomeScreen(
-                client = repo.userInfo!!,
-                monitor = monitor,
+                client = repo.userLoggedIn,
+                monitor = mon,
                 //planTest = plan,
                 onMonitorClick = {
-                    if (monitor != null)
-                        MonitorDetailsActivity.navigate(this, monitor!!)
+                    if (mon != null)
+                        MonitorDetailsActivity.navigate(this, mon)
                     else
                         SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) },
                 onExercisesClick = { Toast.makeText(this, "Available soon", Toast.LENGTH_SHORT).show() },
-                onUserInfoClick = { ClientInfoActivity.navigate(this) },
+                onUserInfoClick = { ClientProfileActivity.navigate(this) },
                 onAboutClick = { AboutActivity.navigate(this) }
             )
         }
