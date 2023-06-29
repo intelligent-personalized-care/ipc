@@ -103,11 +103,7 @@ class ClientsController(private val clientsService: ClientsService) {
         @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
     ): ResponseEntity<ListOfExercisesOfClient> {
         val exercises: List<Exercise> = clientsService.getExercisesOfClient(clientID = clientID, date = date, skip = skip, limit = limit)
-        return ResponseEntity.ok(
-            ListOfExercisesOfClient(
-                exercises = exercises
-            )
-        )
+        return ResponseEntity.ok(ListOfExercisesOfClient(exercises = exercises))
     }
 
     @Authentication

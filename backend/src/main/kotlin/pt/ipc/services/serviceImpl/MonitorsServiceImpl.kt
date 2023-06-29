@@ -1,11 +1,7 @@
 package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.PlanInput
-import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
 import pt.ipc.domain.exceptions.HasNotUploadedVideo
@@ -138,11 +134,11 @@ class MonitorsServiceImpl(
 
                 val plan = it.plansRepository.getPlan(planID = planID) ?: throw PlanNotFound
 
-                val planEndDate = startDate.plusDays((plan.dailyLists.size - 1).toLong())
+                val endDate = startDate.plusDays((plan.dailyLists.size - 1).toLong())
 
-                if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID, startDate, planEndDate)) throw ClientAlreadyHavePlanInThisPeriod
+                if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID = clientID, startDate = startDate, endDate = endDate)) throw ClientAlreadyHavePlanInThisPeriod
 
-                it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate)
+                it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate, endDate = endDate)
             }
         )
     }
@@ -176,6 +172,7 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+
                 if (!it.plansRepository.checkIfClientAlreadyUploadedVideo(
                         clientID = clientID,
                         planID = planID,
@@ -183,11 +180,13 @@ class MonitorsServiceImpl(
                         exerciseID = dailyExerciseID,
                         set = set
                     )) throw HasNotUploadedVideo
+
                 if (!it.plansRepository.checkIfMonitorHasPrescribedExercise(
                         planID = planID,
                         exerciseID = dailyExerciseID,
                         monitorID = monitorID
                     )) throw NotPlanOfMonitor
+
                 it.plansRepository.giveFeedBackOfVideo(
                     clientID = clientID,
                     exerciseID = dailyExerciseID,
@@ -197,4 +196,11 @@ class MonitorsServiceImpl(
             }
         )
     }
+
+    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises> =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.exercisesOfClients(monitorID = monitorID, date = date)
+            }
+        )
 }

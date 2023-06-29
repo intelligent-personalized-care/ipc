@@ -2,12 +2,16 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
+import org.jdbi.v3.core.mapper.reflect.ColumnName
+import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
 import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.Rating
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.storage.repositories.MonitorRepository
+import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 
@@ -146,4 +150,58 @@ class JdbiMonitorsRepository(
             .bind("clientID", clientID)
             .mapTo<Int>()
             .single() == 1
+
+    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises> {
+
+        val clients = handle.createQuery("select u.id,u.name from dbo.client_to_monitor ctm " +
+                "inner join dbo.monitors m on m.m_id = ctm.monitor_id " +
+                "inner join dbo.users u on ctm.client_id = u.id where m.m_id = :monitorID")
+            .bind("monitorID",monitorID)
+            .mapTo<ClientData>()
+            .toList()
+            .ifEmpty { return emptyList() }
+
+
+
+        return clients.map { client ->
+            ClientExercises(id = client.id, name = client.name, exercises = getExerciseTotalInfoOfClient(clientID = client.id, date = date))
+        }
+    }
+
+    private data class ClientData(val id : UUID, val name : String)
+
+    private fun getExerciseTotalInfoOfClient(clientID: UUID, date: LocalDate): List<ExerciseTotalInfo> {
+
+        val planInfo = handle.createQuery("select cp.plan_id,cp.dt_start from dbo.client_plans cp where client_id = :clientID and :date between cp.dt_start and cp.dt_end")
+                .bind("clientID", clientID)
+                .bind("date", date)
+                .mapTo<PlanInfo>()
+                .singleOrNull() ?: return emptyList()
+
+        val dayIndex = Duration.between(planInfo.dtStart.atStartOfDay(), date.atStartOfDay()).toDays().toInt()
+
+        val dailyListID =
+            handle.createQuery("select id from dbo.daily_lists where index = :dayIndex and plan_id = :planID")
+                .bind("dayIndex", dayIndex)
+                .bind("planID", planInfo.id)
+                .mapTo<Int>().single()
+
+        return handle.createQuery(
+            """
+                select de.id, de.ex_id, title, description, type, sets, reps,
+                    case when ev.dt_submit is null then 0 else 1 end as is_done
+                from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                left join dbo.exercises_video ev on de.id = ev.ex_id
+                where daily_list_id = :dailyListID
+                """.trimIndent()
+        )
+            .bind("dailyListID", dailyListID)
+            .mapTo<ExerciseTotalInfo>()
+            .toList()
+
+    }
+
+    private data class PlanInfo(@ColumnName("plan_id") val id: Int, @ColumnName("dt_start")  val dtStart : LocalDate)
+
+
 }

@@ -1,5 +1,6 @@
 package pt.ipc.storage.repositories
 
+import pt.ipc.domain.ClientExercises
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
 import pt.ipc.http.models.ClientOutput
@@ -35,4 +36,6 @@ interface MonitorRepository {
     fun checkIfMonitorIsVerified(monitorID: UUID): Boolean
 
     fun isMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean
+
+    fun exercisesOfClients(monitorID: UUID, date : LocalDate) : List<ClientExercises>
 }

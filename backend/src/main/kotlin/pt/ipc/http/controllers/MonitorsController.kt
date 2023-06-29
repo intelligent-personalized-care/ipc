@@ -1,5 +1,6 @@
 package pt.ipc.http.controllers
 
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.MonitorDetails
-import pt.ipc.domain.PlanID
-import pt.ipc.domain.PlanInput
-import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.User
+import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.Decision
@@ -31,6 +28,7 @@ import pt.ipc.http.utils.Uris
 import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.RegisterOutput
+import java.time.LocalDate
 import java.util.*
 
 @RestController
@@ -203,6 +201,19 @@ class MonitorsController(private val monitorService: MonitorService) {
             clientID = clientID
         )
         return ResponseEntity.ok().build()
+    }
+
+    @Authentication
+    @GetMapping(Uris.EXERCISES_OF_CLIENTS)
+    fun exercisesOfClients(
+        @PathVariable monitorID: UUID,
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @RequestParam date : LocalDate
+    ) : ResponseEntity<ExercisesOfClients>{
+
+        val exercises = monitorService.exercisesOfClients(monitorID = monitorID, date = date)
+
+        return ResponseEntity.ok(ExercisesOfClients(clientsExercises = exercises))
     }
 
     companion object {

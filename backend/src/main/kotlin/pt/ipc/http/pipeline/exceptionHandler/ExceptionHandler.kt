@@ -28,6 +28,21 @@ import javax.servlet.http.HttpServletRequest
 @ControllerAdvice
 class ExceptionHandler {
 
+
+    @ExceptionHandler(value = [NullPointerException::class])
+    fun handleNullPointerException(
+        request: HttpServletRequest,
+        ex: NullPointerException
+    ): ResponseEntity<Any> =
+        Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
+            title = ex.message ?: "Null Pointer Exception",
+            status = HttpStatus.BAD_REQUEST.value()
+        ).toResponseEntity()
+
+
+
+
     @ExceptionHandler(value = [BadRequest::class])
     fun handleBadRequest(
         request: HttpServletRequest,
@@ -198,7 +213,7 @@ class ExceptionHandler {
     ): ResponseEntity<Any> =
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + "internal-server-error"),
-            title = "Internal Server Error",
+            title = ex.message ?: "Internal server Error",
             status = HttpStatus.INTERNAL_SERVER_ERROR.value()
         ).toResponseEntity()
             .also { ex.printStackTrace() }

@@ -42,11 +42,12 @@ class JdbiPlansRepository(
         return planID
     }
 
-    override fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate) {
-        handle.createUpdate("insert into dbo.client_plans (plan_id,client_id,dt_start) values(:planID, :clientID, :startDate)")
+    override fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate, endDate: LocalDate) {
+        handle.createUpdate("insert into dbo.client_plans (plan_id,client_id,dt_start, dt_end) values(:planID, :clientID, :startDate, :endDate)")
             .bind("planID", planID)
             .bind("clientID", clientID)
             .bind("startDate", startDate)
+            .bind("endDate", endDate)
             .execute()
     }
 
@@ -106,16 +107,7 @@ class JdbiPlansRepository(
     }
 
     override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput? {
-        val planId = handle.createQuery(
-            """
-                select distinct p.id
-                from dbo.plans p
-                inner join dbo.client_plans cp on p.id = cp.plan_id
-                inner join dbo.daily_lists dl on dl.plan_id = p.id
-                where cp.client_id = :clientID and :date >= cp.dt_start
-                and :date <= (cp.dt_start + dl.index * interval '1 day')
-            """.trimIndent()
-        )
+        val planId = handle.createQuery("select * from dbo.client_plans cp where cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
             .bind("clientID", clientID)
             .bind("date", date)
             .mapTo<Int>()
@@ -133,24 +125,14 @@ class JdbiPlansRepository(
 
     override fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean {
         return handle.createQuery(
-            """
-               select exists (
-               select 1
-               from dbo.plans p inner join dbo.client_plans cp on p.id = cp.plan_id
-               where cp.client_id = :clientID
-                   and
-                     (((:startDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)))
-                       or (:endDate between cp.dt_start and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id))))
-                  or (cp.dt_start between :startDate and :endDate
-                   and (cp.dt_start + (select max(dl.index) from dbo.daily_lists dl where dl.plan_id = p.id)) between :startDate and :endDate)
-           ))
-            """.trimIndent()
+            "select count(*) from dbo.client_plans cp where " +
+                    "(cp.dt_end >= :startDate and :endDate >= cp.dt_start) and cp.client_id = :clientID"
         )
-            .bind("clientID", clientID)
             .bind("startDate", startDate)
             .bind("endDate", endDate)
-            .mapTo<Boolean>()
-            .single()
+            .bind("clientID", clientID)
+            .mapTo<Int>()
+            .single() >= 1
     }
 
     override fun checkIfMonitorHasPrescribedExercise(planID: Int, exerciseID: Int, monitorID: UUID): Boolean {

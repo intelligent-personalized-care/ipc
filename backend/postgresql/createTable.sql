@@ -81,10 +81,11 @@ CREATE TABLE IF NOT EXISTS dbo.client_plans(
     plan_id   INT NOT NULL REFERENCES dbo.plans (id),
     client_id UUID NOT NULL REFERENCES dbo.clients (c_id),
     dt_start  DATE NOT NULL,
+    dt_end  DATE NOT NULL,
 
-    PRIMARY KEY (plan_id, client_id),
+    PRIMARY KEY (plan_id, client_id,dt_start,dt_end),
 
-    CONSTRAINT date_greater_than_current CHECK ( dt_start > CURRENT_DATE )
+    CONSTRAINT date_greater_than_current CHECK ( dt_start > CURRENT_DATE and dt_end > CURRENT_DATE)
 );
 
 CREATE TABLE IF NOT EXISTS dbo.daily_lists(

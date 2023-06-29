@@ -67,14 +67,14 @@ class JdbiExercisesRepository(
         JOIN dbo.client_plans cp ON p.id = cp.plan_id
         WHERE cp.client_id = :clientID
         AND dl.index = :dayIndex
-        offset :skip 
-        limit :limit
     """
 
-        val dtStart = handle.createQuery("SELECT dt_start FROM dbo.client_plans WHERE client_id = :clientID")
+        val dtStart = handle.createQuery("SELECT dt_start FROM " +
+                "dbo.client_plans cp WHERE cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
             .bind("clientID", clientID)
+            .bind("date",date)
             .mapTo<LocalDate>()
-            .single()
+            .singleOrNull() ?: return emptyList()
 
         val dayIndex = Duration.between(dtStart.atStartOfDay(), date.atStartOfDay()).toDays().toInt()
 

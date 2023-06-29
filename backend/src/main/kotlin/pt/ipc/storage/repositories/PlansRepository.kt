@@ -10,7 +10,7 @@ interface PlansRepository {
 
     fun createPlan(monitorID: UUID, plan: PlanInput): Int
 
-    fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate)
+    fun associatePlanToClient(planID: Int, clientID: UUID, startDate: LocalDate, endDate: LocalDate)
 
     fun getPlan(planID: Int): PlanOutput?
 

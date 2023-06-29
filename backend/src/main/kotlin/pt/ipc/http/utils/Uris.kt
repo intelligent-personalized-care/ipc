@@ -19,6 +19,7 @@ object Uris {
     const val MONITOR_SEARCH_ALL_AVAILABLE = "/users/monitors"
     const val MONITOR_PHOTO = "/users/monitors/{monitorID}/profile/photo"
     const val CLIENTS_OF_MONITOR = "/users/monitors/{monitorID}/clients"
+    const val EXERCISES_OF_CLIENTS = "/users/monitors/{monitorID}/clients/exercises"
 
     const val EXERCISES = "/exercises"
     const val EXERCISES_INFO = "/exercises/{exerciseID}"
