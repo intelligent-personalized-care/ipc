@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.ExerciseType
-import pt.ipc.http.models.AdminSSE
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
@@ -15,7 +14,7 @@ import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.AdminService
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.util.UUID
 
 @RestController
@@ -24,7 +23,7 @@ class AdminController(private val adminService: AdminService, private val sseEmi
 
     @Authentication
     @PostMapping(Uris.ADMIN_CREATION)
-    fun createAdminAccount(@RequestBody registerInput: RegisterInput) : ResponseEntity<RegisterOutput>{
+    fun createAdminAccount(@RequestBody registerInput: RegisterInput) : ResponseEntity<CredentialsOutput>{
 
         val registerOutput = adminService.createAdminAccount(registerInput = registerInput)
 

@@ -4,7 +4,7 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import org.springframework.stereotype.Component
-import pt.ipc.domain.exceptions.ExerciseVideoNotExists
+import pt.ipc.domain.exceptions.FileDoesNotExists
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -22,7 +22,7 @@ class CloudStorageUtilsImpl(
 
     private val videoContentType = "video/mp4"
     private val pdfContentType = "application/pdf"
-    private val pngContenType = "image/png"
+    private val pngContentType = "image/png"
 
     private fun upload(fileName: String, content: ByteArray, contentType: String, bucketName: String) {
         val blobId = BlobId.of(bucketName, fileName)
@@ -35,7 +35,7 @@ class CloudStorageUtilsImpl(
     }
 
     private fun download(fileName: String, bucketName: String): ByteArray {
-        val blob = storage.get(bucketName, fileName) ?: throw ExerciseVideoNotExists
+        val blob = storage.get(bucketName, fileName) ?: throw FileDoesNotExists
 
         val outputStream = ByteArrayOutputStream()
 
@@ -74,7 +74,7 @@ class CloudStorageUtilsImpl(
     }
 
     override fun uploadProfilePicture(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName.toString(), content = file, contentType = pngContenType, bucketName = userPhotosBucket)
+        upload(fileName = fileName.toString(), content = file, contentType = pngContentType, bucketName = userPhotosBucket)
 
     override fun downloadProfilePicture(fileName: UUID): ByteArray =
         download(fileName = fileName.toString(), bucketName = userPhotosBucket)

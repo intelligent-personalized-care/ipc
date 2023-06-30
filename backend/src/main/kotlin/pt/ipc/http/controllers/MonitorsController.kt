@@ -1,35 +1,20 @@
 package pt.ipc.http.controllers
 
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.ForbiddenRequest
-import pt.ipc.http.utils.SseEmitterUtils
-import pt.ipc.http.models.AllMonitorsAvailableOutput
-import pt.ipc.http.models.Decision
-import pt.ipc.http.models.FeedbackInput
-import pt.ipc.http.models.ListOfClients
-import pt.ipc.http.models.ListOfPlans
-import pt.ipc.http.models.PlanToClient
-import pt.ipc.http.models.RequestsOfMonitor
+import pt.ipc.http.models.*
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
 import java.util.*
 
@@ -38,7 +23,7 @@ import java.util.*
 class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils : SseEmitterUtils) {
 
     @PostMapping(Uris.MONITORS)
-    fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<RegisterOutput> {
+    fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<CredentialsOutput> {
 
         val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
 
@@ -114,20 +99,6 @@ class MonitorsController(private val monitorService: MonitorService, private val
         monitorService.updateProfilePicture(monitorID = monitorID, photo = photo.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
-    }
-
-    @Authentication
-    @GetMapping(Uris.MONITOR_PHOTO)
-    fun getProfilePicture(@PathVariable monitorID: UUID, user: User): ResponseEntity<ByteArray> {
-        if(monitorID != user.id) throw ForbiddenRequest
-
-        val profilePicture = monitorService.getProfilePicture(monitorID = monitorID)
-
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.parseMediaType("image/png")
-        headers.contentLength = profilePicture.size.toLong()
-
-        return ResponseEntity.ok().headers(headers).body(profilePicture)
     }
 
     @Authentication

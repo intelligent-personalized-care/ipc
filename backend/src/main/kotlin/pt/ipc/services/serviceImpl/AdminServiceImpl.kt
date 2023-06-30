@@ -7,7 +7,7 @@ import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.AdminService
 import pt.ipc.services.dtos.MonitorInfo
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
@@ -15,14 +15,14 @@ import java.util.*
 class AdminServiceImpl(
     private val transactionManager: TransactionManager,
     private val encryptionUtils: EncryptionUtils,
-    private val usersServiceUtils: UsersServiceUtils
+    private val serviceUtils: ServiceUtils
 ) : AdminService {
 
-    override fun createAdminAccount(registerInput: RegisterInput): RegisterOutput {
+    override fun createAdminAccount(registerInput: RegisterInput): CredentialsOutput {
 
-        usersServiceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
+        serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
-        val (token,id) = usersServiceUtils.createCredentials(role = Role.ADMIN)
+        val (token,id) = serviceUtils.createCredentials(role = Role.ADMIN)
 
         transactionManager.runBlock(
             block = {
@@ -36,7 +36,7 @@ class AdminServiceImpl(
             }
         )
 
-        return RegisterOutput(id = id, token = token)
+        return CredentialsOutput(id = id, token = token)
 
     }
 

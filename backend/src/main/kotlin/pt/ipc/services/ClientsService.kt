@@ -4,17 +4,17 @@ import pt.ipc.domain.Exercise
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
 import java.util.*
 
 interface ClientsService {
 
-    fun registerClient(input: RegisterClientInput): RegisterOutput
+    fun registerClient(input: RegisterClientInput): CredentialsOutput
 
     fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
-    fun loggin(email: String, password: String): RegisterOutput
+    fun login(email: String, password: String): CredentialsOutput
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID
 

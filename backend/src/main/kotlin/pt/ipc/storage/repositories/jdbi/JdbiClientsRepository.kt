@@ -4,7 +4,7 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
 import pt.ipc.domain.User
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
 import java.util.*
@@ -61,11 +61,11 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun login(email: String, passwordHash: String): RegisterOutput? =
+    override fun login(email: String, passwordHash: String): CredentialsOutput? =
         handle.createQuery("select id,token_hash from dbo.users inner join dbo.tokens on users.id = tokens.user_id where email = :email  and password_hash = :passwordHash")
             .bind("email", email)
             .bind("passwordHash", passwordHash)
-            .mapTo<RegisterOutput>()
+            .mapTo<CredentialsOutput>()
             .singleOrNull()
 
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =

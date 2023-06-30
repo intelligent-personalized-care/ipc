@@ -8,13 +8,13 @@ import pt.ipc.http.models.ClientOutput
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
 import java.util.*
 
 interface MonitorService {
 
-    fun registerMonitor(registerInput: RegisterInput): RegisterOutput
+    fun registerMonitor(registerInput: RegisterInput): CredentialsOutput
 
     fun insertCredential(monitorID: UUID, credential: ByteArray)
 

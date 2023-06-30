@@ -3,12 +3,12 @@ package pt.ipc.services
 import pt.ipc.domain.ExerciseType
 import pt.ipc.services.dtos.MonitorInfo
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.util.UUID
 
 interface AdminService {
 
-    fun createAdminAccount(registerInput : RegisterInput) : RegisterOutput
+    fun createAdminAccount(registerInput : RegisterInput) : CredentialsOutput
 
     fun getUnverifiedMonitors() : List<MonitorInfo>
 

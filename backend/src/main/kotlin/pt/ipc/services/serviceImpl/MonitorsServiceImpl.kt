@@ -15,7 +15,7 @@ import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.*
@@ -24,14 +24,14 @@ import java.util.*
 class MonitorsServiceImpl(
     private val encryptionUtils: EncryptionUtils,
     private val transactionManager: TransactionManager,
-    private val usersServiceUtils: UsersServiceUtils
+    private val serviceUtils: ServiceUtils
 ) : MonitorService {
 
-    override fun registerMonitor(registerInput: RegisterInput): RegisterOutput {
+    override fun registerMonitor(registerInput: RegisterInput): CredentialsOutput {
 
-        usersServiceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
+        serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
-        val (token, userID) = usersServiceUtils.createCredentials(role = Role.MONITOR)
+        val (token, userID) = serviceUtils.createCredentials(role = Role.MONITOR)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 
@@ -48,7 +48,7 @@ class MonitorsServiceImpl(
             }
         )
 
-        return RegisterOutput(id = userID, token = token)
+        return CredentialsOutput(id = userID, token = token)
     }
 
     override fun insertCredential(monitorID: UUID, credential: ByteArray) {

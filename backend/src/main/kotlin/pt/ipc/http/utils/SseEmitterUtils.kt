@@ -22,7 +22,6 @@ class SseEmitterUtils {
     }
 
     fun send(userID: UUID, obj : Any){
-
         nonBlockingService.execute {
             val emitter = emitters[userID] ?: throw Exception("This Emitter does not exists")
             try{

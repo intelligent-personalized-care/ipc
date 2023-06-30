@@ -23,7 +23,7 @@ import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYP
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.RegisterClientInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
 import java.util.*
 import javax.servlet.http.HttpServletResponse
@@ -34,32 +34,25 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
 
     @PostMapping(Uris.CLIENT_REGISTER)
-    fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<RegisterOutput> {
-        val registerOutput: RegisterOutput = clientsService.registerClient(registerClientInput)
+    fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<CredentialsOutput> {
+        val credentialsOutput: CredentialsOutput = clientsService.registerClient(registerClientInput)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
-    }
-
-    @PostMapping(Uris.USERS_LOGIN)
-    fun login(@RequestBody loginInput: LoginInput): ResponseEntity<RegisterOutput> {
-        val loginOutput = clientsService.loggin(email = loginInput.email, password = loginInput.password)
-        return ResponseEntity.ok(loginOutput)
+        return ResponseEntity.status(HttpStatus.CREATED).body(credentialsOutput)
     }
 
     @Authentication
     @PostMapping(Uris.CLIENT_PHOTO)
     fun addProfilePicture(
         @PathVariable clientID: UUID,
-        @RequestParam profilePicture: MultipartFile,
+        @RequestParam photo: MultipartFile,
         user: User
     ): ResponseEntity<String> {
         if (user.id != clientID) throw ForbiddenRequest
 
-        clientsService.addProfilePicture(clientID = clientID, profilePicture = profilePicture.bytes)
+        clientsService.addProfilePicture(clientID = clientID, profilePicture = photo.bytes)
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
-
     @Authentication
     @PostMapping(Uris.CLIENT_REQUESTS)
     fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {

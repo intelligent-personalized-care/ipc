@@ -11,7 +11,7 @@ import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
 @Component
-class UsersServiceUtils(
+class ServiceUtils(
     private val transactionManager: TransactionManager,
     private val jwtUtils: JwtUtils
 ) {

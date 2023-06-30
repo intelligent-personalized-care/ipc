@@ -5,12 +5,12 @@ import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.domain.jwt.JwtUtils
-import pt.ipc.services.serviceImpl.UsersServiceUtils
+import pt.ipc.services.serviceImpl.ServiceUtils
 import java.util.UUID
 
 @Component
 class AuthorizationHeaderProcessor(
-    private val usersServiceUtils: UsersServiceUtils,
+    private val serviceUtils: ServiceUtils,
     private val jwtUtils: JwtUtils
 ) {
 
@@ -31,12 +31,12 @@ class AuthorizationHeaderProcessor(
 
         val (id,role) = jwtUtils.getUserInfo(token = token)
 
-        val user = usersServiceUtils.getUser(id = id, role = role) ?: throw UserNotExists
+        val user = serviceUtils.getUser(id = id, role = role) ?: throw UserNotExists
 
         return Pair(first = user, second = role)
     }
 
-    fun checkIfMonitorIsVerified(monitorID : UUID) = usersServiceUtils.checkIfMonitorIsVerified(monitorID = monitorID)
+    fun checkIfMonitorIsVerified(monitorID : UUID) = serviceUtils.checkIfMonitorIsVerified(monitorID = monitorID)
 
     companion object {
         const val SCHEME = "bearer"

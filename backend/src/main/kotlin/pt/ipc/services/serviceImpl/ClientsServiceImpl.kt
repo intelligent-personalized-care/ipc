@@ -18,7 +18,7 @@ import pt.ipc.domain.toLocalDate
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.RegisterClientInput
-import pt.ipc.services.dtos.RegisterOutput
+import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.*
@@ -27,13 +27,13 @@ import java.util.*
 class ClientsServiceImpl(
     private val transactionManager: TransactionManager,
     private val encryptionUtils: EncryptionUtils,
-    private val usersServiceUtils: UsersServiceUtils
+    private val serviceUtils: ServiceUtils
 ) : ClientsService {
 
-    override fun registerClient(input: RegisterClientInput): RegisterOutput {
-        usersServiceUtils.checkDetails(email = input.email, password = input.password)
+    override fun registerClient(input: RegisterClientInput): CredentialsOutput {
+        serviceUtils.checkDetails(email = input.email, password = input.password)
 
-        val (token, id) = usersServiceUtils.createCredentials(role = Role.CLIENT)
+        val (token, id) = serviceUtils.createCredentials(role = Role.CLIENT)
 
         val encryptedToken = encryptionUtils.encrypt(token)
 
@@ -57,7 +57,7 @@ class ClientsServiceImpl(
             }
         )
 
-        return RegisterOutput(id = id, token = token)
+        return CredentialsOutput(id = id, token = token)
     }
 
     override fun addProfilePicture(clientID: UUID, profilePicture: ByteArray) {
@@ -68,7 +68,7 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun loggin(email: String, password: String): RegisterOutput =
+    override fun login(email: String, password: String): CredentialsOutput =
         transactionManager.runBlock(
             block = {
                 val hashedPassword = encryptionUtils.encrypt(plainText = password)
