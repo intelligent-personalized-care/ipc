@@ -55,7 +55,7 @@ fun PlanScreenPreview() {
 val plan = Plan(
     1,
     title = "PlanTest",
-    startDate = LocalDate.of(2023, 6, 27).toString(),
+    startDate = LocalDate.of(2023, 6, 30).toString(),
     dailyLists = listOf(
         DailyList(0,
             exercises = listOf(
