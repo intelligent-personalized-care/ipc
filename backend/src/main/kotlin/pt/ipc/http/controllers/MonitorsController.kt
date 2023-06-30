@@ -37,7 +37,7 @@ import java.util.*
 @RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
 class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils : SseEmitterUtils) {
 
-    @PostMapping(Uris.MONITOR_BY_ID)
+    @PostMapping(Uris.MONITORS)
     fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<RegisterOutput> {
 
         val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
