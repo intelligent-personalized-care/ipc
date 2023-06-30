@@ -335,7 +335,7 @@ class PoseGraphic internal constructor(
 
       if (!isCount) {
         shoulderHeight = currentHeight
-        minSize = (rightWrist.position.y - rightShoulder!!.position.y) / 3
+        minSize = (rightWrist.position.y - rightShoulder.position.y) / 3
         isCount = true
         lastHeight = currentHeight
         lineOneText = "Gesture ready"
