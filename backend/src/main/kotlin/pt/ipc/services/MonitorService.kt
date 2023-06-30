@@ -30,7 +30,7 @@ interface MonitorService {
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
-    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean)
+    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) : List<ClientOutput>
 
     fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 

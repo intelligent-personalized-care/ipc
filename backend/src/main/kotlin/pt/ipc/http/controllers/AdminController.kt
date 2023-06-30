@@ -60,13 +60,6 @@ class AdminController(private val adminService: AdminService, private val sseEmi
 
         adminService.decideMonitorCredential(monitorID = monitorID, accept = decision.accept)
 
-        val message = if(decision.accept) "Your credential has been accepted" else "Your credential has not been accepted"
-
-        val response = AdminSSE(message = message)
-
-
-        sseEmitterUtils.send(userID = monitorID, response)
-
         return ResponseEntity.ok().build()
 
     }

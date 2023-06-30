@@ -26,15 +26,11 @@ class SseEmitterUtils {
         nonBlockingService.execute {
             val emitter = emitters[userID] ?: throw Exception("This Emitter does not exists")
             try{
-                emitter.send(
-                    obj
-                )
+                emitter.send(obj)
             }catch (ex : Exception){
                 emitter.completeWithError(ex)
             }
         }
-
-
     }
 
     fun endConnection(userID: UUID){

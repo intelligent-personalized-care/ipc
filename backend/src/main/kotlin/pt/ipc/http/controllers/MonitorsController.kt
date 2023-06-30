@@ -37,15 +37,12 @@ import java.util.*
 @RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
 class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils : SseEmitterUtils) {
 
-    @PostMapping(Uris.MONITOR_REGISTER)
-    fun registerMonitor(@RequestBody registerInput: RegisterInput): SseEmitter {
+    @PostMapping(Uris.MONITOR_BY_ID)
+    fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<RegisterOutput> {
+
         val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
 
-        val emitter = sseEmitterUtils.createConnection(registerOutput.id)
-
-        sseEmitterUtils.send(userID = registerOutput.id, obj = registerOutput)
-
-        return emitter
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
     }
 
     @Authentication
@@ -62,7 +59,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping(Uris.MONITOR_SEARCH_ALL_AVAILABLE)
+    @GetMapping(Uris.MONITORS)
     fun searchMonitorsAvailable(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
@@ -84,7 +81,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
     }
 
     @Authentication
-    @GetMapping(Uris.MONITOR)
+    @GetMapping(Uris.MONITOR_BY_ID)
     fun getMonitor(@PathVariable monitorID: UUID): ResponseEntity<MonitorDetails> {
         val monitorDetails = monitorService.getMonitor(monitorID = monitorID)
 
@@ -98,16 +95,15 @@ class MonitorsController(private val monitorService: MonitorService, private val
         @PathVariable requestID: UUID,
         @RequestBody decision: Decision,
         user: User
-    ): ResponseEntity<String> {
+    ): ResponseEntity<ListOfClients> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        monitorService.decideRequest(
+        val clients = monitorService.decideRequest(
             requestID = requestID,
             monitorID = monitorID,
             accept = decision.accept
         )
-
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok(ListOfClients(clients = clients))
     }
 
     @Authentication

@@ -2,10 +2,6 @@ package pt.ipc.http.utils
 
 object Uris {
 
-    const val CLIENT_HOME = "/clients/home"
-    const val ADMIN_HOME = "/admins/home"
-    const val MONITOR_HOME = "/monitors/home"
-    const val EXERCISES_HOME = "/exercises/home"
 
     const val CLIENT_REGISTER = "/users/clients"
     const val CLIENT_REQUESTS = "/users/clients/{clientID}/requests"
@@ -13,13 +9,12 @@ object Uris {
     const val CLIENT_MONITOR = "/users/clients/{clientID}/monitor"
     const val USERS_LOGIN = "/users/login"
 
-    const val MONITOR = "/users/monitors/{monitorID}"
+    const val MONITOR_BY_ID = "/users/monitors/{monitorID}"
     const val MONITOR_REQUESTS = "/users/monitors/{monitorID}/requests"
     const val MONITOR_DECIDE_REQUEST = "/users/monitors/{monitorID}/requests/{requestID}"
     const val MONITOR_RATE = "users/monitors/{monitorID}/rate"
-    const val MONITOR_REGISTER = "/users/monitors"
     const val MONITOR_CREDENTIAL = "/users/monitors/{monitorID}/credential"
-    const val MONITOR_SEARCH_ALL_AVAILABLE = "/users/monitors"
+    const val MONITORS = "/users/monitors"
     const val MONITOR_PHOTO = "/users/monitors/{monitorID}/profile/photo"
     const val CLIENTS_OF_MONITOR = "/users/monitors/{monitorID}/clients"
     const val EXERCISES_OF_CLIENTS = "/users/monitors/{monitorID}/clients/exercises"

@@ -104,7 +104,7 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) {
+    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): List<ClientOutput> =
         transactionManager.runBlock(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
@@ -115,9 +115,10 @@ class MonitorsServiceImpl(
                     monitorID = monitorID,
                     accept = accept
                 )
+                 it.monitorRepository.getClientOfMonitor(monitorID = monitorID)
             }
         )
-    }
+
 
     override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
         return transactionManager.runBlock(
