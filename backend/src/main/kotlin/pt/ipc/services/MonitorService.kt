@@ -5,6 +5,7 @@ import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.ClientOutput
+import pt.ipc.http.models.MonitorProfile
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.RegisterInput
@@ -22,9 +23,9 @@ interface MonitorService {
 
     fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput>
 
-    fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails>
-
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
+
+    fun getMonitorProfile(monitorID : UUID) : MonitorProfile
 
     fun getProfilePicture(monitorID: UUID): ByteArray
 

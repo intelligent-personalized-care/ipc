@@ -3,6 +3,7 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
+import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.User
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.repositories.ClientsRepository
@@ -27,8 +28,16 @@ class JdbiClientsRepository(
               .mapTo<User>()
               .singleOrNull()
 
+    override fun getClient(clientID: UUID): ClientOutput? =
+        handle.createQuery("select u.id, u.name, u.email, c.weight, c.height, c.physical_condition as physicalCondition, c.birth_date as birthDate " +
+                                "from dbo.clients c inner join dbo.users u on c.c_id = u.id  where c.c_id = :clientID")
+            .bind("clientID",clientID)
+            .mapTo<ClientOutput>()
+            .singleOrNull()
+
+
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
-        handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) VALUES (:monitorID,:clientID,:requestID,:requestText)")
+        handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) values (:monitorID,:clientID,:requestID,:requestText)")
             .bind("monitorID", monitorID)
             .bind("clientID", clientID)
             .bind("requestID", requestID)
@@ -37,7 +46,7 @@ class JdbiClientsRepository(
     }
 
 
-    override fun registerClient(input: Client, token: String, physicalCondition: String?) {
+    override fun registerClient(input: Client, token: String) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
             .bind("id", input.id)
             .bind("u_name", input.name)
@@ -49,7 +58,7 @@ class JdbiClientsRepository(
             "insert into dbo.clients (c_id, physical_condition, weight, height, birth_date) values (:c_id,:physical_condition,:weight,:height,:birth_date)"
         )
             .bind("c_id", input.id)
-            .bind("physical_condition", physicalCondition)
+            .bind("physical_condition", input.physicalCondition)
             .bind("weight", input.weight)
             .bind("height", input.height)
             .bind("birth_date", input.birthDate)

@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.Exercise
-import pt.ipc.domain.PlanOutput
-import pt.ipc.domain.Rating
-import pt.ipc.domain.User
+import pt.ipc.domain.*
+import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.RatingInput
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.*
@@ -53,6 +52,39 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
+
+    @Authentication
+    @GetMapping(Uris.CLIENT_PROFILE)
+    fun clientProfile(@PathVariable clientID: UUID, user : User) : ResponseEntity<ClientOutput>{
+
+        if (user.id != clientID) throw ForbiddenRequest
+
+        val client = clientsService.getClientProfile(clientID = clientID)
+
+        return ResponseEntity.ok(client)
+    }
+
+    @Authentication
+    @GetMapping(Uris.MONITORS)
+    fun searchMonitorsAvailable(
+        @RequestParam(required = false) name: String?,
+        @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
+        @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int,
+        user : User
+    ): ResponseEntity<AllMonitorsAvailableOutput> {
+
+        val monitors : List<MonitorAvailable> = clientsService.searchMonitorsAvailable(
+            clientID = user.id,
+            name = name,
+            skip = skip,
+            limit = limit
+        )
+
+        return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(monitors))
+
+    }
+
+
     @Authentication
     @PostMapping(Uris.CLIENT_REQUESTS)
     fun makeRequestForMonitor(@PathVariable clientID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {
@@ -66,6 +98,8 @@ class ClientsController(private val clientsService: ClientsService, private val 
     @Authentication
     @GetMapping(Uris.CLIENT_MONITOR)
     fun getMonitorOfClient(@PathVariable clientID: UUID, user: User): ResponseEntity<MonitorOutput> {
+        if (user.id != clientID) throw ForbiddenRequest
+
         val monitorOutput = clientsService.getMonitorOfClient(clientID = clientID)
 
         return ResponseEntity.status(HttpStatus.OK).body(monitorOutput)
@@ -100,9 +134,9 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
     @Authentication
     @PostMapping(Uris.MONITOR_RATE)
-    fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody rating: Rating, user: User): ResponseEntity<Unit> {
-        if (rating.user != user.id) throw ForbiddenRequest
-        clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = rating.rating)
+    fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody ratingInput: RatingInput, user: User): ResponseEntity<Unit> {
+        if (ratingInput.user != user.id) throw ForbiddenRequest
+        clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = ratingInput.rating)
         return ResponseEntity.ok().build()
     }
 

@@ -3,14 +3,9 @@ package pt.ipc.services.serviceImpl
 import org.springframework.stereotype.Service
 import pt.ipc.domain.*
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
-import pt.ipc.domain.exceptions.HasNotUploadedVideo
-import pt.ipc.domain.exceptions.MonitorNotFound
-import pt.ipc.domain.exceptions.NotMonitorOfClient
-import pt.ipc.domain.exceptions.NotPlanOfMonitor
-import pt.ipc.domain.exceptions.PlanNotFound
-import pt.ipc.domain.exceptions.RequestNotExists
+import pt.ipc.domain.exceptions.*
 import pt.ipc.http.models.ClientOutput
+import pt.ipc.http.models.MonitorProfile
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.MonitorService
@@ -70,16 +65,11 @@ class MonitorsServiceImpl(
     override fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput> =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.getClientOfMonitor(monitorID = monitorID)
+                it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
             }
         )
 
-    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> =
-        transactionManager.runBlock(
-            block = {
-                it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
-            }
-        )
+
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         transactionManager.runBlock(
@@ -88,6 +78,14 @@ class MonitorsServiceImpl(
             }
         )
     }
+
+    override fun getMonitorProfile(monitorID: UUID): MonitorProfile =
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.getMonitorProfile(monitorID = monitorID) ?: throw UserNotExists
+            }
+        )
+
 
     override fun getProfilePicture(monitorID: UUID): ByteArray {
         return transactionManager.runBlock(
@@ -109,13 +107,14 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
 
-                it.monitorRepository.decideRequest(
-                    requestID = requestID,
-                    clientID = requestInformation.clientID,
-                    monitorID = monitorID,
-                    accept = accept
-                )
-                 it.monitorRepository.getClientOfMonitor(monitorID = monitorID)
+                if(accept){
+                    it.monitorRepository.acceptRequest(
+                        requestID = requestID,
+                        clientID = requestInformation.clientID,
+                        monitorID = monitorID
+                    )
+                }
+                 it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
             }
         )
 

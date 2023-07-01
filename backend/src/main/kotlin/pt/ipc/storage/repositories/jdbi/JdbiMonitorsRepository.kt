@@ -7,9 +7,7 @@ import pt.ipc.domain.ClientExercises
 import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
-import pt.ipc.http.models.ClientOutput
-import pt.ipc.http.models.Rating
-import pt.ipc.http.models.RequestInformation
+import pt.ipc.http.models.*
 import pt.ipc.storage.repositories.MonitorRepository
 import java.time.Duration
 import java.time.LocalDate
@@ -19,7 +17,7 @@ class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
 
-    private val defaultRating = Rating(starsAverage = 5F, nrOfReviews = 0)
+
 
     override fun registerMonitor(user: User, encryptedToken: String) {
         handle.createUpdate("insert into dbo.users values(:id,:u_name,:u_email,:password_hash)")
@@ -53,13 +51,44 @@ class JdbiMonitorsRepository(
             .mapTo<User>()
             .singleOrNull()
 
+    override fun getMonitorProfile(monitorID: UUID): MonitorProfile? {
+       val details = handle.createQuery("select u.id,u.name,u.email from dbo.monitors m " +
+                "inner join dbo.users u on u.id = m.m_id " +
+                "where u.id = :monitorID ")
+            .bind("monitorID",monitorID)
+            .mapTo<MonitorDetails>()
+            .singleOrNull() ?: return null
+
+        val rating = handle.createQuery(
+            "SELECT avg(stars) AS averageStarts, count(*) AS nrOfReviews FROM dbo.monitor_rating WHERE monitor_id = :monitorID"
+        )
+            .bind("monitorID", monitorID)
+            .mapTo<Rating>()
+            .single()
+            .isEmpty()
+
+
+        val docState = handle.createQuery("select state from dbo.docs_authenticity where monitor_id = :monitorID")
+           .bind("monitorID",monitorID)
+           .mapTo<String>()
+           .single()
+
+       return MonitorProfile(
+           id = details.id,
+           name = details.name,
+           email = details.email,
+           rating = rating,
+           docState = docState
+       )
+    }
+
     override fun getMonitor(monitorID: UUID): MonitorDetails? =
         handle.createQuery("select id, name, email from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
             .bind("monitorID", monitorID)
             .mapTo<MonitorDetails>()
             .singleOrNull()
 
-    override fun getClientOfMonitor(monitorID: UUID): List<ClientOutput> =
+    override fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput> =
         handle.createQuery("select u.id,u.name, u.email from dbo.users u inner join dbo.client_to_monitor cm on u.id = cm.client_id where cm.monitor_id = :monitorID ")
             .bind("monitorID", monitorID)
             .mapTo<ClientOutput>()
@@ -79,19 +108,21 @@ class JdbiMonitorsRepository(
     }
 
     override fun getMonitorRating(monitorID: UUID): Rating =
-        handle.createQuery(
-            "SELECT avg(stars) AS starsAverage, count(*) AS nrOfReviews FROM dbo.monitor_rating WHERE monitor_id = :monitorID"
-        )
-            .bind("monitorID", monitorID)
-            .mapTo<Rating>()
-            .singleOrNull() ?: defaultRating
+    handle.createQuery(
+        "SELECT avg(stars) AS averageStarts, count(*) AS nrOfReviews FROM dbo.monitor_rating WHERE monitor_id = :monitorID")
+        .bind("monitorID", monitorID)
+        .mapTo<Rating>()
+        .single()
+        .isEmpty()
 
-    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int): List<MonitorDetails> {
+
+    override fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int, clientID: UUID): List<MonitorAvailable> {
         val queryName = if (name != null) "and u.name like :name" else ""
 
         return handle.createQuery(
             """
-                    select id, name, email from dbo.monitors m
+                    select id, name, email,exists(select * from dbo.monitor_requests where monitor_id = da.monitor_id and client_id = :clientID) as requested 
+                    from dbo.monitors m
                     inner join dbo.users u on u.id = m.m_id
                     inner join dbo.docs_authenticity da on m.m_id = da.monitor_id
                     where da.state = 'valid' $queryName
@@ -99,24 +130,19 @@ class JdbiMonitorsRepository(
                     limit :limit
             """.trimIndent()
         )
+            .bind("clientID",clientID)
             .bind("name", "%$name%")
             .bind("skip", skip)
             .bind("limit", limit)
-            .mapTo<MonitorDetails>()
+            .mapTo<MonitorAvailable>()
             .toList()
     }
 
-    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, accept: Boolean) {
-        handle.createUpdate("delete from dbo.monitor_requests where request_id = :requestID ")
-            .bind("requestID", requestID)
-            .execute()
-
-        if (accept) {
+    override fun acceptRequest(requestID: UUID, clientID: UUID, monitorID: UUID) {
             handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
                 .bind("monitorID", monitorID)
                 .bind("clientID", clientID)
                 .execute()
-        }
     }
 
     override fun getRequestInformation(requestID: UUID): RequestInformation? =

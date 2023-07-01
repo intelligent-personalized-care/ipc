@@ -19,6 +19,7 @@ class AuthenticationInterceptor(
 
     private val uuidRegex = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
     private val monitorCredentialRegex = "/users/monitors/$uuidRegex/credential".toRegex()
+    private val monitorProfileRegex = "/users/monitors/$uuidRegex/profile".toRegex()
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
@@ -28,7 +29,10 @@ class AuthenticationInterceptor(
 
             val uri = request.requestURI
 
-            if(role.isMonitor() && !(uri.matches(monitorCredentialRegex) && request.method == "POST")){ // Monitor does not need to be verified when inputing credentials
+            if(
+                role.isMonitor()
+                && (!(uri.matches(monitorCredentialRegex) && request.method == "POST") // Inputting Credential
+                && !(uri.matches(monitorProfileRegex) && request.method == "GET"))){  //  Getting Profile
                 authorizationHeaderProcessor.checkIfMonitorIsVerified(monitorID = user.id)
             }
 

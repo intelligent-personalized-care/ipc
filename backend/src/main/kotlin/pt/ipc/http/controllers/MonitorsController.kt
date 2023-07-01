@@ -44,15 +44,14 @@ class MonitorsController(private val monitorService: MonitorService, private val
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping(Uris.MONITORS)
-    fun searchMonitorsAvailable(
-        @RequestParam(required = false) name: String?,
-        @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
-        @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int
-    ): ResponseEntity<AllMonitorsAvailableOutput> {
-        val res: List<MonitorDetails> = monitorService.searchMonitorsAvailable(name = name, skip = skip, limit = limit)
+    @Authentication
+    @GetMapping(Uris.MONITOR_PROFILE)
+    fun monitorProfile(@PathVariable monitorID: UUID, user: User) : ResponseEntity<MonitorProfile>{
+        if(monitorID != user.id) throw ForbiddenRequest
 
-        return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(res))
+        val profile = monitorService.getMonitorProfile(monitorID = monitorID)
+
+        return ResponseEntity.ok(profile)
     }
 
     @Authentication

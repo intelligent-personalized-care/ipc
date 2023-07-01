@@ -1,7 +1,9 @@
 package pt.ipc.services
 
+import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.Exercise
 import pt.ipc.domain.PlanOutput
+import pt.ipc.http.models.MonitorAvailable
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.CredentialsOutput
@@ -14,7 +16,11 @@ interface ClientsService {
 
     fun addProfilePicture(clientID: UUID, profilePicture: ByteArray)
 
+    fun getClientProfile(clientID: UUID) : ClientOutput
+
     fun login(email: String, password: String): CredentialsOutput
+
+    fun searchMonitorsAvailable(clientID: UUID,name: String?, skip: Int, limit: Int): List<MonitorAvailable>
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID
 

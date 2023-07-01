@@ -10,6 +10,7 @@ data class Client(
     val password: String,
     val weight: Int? = null,
     val height: Int? = null,
+    val physicalCondition: String? = null,
     val birthDate: LocalDate? = null
 )
 
@@ -22,3 +23,13 @@ fun String.toLocalDate(): LocalDate {
 
     return LocalDate.of(year, month, day)
 }
+
+data class ClientOutput(
+    val id: UUID,
+    val name: String,
+    val email: String,
+    val weight: Int? = null,
+    val height: Int? = null,
+    val physicalCondition: String? = null,
+    val birthDate: LocalDate? = null
+)

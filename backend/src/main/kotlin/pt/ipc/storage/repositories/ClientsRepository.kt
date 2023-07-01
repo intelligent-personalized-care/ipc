@@ -1,6 +1,7 @@
 package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Client
+import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.User
 import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
@@ -12,7 +13,9 @@ interface ClientsRepository {
 
     fun getUserByID(id : UUID) : User?
 
-    fun registerClient(input: Client, token: String, physicalCondition: String? = null)
+    fun getClient(clientID : UUID) : ClientOutput?
+
+    fun registerClient(input: Client, token: String)
 
     fun login(email: String, passwordHash: String): CredentialsOutput?
 

@@ -6,6 +6,7 @@ object Uris {
     const val USER_PHOTO = "/users/{userID}/photo"
 
     const val CLIENT_REGISTER = "/users/clients"
+    const val CLIENT_PROFILE = "/users/clients/{clientID}/profile"
     const val CLIENT_REQUESTS = "/users/clients/{clientID}/requests"
     const val CLIENT_PHOTO = "/users/clients/{clientID}/profile/photo"
     const val CLIENT_MONITOR = "/users/clients/{clientID}/monitor"
@@ -20,6 +21,7 @@ object Uris {
     const val MONITOR_PHOTO = "/users/monitors/{monitorID}/profile/photo"
     const val CLIENTS_OF_MONITOR = "/users/monitors/{monitorID}/clients"
     const val EXERCISES_OF_CLIENTS = "/users/monitors/{monitorID}/clients/exercises"
+    const val MONITOR_PROFILE = "/users/monitors/{monitorID}/profile"
 
     const val EXERCISES = "/exercises"
     const val EXERCISES_INFO = "/exercises/{exerciseID}"
