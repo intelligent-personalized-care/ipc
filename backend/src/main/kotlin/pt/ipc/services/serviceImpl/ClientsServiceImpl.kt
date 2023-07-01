@@ -85,22 +85,22 @@ class ClientsServiceImpl(
         )
 
 
-    override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID {
+    override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID, String> {
         val requestID = UUID.randomUUID()
 
-        transactionManager.runBlock(
+        return transactionManager.runBlock(
             block = {
+                val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
                 if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
-
                 it.clientsRepository.requestMonitor(
                     requestID = requestID,
                     monitorID = monitorID,
                     clientID = clientID,
                     requestText = requestText
                 )
+                 Pair(first = requestID, second = client.name)
             }
         )
-        return requestID
     }
 
     override fun getMonitorOfClient(clientID: UUID): MonitorOutput {
@@ -150,10 +150,14 @@ class ClientsServiceImpl(
         exerciseID: Int,
         set: Int,
         feedback: String?
-    ) {
+    ): Pair<UUID, String> {
         val exerciseVideoID = UUID.randomUUID()
-        transactionManager.runBlock(
+        return transactionManager.runBlock(
             block = {
+
+                val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
+                val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
+
                 if (!it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
                 if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID, exerciseID = exerciseID, set = set)) throw ExerciseAlreadyUploaded
                 it.clientsRepository.uploadExerciseVideoOfClient(
@@ -164,7 +168,10 @@ class ClientsServiceImpl(
                     clientFeedback = feedback,
                     set = set
                 )
+
                 it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video)
+
+                Pair(first = monitor.id, second = client.name)
             },
             fileName = exerciseVideoID
         )

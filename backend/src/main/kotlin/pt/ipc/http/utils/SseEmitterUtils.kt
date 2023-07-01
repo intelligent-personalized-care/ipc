@@ -11,6 +11,8 @@ import java.util.concurrent.Executors
 @Component
 class SseEmitterUtils {
 
+    private class AcceptConnection(val accept : Boolean = true)
+
     private data class Object(val className : String, val obj : Any){
         init{
             require(obj::class.simpleName != null)
@@ -24,6 +26,7 @@ class SseEmitterUtils {
     fun createConnection(userID : UUID) : SseEmitter{
         val emitter = SseEmitter(0)
         emitters[userID] = emitter
+        send(userID = userID, AcceptConnection())
         return emitter
     }
 
@@ -31,7 +34,10 @@ class SseEmitterUtils {
 
         val emitter = emitters[userID] ?: return
 
-        val newObject = Object(className = obj::class.simpleName ?: throw IllegalArgumentException("Class can not be anonymous"), obj = obj)
+        val newObject = Object(
+            className = obj::class.simpleName ?: throw IllegalArgumentException("Class can not be anonymous"),
+            obj = obj
+        )
 
         nonBlockingService.execute {
             try{

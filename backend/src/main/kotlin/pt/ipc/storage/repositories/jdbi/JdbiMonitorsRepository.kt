@@ -94,13 +94,13 @@ class JdbiMonitorsRepository(
             .mapTo<ClientOutput>()
             .toList()
 
-    override fun getMonitorOfClient(clientId: UUID): MonitorDetails? {
+    override fun getMonitorOfClient(clientID: UUID): MonitorDetails? {
         val monitorId = handle.createQuery(
             """
                 select monitor_id from dbo.client_to_monitor where client_id = :clientID
             """.trimIndent()
         )
-            .bind("clientID", clientId)
+            .bind("clientID", clientID)
             .mapTo<UUID>()
             .singleOrNull() ?: return null
 

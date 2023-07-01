@@ -8,6 +8,9 @@ import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.models.*
+import pt.ipc.http.models.MonitorFeedBack
+import pt.ipc.http.models.PlanAssociation
+import pt.ipc.http.models.RequestAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.SseEmitterUtils
@@ -82,11 +85,14 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<ListOfClients> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val clients = monitorService.decideRequest(
+        val (clients,clientID,monitorName) = monitorService.decideRequest(
             requestID = requestID,
             monitorID = monitorID,
             accept = decision.accept
         )
+
+        if(decision.accept) sseEmitterUtils.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
+
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }
 
@@ -140,7 +146,13 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<Unit> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        monitorService.associatePlanToClient(monitorID = monitorID, clientID = clientID, startDate = planInfo.startDate, planID = planInfo.planID)
+        val title = monitorService.associatePlanToClient(
+            monitorID = monitorID,
+            clientID = clientID,
+            startDate = planInfo.startDate,
+            planID = planInfo.planID)
+
+        sseEmitterUtils.send(userID = clientID, obj = PlanAssociation(planTitle = title, startDate = planInfo.startDate))
 
         return ResponseEntity.ok().build()
     }
@@ -172,6 +184,9 @@ class MonitorsController(private val monitorService: MonitorService, private val
             feedback = feedbackInput.feedback,
             clientID = clientID
         )
+
+        sseEmitterUtils.send(userID = clientID, obj = MonitorFeedBack(feedBack = feedbackInput.feedback))
+
         return ResponseEntity.ok().build()
     }
 

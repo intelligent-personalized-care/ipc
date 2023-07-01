@@ -31,11 +31,11 @@ interface MonitorService {
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
-    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) : List<ClientOutput>
+    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean) : Triple<List<ClientOutput>,UUID,String>
 
     fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 
-    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int)
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int) : String
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

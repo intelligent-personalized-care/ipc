@@ -102,10 +102,11 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): List<ClientOutput> =
+    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): Triple<List<ClientOutput>, UUID, String> =
         transactionManager.runBlock(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
+                val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
 
                 if(accept){
                     it.monitorRepository.acceptRequest(
@@ -114,7 +115,8 @@ class MonitorsServiceImpl(
                         monitorID = monitorID
                     )
                 }
-                 it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
+                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
+                 Triple(first = clients, second = monitor.id, third = requestInformation.clientName)
             }
         )
 
@@ -127,7 +129,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int) {
+    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): String {
         return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
@@ -139,6 +141,8 @@ class MonitorsServiceImpl(
                 if (it.plansRepository.checkIfExistsPlanOfClientInThisPeriod(clientID = clientID, startDate = startDate, endDate = endDate)) throw ClientAlreadyHavePlanInThisPeriod
 
                 it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate, endDate = endDate)
+
+                plan.title
             }
         )
     }

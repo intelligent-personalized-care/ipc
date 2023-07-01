@@ -2,12 +2,14 @@ package pt.ipc.http.utils
 
 object Uris {
 
+    const val USERS_SUBSCRIBE = "/users/subscribe"
+    const val USERS_UNSUBSCRIBE = "/users/unsubscribe"
+
     const val USERS_LOGIN = "/users/login"
     const val USER_PHOTO = "/users/{userID}/photo"
 
     const val CLIENT_REGISTER = "/users/clients"
     const val CLIENT_PROFILE = "/users/clients/{clientID}/profile"
-    const val CLIENT_REQUESTS = "/users/clients/{clientID}/requests"
     const val CLIENT_PHOTO = "/users/clients/{clientID}/profile/photo"
     const val CLIENT_MONITOR = "/users/clients/{clientID}/monitor"
 

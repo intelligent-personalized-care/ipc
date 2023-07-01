@@ -21,7 +21,7 @@ interface MonitorRepository {
 
     fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput>
 
-    fun getMonitorOfClient(clientId: UUID): MonitorDetails?
+    fun getMonitorOfClient(clientID: UUID): MonitorDetails?
 
     fun getMonitorRating(monitorID: UUID): Rating
 

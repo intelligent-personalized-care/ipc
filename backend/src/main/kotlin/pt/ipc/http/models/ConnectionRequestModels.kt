@@ -3,7 +3,7 @@ package pt.ipc.http.models
 import java.util.*
 
 data class ConnectionRequest(
-    val monitorId: UUID,
+    val clientID: UUID,
     val text: String? = null
 )
 

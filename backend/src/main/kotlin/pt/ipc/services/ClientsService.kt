@@ -22,7 +22,7 @@ interface ClientsService {
 
     fun searchMonitorsAvailable(clientID: UUID,name: String?, skip: Int, limit: Int): List<MonitorAvailable>
 
-    fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): UUID
+    fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID,String>
 
     fun getMonitorOfClient(clientID: UUID): MonitorOutput
 
@@ -32,5 +32,5 @@ interface ClientsService {
 
     fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int)
 
-    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, set : Int, feedback : String? = null)
+    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, set : Int, feedback : String? = null) : Pair<UUID,String>
 }

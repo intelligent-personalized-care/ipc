@@ -10,6 +10,7 @@ import pt.ipc.domain.ExerciseType
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
+import pt.ipc.http.models.CredentialAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.AdminService
@@ -58,6 +59,8 @@ class AdminController(private val adminService: AdminService, private val sseEmi
     fun decideCredentialOfMonitor(@PathVariable monitorID : UUID, @RequestBody decision : Decision) : ResponseEntity<Unit>{
 
         adminService.decideMonitorCredential(monitorID = monitorID, accept = decision.accept)
+
+        sseEmitterUtils.send(userID = monitorID, CredentialAcceptance(acceptance = decision.accept))
 
         return ResponseEntity.ok().build()
 

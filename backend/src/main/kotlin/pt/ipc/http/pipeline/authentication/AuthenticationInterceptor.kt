@@ -20,6 +20,8 @@ class AuthenticationInterceptor(
     private val uuidRegex = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
     private val monitorCredentialRegex = "/users/monitors/$uuidRegex/credential".toRegex()
     private val monitorProfileRegex = "/users/monitors/$uuidRegex/profile".toRegex()
+    private val subscribeURI = "/users/subscribe".toRegex()
+    private val unsubscribeURI = "/users/subscribe".toRegex()
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         if (handler is HandlerMethod && handler.hasMethodAnnotation(Authentication::class.java)) {
@@ -32,7 +34,9 @@ class AuthenticationInterceptor(
             if(
                 role.isMonitor()
                 && (!(uri.matches(monitorCredentialRegex) && request.method == "POST") // Inputting Credential
-                && !(uri.matches(monitorProfileRegex) && request.method == "GET"))){  //  Getting Profile
+                && !(uri.matches(monitorProfileRegex) && request.method == "GET")
+                && !(uri.matches(subscribeURI) && request.method == "POST")
+                && !(uri.matches(unsubscribeURI) && request.method == "POST"))){  //  Getting Profile
                 authorizationHeaderProcessor.checkIfMonitorIsVerified(monitorID = user.id)
             }
 
