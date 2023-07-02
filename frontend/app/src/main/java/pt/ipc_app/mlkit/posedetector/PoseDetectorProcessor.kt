@@ -17,7 +17,6 @@
 package pt.ipc_app.mlkit.posedetector
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
@@ -25,7 +24,7 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
-import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.vision.VisionProcessorBase
 
@@ -33,7 +32,7 @@ import pt.ipc_app.mlkit.vision.VisionProcessorBase
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
-  private val exercise: DailyExercise
+  private val exercise: Exercise
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {

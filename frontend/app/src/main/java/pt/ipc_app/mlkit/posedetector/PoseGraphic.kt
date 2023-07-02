@@ -21,10 +21,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.text.TextUtils
-
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
-import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.exercises.ExerciseLogic
 import kotlin.math.abs
@@ -34,7 +33,7 @@ import kotlin.math.atan2
 class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
-  private val exercise: DailyExercise
+  private val exercise: Exercise
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint
@@ -84,7 +83,7 @@ class PoseGraphic internal constructor(
 
 
     //to divide each exercise logic
-    when(exercise.title){
+    when(exercise.exeTitle){
         "Squats" -> {
           /*//Calculate whether the hand exceeds the shoulder
           val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)

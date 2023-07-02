@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.exercise
+package pt.ipc_app.ui.screens.exercises.info
 
 import android.content.Context
 import android.content.Intent
@@ -8,23 +8,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.mlkit.vision.CameraXLivePreviewActivity
+import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import pt.ipc_app.utils.viewModelInit
 
 class ExerciseActivity: ComponentActivity() {
 
-    private val viewModel by viewModels<ExerciseViewModel> {
+    private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ExerciseViewModel(app.services.exercisesService, app.sessionManager)
+            ExercisesViewModel(app.services.exercisesService, app.sessionManager)
         }
     }
 
     companion object {
         const val EXERCISE = "EXERCISE"
-        fun navigate(context: Context, exercise: ExerciseTotalInfo) {
+        fun navigate(context: Context, exercise: Exercise) {
             with(context) {
                 val intent = Intent(this, ExerciseActivity::class.java)
                 intent.putExtra(EXERCISE, exercise)
@@ -38,8 +39,8 @@ class ExerciseActivity: ComponentActivity() {
 
         setContent {
             ExerciseScreen(
-                exercise = exercise.exercise,
-                exercisePreviewUrl = viewModel.getExercisePreviewUrl(exercise.exercise.exerciseInfoID),
+                exercise = exercise,
+                exercisePreviewUrl = viewModel.getExercisePreviewUrl(exercise.exeID),
                 onRecordClick = {
                     finish()
                     CameraXLivePreviewActivity.navigate(this, exercise)
@@ -49,9 +50,9 @@ class ExerciseActivity: ComponentActivity() {
     }
 
     @Suppress("deprecation")
-    private val exercise: ExerciseTotalInfo by lazy {
+    private val exercise: Exercise by lazy {
         val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(EXERCISE, ExerciseTotalInfo::class.java)
+            intent.getParcelableExtra(EXERCISE, Exercise::class.java)
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)

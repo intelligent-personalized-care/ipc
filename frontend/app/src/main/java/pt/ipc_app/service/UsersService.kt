@@ -159,9 +159,9 @@ class UsersService(
         token: String
     ): APIResult<Any> =
         post(
-            uri = "/users/clients/$clientId/requests",
+            uri = "/users/monitors/$monitorId",
             token = token,
-            body = ConnectionRequestInput(monitorId)
+            body = ConnectionRequestInput(clientId)
         )
 
     /**
@@ -200,10 +200,9 @@ class UsersService(
         )
 
     fun getProfilePictureUrl(
-        userId: UUID,
-        role: Role
+        userId: UUID
     ): String =
-        "$apiEndpoint/users/${role.name.lowercase()}s/$userId/profile/photo"
+        "$apiEndpoint/users/$userId/photo"
 
     /**
      * Updates the profile picture of a client.
@@ -220,7 +219,7 @@ class UsersService(
         postWithFile(
             uri = "/users/clients/$clientId/profile/photo",
             token = token,
-            multipartPropName = "profilePicture",
+            multipartPropName = "photo",
             file = image,
             contentType = "image/jpeg"
         )

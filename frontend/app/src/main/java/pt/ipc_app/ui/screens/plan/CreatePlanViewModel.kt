@@ -38,11 +38,14 @@ class CreatePlanViewModel(
     /**
      * Attempts to get all the exercises.
      */
-    fun getExercises() {
+    fun getExercises(
+        skip: Int = 0
+    ) {
         launchAndExecuteRequest(
             request = {
                 _exercisesState.value = ProgressState.WAITING
                 exercisesService.getExercises(
+                    skip = skip,
                     token = sessionManager.userLoggedIn.token
                 ).also {
                     _exercisesState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE

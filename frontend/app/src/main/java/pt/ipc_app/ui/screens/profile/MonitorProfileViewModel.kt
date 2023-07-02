@@ -30,7 +30,7 @@ class MonitorProfileViewModel(
         get() = _pictureState.asStateFlow()
 
     fun getProfilePictureUrl(): String =
-        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id), Role.MONITOR)
+        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id))
 
     /**
      * Attempts to update the profile picture of client.

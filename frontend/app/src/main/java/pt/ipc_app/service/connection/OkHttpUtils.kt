@@ -37,7 +37,7 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
                     continuation.resume(handler(response))
                     Log.println(Log.WARN, REQUEST_TAG, "Success: " + response.body)
                 } catch (t: Throwable) {
-                    Log.println(Log.WARN, REQUEST_TAG, "t: " + t)
+                    Log.println(Log.WARN, REQUEST_TAG, "t: " + t.message)
                     continuation.resumeWithException(t)
                 }
             }

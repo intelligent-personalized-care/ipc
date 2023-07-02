@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.plan
+package pt.ipc_app.ui.screens.exercises.list
 
 import android.content.Context
 import android.content.Intent
@@ -6,27 +6,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.screens.home.MonitorHomeActivity
+import pt.ipc_app.domain.exercise.FreeExercise
+import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
+import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.utils.viewModelInit
 
-/**
- * The create plan activity.
- */
-class CreatePlanActivity : ComponentActivity() {
+class ExercisesListActivity: ComponentActivity() {
 
-    private val viewModel by viewModels<CreatePlanViewModel> {
+    private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            CreatePlanViewModel(app.services.plansService, app.services.exercisesService, app.sessionManager)
+            ExercisesViewModel(app.services.exercisesService, app.sessionManager)
         }
     }
 
     companion object {
         fun navigate(context: Context) {
             with(context) {
-                val intent = Intent(this, CreatePlanActivity::class.java)
+                val intent = Intent(this, ExercisesListActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -38,14 +37,12 @@ class CreatePlanActivity : ComponentActivity() {
         viewModel.getExercises()
 
         setContent {
-            CreatePlanScreen(
+            ExercisesListScreen(
                 exercises = viewModel.exercises.collectAsState().value,
-                onPlanCreation = {
-                    viewModel.createPlan(it)
-                    finish()
-                },
-                onExercisesPaginationClick = { viewModel.getExercises(it) }
+                onExerciseClick = { ExerciseActivity.navigate(this, it) },
+                onPaginationClick = { viewModel.getExercises(it) }
             )
         }
     }
+
 }

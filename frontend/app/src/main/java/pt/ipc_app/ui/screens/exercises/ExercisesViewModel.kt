@@ -1,7 +1,10 @@
-package pt.ipc_app.ui.screens.exercise
+package pt.ipc_app.ui.screens.exercises
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import pt.ipc_app.domain.exercise.ExerciseInfo
+import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
+import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
 import pt.ipc_app.service.ExercisesService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
@@ -11,11 +14,11 @@ import java.io.File
 import java.util.*
 
 /**
- * View model for the [ExerciseActivity].
+ * View model for the [ExerciseActivity] and [ExercisesListActivity].
  *
  * @param sessionManager the manager used to handle the user session
  */
-class ExerciseViewModel(
+class ExercisesViewModel(
     private val exercisesService: ExercisesService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
@@ -24,6 +27,10 @@ class ExerciseViewModel(
     val state
         get() = _state.asStateFlow()
 
+    private val _exercises = MutableStateFlow(listOf<ExerciseInfo>())
+    val exercises
+        get() = _exercises.asStateFlow()
+
     /**
      * Attempts to get a preview url of an exercise.
      */
@@ -31,6 +38,22 @@ class ExerciseViewModel(
         exerciseInfoId: UUID
     ): String =
         exercisesService.getExercisePreviewUrl(exerciseInfoId)
+
+    fun getExercises(
+        skip: Int = 0
+    ) {
+        launchAndExecuteRequest(
+            request = {
+                exercisesService.getExercises(
+                    skip = skip,
+                    token = sessionManager.userLoggedIn.token
+                )
+            },
+            onSuccess = {
+                _exercises.value = it.exercises
+            }
+        )
+    }
 
     /**
      * Attempts to submit an exercise of client.

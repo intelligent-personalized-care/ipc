@@ -2,6 +2,7 @@ package pt.ipc_app.ui.screens.plan
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
@@ -21,14 +22,17 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.ExerciseInfo
 import pt.ipc_app.service.models.dailyList.DailyListInput
+import pt.ipc_app.service.models.exercises.ExerciseInput
 import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.ui.components.*
+import pt.ipc_app.ui.components.exercises.ExercisesInfoPagination
 import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun CreatePlanScreen(
     exercises: List<ExerciseInfo>,
-    onPlanCreation: (PlanInput) -> Unit = { }
+    onPlanCreation: (PlanInput) -> Unit = { },
+    onExercisesPaginationClick: (Int) -> Unit = { }
 ) {
     var planTitle by remember { mutableStateOf("") }
 
@@ -68,13 +72,12 @@ fun CreatePlanScreen(
                     dayCounter++
                 }
             )
-
-            ExercisesInfoList(
+            ExercisesInfoPagination(
                 exercises = exercises,
-                isExerciseAlreadyInDailyList = { plan.dailyLists[daySelected]!!.containsExercise(it.id) },
-                onExerciseAdd = {
-                    plan = plan.addExerciseInDailyList(daySelected, it)
-                }
+                onExerciseChosen = { plan = plan.addExerciseInDailyList(daySelected, ExerciseInput(it.exeID, it.exeSets, it.exeReps)) },
+                isClickExerciseEnabled = { !plan.dailyLists[daySelected]!!.containsExercise(it.id) },
+                onPaginationClick = onExercisesPaginationClick,
+                modifier = Modifier.height(320.dp)
             )
 
             Button(

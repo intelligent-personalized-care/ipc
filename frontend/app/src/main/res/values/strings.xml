@@ -34,6 +34,7 @@
     <string name="client_requests">Client Requests</string>
     <string name="my_clients">My Clients</string>
 
+    <string name="exercises_title">Exercises</string>
     <string name="monitor_details_title">Monitor Details</string>
     <string name="client_details_title">Client Details</string>
     <string name="profile_title">Profile</string>

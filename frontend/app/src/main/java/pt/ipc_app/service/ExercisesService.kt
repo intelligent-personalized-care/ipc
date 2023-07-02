@@ -29,10 +29,11 @@ class ExercisesService(
      * @throws IOException if there is an error while sending the request
      */
     suspend fun getExercises(
+        skip: Int = 0,
         token: String
     ): APIResult<ListOfExercisesInfo> =
         get(
-            uri = "/exercises",
+            uri = "/exercises?skip=$skip",
             token = token
         )
 

@@ -7,6 +7,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +22,7 @@ import pt.ipc_app.domain.exercise.ExerciseInfo
 @Composable
 fun ExerciseInfoRow(
     exercise: ExerciseInfo,
-    alreadyInDailyList: Boolean,
+    clickExerciseEnabled: Boolean,
     onExerciseAdd: (Exercise) -> Unit = { }
 ) {
     var clicked by remember { mutableStateOf(false) }
@@ -41,12 +43,22 @@ fun ExerciseInfoRow(
             Text(exercise.title)
         }
         Spacer(modifier = Modifier.weight(0.1f))
-        if (alreadyInDailyList)
-            Row {
+        Row {
+            if (!clickExerciseEnabled)
                 AddExerciseIcon(true)
-            }
+            else if (clicked)
+                Icon(
+                    imageVector = Icons.Default.ArrowDropUp,
+                    contentDescription = "DropUp"
+                )
+            else
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "DropDown"
+                )
+        }
     }
-    if (clicked && !alreadyInDailyList) {
+    if (clicked && clickExerciseEnabled) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +86,15 @@ fun ExerciseInfoRow(
             Box(
                 modifier = Modifier
                     .clickable {
-                        onExerciseAdd(Exercise(exercise.id, sets, reps))
+                        onExerciseAdd(
+                            Exercise(
+                                exeID = exercise.id,
+                                exeTitle = exercise.title,
+                                exeDescription = exercise.description,
+                                exeSets = sets,
+                                exeReps = reps
+                            )
+                        )
                         clicked = !clicked
                     }
                     .padding(start = 16.dp)

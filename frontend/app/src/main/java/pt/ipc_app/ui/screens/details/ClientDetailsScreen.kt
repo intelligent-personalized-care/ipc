@@ -55,44 +55,42 @@ fun ClientDetailsScreen(
                     onSendEmailRequest()
                 }
             )
-
-
-            if (isMyClient) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
+        }
+        if (isMyClient) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 300.dp)
+            ) {
+                Button(
+                    onClick = { showPlans = !showPlans },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
                 ) {
-                    Button(
-                        onClick = { showPlans = !showPlans },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
-                    ) {
-                        Text("Associate Plan")
-                    }
-
-                    if (showPlans) {
-                        var startDate by remember { mutableStateOf("") }
-
-                        val dt = DatePicker(
-                            onDateSelected = { startDate = it }
-                        )
-                        MyDatePicker(
-                            fieldType = TextFieldType.PLAN_START_DATE,
-                            value = startDate,
-                            onValueChange = { startDate = it },
-                            onClick = { dt.show() }
-                        )
-
-                        if (startDate.isNotEmpty()) {
-                            MonitorPlansList(
-                                plans = plans,
-                                onAssociatePlan = { onAssociatePlan(it, startDate) }
-                            )
-                        }
-                    }
+                    Text("Associate Plan")
                 }
 
+                if (showPlans) {
+                    var startDate by remember { mutableStateOf("") }
+
+                    val dt = DatePicker(
+                        onDateSelected = { startDate = it }
+                    )
+                    MyDatePicker(
+                        fieldType = TextFieldType.PLAN_START_DATE,
+                        value = startDate,
+                        onValueChange = { startDate = it },
+                        onClick = { dt.show() }
+                    )
+
+                    if (startDate.isNotEmpty()) {
+                        MonitorPlansList(
+                            plans = plans,
+                            onAssociatePlan = { onAssociatePlan(it, startDate) }
+                        )
+                    }
+                }
             }
         }
+
     }
 
 }

@@ -25,7 +25,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -43,10 +42,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
-import kotlinx.parcelize.Parcelize
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
-import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.mlkit.CameraXViewModel
 import pt.ipc_app.mlkit.GraphicOverlay
@@ -54,7 +52,7 @@ import pt.ipc_app.mlkit.VisionImageProcessor
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
-import pt.ipc_app.ui.screens.exercise.ExerciseViewModel
+import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import pt.ipc_app.utils.viewModelInit
 import java.io.File
 import java.util.*
@@ -81,10 +79,10 @@ class CameraXLivePreviewActivity :
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
 
-    private val viewModel by viewModels<ExerciseViewModel> {
+    private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ExerciseViewModel(app.services.exercisesService, app.sessionManager)
+            ExercisesViewModel(app.services.exercisesService, app.sessionManager)
         }
     }
 
@@ -92,19 +90,18 @@ class CameraXLivePreviewActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
             selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, POSE_DETECTION)
-        }
+
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         setContentView(R.layout.activity_vision_camerax_live_preview)
         previewView = findViewById(R.id.preview_view)
-        if (previewView == null) {
+        if (previewView == null)
             Log.d(TAG, "previewView is null")
-        }
+
         graphicOverlay = findViewById(R.id.graphic_overlay)
-        if (graphicOverlay == null) {
+        if (graphicOverlay == null)
             Log.d(TAG, "graphicOverlay is null")
-        }
 
         val options: MutableList<String> = ArrayList()
         options.add(POSE_DETECTION)
@@ -130,16 +127,20 @@ class CameraXLivePreviewActivity :
         }
 
         //verifies all permissions before acessing camera
-        if (!allRuntimePermissionsGranted()) {
+        if (!allRuntimePermissionsGranted())
             getRuntimePermissions()
-        }
 
         //Creates a file directory for the video to be saved locally
         //creates a video capture and the record button action
         outputDirectory = getOutputDirectory()
         createVideoCapture()
-        setupRecordingButton { viewModel.submitExerciseVideo(it, exercise.planId, exercise.dailyListId, exercise.exercise.id) }
 
+        setupRecordingButton {
+            if (exercise is ExerciseTotalInfo) {
+                val exe = exercise as ExerciseTotalInfo
+                viewModel.submitExerciseVideo(it, exe.planId, exe.dailyListId, exe.exercise.id)
+            }
+        }
     }
 
     private fun getOutputDirectory(): File {
@@ -168,15 +169,15 @@ class CameraXLivePreviewActivity :
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        if (cameraProvider == null) {
+        if (cameraProvider == null)
             return
-        }
+
         val newLensFacing =
-            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+            if (lensFacing == CameraSelector.LENS_FACING_FRONT)
                 CameraSelector.LENS_FACING_BACK
-            } else {
+            else
                 CameraSelector.LENS_FACING_FRONT
-            }
+
         val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
         try {
             if (cameraProvider!!.hasCamera(newCameraSelector)) {
@@ -204,7 +205,6 @@ class CameraXLivePreviewActivity :
 
     override fun onPause() {
         super.onPause()
-
         imageProcessor?.run { this.stop() }
     }
 
@@ -224,45 +224,44 @@ class CameraXLivePreviewActivity :
     }
 
     private fun bindPreviewUseCase() {
-        if (!PreferenceUtils.isCameraLiveViewportEnabled(this)) {
+        if (!PreferenceUtils.isCameraLiveViewportEnabled(this))
             return
-        }
-        if (cameraProvider == null) {
+
+        if (cameraProvider == null)
             return
-        }
-        if (previewUseCase != null) {
+
+        if (previewUseCase != null)
             cameraProvider!!.unbind(previewUseCase)
-        }
 
         val builder = Preview.Builder()
         val targetResolution = PreferenceUtils.getCameraXTargetResolution(this, lensFacing)
-        if (targetResolution != null) {
+        if (targetResolution != null)
             builder.setTargetResolution(targetResolution)
-        }
+
         previewUseCase = builder.build()
         previewUseCase!!.setSurfaceProvider(previewView!!.surfaceProvider)
-        cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
+        cameraProvider!!.bindToLifecycle(this, cameraSelector!!, previewUseCase)
     }
 
     private fun bindAnalysisUseCase() {
-        if (cameraProvider == null) {
+        if (cameraProvider == null)
             return
-        }
-        if (analysisUseCase != null) {
+
+        if (analysisUseCase != null)
             cameraProvider!!.unbind(analysisUseCase)
-        }
-        if (imageProcessor != null) {
+
+        if (imageProcessor != null)
             imageProcessor!!.stop()
-        }
+
         imageProcessor =
             try {
                 when (selectedModel) {
                     POSE_DETECTION -> {
                         val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
                         PoseDetectorProcessor(
-                            this,
-                            poseDetectorOptions as PoseDetectorOptions,
-                            exercise.exercise
+                            context = this,
+                            options = poseDetectorOptions as PoseDetectorOptions,
+                            exercise = exercise
                         )
                     }
 
@@ -311,7 +310,7 @@ class CameraXLivePreviewActivity :
                 }
             }
         )
-        cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, analysisUseCase)
+        cameraProvider!!.bindToLifecycle(this, cameraSelector!!, analysisUseCase)
     }
 
     //-------------------------------- Recording video ------------------------------------------------------------
@@ -336,7 +335,12 @@ class CameraXLivePreviewActivity :
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
     private fun startRecording(onSubmission: (File) -> Unit) {
-        val file = File(outputDirectory, "${exercise.exercise.id}.mp4")
+        val videoName =
+            if (exercise is ExerciseTotalInfo)
+                (exercise as ExerciseTotalInfo).exercise.id
+            else UUID.randomUUID()
+
+        val file = File(outputDirectory, "$videoName.mp4")
         val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
 
         videoCapture.startRecording(
@@ -432,9 +436,9 @@ class CameraXLivePreviewActivity :
     //--------------------------- for different exercices -------------------------------
 
     @Suppress("deprecation")
-    private val exercise: ExerciseTotalInfo by lazy {
+    private val exercise: Exercise by lazy {
         val exe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            intent.getParcelableExtra(EXERCISE, ExerciseTotalInfo::class.java)
+            intent.getParcelableExtra(EXERCISE, Exercise::class.java)
         else
             intent.getParcelableExtra(EXERCISE)
         checkNotNull(exe)
@@ -456,12 +460,12 @@ class CameraXLivePreviewActivity :
                 Manifest.permission.RECORD_AUDIO
             )
 
-        const val EXERCISE = "EXERCISE_TO_RECORD"
+        const val EXERCISE = "EXERCISE_TO_DO"
 
-        fun navigate(context: Context, exerciseToRecord: ExerciseTotalInfo) {
+        fun navigate(context: Context, exercise: Exercise) {
             with(context) {
                 val intent = Intent(this, CameraXLivePreviewActivity::class.java)
-                intent.putExtra(EXERCISE, exerciseToRecord)
+                intent.putExtra(EXERCISE, exercise)
                 startActivity(intent)
             }
         }

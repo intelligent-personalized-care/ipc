@@ -12,10 +12,11 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.about.AboutActivity
-import pt.ipc_app.ui.screens.exercise.ExerciseActivity
+import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.profile.ClientProfileActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
+import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
 import java.util.*
 
 /**
@@ -56,7 +57,7 @@ class ClientHomeActivity : ComponentActivity() {
                         SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) },
-                onExercisesClick = { Toast.makeText(this, "Available soon", Toast.LENGTH_SHORT).show() },
+                onExercisesClick = { ExercisesListActivity.navigate(this) },
                 onUserInfoClick = { ClientProfileActivity.navigate(this) },
                 onAboutClick = { AboutActivity.navigate(this) }
             )

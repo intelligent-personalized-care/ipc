@@ -26,7 +26,7 @@ class ClientProfileViewModel(
         get() = _state.asStateFlow()
 
     fun getProfilePictureUrl(): String =
-        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id), Role.CLIENT)
+        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id))
 
     /**
      * Attempts to update the profile picture of client.
