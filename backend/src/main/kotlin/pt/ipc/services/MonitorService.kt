@@ -24,7 +24,7 @@ interface MonitorService {
 
     fun getClientsOfMonitor(monitorID: UUID): List<ClientInformation>
 
-    fun getClientOfMonitor(monitorID: UUID,clientID: UUID, date : LocalDate) : ClientOfMonitor
+    fun getClientOfMonitor(monitorID: UUID, clientID: UUID): ClientOfMonitor
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 

@@ -22,7 +22,7 @@ interface MonitorRepository {
 
     fun getMonitorProfile(monitorID: UUID): MonitorProfile?
 
-    fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date : LocalDate) : ClientOfMonitor?
+    fun getClientOfMonitor(monitorID: UUID, clientID: UUID): ClientOfMonitor?
 
     fun getMonitor(monitorID: UUID): MonitorDetails?
 
@@ -34,7 +34,7 @@ interface MonitorRepository {
 
     fun searchMonitorsAvailable(name: String?, skip: Int, limit: Int, clientID: UUID): List<MonitorAvailable>
 
-    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision : Boolean)
+    fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: Boolean)
 
     fun getRequestInformation(requestID: UUID): RequestInformation?
 

@@ -86,26 +86,48 @@ class JdbiMonitorsRepository(
         )
     }
 
-    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date : LocalDate): ClientOfMonitor? {
-
-        val clientOfMonitor = handle.createQuery("select * from dbo.users u inner join dbo.client_to_monitor ctm on u.id = ctm.client_id where ctm.client_id = :clientID and ctm.monitor_id = :monitorID")
-            .bind("clientID",clientID)
-            .bind("monitorID",monitorID)
-            .mapTo<ClientOfMonitor>()
+    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID): ClientOfMonitor? {
+        val clientInfo = handle.createQuery(
+            "select u.name, u.email, c.weight, c.height, c.physical_condition, c.birth_date from dbo.users u " +
+                "inner join dbo.client_to_monitor ctm on u.id = ctm.client_id " +
+                "inner join dbo.clients c on u.id = c.c_id " +
+                "where ctm.client_id = :clientID and ctm.monitor_id = :monitorID"
+        )
+            .bind("clientID", clientID)
+            .bind("monitorID", monitorID)
+            .mapTo<ClientInfo>()
             .singleOrNull() ?: return null
 
-        val plan = handle.createQuery("select p.id,p.title from dbo.clients c " +
+        val plans = handle.createQuery(
+            "select p.id,p.title,cp.dt_start as startDate,cp.dt_end as endDate from dbo.clients c " +
                 "inner join dbo.client_plans cp on c.c_id = cp.client_id " +
                 "inner join dbo.plans p on p.id = cp.plan_id " +
-                "where cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
+                "where cp.client_id = :clientID "
+        )
             .bind("clientID", clientID)
-            .bind("date", date)
             .mapTo<PlanOfClient>()
-            .singleOrNull()
+            .toList()
 
-        return clientOfMonitor.copy(plan = plan)
-
+        return ClientOfMonitor(
+            id = clientID,
+            name = clientInfo.name,
+            email = clientInfo.email,
+            weight = clientInfo.weight,
+            height = clientInfo.height,
+            physicalCondition = clientInfo.physicalCondition,
+            birthDate = clientInfo.birthDate,
+            plans = plans
+        )
     }
+
+    private data class ClientInfo(
+        val name: String,
+        val email: String,
+        val weight: Int? = null,
+        val height: Int? = null,
+        val physicalCondition: String? = null,
+        val birthDate: LocalDate? = null
+    )
 
     override fun getMonitor(monitorID: UUID): MonitorDetails? =
         handle.createQuery("select id, name, email from dbo.monitors m inner join dbo.users u on u.id = m.m_id where m.m_id = :monitorID")
@@ -164,18 +186,16 @@ class JdbiMonitorsRepository(
     }
 
     override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: Boolean) {
-
         handle.createUpdate("delete from dbo.monitor_requests where request_id = :requestID ")
             .bind("requestID", requestID)
             .execute()
 
-        if(decision){
+        if (decision) {
             handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
                 .bind("monitorID", monitorID)
                 .bind("clientID", clientID)
                 .execute()
         }
-
     }
 
     override fun getRequestInformation(requestID: UUID): RequestInformation? =

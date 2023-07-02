@@ -88,17 +88,14 @@ class MonitorsController(private val monitorService: MonitorService, private val
     @GetMapping(Uris.CLIENT_OF_MONITOR)
     fun clientOfMonitor(
         @PathVariable clientID: UUID,
-        @PathVariable monitorID: UUID, user: User,
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        @RequestParam(required = false)
-        date: LocalDate?
-    ) : ResponseEntity<ClientOfMonitor>{
+        @PathVariable monitorID: UUID,
+        user: User
+    ): ResponseEntity<ClientOfMonitor> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val client = monitorService.getClientOfMonitor(monitorID = monitorID, clientID = clientID, date = date ?: LocalDate.now())
+        val client = monitorService.getClientOfMonitor(monitorID = monitorID, clientID = clientID)
 
         return ResponseEntity.ok(client)
-
     }
 
     @Authentication

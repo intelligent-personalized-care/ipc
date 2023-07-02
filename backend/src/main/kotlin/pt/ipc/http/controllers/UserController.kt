@@ -54,6 +54,4 @@ class UserController(private val userService: UserService, private val sseEmitte
 
         return ResponseEntity.ok().headers(headers).body(profilePicture)
     }
-
-
 }

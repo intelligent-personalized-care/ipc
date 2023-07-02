@@ -81,14 +81,13 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date: LocalDate): ClientOfMonitor =
+    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID): ClientOfMonitor =
         transactionManager.runBlock(
             block = {
-                if(!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
-                it.monitorRepository.getClientOfMonitor(monitorID = monitorID, clientID = clientID, date = date) ?: throw UserNotExists
+                if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                it.monitorRepository.getClientOfMonitor(monitorID = monitorID, clientID = clientID) ?: throw UserNotExists
             }
         )
-
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         transactionManager.runBlock(
@@ -126,12 +125,12 @@ class MonitorsServiceImpl(
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
                 val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
 
-                    it.monitorRepository.decideRequest(
-                        requestID = requestID,
-                        clientID = requestInformation.clientID,
-                        monitorID = monitorID,
-                        decision = accept
-                    )
+                it.monitorRepository.decideRequest(
+                    requestID = requestID,
+                    clientID = requestInformation.clientID,
+                    monitorID = monitorID,
+                    decision = accept
+                )
 
                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
 
