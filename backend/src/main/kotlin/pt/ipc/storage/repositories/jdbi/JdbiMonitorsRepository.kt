@@ -140,11 +140,19 @@ class JdbiMonitorsRepository(
             .toList()
     }
 
-    override fun acceptRequest(requestID: UUID, clientID: UUID, monitorID: UUID) {
-        handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
-            .bind("monitorID", monitorID)
-            .bind("clientID", clientID)
+    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: Boolean) {
+
+        handle.createUpdate("delete from dbo.monitor_requests where request_id = :requestID ")
+            .bind("requestID", requestID)
             .execute()
+
+        if(decision){
+            handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
+                .bind("monitorID", monitorID)
+                .bind("clientID", clientID)
+                .execute()
+        }
+
     }
 
     override fun getRequestInformation(requestID: UUID): RequestInformation? =
