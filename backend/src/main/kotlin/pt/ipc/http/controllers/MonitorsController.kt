@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.*
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.models.*
-import pt.ipc.http.models.MonitorFeedBack
-import pt.ipc.http.models.PlanAssociation
-import pt.ipc.http.models.RequestAcceptance
+import pt.ipc.http.models.emitter.MonitorFeedBack
+import pt.ipc.http.models.emitter.PlanAssociation
+import pt.ipc.http.models.emitter.RequestAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.SseEmitterUtils

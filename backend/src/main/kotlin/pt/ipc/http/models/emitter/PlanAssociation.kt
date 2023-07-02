@@ -1,4 +1,4 @@
-package pt.ipc.http.models
+package pt.ipc.http.models.emitter
 
 import java.time.LocalDate
 

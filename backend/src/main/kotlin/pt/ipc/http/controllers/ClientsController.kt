@@ -15,12 +15,17 @@ import pt.ipc.domain.*
 import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.RatingInput
 import pt.ipc.domain.exceptions.ForbiddenRequest
-import pt.ipc.http.utils.SseEmitterUtils
-import pt.ipc.http.models.*
-import pt.ipc.http.models.PostedVideo
-import pt.ipc.http.models.RequestMonitor
+import pt.ipc.http.models.AllMonitorsAvailableOutput
+import pt.ipc.http.models.ConnectionRequest
+import pt.ipc.http.models.ListOfExercisesOfClient
+import pt.ipc.http.models.MonitorAvailable
+import pt.ipc.http.models.MonitorOutput
+import pt.ipc.http.models.RequestIdOutput
+import pt.ipc.http.models.emitter.PostedVideo
+import pt.ipc.http.models.emitter.RequestMonitor
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.RegisterClientInput
@@ -94,9 +99,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
         val (requestID,clientName) = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
 
-        val requestMonitor = RequestMonitor(id = requestID, name = clientName)
-
-        sseEmitterUtils.send(userID = monitorID, obj = requestMonitor)
+        sseEmitterUtils.send(userID = monitorID, obj = RequestMonitor(requestID = requestID, name = clientName))
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
     }

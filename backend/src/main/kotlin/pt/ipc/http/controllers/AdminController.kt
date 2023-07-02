@@ -10,7 +10,7 @@ import pt.ipc.domain.ExerciseType
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
-import pt.ipc.http.models.CredentialAcceptance
+import pt.ipc.http.models.emitter.CredentialAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.AdminService

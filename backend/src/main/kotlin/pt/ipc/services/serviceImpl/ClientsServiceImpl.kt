@@ -160,6 +160,7 @@ class ClientsServiceImpl(
 
                 if (!it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
                 if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID, exerciseID = exerciseID, set = set)) throw ExerciseAlreadyUploaded
+
                 it.clientsRepository.uploadExerciseVideoOfClient(
                     clientID = clientID,
                     exerciseID = exerciseID,

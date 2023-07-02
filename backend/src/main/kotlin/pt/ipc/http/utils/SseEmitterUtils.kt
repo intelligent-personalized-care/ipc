@@ -11,7 +11,8 @@ import java.util.concurrent.Executors
 @Component
 class SseEmitterUtils {
 
-    private class AcceptConnection(val accept : Boolean = true)
+    private class AcceptConnection(val accept : String = "Connection Accepted")
+    private val accept = AcceptConnection()
 
     private data class Object(val className : String, val obj : Any){
         init{
@@ -26,7 +27,7 @@ class SseEmitterUtils {
     fun createConnection(userID : UUID) : SseEmitter{
         val emitter = SseEmitter(0)
         emitters[userID] = emitter
-        send(userID = userID, AcceptConnection())
+        send(userID = userID, accept )
         return emitter
     }
 
