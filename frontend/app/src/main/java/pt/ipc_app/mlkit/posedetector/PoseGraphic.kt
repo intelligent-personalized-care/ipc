@@ -26,6 +26,7 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.mlkit.GraphicOverlay
+import pt.ipc_app.mlkit.exercises.ExerciseLogic
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -85,7 +86,7 @@ class PoseGraphic internal constructor(
     //to divide each exercise logic
     when(exercise.title){
         "Squats" -> {
-          //Calculate whether the hand exceeds the shoulder
+          /*//Calculate whether the hand exceeds the shoulder
           val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
           val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
           //Calculate whether the distance between the shoulder and the foot is the same width
@@ -95,12 +96,27 @@ class PoseGraphic internal constructor(
           //angle of point 27-25-23( right hip, right knee and right ankle)
           val angleRhRkRa = getAngle(rightHip, rightKnee, rightAnkle)
 
-          squatLogic(canvas,angleRhRkRa,yLeftHand,yRightHand, ratio, rightShoulder, leftShoulder, rightHip!!, rightAnkle)
+          squatLogic(canvas,angleRhRkRa,yLeftHand,yRightHand, ratio, rightShoulder, leftShoulder, rightHip!!, rightAnkle)*/
+
+          //Calculate whether the hand exceeds the shoulder
+          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
+
+          //Calculate whether the distance between the shoulder and the foot is the same width
+          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+
+          val exerciseLogic = ExerciseLogic(rightHip!!,rightKnee!!,rightAnkle,yRightHand,yLeftHand,ratio,
+            rightShoulder.position.y + leftShoulder.position.y, rightAnkle.position.y - rightHip.position.y, 5, 0, 0.5,
+          2, 5,
+            "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart",
+          null, null)
+
+          doExerciseLogic(canvas, exerciseLogic)
 
           toDraw = !toDraw
         }
         "Push ups" -> {
-          //Calculate whether the hand is in front of the shoulder
+         /* //Calculate whether the hand is in front of the shoulder
           val xRightHand = differenceBetweenCoordinates(rightWrist!!.position.x, rightShoulder!!.position.x)
           val xLeftHand = differenceBetweenCoordinates(leftWrist!!.position.x, leftShoulder!!.position.x)
           //Calculate whether the distance between the shoulder and the foot is the same width
@@ -113,8 +129,23 @@ class PoseGraphic internal constructor(
           println("xRight $xRightHand")
           println()
           println("xLeft $xLeftHand")
-          pushUpLogic(canvas,angleRwReRs,xLeftHand,xRightHand, ratio, rightShoulder, leftShoulder, rightWrist, rightElbow!!)
+          pushUpLogic(canvas,angleRwReRs,xLeftHand,xRightHand, ratio, rightShoulder, leftShoulder, rightWrist, rightElbow!!)*/
 
+          //Calculate whether the hand is in front of the shoulder
+          val xRightHand = differenceBetweenCoordinates(rightWrist!!.position.x, rightShoulder!!.position.x)
+          val xLeftHand = differenceBetweenCoordinates(leftWrist!!.position.x, leftShoulder!!.position.x)
+
+          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+
+          println(rightWrist.position.y)
+          println(rightShoulder.position.y)
+          val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,xRightHand,xLeftHand,ratio,
+            rightShoulder.position.y ,rightShoulder.position.y - rightElbow.position.y /*rightShoulder.position.x - rightWrist.position.x*/ , 25, 0, 0.5,
+            null, null,
+            "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",
+            null, null)
+
+          doExerciseLogic(canvas, exerciseLogic)
           toDraw = !toDraw
 
         }
@@ -256,7 +287,7 @@ class PoseGraphic internal constructor(
   companion object {
     private const val DOT_RADIUS = 11.0f
     private const val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f
-    private const val TEXT_SIZE = 60.0f
+    private const val TEXT_SIZE = 70.0f
 
     var isUp = false
     var isDown = false
@@ -280,7 +311,7 @@ class PoseGraphic internal constructor(
     rightPaint.color = Color.YELLOW
 
     tipPaint = Paint()
-    tipPaint.color = Color.WHITE
+    tipPaint.color = Color.GREEN
     tipPaint.textSize = 40f
   }
 
@@ -310,9 +341,70 @@ class PoseGraphic internal constructor(
   private fun differenceBetweenCoordinates(firstCoordinate :Float, secondCoordinate :Float) = firstCoordinate - secondCoordinate
 
   /**
+   * Returns the ratio between two distances
+   * */
+
+  private fun ratio(firstCoordinate :Float, secondCoordinate :Float, thirdCoordinate :Float, fourthCoordinate :Float) =
+      differenceBetweenCoordinates(thirdCoordinate,fourthCoordinate) / differenceBetweenCoordinates(firstCoordinate,secondCoordinate)
+
+
+  /**
+   * Implements the exercise logic
+   * */
+  private fun doExerciseLogic(canvas: Canvas, exerciseLogic: ExerciseLogic){
+
+    val angle = getAngle(exerciseLogic.firstPoint, exerciseLogic.midPoint, exerciseLogic.lastPoint)
+
+    if (((180 - abs(angle)) > exerciseLogic.condOne) && !isCount) {
+      reInitParams()
+      lineOneText = exerciseLogic.lTextCondOne
+    } else if (exerciseLogic.leftHandPos > 0 || exerciseLogic.rightHandPos > 0) {
+      reInitParams()
+      lineOneText = exerciseLogic.lTextCondTwo
+    } else if (exerciseLogic.ratio < 0.5 && !isCount) {
+      reInitParams()
+      lineOneText = exerciseLogic.lTextCondThree
+    } else {
+      val currentHeight =
+        if(exerciseLogic.condCurrentWeight != null) exerciseLogic.currentHeight / exerciseLogic.condCurrentWeight //Judging up and down by shoulder height
+        else exerciseLogic.currentHeight
+
+      if (!isCount) {
+        shoulderHeight = currentHeight
+        minSize = exerciseLogic.condMinSize?.let { exerciseLogic.minSize / it } ?: exerciseLogic.minSize
+        isCount = true
+        lastHeight = currentHeight
+        lineOneText = "Gesture ready"
+      }
+      if (!isDown && (currentHeight - lastHeight) > minSize) {
+        isDown = true
+        isUp = false
+        downCount++
+        lastHeight = currentHeight
+        lineTwoText = "start down"
+      } else if ((currentHeight - lastHeight) > minSize) {
+        lineTwoText = "downing"
+        lastHeight = currentHeight
+      }
+      if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
+        isUp = true
+        isDown = false
+        upCount++
+        lastHeight = currentHeight
+        lineTwoText = "start up"
+      } else if ((lastHeight - currentHeight) > minSize) {
+        lineTwoText = "uping"
+        lastHeight = currentHeight
+      }
+    }
+    drawText(canvas, lineOneText, 1)
+    drawText(canvas, lineTwoText, 2)
+    drawText(canvas, "count: $upCount", 3)
+  }
+  /**
    * Implements the squat exercise logic
    * */
-  private fun squatLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightHip: PoseLandmark, rightAnkle : PoseLandmark){
+/*  private fun squatLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightHip: PoseLandmark, rightAnkle : PoseLandmark){
 
       println("Angle ${abs(angle)}")
       if (((180 - abs(angle)) > 5) && !isCount) {
@@ -359,12 +451,12 @@ class PoseGraphic internal constructor(
       drawText(canvas, lineOneText, 1)
       drawText(canvas, lineTwoText, 2)
       drawText(canvas, "count: $upCount", 3)
-     }
+     }*/
 
   /**
    * Implements the push-up exercise logic
    * */
-  private fun pushUpLogic(canvas: Canvas, angle: Double, xLeftHand : Float, xRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightWrist: PoseLandmark,  rightElbow: PoseLandmark){
+ /* private fun pushUpLogic(canvas: Canvas, angle: Double, xLeftHand : Float, xRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightWrist: PoseLandmark,  rightElbow: PoseLandmark){
 
     println("Angle ${abs(angle)}")
     if (((180 - abs(angle)) > 25) && !isCount) {
@@ -412,5 +504,5 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineOneText, 1)
     drawText(canvas, lineTwoText, 2)
     drawText(canvas, "count: $upCount", 3)
-  }
+  }*/
 }
