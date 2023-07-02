@@ -4,8 +4,10 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.ExerciseTotalInfo
 import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.PlanOfClient
 import pt.ipc.domain.User
 import pt.ipc.http.models.ClientInformation
 import pt.ipc.http.models.MonitorAvailable
@@ -82,6 +84,27 @@ class JdbiMonitorsRepository(
             rating = rating,
             docState = docState
         )
+    }
+
+    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date : LocalDate): ClientOfMonitor? {
+
+        val clientOfMonitor = handle.createQuery("select * from dbo.users u inner join dbo.client_to_monitor ctm on u.id = ctm.client_id where ctm.client_id = :clientID and ctm.monitor_id = :monitorID")
+            .bind("clientID",clientID)
+            .bind("monitorID",monitorID)
+            .mapTo<ClientOfMonitor>()
+            .singleOrNull() ?: return null
+
+        val plan = handle.createQuery("select p.id,p.title from dbo.clients c " +
+                "inner join dbo.client_plans cp on c.c_id = cp.client_id " +
+                "inner join dbo.plans p on p.id = cp.plan_id " +
+                "where cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
+            .bind("clientID", clientID)
+            .bind("date", date)
+            .mapTo<PlanOfClient>()
+            .singleOrNull()
+
+        return clientOfMonitor.copy(plan = plan)
+
     }
 
     override fun getMonitor(monitorID: UUID): MonitorDetails? =

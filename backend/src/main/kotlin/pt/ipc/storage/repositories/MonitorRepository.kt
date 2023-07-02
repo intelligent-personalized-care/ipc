@@ -1,6 +1,7 @@
 package pt.ipc.storage.repositories
 
 import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
 import pt.ipc.http.models.ClientInformation
@@ -20,6 +21,8 @@ interface MonitorRepository {
     fun getUserByID(id: UUID): User?
 
     fun getMonitorProfile(monitorID: UUID): MonitorProfile?
+
+    fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date : LocalDate) : ClientOfMonitor?
 
     fun getMonitor(monitorID: UUID): MonitorDetails?
 

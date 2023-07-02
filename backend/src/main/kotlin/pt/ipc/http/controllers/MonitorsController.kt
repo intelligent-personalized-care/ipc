@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.ExercisesOfClients
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanID
@@ -81,6 +82,23 @@ class MonitorsController(private val monitorService: MonitorService, private val
         val clients = monitorService.getClientsOfMonitor(monitorID = user.id)
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
+    }
+
+    @Authentication
+    @GetMapping(Uris.CLIENT_OF_MONITOR)
+    fun clientOfMonitor(
+        @PathVariable clientID: UUID,
+        @PathVariable monitorID: UUID, user: User,
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @RequestParam(required = false)
+        date: LocalDate?
+    ) : ResponseEntity<ClientOfMonitor>{
+        if (user.id != monitorID) throw ForbiddenRequest
+
+        val client = monitorService.getClientOfMonitor(monitorID = monitorID, clientID = clientID, date = date ?: LocalDate.now())
+
+        return ResponseEntity.ok(client)
+
     }
 
     @Authentication

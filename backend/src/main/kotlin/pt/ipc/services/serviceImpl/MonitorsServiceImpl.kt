@@ -2,6 +2,7 @@ package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
 import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
@@ -25,7 +26,7 @@ import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 @Service
 class MonitorsServiceImpl(
@@ -80,6 +81,15 @@ class MonitorsServiceImpl(
             }
         )
 
+    override fun getClientOfMonitor(monitorID: UUID, clientID: UUID, date: LocalDate): ClientOfMonitor =
+        transactionManager.runBlock(
+            block = {
+                if(!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
+                it.monitorRepository.getClientOfMonitor(monitorID = monitorID, clientID = clientID, date = date) ?: throw UserNotExists
+            }
+        )
+
+
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         transactionManager.runBlock(
             block = {
@@ -115,7 +125,7 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
                 val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
-                
+
                     it.monitorRepository.decideRequest(
                         requestID = requestID,
                         clientID = requestInformation.clientID,

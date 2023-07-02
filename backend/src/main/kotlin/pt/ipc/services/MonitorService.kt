@@ -1,6 +1,7 @@
 package pt.ipc.services
 
 import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
@@ -22,6 +23,8 @@ interface MonitorService {
     fun getMonitor(monitorID: UUID): MonitorDetails
 
     fun getClientsOfMonitor(monitorID: UUID): List<ClientInformation>
+
+    fun getClientOfMonitor(monitorID: UUID,clientID: UUID, date : LocalDate) : ClientOfMonitor
 
     fun updateProfilePicture(monitorID: UUID, photo: ByteArray)
 
