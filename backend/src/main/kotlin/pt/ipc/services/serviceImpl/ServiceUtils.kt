@@ -20,28 +20,26 @@ class ServiceUtils(
         private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
     }
 
-    fun getUser(id : UUID, role : Role) : User? =
-       when(role){
-           Role.MONITOR -> transactionManager.runBlock(
-                            block = {
-                                it.monitorRepository.getUserByID(id = id)
-                            }
-                        )
-           Role.CLIENT -> transactionManager.runBlock(
-                            block = {
-                                it.clientsRepository.getUserByID(id = id)
-                            }
-                        )
-           Role.ADMIN -> transactionManager.runBlock(
-                            block = {
-                                it.adminRepository.getUserByID(id = id)
-                            }
-                        )
-              }
+    fun getUser(id: UUID, role: Role): User? =
+        when (role) {
+            Role.MONITOR -> transactionManager.runBlock(
+                block = {
+                    it.monitorRepository.getUserByID(id = id)
+                }
+            )
+            Role.CLIENT -> transactionManager.runBlock(
+                block = {
+                    it.clientsRepository.getUserByID(id = id)
+                }
+            )
+            Role.ADMIN -> transactionManager.runBlock(
+                block = {
+                    it.adminRepository.getUserByID(id = id)
+                }
+            )
+        }
 
-
-
-    fun checkIfMonitorIsVerified(monitorID : UUID) =
+    fun checkIfMonitorIsVerified(monitorID: UUID) =
         transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.checkIfMonitorIsVerified(monitorID = monitorID)) throw MonitorNotVerified

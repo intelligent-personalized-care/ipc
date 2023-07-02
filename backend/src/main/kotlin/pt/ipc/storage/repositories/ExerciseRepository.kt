@@ -19,9 +19,9 @@ interface ExerciseRepository {
 
     fun getExercisesOfDay(clientID: UUID, date: LocalDate): List<Exercise>
 
-    fun addExerciseInfoPreview(exerciseID: UUID, title : String, description : String, type : ExerciseType)
+    fun addExerciseInfoPreview(exerciseID: UUID, title: String, description: String, type: ExerciseType)
 
-    fun getClientVideoID(clientID: UUID, planID : Int, dailyListID : Int, dailyExerciseID : Int, set : Int) : UUID?
+    fun getClientVideoID(clientID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int): UUID?
 
-    fun getVideoFeedback(videoID : UUID) : VideoFeedBack
+    fun getVideoFeedback(videoID: UUID): VideoFeedBack
 }

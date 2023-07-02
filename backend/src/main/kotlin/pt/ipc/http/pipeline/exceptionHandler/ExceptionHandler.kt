@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest
 @ControllerAdvice
 class ExceptionHandler {
 
-
     @ExceptionHandler(value = [NullPointerException::class])
     fun handleNullPointerException(
         request: HttpServletRequest,
@@ -39,9 +38,6 @@ class ExceptionHandler {
             title = ex.message ?: "Null Pointer Exception",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
-
-
-
 
     @ExceptionHandler(value = [BadRequest::class])
     fun handleBadRequest(
@@ -106,8 +102,8 @@ class ExceptionHandler {
     @ExceptionHandler(value = [MissingServletRequestParameterException::class])
     fun handleMissingMethodParameter(
         request: HttpServletRequest,
-        ex : MissingServletRequestParameterException
-    ) : ResponseEntity<Any> =
+        ex: MissingServletRequestParameterException
+    ): ResponseEntity<Any> =
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message,
@@ -119,21 +115,18 @@ class ExceptionHandler {
         request: HttpServletRequest,
         ex: Exception
     ): ResponseEntity<Any> {
-
-
-    return Problem(
-    type = URI.create(PROBLEMS_DOCS_URI + "multipart"),
-    title = ex.message ?: "Multipart File Problem without message",
-    status = HttpStatus.BAD_REQUEST.value ()
-    ).toResponseEntity()
-
-}
+        return Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + "multipart"),
+            title = ex.message ?: "Multipart File Problem without message",
+            status = HttpStatus.BAD_REQUEST.value()
+        ).toResponseEntity()
+    }
 
     @ExceptionHandler(value = [JwtException::class])
     fun handleJWTException(
         request: HttpServletRequest,
         ex: JwtException
-    ) : ResponseEntity<Any>{
+    ): ResponseEntity<Any> {
         return Problem(
             type = URI.create(PROBLEMS_DOCS_URI + "JWT"),
             title = ex.message(),

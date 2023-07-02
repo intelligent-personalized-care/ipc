@@ -1,6 +1,5 @@
 package pt.ipc.http.models
 
-import pt.ipc.domain.MonitorDetails
 import java.util.*
 
 data class AllMonitorsAvailableOutput(
@@ -11,5 +10,5 @@ data class MonitorAvailable(
     val id: UUID,
     val name: String,
     val email: String,
-    val requested : Boolean
+    val requested: Boolean
 )

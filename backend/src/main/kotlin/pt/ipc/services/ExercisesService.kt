@@ -13,7 +13,7 @@ interface ExercisesService {
 
     fun getExercisePreviewVideo(exerciseID: UUID): ByteArray
 
-    fun getClientVideo(clientID : UUID, userID : UUID, planID : Int, dailyList : Int, dailyExercise : Int, set : Int): ByteArray
+    fun getClientVideo(clientID: UUID, userID: UUID, planID: Int, dailyList: Int, dailyExercise: Int, set: Int): ByteArray
 
-    fun getVideoFeedback(clientID : UUID, userID : UUID, planID : Int, dailyList : Int, dailyExercise : Int, set: Int) : VideoFeedBack
+    fun getVideoFeedback(clientID: UUID, userID: UUID, planID: Int, dailyList: Int, dailyExercise: Int, set: Int): VideoFeedBack
 }

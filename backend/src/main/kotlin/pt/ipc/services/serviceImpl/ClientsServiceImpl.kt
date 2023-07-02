@@ -1,17 +1,30 @@
 package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.*
+import pt.ipc.domain.Client
+import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.Exercise
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.*
+import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
+import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
+import pt.ipc.domain.exceptions.ClientDontHavePlan
+import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
+import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
+import pt.ipc.domain.exceptions.LoginFailed
+import pt.ipc.domain.exceptions.MonitorNotFound
+import pt.ipc.domain.exceptions.NotMonitorOfClient
+import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.domain.toLocalDate
 import pt.ipc.http.models.MonitorAvailable
 import pt.ipc.http.models.MonitorOutput
 import pt.ipc.services.ClientsService
-import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @Service
 class ClientsServiceImpl(
@@ -42,7 +55,7 @@ class ClientsServiceImpl(
             block = {
                 it.clientsRepository.registerClient(
                     input = encryptedClient,
-                    token = encryptedToken,
+                    token = encryptedToken
                 )
             }
         )
@@ -58,14 +71,12 @@ class ClientsServiceImpl(
         )
     }
 
-    override fun getClientProfile(clientID: UUID) : ClientOutput =
+    override fun getClientProfile(clientID: UUID): ClientOutput =
         transactionManager.runBlock(
             block = {
                 it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
             }
         )
-
-
 
     override fun login(email: String, password: String): CredentialsOutput =
         transactionManager.runBlock(
@@ -80,10 +91,9 @@ class ClientsServiceImpl(
     override fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable> =
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit,clientID)
+                it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit, clientID)
             }
         )
-
 
     override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID, String> {
         val requestID = UUID.randomUUID()
@@ -98,7 +108,7 @@ class ClientsServiceImpl(
                     clientID = clientID,
                     requestText = requestText
                 )
-                 Pair(first = requestID, second = client.name)
+                Pair(first = requestID, second = client.name)
             }
         )
     }
@@ -154,7 +164,6 @@ class ClientsServiceImpl(
         val exerciseVideoID = UUID.randomUUID()
         return transactionManager.runBlock(
             block = {
-
                 val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
                 val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
 

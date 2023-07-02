@@ -6,13 +6,11 @@ import java.util.UUID
 
 interface AdminRepository {
 
-    fun getUserByID(id : UUID) : User?
+    fun getUserByID(id: UUID): User?
 
-    fun createAdmin(id : UUID, email : String, name : String, passwordHash : String, tokenHash : String)
+    fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, tokenHash: String)
 
-    fun getUnverifiedMonitors() : List<MonitorInfo>
+    fun getUnverifiedMonitors(): List<MonitorInfo>
 
-    fun decideMonitorVerification(monitorID : UUID, decision : Boolean)
-
-
+    fun decideMonitorVerification(monitorID: UUID, decision: Boolean)
 }

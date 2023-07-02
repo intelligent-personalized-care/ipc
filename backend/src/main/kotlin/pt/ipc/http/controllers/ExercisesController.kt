@@ -3,7 +3,11 @@ package pt.ipc.http.controllers
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.User
@@ -13,10 +17,10 @@ import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ExercisesService
-import java.util.*
+import java.util.UUID
 
 @RestController
-@RequestMapping(produces = ["application/json", "video/mp4",Problem.PROBLEM_MEDIA_TYPE])
+@RequestMapping(produces = ["application/json", "video/mp4", Problem.PROBLEM_MEDIA_TYPE])
 class ExercisesController(private val exercisesService: ExercisesService) {
 
     @GetMapping(Uris.EXERCISES)
@@ -55,10 +59,9 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         @PathVariable planID: Int,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
-        @RequestParam(required = true) set : Int,
+        @RequestParam(required = true) set: Int,
         user: User
     ): ResponseEntity<ByteArray> {
-
         val clientVideo = exercisesService.getClientVideo(
             clientID = clientID,
             userID = user.id,
@@ -83,10 +86,9 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
         @PathVariable planID: Int,
-        @RequestParam(required = true) set : Int,
+        @RequestParam(required = true) set: Int,
         user: User
-    ) : ResponseEntity<VideoFeedBack>{
-
+    ): ResponseEntity<VideoFeedBack> {
         val videoFeedBack = exercisesService.getVideoFeedback(
             clientID = clientID,
             userID = user.id,

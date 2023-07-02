@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.*
 import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.Exercise
+import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.RatingInput
+import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.models.AllMonitorsAvailableOutput
 import pt.ipc.http.models.ConnectionRequest
@@ -28,16 +30,15 @@ import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYP
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ClientsService
-import pt.ipc.services.dtos.RegisterClientInput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterClientInput
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping(produces = ["application/json", PROBLEM_MEDIA_TYPE])
 class ClientsController(private val clientsService: ClientsService, private val sseEmitterUtils: SseEmitterUtils) {
-
 
     @PostMapping(Uris.CLIENT_REGISTER)
     fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<CredentialsOutput> {
@@ -62,8 +63,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
     @Authentication
     @GetMapping(Uris.CLIENT_PROFILE)
-    fun clientProfile(@PathVariable clientID: UUID, user : User) : ResponseEntity<ClientOutput>{
-
+    fun clientProfile(@PathVariable clientID: UUID, user: User): ResponseEntity<ClientOutput> {
         if (user.id != clientID) throw ForbiddenRequest
 
         val client = clientsService.getClientProfile(clientID = clientID)
@@ -77,10 +77,9 @@ class ClientsController(private val clientsService: ClientsService, private val 
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
         @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) limit: Int,
-        user : User
+        user: User
     ): ResponseEntity<AllMonitorsAvailableOutput> {
-
-        val monitors : List<MonitorAvailable> = clientsService.searchMonitorsAvailable(
+        val monitors: List<MonitorAvailable> = clientsService.searchMonitorsAvailable(
             clientID = user.id,
             name = name,
             skip = skip,
@@ -88,16 +87,14 @@ class ClientsController(private val clientsService: ClientsService, private val 
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(AllMonitorsAvailableOutput(monitors))
-
     }
-
 
     @Authentication
     @PostMapping(Uris.MONITOR_BY_ID)
     fun makeRequestForMonitor(@PathVariable monitorID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {
         if (user.id != connRequest.clientID) throw ForbiddenRequest
 
-        val (requestID,clientName) = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
+        val (requestID, clientName) = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
 
         sseEmitterUtils.send(userID = monitorID, obj = RequestMonitor(requestID = requestID, name = clientName))
 
@@ -153,31 +150,29 @@ class ClientsController(private val clientsService: ClientsService, private val 
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
     fun postVideoOfExercise(
         @RequestParam video: MultipartFile,
-        @RequestParam set : Int,
-        @RequestParam(required = false) feedBack : String?,
+        @RequestParam set: Int,
+        @RequestParam(required = false) feedBack: String?,
         @PathVariable clientID: UUID,
         @PathVariable planID: Int,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
         user: User
     ): ResponseEntity<Unit> {
+        if (user.id != clientID) throw ForbiddenRequest
 
-        if(user.id != clientID) throw ForbiddenRequest
+        val (monitorID, clientName) = clientsService.uploadVideoOfClient(
+            video = video.bytes,
+            clientID = clientID,
+            planID = planID,
+            dailyListID = dailyListID,
+            exerciseID = exerciseID,
+            set = set,
+            feedback = feedBack
+        )
 
-        val (monitorID,clientName) = clientsService.uploadVideoOfClient(
-                                    video = video.bytes,
-                                    clientID = clientID,
-                                    planID = planID,
-                                    dailyListID = dailyListID,
-                                    exerciseID = exerciseID,
-                                    set = set,
-                                    feedback = feedBack
-                                 )
-
-        sseEmitterUtils.send(userID = monitorID, obj = PostedVideo(name = clientName) )
+        sseEmitterUtils.send(userID = monitorID, obj = PostedVideo(name = clientName))
 
         return ResponseEntity.ok().build()
-
     }
 
     companion object {

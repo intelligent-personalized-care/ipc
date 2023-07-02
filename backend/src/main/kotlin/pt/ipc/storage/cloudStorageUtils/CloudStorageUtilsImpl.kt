@@ -80,5 +80,5 @@ class CloudStorageUtilsImpl(
         download(fileName = fileName.toString(), bucketName = userPhotosBucket)
 
     override fun uploadVideoPreview(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName.toString(),file, contentType = videoContentType, exercisesPreviewsBucket)
+        upload(fileName = fileName.toString(), file, contentType = videoContentType, exercisesPreviewsBucket)
 }

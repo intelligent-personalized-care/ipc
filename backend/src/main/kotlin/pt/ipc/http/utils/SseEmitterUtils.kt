@@ -7,15 +7,14 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
-
 @Component
 class SseEmitterUtils {
 
-    private class AcceptConnection(val accept : String = "Connection Accepted")
+    private class AcceptConnection(val accept: String = "Connection Accepted")
     private val accept = AcceptConnection()
 
-    private data class Object(val className : String, val obj : Any){
-        init{
+    private data class Object(val className: String, val obj: Any) {
+        init {
             require(obj::class.simpleName != null)
         }
     }
@@ -24,15 +23,14 @@ class SseEmitterUtils {
 
     private val emitters = ConcurrentHashMap<UUID, SseEmitter>()
 
-    fun createConnection(userID : UUID) : SseEmitter{
+    fun createConnection(userID: UUID): SseEmitter {
         val emitter = SseEmitter(0)
         emitters[userID] = emitter
-        send(userID = userID, accept )
+        send(userID = userID, accept)
         return emitter
     }
 
-    fun send(userID: UUID, obj : Any){
-
+    fun send(userID: UUID, obj: Any) {
         val emitter = emitters[userID] ?: return
 
         val newObject = Object(
@@ -41,21 +39,17 @@ class SseEmitterUtils {
         )
 
         nonBlockingService.execute {
-            try{
+            try {
                 emitter.send(newObject)
-            }catch (ex : Exception){
+            } catch (ex: Exception) {
                 emitter.completeWithError(ex)
             }
         }
     }
 
-    fun endConnection(userID: UUID){
+    fun endConnection(userID: UUID) {
         val emitter = emitters[userID] ?: return
         emitter.complete()
         emitters.remove(userID)
     }
-
-
-
 }
-

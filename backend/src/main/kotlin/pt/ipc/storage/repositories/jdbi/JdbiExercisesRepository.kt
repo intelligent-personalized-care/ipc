@@ -69,10 +69,12 @@ class JdbiExercisesRepository(
         AND dl.index = :dayIndex
     """
 
-        val dtStart = handle.createQuery("SELECT dt_start FROM " +
-                "dbo.client_plans cp WHERE cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
+        val dtStart = handle.createQuery(
+            "SELECT dt_start FROM " +
+                "dbo.client_plans cp WHERE cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end"
+        )
             .bind("clientID", clientID)
-            .bind("date",date)
+            .bind("date", date)
             .mapTo<LocalDate>()
             .singleOrNull() ?: return emptyList()
 
@@ -87,10 +89,10 @@ class JdbiExercisesRepository(
 
     override fun addExerciseInfoPreview(exerciseID: UUID, title: String, description: String, type: ExerciseType) {
         handle.createUpdate("insert into dbo.exercises_info(id, title, description, type) values(:id,:title,:description,:type)")
-            .bind("id",exerciseID)
-            .bind("title",title)
-            .bind("description",description)
-            .bind("type",type)
+            .bind("id", exerciseID)
+            .bind("title", title)
+            .bind("description", description)
+            .bind("type", type)
             .execute()
     }
 
@@ -99,20 +101,19 @@ class JdbiExercisesRepository(
             "select ev.id from dbo.exercises_video ev " +
                 "inner join dbo.daily_exercises de on de.id = ev.ex_id " +
                 "inner join dbo.daily_lists dl on de.daily_list_id = dl.id " +
-                "where de.id = :dailyExerciseID and dl.id = :dailyListID and dl.plan_id = :planID and ev.client_id = :clientID and ev.nr_set = :set")
-            .bind("dailyExerciseID",dailyExerciseID)
-            .bind("dailyListID",dailyListID)
-            .bind("planID",planID)
-            .bind("clientID",clientID)
-            .bind("set",set)
+                "where de.id = :dailyExerciseID and dl.id = :dailyListID and dl.plan_id = :planID and ev.client_id = :clientID and ev.nr_set = :set"
+        )
+            .bind("dailyExerciseID", dailyExerciseID)
+            .bind("dailyListID", dailyListID)
+            .bind("planID", planID)
+            .bind("clientID", clientID)
+            .bind("set", set)
             .mapTo<UUID>()
             .singleOrNull()
 
-
-    override fun getVideoFeedback(videoID : UUID) : VideoFeedBack =
+    override fun getVideoFeedback(videoID: UUID): VideoFeedBack =
         handle.createQuery("select feedback_client,feedback_monitor from dbo.exercises_video where id = :videoID")
-            .bind("videoID",videoID)
+            .bind("videoID", videoID)
             .mapTo<VideoFeedBack>()
             .single()
-    }
-
+}

@@ -5,9 +5,9 @@ import pt.ipc.domain.ExerciseType
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.services.AdminService
+import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.MonitorInfo
 import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
@@ -19,10 +19,9 @@ class AdminServiceImpl(
 ) : AdminService {
 
     override fun createAdminAccount(registerInput: RegisterInput): CredentialsOutput {
-
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
-        val (token,id) = serviceUtils.createCredentials(role = Role.ADMIN)
+        val (token, id) = serviceUtils.createCredentials(role = Role.ADMIN)
 
         transactionManager.runBlock(
             block = {
@@ -37,7 +36,6 @@ class AdminServiceImpl(
         )
 
         return CredentialsOutput(id = id, token = token)
-
     }
 
     override fun getUnverifiedMonitors(): List<MonitorInfo> =
@@ -54,7 +52,6 @@ class AdminServiceImpl(
             }
         )
 
-
     override fun decideMonitorCredential(monitorID: UUID, accept: Boolean) =
         transactionManager.runBlock(
             block = {
@@ -63,7 +60,6 @@ class AdminServiceImpl(
         )
 
     override fun addExerciseInfoPreview(title: String, description: String, type: ExerciseType, video: ByteArray) {
-
         val exerciseID = UUID.randomUUID()
 
         transactionManager.runBlock(

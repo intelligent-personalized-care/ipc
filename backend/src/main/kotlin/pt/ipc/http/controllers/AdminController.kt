@@ -4,46 +4,47 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.ExerciseType
-import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
 import pt.ipc.http.models.emitter.CredentialAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
+import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.AdminService
-import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterInput
 import java.util.UUID
 
 @RestController
 class AdminController(private val adminService: AdminService, private val sseEmitterUtils: SseEmitterUtils) {
 
-
     @Authentication
     @PostMapping(Uris.ADMIN_CREATION)
-    fun createAdminAccount(@RequestBody registerInput: RegisterInput) : ResponseEntity<CredentialsOutput>{
-
+    fun createAdminAccount(@RequestBody registerInput: RegisterInput): ResponseEntity<CredentialsOutput> {
         val registerOutput = adminService.createAdminAccount(registerInput = registerInput)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
-
     }
 
     @Authentication
     @GetMapping(Uris.UNVERIFIED_MONITORS)
-    fun getUnverifiedMonitors() : ResponseEntity<ListOfUnverifiedMonitors>{
+    fun getUnverifiedMonitors(): ResponseEntity<ListOfUnverifiedMonitors> {
         val monitors = adminService.getUnverifiedMonitors()
 
         return ResponseEntity.ok(ListOfUnverifiedMonitors(monitors = monitors))
     }
 
-
     @Authentication
     @GetMapping(Uris.UNVERIFIED_MONITOR)
-    fun credentialOfMonitor(@PathVariable monitorID: UUID) : ResponseEntity<ByteArray> {
+    fun credentialOfMonitor(@PathVariable monitorID: UUID): ResponseEntity<ByteArray> {
         val credential = adminService.getCredentialOfMonitor(monitorID = monitorID)
 
         val headers = HttpHeaders()
@@ -51,19 +52,16 @@ class AdminController(private val adminService: AdminService, private val sseEmi
         headers.contentLength = credential.size.toLong()
 
         return ResponseEntity.ok().headers(headers).body(credential)
-
     }
 
     @Authentication
     @PostMapping(Uris.UNVERIFIED_MONITOR)
-    fun decideCredentialOfMonitor(@PathVariable monitorID : UUID, @RequestBody decision : Decision) : ResponseEntity<Unit>{
-
+    fun decideCredentialOfMonitor(@PathVariable monitorID: UUID, @RequestBody decision: Decision): ResponseEntity<Unit> {
         adminService.decideMonitorCredential(monitorID = monitorID, accept = decision.accept)
 
         sseEmitterUtils.send(userID = monitorID, CredentialAcceptance(acceptance = decision.accept))
 
         return ResponseEntity.ok().build()
-
     }
 
     @Authentication
@@ -72,9 +70,9 @@ class AdminController(private val adminService: AdminService, private val sseEmi
         @RequestParam video: MultipartFile,
         @RequestParam title: String,
         @RequestParam description: String,
-        @RequestParam type: ExerciseType,
+        @RequestParam type: ExerciseType
 
-    ) : ResponseEntity<Unit>{
+    ): ResponseEntity<Unit> {
         adminService.addExerciseInfoPreview(
             title = title,
             description = description,
@@ -84,6 +82,4 @@ class AdminController(private val adminService: AdminService, private val sseEmi
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
-
-
 }

@@ -10,9 +10,9 @@ import java.util.*
 
 @Service
 class UserServiceImpl(
-    private val transactionManager : TransactionManager,
-    private val encryptionUtils : EncryptionUtils
-) : UserService{
+    private val transactionManager: TransactionManager,
+    private val encryptionUtils: EncryptionUtils
+) : UserService {
 
     override fun getUserPhoto(userID: UUID): ByteArray =
         transactionManager.runBlock(

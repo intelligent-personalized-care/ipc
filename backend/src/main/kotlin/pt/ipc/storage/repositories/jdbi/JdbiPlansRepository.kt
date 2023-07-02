@@ -126,7 +126,7 @@ class JdbiPlansRepository(
     override fun checkIfExistsPlanOfClientInThisPeriod(clientID: UUID, startDate: LocalDate, endDate: LocalDate): Boolean {
         return handle.createQuery(
             "select count(*) from dbo.client_plans cp where " +
-                    "(cp.dt_end >= :startDate and :endDate >= cp.dt_start) and cp.client_id = :clientID"
+                "(cp.dt_end >= :startDate and :endDate >= cp.dt_start) and cp.client_id = :clientID"
         )
             .bind("startDate", startDate)
             .bind("endDate", endDate)
@@ -144,7 +144,7 @@ class JdbiPlansRepository(
         )
             .bind("exerciseID", exerciseID)
             .bind("monitorID", monitorID)
-            .bind("planID",planID)
+            .bind("planID", planID)
             .mapTo<Int>()
             .single() == 1
     }
@@ -162,7 +162,7 @@ class JdbiPlansRepository(
                 "inner join dbo.daily_lists dl on dl.id = de.daily_list_id " +
                 "where ev.nr_set = :set and ev.ex_id = :exerciseID and dl.id = :dailyListID and dl.plan_id = :planID"
         )
-            .bind("set",set)
+            .bind("set", set)
             .bind("exerciseID", exerciseID)
             .bind("dailyListID", dailyListID)
             .bind("planID", planID)
@@ -172,7 +172,8 @@ class JdbiPlansRepository(
 
     override fun giveFeedBackOfVideo(clientID: UUID, exerciseID: Int, set: Int, feedBack: String) {
         handle.createUpdate(
-            "update dbo.exercises_video set feedback_monitor = :feedBack where ex_id = :exerciseID and client_id = :clientID and nr_set = :set")
+            "update dbo.exercises_video set feedback_monitor = :feedBack where ex_id = :exerciseID and client_id = :clientID and nr_set = :set"
+        )
             .bind("feedBack", feedBack)
             .bind("exerciseID", exerciseID)
             .bind("clientID", clientID)

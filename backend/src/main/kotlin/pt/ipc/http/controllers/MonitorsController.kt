@@ -3,11 +3,28 @@ package pt.ipc.http.controllers
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import pt.ipc.domain.*
+import pt.ipc.domain.ExercisesOfClients
+import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.PlanID
+import pt.ipc.domain.PlanInput
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.ForbiddenRequest
-import pt.ipc.http.models.*
+import pt.ipc.http.models.Decision
+import pt.ipc.http.models.FeedbackInput
+import pt.ipc.http.models.ListOfClients
+import pt.ipc.http.models.ListOfPlans
+import pt.ipc.http.models.MonitorProfile
+import pt.ipc.http.models.PlanToClient
+import pt.ipc.http.models.RequestsOfMonitor
 import pt.ipc.http.models.emitter.MonitorFeedBack
 import pt.ipc.http.models.emitter.PlanAssociation
 import pt.ipc.http.models.emitter.RequestAcceptance
@@ -16,18 +33,17 @@ import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYP
 import pt.ipc.http.utils.SseEmitterUtils
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.MonitorService
-import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterInput
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @RestController
 @RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
-class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils : SseEmitterUtils) {
+class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils: SseEmitterUtils) {
 
     @PostMapping(Uris.MONITORS)
     fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<CredentialsOutput> {
-
         val registerOutput = monitorService.registerMonitor(registerInput = registerInput)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerOutput)
@@ -49,8 +65,8 @@ class MonitorsController(private val monitorService: MonitorService, private val
 
     @Authentication
     @GetMapping(Uris.MONITOR_PROFILE)
-    fun monitorProfile(@PathVariable monitorID: UUID, user: User) : ResponseEntity<MonitorProfile>{
-        if(monitorID != user.id) throw ForbiddenRequest
+    fun monitorProfile(@PathVariable monitorID: UUID, user: User): ResponseEntity<MonitorProfile> {
+        if (monitorID != user.id) throw ForbiddenRequest
 
         val profile = monitorService.getMonitorProfile(monitorID = monitorID)
 
@@ -85,13 +101,13 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<ListOfClients> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val (clients,clientID,monitorName) = monitorService.decideRequest(
+        val (clients, clientID, monitorName) = monitorService.decideRequest(
             requestID = requestID,
             monitorID = monitorID,
             accept = decision.accept
         )
 
-        if(decision.accept) sseEmitterUtils.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
+        if (decision.accept) sseEmitterUtils.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }
@@ -150,7 +166,8 @@ class MonitorsController(private val monitorService: MonitorService, private val
             monitorID = monitorID,
             clientID = clientID,
             startDate = planInfo.startDate,
-            planID = planInfo.planID)
+            planID = planInfo.planID
+        )
 
         sseEmitterUtils.send(userID = clientID, obj = PlanAssociation(planTitle = title, startDate = planInfo.startDate))
 
@@ -180,7 +197,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
             planID = planID,
             dailyListID = dailyListID,
             dailyExerciseID = exerciseID,
-            set = feedbackInput.set ,
+            set = feedbackInput.set,
             feedback = feedbackInput.feedback,
             clientID = clientID
         )
@@ -195,16 +212,11 @@ class MonitorsController(private val monitorService: MonitorService, private val
     fun exercisesOfClients(
         @PathVariable monitorID: UUID,
         @DateTimeFormat(pattern = "yyyy-MM-dd")
-        @RequestParam date : LocalDate
-    ) : ResponseEntity<ExercisesOfClients>{
-
+        @RequestParam
+        date: LocalDate
+    ): ResponseEntity<ExercisesOfClients> {
         val exercises = monitorService.exercisesOfClients(monitorID = monitorID, date = date)
 
         return ResponseEntity.ok(ExercisesOfClients(clientsExercises = exercises))
-    }
-
-    companion object {
-        private const val DEFAULT_SKIP = "0"
-        private const val DEFAULT_LIMIT = "10"
     }
 }

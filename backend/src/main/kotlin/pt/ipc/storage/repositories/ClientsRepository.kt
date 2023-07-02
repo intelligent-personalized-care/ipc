@@ -11,9 +11,9 @@ interface ClientsRepository {
 
     fun existsEmail(email: String): Boolean
 
-    fun getUserByID(id : UUID) : User?
+    fun getUserByID(id: UUID): User?
 
-    fun getClient(clientID : UUID) : ClientOutput?
+    fun getClient(clientID: UUID): ClientOutput?
 
     fun registerClient(input: Client, token: String)
 
@@ -27,7 +27,7 @@ interface ClientsRepository {
 
     fun checkIfClientHasThisExercise(clientID: UUID, planID: Int, dailyList: Int, exerciseID: Int): Boolean
 
-    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int, set : Int): Boolean
+    fun checkIfClientAlreadyUploadedVideo(clientID: UUID, exerciseID: Int, set: Int): Boolean
 
-    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, set : Int, clientFeedback: String?)
+    fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, set: Int, clientFeedback: String?)
 }

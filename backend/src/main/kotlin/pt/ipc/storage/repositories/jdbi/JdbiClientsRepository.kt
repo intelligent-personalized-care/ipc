@@ -24,17 +24,18 @@ class JdbiClientsRepository(
 
     override fun getUserByID(id: UUID): User? =
         handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.clients c on u.id = c.c_id where c.c_id = :id")
-              .bind("id",id)
-              .mapTo<User>()
-              .singleOrNull()
-
-    override fun getClient(clientID: UUID): ClientOutput? =
-        handle.createQuery("select u.id, u.name, u.email, c.weight, c.height, c.physical_condition as physicalCondition, c.birth_date as birthDate " +
-                                "from dbo.clients c inner join dbo.users u on c.c_id = u.id  where c.c_id = :clientID")
-            .bind("clientID",clientID)
-            .mapTo<ClientOutput>()
+            .bind("id", id)
+            .mapTo<User>()
             .singleOrNull()
 
+    override fun getClient(clientID: UUID): ClientOutput? =
+        handle.createQuery(
+            "select u.id, u.name, u.email, c.weight, c.height, c.physical_condition as physicalCondition, c.birth_date as birthDate " +
+                "from dbo.clients c inner join dbo.users u on c.c_id = u.id  where c.c_id = :clientID"
+        )
+            .bind("clientID", clientID)
+            .mapTo<ClientOutput>()
+            .singleOrNull()
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
         handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) values (:monitorID,:clientID,:requestID,:requestText)")
@@ -44,7 +45,6 @@ class JdbiClientsRepository(
             .bind("requestText", requestText)
             .execute()
     }
-
 
     override fun registerClient(input: Client, token: String) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
@@ -116,7 +116,7 @@ class JdbiClientsRepository(
         return handle.createQuery("select count(*) from dbo.exercises_video where client_id = :client and ex_id = :exerciseID and nr_set = :set")
             .bind("client", clientID)
             .bind("exerciseID", exerciseID)
-            .bind("set",set)
+            .bind("set", set)
             .mapTo<Int>()
             .single() == 1
     }
@@ -131,13 +131,14 @@ class JdbiClientsRepository(
     ) {
         handle.createUpdate(
             "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor,nr_set) " +
-                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null,:set)")
+                "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null,:set)"
+        )
             .bind("exerciseVideoID", exerciseVideoID)
             .bind("exerciseID", exerciseID)
             .bind("clientID", clientID)
             .bind("date", date)
             .bind("clientFeedback", clientFeedback)
-            .bind("set",set)
+            .bind("set", set)
             .execute()
     }
 }

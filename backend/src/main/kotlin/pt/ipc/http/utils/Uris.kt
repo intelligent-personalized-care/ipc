@@ -13,7 +13,6 @@ object Uris {
     const val CLIENT_PHOTO = "/users/clients/{clientID}/profile/photo"
     const val CLIENT_MONITOR = "/users/clients/{clientID}/monitor"
 
-
     const val MONITOR_BY_ID = "/users/monitors/{monitorID}"
     const val MONITOR_REQUESTS = "/users/monitors/{monitorID}/requests"
     const val MONITOR_DECIDE_REQUEST = "/users/monitors/{monitorID}/requests/{requestID}"
@@ -42,6 +41,4 @@ object Uris {
     const val UNVERIFIED_MONITORS = "/admin/unverified_monitors"
     const val UNVERIFIED_MONITOR = "/admin/unverified_monitors/{monitorID}"
     const val ADD_VIDEO_PREVIEW = "/admin/video_preview"
-
-
 }

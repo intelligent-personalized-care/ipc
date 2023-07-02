@@ -27,16 +27,16 @@ class AuthorizationHeaderProcessor(
             return null
         }
 
-        val token : String = parts[1]
+        val token: String = parts[1]
 
-        val (id,role) = jwtUtils.getUserInfo(token = token)
+        val (id, role) = jwtUtils.getUserInfo(token = token)
 
         val user = serviceUtils.getUser(id = id, role = role) ?: throw UserNotExists
 
         return Pair(first = user, second = role)
     }
 
-    fun checkIfMonitorIsVerified(monitorID : UUID) = serviceUtils.checkIfMonitorIsVerified(monitorID = monitorID)
+    fun checkIfMonitorIsVerified(monitorID: UUID) = serviceUtils.checkIfMonitorIsVerified(monitorID = monitorID)
 
     companion object {
         const val SCHEME = "bearer"

@@ -21,7 +21,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
     private data class JwtPayload(val claims: Claims)
 
-    private fun createJwtPayload( id: UUID, role: Role): JwtPayload {
+    private fun createJwtPayload(id: UUID, role: Role): JwtPayload {
         val claims = Jwts.claims()
         claims[userID] = id
         claims[userRole] = role
@@ -39,50 +39,23 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
         )
     }
 
-    fun getUserInfo(token : String) : Pair<UUID,Role>{
-
+    fun getUserInfo(token: String): Pair<UUID, Role> {
         val claims = getClaimsOfToken(token = token)
 
         val id = UUID.fromString(claims[userID].toString())
         val role = claims[userRole].toString().toRole()
 
         return Pair(first = id, second = role)
-
     }
 
-    private fun getClaimsOfToken(token : String) : Claims{
-
+    private fun getClaimsOfToken(token: String): Claims {
         return Jwts.parserBuilder()
-                   .setSigningKey(acessTokenKey)
-                   .build()
-                   .parseClaimsJws(token).body
+            .setSigningKey(acessTokenKey)
+            .build()
+            .parseClaimsJws(token).body
     }
 
     companion object {
         private const val SECRET_KEY_ALGORITHM = "HmacSHA512"
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

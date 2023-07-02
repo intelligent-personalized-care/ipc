@@ -4,8 +4,16 @@ import org.jdbi.v3.core.Handle
 import pt.ipc.storage.cloudStorageUtils.CloudStorageConfiguration
 import pt.ipc.storage.cloudStorageUtils.CloudStorageUtils
 import pt.ipc.storage.cloudStorageUtils.CloudStorageUtilsImpl
-import pt.ipc.storage.repositories.*
-import pt.ipc.storage.repositories.jdbi.*
+import pt.ipc.storage.repositories.AdminRepository
+import pt.ipc.storage.repositories.ClientsRepository
+import pt.ipc.storage.repositories.ExerciseRepository
+import pt.ipc.storage.repositories.MonitorRepository
+import pt.ipc.storage.repositories.PlansRepository
+import pt.ipc.storage.repositories.jdbi.JdbiAdminRepository
+import pt.ipc.storage.repositories.jdbi.JdbiClientsRepository
+import pt.ipc.storage.repositories.jdbi.JdbiExercisesRepository
+import pt.ipc.storage.repositories.jdbi.JdbiMonitorsRepository
+import pt.ipc.storage.repositories.jdbi.JdbiPlansRepository
 
 class TransactionImpl(
     private val handle: Handle,
@@ -22,5 +30,5 @@ class TransactionImpl(
 
     override val cloudStorage: CloudStorageUtils by lazy { CloudStorageUtilsImpl(cloudStorageConfiguration) }
 
-    override val adminRepository : AdminRepository by lazy { JdbiAdminRepository(handle) }
+    override val adminRepository: AdminRepository by lazy { JdbiAdminRepository(handle) }
 }

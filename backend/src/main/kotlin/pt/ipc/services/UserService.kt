@@ -5,8 +5,7 @@ import java.util.*
 
 interface UserService {
 
-    fun getUserPhoto(userID : UUID) : ByteArray
+    fun getUserPhoto(userID: UUID): ByteArray
 
-    fun login(email : String, password : String) : CredentialsOutput
-
+    fun login(email: String, password: String): CredentialsOutput
 }

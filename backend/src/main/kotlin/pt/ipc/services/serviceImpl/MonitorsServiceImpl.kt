@@ -1,19 +1,31 @@
 package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.*
+import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.PlanInput
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.Role
+import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
-import pt.ipc.domain.exceptions.*
-import pt.ipc.http.models.ClientOutput
+import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
+import pt.ipc.domain.exceptions.HasNotUploadedVideo
+import pt.ipc.domain.exceptions.MonitorNotFound
+import pt.ipc.domain.exceptions.NotMonitorOfClient
+import pt.ipc.domain.exceptions.NotPlanOfMonitor
+import pt.ipc.domain.exceptions.PlanNotFound
+import pt.ipc.domain.exceptions.RequestNotExists
+import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.http.models.ClientInformation
 import pt.ipc.http.models.MonitorProfile
 import pt.ipc.http.models.PlansOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.MonitorService
-import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @Service
 class MonitorsServiceImpl(
@@ -23,7 +35,6 @@ class MonitorsServiceImpl(
 ) : MonitorService {
 
     override fun registerMonitor(registerInput: RegisterInput): CredentialsOutput {
-
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
         val (token, userID) = serviceUtils.createCredentials(role = Role.MONITOR)
@@ -62,14 +73,12 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun getClientsOfMonitor(monitorID: UUID): List<ClientOutput> =
+    override fun getClientsOfMonitor(monitorID: UUID): List<ClientInformation> =
         transactionManager.runBlock(
             block = {
                 it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
             }
         )
-
-
 
     override fun updateProfilePicture(monitorID: UUID, photo: ByteArray) {
         transactionManager.runBlock(
@@ -86,7 +95,6 @@ class MonitorsServiceImpl(
             }
         )
 
-
     override fun getProfilePicture(monitorID: UUID): ByteArray {
         return transactionManager.runBlock(
             block = {
@@ -102,24 +110,23 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): Triple<List<ClientOutput>, UUID, String> =
+    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): Triple<List<ClientInformation>, UUID, String> =
         transactionManager.runBlock(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
                 val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
 
-                if(accept){
+                if (accept) {
                     it.monitorRepository.acceptRequest(
                         requestID = requestID,
                         clientID = requestInformation.clientID,
                         monitorID = monitorID
                     )
                 }
-                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
-                 Triple(first = clients, second = monitor.id, third = requestInformation.clientName)
+                val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
+                Triple(first = clients, second = monitor.id, third = requestInformation.clientName)
             }
         )
-
 
     override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
         return transactionManager.runBlock(
@@ -183,13 +190,19 @@ class MonitorsServiceImpl(
                         dailyListID = dailyListID,
                         exerciseID = dailyExerciseID,
                         set = set
-                    )) throw HasNotUploadedVideo
+                    )
+                ) {
+                    throw HasNotUploadedVideo
+                }
 
                 if (!it.plansRepository.checkIfMonitorHasPrescribedExercise(
                         planID = planID,
                         exerciseID = dailyExerciseID,
                         monitorID = monitorID
-                    )) throw NotPlanOfMonitor
+                    )
+                ) {
+                    throw NotPlanOfMonitor
+                }
 
                 it.plansRepository.giveFeedBackOfVideo(
                     clientID = clientID,

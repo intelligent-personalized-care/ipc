@@ -6,34 +6,33 @@ enum class Role {
     ADMIN;
 
     fun isMonitor(): Boolean =
-        when(this){
+        when (this) {
             MONITOR -> true
-            CLIENT,ADMIN -> false
+            CLIENT, ADMIN -> false
         }
 
-     fun notAdmin(): Boolean =
-        when(this){
-            CLIENT,MONITOR -> true
+    fun notAdmin(): Boolean =
+        when (this) {
+            CLIENT, MONITOR -> true
             ADMIN -> false
         }
 
-     fun notClient() : Boolean =
-         when(this){
-             ADMIN,MONITOR -> true
-             CLIENT -> false
-         }
-
-     fun notMonitor() : Boolean =
-         when(this){
-         CLIENT,ADMIN -> true
-         MONITOR -> false
+    fun notClient(): Boolean =
+        when (this) {
+            ADMIN, MONITOR -> true
+            CLIENT -> false
         }
-    }
 
+    fun notMonitor(): Boolean =
+        when (this) {
+            CLIENT, ADMIN -> true
+            MONITOR -> false
+        }
+}
 
 fun String.toRole(): Role =
-    when(this){
-      "CLIENT" -> Role.CLIENT
-      "MONITOR" -> Role.MONITOR
-      else -> Role.ADMIN
+    when (this) {
+        "CLIENT" -> Role.CLIENT
+        "MONITOR" -> Role.MONITOR
+        else -> Role.ADMIN
     }

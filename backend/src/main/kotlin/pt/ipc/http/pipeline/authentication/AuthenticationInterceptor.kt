@@ -31,12 +31,15 @@ class AuthenticationInterceptor(
 
             val uri = request.requestURI
 
-            if(
-                role.isMonitor()
-                && (!(uri.matches(monitorCredentialRegex) && request.method == "POST") // Inputting Credential
-                && !(uri.matches(monitorProfileRegex) && request.method == "GET")
-                && !(uri.matches(subscribeURI) && request.method == "POST")
-                && !(uri.matches(unsubscribeURI) && request.method == "POST"))){  //  Getting Profile
+            if (
+                role.isMonitor() &&
+                (
+                    !(uri.matches(monitorCredentialRegex) && request.method == "POST") && // Inputting Credential
+                        !(uri.matches(monitorProfileRegex) && request.method == "GET") &&
+                        !(uri.matches(subscribeURI) && request.method == "POST") &&
+                        !(uri.matches(unsubscribeURI) && request.method == "POST")
+                    )
+            ) { //  Getting Profile
                 authorizationHeaderProcessor.checkIfMonitorIsVerified(monitorID = user.id)
             }
 
