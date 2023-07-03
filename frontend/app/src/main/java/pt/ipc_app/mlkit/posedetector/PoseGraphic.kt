@@ -121,6 +121,25 @@ class PoseGraphic internal constructor(
           toDraw = !toDraw
 
         }
+        "Shoulder press" -> {
+
+          //Calculate whether the hand exceeds the shoulder
+          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
+
+          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+
+          println(rightShoulder.position.y - rightWrist.position.y)
+          val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
+            rightWrist.position.y + leftWrist.position.y ,rightWrist.position.y - rightShoulder.position.y , 100, 0, 0.5,
+            2, 8,
+            "Please put your elbows at shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",
+            null, null)
+
+          doExerciseLogic(canvas, exerciseLogic)
+
+          toDraw = !toDraw
+        }
         else -> {
 
         }
@@ -327,13 +346,13 @@ class PoseGraphic internal constructor(
 
     val angle = getAngle(exerciseLogic.firstPoint, exerciseLogic.midPoint, exerciseLogic.lastPoint)
 
-    if (((180 - abs(angle)) > exerciseLogic.condOne || (isDown && abs(angle) < 180 / 2)) && !isCount) {
+    if (((180 - abs(angle)) > exerciseLogic.condOne /*|| (isDown && abs(angle) < 180 / 2)*/) && !isCount) {
       reInitParams()
       lineOneText = exerciseLogic.lTextCondOne
-    } else if (exerciseLogic.leftHandPos > 0 || exerciseLogic.rightHandPos > 0) {
+    } else if (exerciseLogic.leftHandPos > exerciseLogic.condTwo || exerciseLogic.rightHandPos > exerciseLogic.condTwo) {
       reInitParams()
       lineOneText = exerciseLogic.lTextCondTwo
-    } else if (exerciseLogic.ratio < 0.5 && !isCount) {
+    } else if (exerciseLogic.ratio < exerciseLogic.condThree && !isCount) {
       reInitParams()
       lineOneText = exerciseLogic.lTextCondThree
     } else {

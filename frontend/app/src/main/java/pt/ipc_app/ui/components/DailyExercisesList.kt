@@ -61,7 +61,7 @@ val plan = Plan(
             exercises = listOf(
                 DailyExercise(1, UUID.randomUUID(), "Push ups", "", ""),
                 DailyExercise(2, UUID.randomUUID(), "Abs", "", ""),
-                DailyExercise(3, UUID.randomUUID(), "Leg extension", "", "")
+                DailyExercise(3, UUID.randomUUID(), "Shoulder press", "", "")
             )
         ),
         DailyList(1,
