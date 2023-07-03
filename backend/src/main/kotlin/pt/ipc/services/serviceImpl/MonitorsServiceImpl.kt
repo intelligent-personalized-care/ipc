@@ -19,7 +19,7 @@ import pt.ipc.domain.exceptions.RequestNotExists
 import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.http.models.ClientInformation
 import pt.ipc.http.models.MonitorProfile
-import pt.ipc.http.models.PlansOutput
+import pt.ipc.http.models.PlanInfoOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.CredentialsOutput
@@ -173,7 +173,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun getPlans(monitorID: UUID): List<PlansOutput> {
+    override fun getPlans(monitorID: UUID): List<PlanInfoOutput> {
         return transactionManager.runBlock(
             block = {
                 it.plansRepository.getPlans(monitorID = monitorID)

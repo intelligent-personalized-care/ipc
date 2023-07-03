@@ -7,7 +7,7 @@ import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.ClientInformation
 import pt.ipc.http.models.MonitorProfile
-import pt.ipc.http.models.PlansOutput
+import pt.ipc.http.models.PlanInfoOutput
 import pt.ipc.http.models.RequestInformation
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.RegisterInput
@@ -42,7 +42,7 @@ interface MonitorService {
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 
-    fun getPlans(monitorID: UUID): List<PlansOutput>
+    fun getPlans(monitorID: UUID): List<PlanInfoOutput>
 
     fun giveFeedbackOfExercise(monitorID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int, feedback: String, clientID: UUID)
 

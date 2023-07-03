@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS dbo.plans(
     monitor_id       UUID NOT NULL REFERENCES dbo.monitors (m_id),
     title            VARCHAR(50) NOT NULL,
 
-    CONSTRAINT title_length CHECK ( char_length(title) >= 5 )
+    CONSTRAINT title_length CHECK ( char_length(title) >= 3 )
 );
 
 CREATE TABLE IF NOT EXISTS dbo.client_plans(
@@ -116,8 +116,8 @@ CREATE TABLE IF NOT EXISTS dbo.daily_exercises(
     sets                INT NOT NULL,
     reps                INT NOT NULL,
 
-    CONSTRAINT sets_is_valid CHECK ( sets >= 1 AND sets <= 10 ),
-    CONSTRAINT reps_is_valid CHECK ( reps >= 1 AND reps <= 50 )
+    CONSTRAINT sets_is_valid CHECK ( sets >= 1 AND sets <= 20 ),
+    CONSTRAINT reps_is_valid CHECK ( reps >= 1 AND reps <= 200 )
 );
 
 CREATE TABLE IF NOT EXISTS dbo.exercises_video(
