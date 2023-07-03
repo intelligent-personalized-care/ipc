@@ -18,5 +18,5 @@ data class MonitorProfile(
     val name: String,
     val email: String,
     val rating: Rating,
-    val docState: String
+    val docState: String? = null
 )

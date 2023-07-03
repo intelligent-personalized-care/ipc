@@ -13,5 +13,3 @@ data class ClientOfMonitor(
     val birthDate: LocalDate? = null,
     val plans: List<PlanOfClient>
 )
-
-data class PlanOfClient(val id: Int, val title: String, val startDate: LocalDate, val endDate: LocalDate)

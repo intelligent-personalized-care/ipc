@@ -84,11 +84,9 @@ class JdbiPlansRepository(
 
             dailyLists.add(
                 index,
-                if (exercises != null) {
+                if (exercises != null)
                     DailyListOutput(dailyListID, exercises)
-                } else {
-                    null
-                }
+                else null
             )
         }
 
@@ -114,14 +112,21 @@ class JdbiPlansRepository(
             .toList()
     }
 
+    private data class PlanStartDate(val planId: Int, val dtStart: LocalDate)
+
     override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput? {
-        val planId = handle.createQuery("select * from dbo.client_plans cp where cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end")
+        val plan = handle.createQuery(
+            """
+                select cp.plan_id, cp.dt_start from dbo.client_plans cp 
+                where cp.client_id = :clientID and :date between cp.dt_start and cp.dt_end
+            """.trimIndent()
+        )
             .bind("clientID", clientID)
             .bind("date", date)
-            .mapTo<Int>()
+            .mapTo<PlanStartDate>()
             .singleOrNull() ?: return null
 
-        return getPlan(planId)
+        return getPlan(plan.planId)?.copy(startDate = plan.dtStart)
     }
 
     override fun checkIfPlanIsOfMonitor(monitorID: UUID, planID: Int): Boolean =
@@ -165,10 +170,12 @@ class JdbiPlansRepository(
         set: Int
     ): Boolean {
         return handle.createQuery(
-            "select count(*) from dbo.exercises_video ev " +
-                "inner join dbo.daily_exercises de on ev.ex_id = de.id " +
-                "inner join dbo.daily_lists dl on dl.id = de.daily_list_id " +
-                "where ev.nr_set = :set and ev.ex_id = :exerciseID and dl.id = :dailyListID and dl.plan_id = :planID"
+            """
+                select count(*) from dbo.exercises_video ev
+                inner join dbo.daily_exercises de on ev.ex_id = de.id
+                inner join dbo.daily_lists dl on dl.id = de.daily_list_id
+                where ev.nr_set = :set and ev.ex_id = :exerciseID and dl.id = :dailyListID and dl.plan_id = :planID
+            """.trimIndent()
         )
             .bind("set", set)
             .bind("exerciseID", exerciseID)

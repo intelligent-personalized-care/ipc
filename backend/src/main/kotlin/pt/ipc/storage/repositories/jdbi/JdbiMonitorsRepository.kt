@@ -75,7 +75,7 @@ class JdbiMonitorsRepository(
         val docState = handle.createQuery("select state from dbo.docs_authenticity where monitor_id = :monitorID")
             .bind("monitorID", monitorID)
             .mapTo<String>()
-            .single()
+            .singleOrNull()
 
         return MonitorProfile(
             id = details.id,
