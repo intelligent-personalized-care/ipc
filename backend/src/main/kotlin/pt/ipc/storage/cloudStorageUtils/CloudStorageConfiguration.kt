@@ -17,7 +17,7 @@ class CloudStorageConfiguration(
 
 ) {
 
-    private val maxAttemps = 5
+    private val maxAttempts = 5
 
     private val retryDelayMultiplier = 3.0
 
@@ -30,7 +30,7 @@ class CloudStorageConfiguration(
     private val retryStorageOptions: RetrySettings = StorageOptions
         .getDefaultRetrySettings()
         .toBuilder()
-        .setMaxAttempts(maxAttemps)
+        .setMaxAttempts(maxAttempts)
         .setRetryDelayMultiplier(retryDelayMultiplier)
         .setTotalTimeout(totalTimeOut)
         .build()
@@ -44,8 +44,8 @@ class CloudStorageConfiguration(
 
     val storage: Storage = storageOptions.service
 
-    val userPhotosBucket = "users_photos"
-    val monitorCredentialsBucket = "monitors_credentials"
-    val clientsVideosBucket = "clients_videos"
-    val exercisesPreviewsBucket = "exercises_previews"
+    val userPhotosBucket = "ipc_users_photos"
+    val monitorCredentialsBucket = "ipc_monitors_credentials"
+    val clientsVideosBucket = "ipc_clients_videos"
+    val exercisesPreviewsBucket = "ipc_exercises_previews"
 }

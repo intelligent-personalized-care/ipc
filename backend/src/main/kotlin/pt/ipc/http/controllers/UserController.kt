@@ -21,7 +21,7 @@ import pt.ipc.services.dtos.CredentialsOutput
 import java.util.UUID
 
 @RestController
-@RequestMapping(produces = ["application/json", "image/png", Problem.PROBLEM_MEDIA_TYPE])
+    @RequestMapping(produces = ["application/json", "image/png", Problem.PROBLEM_MEDIA_TYPE])
 class UserController(private val userService: UserService, private val sseEmitterUtils: SseEmitterUtils) {
 
     @PostMapping(Uris.USERS_LOGIN)
