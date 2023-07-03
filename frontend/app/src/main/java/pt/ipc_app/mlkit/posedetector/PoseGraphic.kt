@@ -85,17 +85,6 @@ class PoseGraphic internal constructor(
     //to divide each exercise logic
     when(exercise.exeTitle){
         "Squats" -> {
-          /*//Calculate whether the hand exceeds the shoulder
-          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
-          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
-          //Calculate whether the distance between the shoulder and the foot is the same width
-          val shoulderDistance = differenceBetweenCoordinates(leftShoulder.position.x, rightShoulder.position.x)
-          val footDistance = differenceBetweenCoordinates(leftAnkle!!.position.x, rightAnkle!!.position.x)
-          val ratio = footDistance / shoulderDistance
-          //angle of point 27-25-23( right hip, right knee and right ankle)
-          val angleRhRkRa = getAngle(rightHip, rightKnee, rightAnkle)
-
-          squatLogic(canvas,angleRhRkRa,yLeftHand,yRightHand, ratio, rightShoulder, leftShoulder, rightHip!!, rightAnkle)*/
 
           //Calculate whether the hand exceeds the shoulder
           val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
@@ -384,55 +373,4 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineTwoText, 2)
     drawText(canvas, "count: $upCount", 3)
   }
-  /**
-   * Implements the squat exercise logic
-   * */
-/*  private fun squatLogic(canvas: Canvas, angle: Double, yLeftHand : Float, yRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightHip: PoseLandmark, rightAnkle : PoseLandmark){
-
-      println("Angle ${abs(angle)}")
-      if (((180 - abs(angle)) > 5) && !isCount) {
-        reInitParams()
-        lineOneText = "Please stand up straight"
-      } else if (yLeftHand > 0 || yRightHand > 0) {
-        reInitParams()
-        lineOneText = "Please hold your hands behind your head"
-      } else if (ratio < 0.5 && !isCount) {
-        reInitParams()
-        lineOneText = "Please spread your feet shoulder-width apart"
-      } else {
-        val currentHeight =
-          (rightShoulder.position.y + leftShoulder.position.y) / 2 //Judging up and down by shoulder height
-
-        if (!isCount) {
-          shoulderHeight = currentHeight
-          minSize = (rightAnkle.position.y - rightHip.position.y) / 5
-          isCount = true
-          lastHeight = currentHeight
-          lineOneText = "Gesture ready"
-        }
-        if (!isDown && (currentHeight - lastHeight) > minSize) {
-          isDown = true
-          isUp = false
-          downCount++
-          lastHeight = currentHeight
-          lineTwoText = "start down"
-        } else if ((currentHeight - lastHeight) > minSize) {
-          lineTwoText = "downing"
-          lastHeight = currentHeight
-        }
-        if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
-          isUp = true
-          isDown = false
-          upCount++
-          lastHeight = currentHeight
-          lineTwoText = "start up"
-        } else if ((lastHeight - currentHeight) > minSize) {
-          lineTwoText = "uping"
-          lastHeight = currentHeight
-        }
-      }
-      drawText(canvas, lineOneText, 1)
-      drawText(canvas, lineTwoText, 2)
-      drawText(canvas, "count: $upCount", 3)
-     }*/
 }
