@@ -128,11 +128,10 @@ class PoseGraphic internal constructor(
           val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
-
-          println(rightShoulder.position.y - rightWrist.position.y)
+          
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
-            rightWrist.position.y + leftWrist.position.y ,rightWrist.position.y - rightShoulder.position.y , 100, 0, 0.5,
-            2, 8,
+            rightWrist.position.y + leftWrist.position.y ,rightElbow.position.y + leftElbow!!.position.y, 110, 0, 0.5,
+            2, 12,
             "Please put your elbows at shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",
             null, null)
 
