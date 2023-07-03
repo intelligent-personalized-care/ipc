@@ -26,7 +26,7 @@ class ClientDetailsActivity : ComponentActivity() {
     private val viewModel by viewModels<ClientDetailsViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ClientDetailsViewModel(app.services.plansService, app.sessionManager)
+            ClientDetailsViewModel(app.services.plansService, app.services.usersService, app.sessionManager)
         }
     }
 
@@ -47,22 +47,26 @@ class ClientDetailsActivity : ComponentActivity() {
         val monitorId = UUID.fromString(repo.userLoggedIn.id)
 
         viewModel.getMonitorPlans(monitorId)
+        viewModel.getClientDetails(client.id)
 
         setContent {
-            ClientDetailsScreen(
-                client = client,
-                isMyClient = true,
-                onSendEmailRequest = { openSendEmail(client.email) },
-                plans = viewModel.plans.collectAsState().value.plans,
-                onAssociatePlan = { pid, startDate ->
-                    viewModel.associatePlanToClient(
-                        monitorId = monitorId,
-                        clientId = client.id,
-                        planId = pid,
-                        startDate = startDate
-                    )
-                }
-            )
+            val cl = viewModel.client.collectAsState().value
+            if (cl != null)
+                ClientDetailsScreen(
+                    client = cl,
+                    profilePictureUrl = viewModel.getProfilePictureUrl(cl.id),
+                    isMyClient = true,
+                    onSendEmailRequest = { openSendEmail(client.email) },
+                    plans = viewModel.plans.collectAsState().value.plans,
+                    onAssociatePlan = { pid, startDate ->
+                        viewModel.associatePlanToClient(
+                            monitorId = monitorId,
+                            clientId = client.id,
+                            planId = pid,
+                            startDate = startDate
+                        )
+                    }
+                )
         }
     }
 

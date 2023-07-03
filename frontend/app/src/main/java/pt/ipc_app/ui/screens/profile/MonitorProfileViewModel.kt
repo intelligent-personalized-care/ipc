@@ -21,6 +21,12 @@ class MonitorProfileViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
+    enum class FileToSubmit { PICTURE, CREDENTIAL}
+
+    private var _fileToSubmit = MutableStateFlow<FileToSubmit?>(null)
+    val fileToSubmit
+        get() = _fileToSubmit.asStateFlow()
+
     private val _documentState = MutableStateFlow(ProgressState.IDLE)
     val documentState
         get() = _documentState.asStateFlow()
@@ -31,6 +37,10 @@ class MonitorProfileViewModel(
 
     fun getProfilePictureUrl(): String =
         usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id))
+
+    fun setFileToSubmit(type: FileToSubmit) {
+        _fileToSubmit.value = type
+    }
 
     /**
      * Attempts to update the profile picture of client.
@@ -43,7 +53,8 @@ class MonitorProfileViewModel(
                 _pictureState.value = ProgressState.WAITING
                 usersService.updateProfilePicture(
                     image = image,
-                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    userId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    role = Role.MONITOR,
                     token = sessionManager.userLoggedIn.token
                 ).also {
                     if (it !is APIResult.Success) _pictureState.value = ProgressState.IDLE

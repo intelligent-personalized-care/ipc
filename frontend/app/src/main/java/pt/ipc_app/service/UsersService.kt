@@ -6,15 +6,12 @@ import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.ConnectionRequestInput
-import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
-import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.service.models.users.ClientsOfMonitor
-import pt.ipc_app.service.models.users.ListMonitorsOutput
+import pt.ipc_app.service.models.users.*
 import java.io.File
 import java.io.IOException
 import java.util.UUID
@@ -95,6 +92,23 @@ class UsersService(
     ): APIResult<MonitorOutput> =
         get(
             uri = "/users/clients/$clientId/monitor",
+            token = token
+        )
+
+    /**
+     * Gets client's details of monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getClientOfMonitor(
+        monitorId: UUID,
+        clientId: UUID,
+        token: String
+    ): APIResult<ClientOfMonitor> =
+        get(
+            uri = "/users/monitors/$monitorId/clients/$clientId",
             token = token
         )
 
@@ -205,7 +219,7 @@ class UsersService(
         "$apiEndpoint/users/$userId/photo"
 
     /**
-     * Updates the profile picture of a client.
+     * Updates the profile picture of an user.
      *
      * @return the API result of the request
      *
@@ -213,11 +227,12 @@ class UsersService(
      */
     suspend fun updateProfilePicture(
         image: File,
-        clientId: UUID,
+        userId: UUID,
+        role: Role,
         token: String
     ): APIResult<Any> =
         postWithFile(
-            uri = "/users/clients/$clientId/profile/photo",
+            uri = "/users/${role.name.lowercase()}s/$userId/profile/photo",
             token = token,
             multipartPropName = "photo",
             file = image,

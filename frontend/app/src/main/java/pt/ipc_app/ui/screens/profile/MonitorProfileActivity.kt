@@ -51,8 +51,16 @@ class MonitorProfileActivity : ComponentActivity() {
                 monitor = repo.userLoggedIn,
                 profilePictureUrl = viewModel.getProfilePictureUrl(),
                 updateProfilePictureState = viewModel.pictureState.collectAsState().value,
+                onUpdateProfilePicture = {
+                    viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.PICTURE)
+                    checkReadStoragePermission()
+                },
+                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() },
                 submitCredentialDocumentState = viewModel.documentState.collectAsState().value,
-                onSubmitCredentialDocument = { checkReadStoragePermission() },
+                onSubmitCredentialDocument = {
+                    viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
+                    checkReadStoragePermission()
+                },
                 onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
             )
         }
@@ -66,7 +74,7 @@ class MonitorProfileActivity : ComponentActivity() {
     }
 
     private fun openFileManager() {
-        fileChooserLauncher.launch("application/pdf")
+        fileChooserLauncher.launch("*/*")
     }
 
     private val requestReadStoragePermissionLauncher =
@@ -80,7 +88,10 @@ class MonitorProfileActivity : ComponentActivity() {
             try {
                 val file = getFileFromUri(uri) ?: throw IllegalArgumentException()
 
-                viewModel.submitCredentialDocument(file)
+                if (viewModel.fileToSubmit.value == MonitorProfileViewModel.FileToSubmit.PICTURE)
+                    viewModel.updatePicture(file)
+                else if (viewModel.fileToSubmit.value == MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
+                    viewModel.submitCredentialDocument(file)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

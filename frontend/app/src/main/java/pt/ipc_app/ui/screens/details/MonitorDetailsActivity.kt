@@ -40,6 +40,7 @@ class MonitorDetailsActivity : ComponentActivity() {
         setContent {
             MonitorDetailsScreen(
                 monitor = monitor,
+                profilePictureUrl = viewModel.getProfilePictureUrl(monitor.id),
                 onSendEmailRequest = { openSendEmail(monitor.email) },
                 onRequestedConnection = { viewModel.connectWithMonitor(monitor.id) }
             )

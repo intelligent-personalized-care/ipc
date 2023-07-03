@@ -9,10 +9,10 @@ enum class TextFieldType(val labelId: Int) {
     EMAIL(R.string.register_screen_label_email),
     PASSWORD(R.string.register_screen_label_password),
 
-    BIRTH_DATE(R.string.register_screen_label_birthDate),
-    WEIGHT(R.string.register_screen_label_weight),
-    HEIGHT(R.string.register_screen_label_height),
-    PHYSICAL_CONDITION(R.string.register_screen_label_physicalCondition),
+    BIRTH_DATE(R.string.birthDate),
+    WEIGHT(R.string.weight),
+    HEIGHT(R.string.height),
+    PHYSICAL_CONDITION(R.string.physicalCondition),
 
     SEARCH(R.string.search_label),
 

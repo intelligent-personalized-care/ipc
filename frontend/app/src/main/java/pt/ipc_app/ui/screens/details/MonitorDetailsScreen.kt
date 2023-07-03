@@ -15,12 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
 fun MonitorDetailsScreen(
     monitor: MonitorOutput,
+    profilePictureUrl: String,
     requestEnable: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
     onRequestedConnection: () -> Unit = { }
@@ -32,18 +34,23 @@ fun MonitorDetailsScreen(
         ) {
             Text(
                 text = stringResource(R.string.monitor_details_title),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier.padding(bottom = 40.dp)
             )
+
+            ProfilePicture(url = profilePictureUrl)
+            Text(
+                text = monitor.name,
+                style = MaterialTheme.typography.h6
+            )
+
         }
         Column(
-            modifier = Modifier.padding(start = 40.dp, top = 100.dp)
+            modifier = Modifier.padding(start = 30.dp, top = 300.dp)
         ) {
-            Text(monitor.name)
             Text(
                 text = monitor.email,
-                modifier = Modifier.clickable {
-                    onSendEmailRequest()
-                }
+                modifier = Modifier.clickable { onSendEmailRequest() }
             )
 
             if (requestEnable) {
@@ -66,5 +73,8 @@ fun MonitorDetailsScreen(
 @Preview
 @Composable
 fun MonitorDetailsScreenPreview() {
-    MonitorDetailsScreen(monitor = MonitorOutput(UUID.randomUUID(), "Mike", "", 4.8F))
+    MonitorDetailsScreen(
+        monitor = MonitorOutput(UUID.randomUUID(), "Mike", "", 4.8F),
+        profilePictureUrl = ""
+    )
 }

@@ -7,10 +7,10 @@
     <string name="register_screen_label_name">Name</string>
     <string name="register_screen_label_email">Email</string>
     <string name="register_screen_label_password">Password</string>
-    <string name="register_screen_label_birthDate">Birth Date</string>
-    <string name="register_screen_label_weight">Weight</string>
-    <string name="register_screen_label_height">Height</string>
-    <string name="register_screen_label_physicalCondition">Physical Condition</string>
+    <string name="birthDate">Birth Date</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="physicalCondition">Physical Condition</string>
 
     <string name="client">Client</string>
     <string name="monitor">Monitor</string>

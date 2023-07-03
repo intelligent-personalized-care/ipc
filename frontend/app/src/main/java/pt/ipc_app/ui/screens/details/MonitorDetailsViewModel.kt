@@ -18,6 +18,11 @@ class MonitorDetailsViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
+    fun getProfilePictureUrl(
+        monitorId: UUID
+    ): String =
+        usersService.getProfilePictureUrl(monitorId)
+
     /**
      * Attempts to connect the monitor with a client.
      */

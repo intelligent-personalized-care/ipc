@@ -39,7 +39,8 @@ class ClientProfileViewModel(
                 _state.value = ProgressState.WAITING
                 usersService.updateProfilePicture(
                     image = image,
-                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    userId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    role = Role.CLIENT,
                     token = sessionManager.userLoggedIn.token
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE
