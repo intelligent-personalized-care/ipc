@@ -115,32 +115,16 @@ class PoseGraphic internal constructor(
           toDraw = !toDraw
         }
         "Push ups" -> {
-         /* //Calculate whether the hand is in front of the shoulder
-          val xRightHand = differenceBetweenCoordinates(rightWrist!!.position.x, rightShoulder!!.position.x)
-          val xLeftHand = differenceBetweenCoordinates(leftWrist!!.position.x, leftShoulder!!.position.x)
-          //Calculate whether the distance between the shoulder and the foot is the same width
-          val shoulderDistance = differenceBetweenCoordinates(leftShoulder.position.x, rightShoulder.position.x)
-          val footDistance = differenceBetweenCoordinates(leftAnkle!!.position.x, rightAnkle!!.position.x)
-          val ratio = footDistance / shoulderDistance
-          //angle of point 15-13-11( rightWrist, rightElbow, rightShoulder)
-          val angleRwReRs = getAngle(rightWrist, rightElbow, rightShoulder)
-
-          println("xRight $xRightHand")
-          println()
-          println("xLeft $xLeftHand")
-          pushUpLogic(canvas,angleRwReRs,xLeftHand,xRightHand, ratio, rightShoulder, leftShoulder, rightWrist, rightElbow!!)*/
 
           //Calculate whether the hand is in front of the shoulder
-          val xRightHand = differenceBetweenCoordinates(rightWrist!!.position.x, rightShoulder!!.position.x)
-          val xLeftHand = differenceBetweenCoordinates(leftWrist!!.position.x, leftShoulder!!.position.x)
+          val yRightHand = differenceBetweenCoordinates(rightShoulder!!.position.y,rightWrist!!.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftShoulder!!.position.y, leftWrist!!.position.y)
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
-          println(rightWrist.position.y)
-          println(rightShoulder.position.y)
-          val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,xRightHand,xLeftHand,ratio,
-            rightShoulder.position.y ,rightShoulder.position.y - rightElbow.position.y /*rightShoulder.position.x - rightWrist.position.x*/ , 25, 0, 0.5,
-            null, null,
+          val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
+            rightShoulder.position.x + leftShoulder.position.x ,rightShoulder.position.x - rightWrist.position.x , 25, 0, 0.5,
+            2, 6,
             "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",
             null, null)
 
@@ -354,7 +338,7 @@ class PoseGraphic internal constructor(
 
     val angle = getAngle(exerciseLogic.firstPoint, exerciseLogic.midPoint, exerciseLogic.lastPoint)
 
-    if (((180 - abs(angle)) > exerciseLogic.condOne) && !isCount) {
+    if (((180 - abs(angle)) > exerciseLogic.condOne || (isDown && abs(angle) < 180 / 2)) && !isCount) {
       reInitParams()
       lineOneText = exerciseLogic.lTextCondOne
     } else if (exerciseLogic.leftHandPos > 0 || exerciseLogic.rightHandPos > 0) {
@@ -365,7 +349,7 @@ class PoseGraphic internal constructor(
       lineOneText = exerciseLogic.lTextCondThree
     } else {
       val currentHeight =
-        if(exerciseLogic.condCurrentWeight != null) exerciseLogic.currentHeight / exerciseLogic.condCurrentWeight //Judging up and down by shoulder height
+        if(exerciseLogic.condCurrentWeight != null) exerciseLogic.currentHeight / exerciseLogic.condCurrentWeight //Judging up and down by current height
         else exerciseLogic.currentHeight
 
       if (!isCount) {
@@ -451,57 +435,4 @@ class PoseGraphic internal constructor(
       drawText(canvas, lineTwoText, 2)
       drawText(canvas, "count: $upCount", 3)
      }*/
-
-  /**
-   * Implements the push-up exercise logic
-   * */
- /* private fun pushUpLogic(canvas: Canvas, angle: Double, xLeftHand : Float, xRightHand: Float, ratio: Float, rightShoulder: PoseLandmark, leftShoulder : PoseLandmark, rightWrist: PoseLandmark,  rightElbow: PoseLandmark){
-
-    println("Angle ${abs(angle)}")
-    if (((180 - abs(angle)) > 25) && !isCount) {
-      reInitParams()
-      lineOneText = "Please keep in a plank position with the arms straight out"
-    } else if (xLeftHand > 0 || xRightHand > 0) {
-      reInitParams()
-      lineOneText = "Please hold your hands straight out in front of your body "
-    } else if (ratio < 0.5 && !isCount) {
-      reInitParams()
-      lineOneText = "Please spread your feet shoulder-width apart"
-    } else {
-      val currentHeight = rightElbow.position.y
-        //(rightShoulder.position.x + leftShoulder.position.x) / 2 //Judging up and down by shoulder height
-
-      if (!isCount) {
-        shoulderHeight = currentHeight
-        //println(rightWrist.position.y - rightShoulder.position.y)
-        minSize = if (rightShoulder.position.y <= rightElbow.position.y) rightShoulder.position.y else rightElbow.position.y//(rightWrist.position.x - rightShoulder.position.x) / 2
-        isCount = true
-        lastHeight = currentHeight
-        lineOneText = "Gesture ready"
-      }
-      if (!isDown && (currentHeight - lastHeight) > minSize) {
-        isDown = true
-        isUp = false
-        downCount++
-        lastHeight = currentHeight
-        lineTwoText = "start down"
-      } else if ((currentHeight - lastHeight) > minSize) {
-        lineTwoText = "downing"
-        lastHeight = currentHeight
-      }
-      if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
-        isUp = true
-        isDown = false
-        upCount++
-        lastHeight = currentHeight
-        lineTwoText = "start up"
-      } else if ((lastHeight - currentHeight) > minSize) {
-        lineTwoText = "uping"
-        lastHeight = currentHeight
-      }
-    }
-    drawText(canvas, lineOneText, 1)
-    drawText(canvas, lineTwoText, 2)
-    drawText(canvas, "count: $upCount", 3)
-  }*/
 }
