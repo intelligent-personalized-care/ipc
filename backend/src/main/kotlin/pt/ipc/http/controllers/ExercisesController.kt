@@ -41,6 +41,7 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         return ResponseEntity.ok(exerciseInfo)
     }
 
+    // @Authentication TODO
     @GetMapping(Uris.EXERCISES_INFO_VIDEO)
     fun getExerciseVideo(@PathVariable exerciseID: UUID): ResponseEntity<ByteArray> {
         val exerciseVideo = exercisesService.getExercisePreviewVideo(exerciseID = exerciseID)
@@ -52,19 +53,19 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         return ResponseEntity.ok().headers(headers).body(exerciseVideo)
     }
 
-    @Authentication
+    // @Authentication TODO
     @GetMapping(Uris.VIDEO_OF_EXERCISE)
     fun getClientVideoOfExercise(
         @PathVariable clientID: UUID,
         @PathVariable planID: Int,
         @PathVariable dailyListID: Int,
         @PathVariable exerciseID: Int,
-        @RequestParam(required = true) set: Int,
-        user: User
+        @RequestParam(required = true) set: Int
+        // user: User
     ): ResponseEntity<ByteArray> {
         val clientVideo = exercisesService.getClientVideo(
             clientID = clientID,
-            userID = user.id,
+            // userID = user.id,
             planID = planID,
             dailyList = dailyListID,
             dailyExercise = exerciseID,

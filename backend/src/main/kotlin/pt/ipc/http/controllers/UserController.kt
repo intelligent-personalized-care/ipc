@@ -43,6 +43,7 @@ class UserController(private val userService: UserService, private val sseEmitte
         return ResponseEntity.ok().build()
     }
 
+    @Authentication
     @GetMapping(Uris.USER_PHOTO)
     fun getPhotoOfUser(@PathVariable userID: UUID): ResponseEntity<ByteArray> {
         val profilePicture = userService.getUserPhoto(userID = userID)

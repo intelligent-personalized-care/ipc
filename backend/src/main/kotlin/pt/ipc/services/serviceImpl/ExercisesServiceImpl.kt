@@ -43,12 +43,14 @@ class ExercisesServiceImpl(
         )
     }
 
-    override fun getClientVideo(clientID: UUID, userID: UUID, planID: Int, dailyList: Int, dailyExercise: Int, set: Int): ByteArray {
+    override fun getClientVideo(clientID: UUID, /*userID: UUID,*/ planID: Int, dailyList: Int, dailyExercise: Int, set: Int): ByteArray {
         return transactionManager.runBlock(
             block = {
+                /*
                 if (userID != clientID) {
                     if (!it.monitorRepository.isMonitorOfClient(monitorID = userID, clientID = clientID)) throw ForbiddenRequest
                 }
+                 */
 
                 val videoID = it.exerciseRepository.getClientVideoID(
                     clientID = clientID,

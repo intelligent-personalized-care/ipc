@@ -70,11 +70,12 @@ class JdbiPlansRepository(
             val exercises: List<ExerciseTotalInfo>? =
                 handle.createQuery(
                     """
-                    select de.id, de.ex_id, title, description, type, sets, reps,
-                        case when ev.dt_submit is null then 0 else 1 end as is_done
+                    select de.id, de.ex_id, ei.title, ei.description, ei.type, de.sets, de.reps,
+                        case when count(ev.ex_id) != de.sets then 0 else 1 end as is_done
                     from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
                     left join dbo.exercises_video ev on de.id = ev.ex_id
                     where daily_list_id = :dailyListID
+                    group by de.id, ei.title, ei.description, ei.type, de.sets, de.reps
                     """.trimIndent()
                 )
                     .bind("dailyListID", dailyListID)
