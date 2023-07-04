@@ -15,6 +15,9 @@ java.sourceCompatibility = JavaVersion.VERSION_14
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://storage.googleapis.com/cloud-sql-jdbc")
+    }
 }
 
 dependencies {
@@ -25,6 +28,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("net.glxn:qrgen:1.4")
 
+    implementation("com.zaxxer:HikariCP:4.0.3")
+
+    implementation("com.google.cloud.sql:postgres-socket-factory:1.2.2")
+    implementation("org.postgresql:postgresql:42.2.27")
     // Spring dependencies
     implementation("org.springframework:spring-context:5.3.22")
     implementation("org.springframework.security:spring-security-core:5.7.7")
