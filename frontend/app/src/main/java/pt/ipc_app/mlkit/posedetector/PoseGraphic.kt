@@ -97,7 +97,7 @@ class PoseGraphic internal constructor(
             rightShoulder.position.y + leftShoulder.position.y, rightAnkle.position.y - rightHip.position.y, 5, 0, 0.5,
           2, 5,
             "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart",
-          null, null)
+          exercise.exeSets, exercise.exeReps)
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -111,11 +111,12 @@ class PoseGraphic internal constructor(
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
+          println(rightElbow!!.position.x)
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightShoulder.position.x + leftShoulder.position.x ,rightShoulder.position.x - rightWrist.position.x , 25, 0, 0.5,
             2, 6,
             "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",
-            null, null)
+            exercise.exeSets, exercise.exeReps)
 
           doExerciseLogic(canvas, exerciseLogic)
           toDraw = !toDraw
@@ -128,12 +129,12 @@ class PoseGraphic internal constructor(
           val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
-          
+
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightWrist.position.y + leftWrist.position.y ,rightElbow.position.y + leftElbow!!.position.y, 110, 0, 0.5,
             2, 12,
-            "Please put your elbows at shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",
-            null, null)
+            "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",
+            exercise.exeSets, exercise.exeReps)
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -364,7 +365,7 @@ class PoseGraphic internal constructor(
         minSize = exerciseLogic.condMinSize?.let { exerciseLogic.minSize / it } ?: exerciseLogic.minSize
         isCount = true
         lastHeight = currentHeight
-        lineOneText = "Gesture ready"
+        lineOneText = "Gesture ready, control each rep"
       }
       if (!isDown && (currentHeight - lastHeight) > minSize) {
         isDown = true
@@ -390,5 +391,7 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineOneText, 1)
     drawText(canvas, lineTwoText, 2)
     drawText(canvas, "count: $upCount", 3)
+    //verificar reps igual a upcount caso seja para e envia o video
+    /*exerciseLogic.reps*/
   }
 }
