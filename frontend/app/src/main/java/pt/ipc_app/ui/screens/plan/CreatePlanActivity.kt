@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.screens.home.MonitorHomeActivity
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -37,7 +36,7 @@ class CreatePlanActivity : ComponentActivity() {
 
         viewModel.getExercises()
 
-        setContent {
+        setCustomContent(viewModel) {
             CreatePlanScreen(
                 exercises = viewModel.exercises.collectAsState().value,
                 onPlanCreation = {

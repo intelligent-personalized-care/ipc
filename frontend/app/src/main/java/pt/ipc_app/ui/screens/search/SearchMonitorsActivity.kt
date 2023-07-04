@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -36,7 +36,7 @@ class SearchMonitorsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
+        setCustomContent(viewModel) {
             val monitors = viewModel.monitors.collectAsState().value
 
             if (monitors.isEmpty()) {

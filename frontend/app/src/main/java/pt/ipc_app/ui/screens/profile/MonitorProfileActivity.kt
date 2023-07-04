@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
@@ -16,6 +15,7 @@ import androidx.core.content.ContextCompat
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.getFileFromUri
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 import java.io.IOException
 
@@ -45,7 +45,7 @@ class MonitorProfileActivity : ComponentActivity() {
 
         viewModel.getProfile()
 
-        setContent {
+        setCustomContent(viewModel) {
             val profile = viewModel.monitorProfile.collectAsState().value
             profile?.let {
                 MonitorProfileScreen(

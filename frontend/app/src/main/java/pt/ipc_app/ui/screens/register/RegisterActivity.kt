@@ -16,7 +16,6 @@ import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.utils.viewModelInit
-import java.io.ByteArrayOutputStream
 
 /**
  * The register activity.

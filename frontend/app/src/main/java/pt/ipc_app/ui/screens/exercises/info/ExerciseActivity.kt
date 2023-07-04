@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.mlkit.vision.CameraXLivePreviewActivity
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 
 class ExerciseActivity: ComponentActivity() {
@@ -37,7 +37,7 @@ class ExerciseActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
+        setCustomContent(viewModel) {
             ExerciseScreen(
                 exercise = exercise,
                 isToRecord = if (exercise is ExerciseTotalInfo) !(exercise as ExerciseTotalInfo).exercise.isDone else true,

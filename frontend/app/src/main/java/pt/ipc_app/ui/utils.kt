@@ -6,9 +6,15 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionContext
 import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
+import pt.ipc_app.ui.components.CheckProblemJson
+import pt.ipc_app.ui.screens.AppViewModel
 import java.io.File
 import java.io.FileOutputStream
 
@@ -44,5 +50,17 @@ fun Context.getFileFromUri(imageUri: Uri): File? {
             }
         }
         outputFile
+    }
+}
+
+fun ComponentActivity.setCustomContent(
+    viewModel: AppViewModel,
+    content: @Composable () -> Unit
+) {
+    setContent {
+        content()
+        viewModel.error?.let {
+            CheckProblemJson(error = it)
+        }
     }
 }

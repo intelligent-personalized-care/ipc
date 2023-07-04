@@ -19,7 +19,7 @@ import java.net.URI
 @Composable
 fun ErrorAlert(
     title: String,
-    message: String,
+    message: String? = null,
     buttonText: String,
     onDismiss: () -> Unit
 ) {
@@ -41,24 +41,21 @@ fun ErrorAlert(
             }
         },
         title = { Text(text = title) },
-        text = { Text(text = message) }
+        text = message?.let{ { Text(text = it) } }
     )
 
 }
 
 @Composable
-fun CheckProblemJson(error: ProblemJson?) {
-    if (error != null) {
-        var showDialog by remember { mutableStateOf(true) }
+fun CheckProblemJson(error: ProblemJson) {
+    var showDialog by remember { mutableStateOf(true) }
 
-        if (showDialog) {
-            ErrorAlert(
-                title = error.title,
-                message = "Status ${error.status}",
-                buttonText = "OK",
-                onDismiss = { showDialog = false }
-            )
-        }
+    if (showDialog) {
+        ErrorAlert(
+            title = error.title,
+            buttonText = "OK",
+            onDismiss = { showDialog = false }
+        )
     }
 }
 
@@ -84,4 +81,3 @@ fun CheckProblemJsonPreview() {
         )
     )
 }
-

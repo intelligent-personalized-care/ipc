@@ -5,14 +5,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.components.CheckProblemJson
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
@@ -51,7 +50,7 @@ class ClientDetailsActivity : ComponentActivity() {
         viewModel.getClientDetails(client.id)
         viewModel.getMonitorPlans(monitorId)
 
-        setContent {
+        setCustomContent(viewModel) {
             val cl = viewModel.client.collectAsState().value
             if (cl != null)
                 ClientDetailsScreen(
@@ -69,10 +68,6 @@ class ClientDetailsActivity : ComponentActivity() {
                         )
                     }
                 )
-            viewModel.error?.let {
-                CheckProblemJson(error = it)
-            }
-
         }
     }
 

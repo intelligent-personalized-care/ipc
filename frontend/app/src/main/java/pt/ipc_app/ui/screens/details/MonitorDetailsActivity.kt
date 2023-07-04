@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -38,7 +38,7 @@ class MonitorDetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        setCustomContent(viewModel) {
             MonitorDetailsScreen(
                 monitor = monitor,
                 profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, monitor.id)) },

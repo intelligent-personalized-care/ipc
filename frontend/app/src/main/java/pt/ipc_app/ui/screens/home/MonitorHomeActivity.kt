@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
@@ -16,6 +15,7 @@ import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
 import pt.ipc_app.ui.screens.plan.CreatePlanActivity
 import pt.ipc_app.ui.screens.profile.MonitorProfileActivity
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
@@ -50,7 +50,7 @@ class MonitorHomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        setCustomContent(viewModel) {
             var clientsList by remember { mutableStateOf(clients?.clients ?: listOf()) }
             var requestsList by remember { mutableStateOf(requests?.requests ?: listOf()) }
 

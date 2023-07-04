@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.domain.exercise.FreeExercise
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
+import pt.ipc_app.ui.setCustomContent
 import pt.ipc_app.utils.viewModelInit
 
 class ExercisesListActivity: ComponentActivity() {
@@ -36,7 +35,7 @@ class ExercisesListActivity: ComponentActivity() {
 
         viewModel.getExercises()
 
-        setContent {
+        setCustomContent(viewModel) {
             ExercisesListScreen(
                 exercises = viewModel.exercises.collectAsState().value,
                 onExerciseClick = { ExerciseActivity.navigate(this, it) },

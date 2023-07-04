@@ -23,7 +23,7 @@ fun RateMonitor(
     modifier: Modifier = Modifier,
     onSubmitRating: (Int) -> Unit = { }
 ) {
-    var stars by remember { mutableStateOf(-1) }
+    var stars by remember { mutableStateOf(0) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -31,18 +31,21 @@ fun RateMonitor(
         Row {
             repeat(5) {
                 Icon(
-                    imageVector = if (it <= stars) Icons.Default.Star else Icons.Default.StarBorder,
+                    imageVector = if (it < stars) Icons.Default.Star else Icons.Default.StarBorder,
                     contentDescription = "Star",
                     tint = Color(255, 217, 102, 255),
                     modifier = Modifier.size(50.dp).clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
-                        onClick = { stars = it }
+                        onClick = { stars = it + 1 }
                     )
                 )
             }
         }
-        Button(onClick = { onSubmitRating(stars + 1) }) {
+        Button(
+            onClick = { onSubmitRating(stars) },
+            enabled = stars > 0
+        ) {
             Text(text = "Submit")
         }
     }
