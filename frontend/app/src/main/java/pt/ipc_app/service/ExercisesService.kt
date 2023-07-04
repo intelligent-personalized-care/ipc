@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.exercises.ListOfExercisesInfo
+import pt.ipc_app.service.utils.ContentType
+import pt.ipc_app.service.utils.MultipartEntry
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -55,14 +57,16 @@ class ExercisesService(
         planId: Int,
         dailyListId: Int,
         exerciseId: Int,
+        set: Int,
         token: String
     ): APIResult<Any> =
-        postWithFile(
+        postWithMultipartBody(
             uri = "/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId",
             token = token,
-            multipartPropName = "video",
-            file = video,
-            contentType = "video/mp4"
+            multipartEntries = listOf(
+                MultipartEntry(name = "video", value = video, contentType = ContentType.VIDEO),
+                MultipartEntry(name = "set", value = set)
+            )
         )
 
 }

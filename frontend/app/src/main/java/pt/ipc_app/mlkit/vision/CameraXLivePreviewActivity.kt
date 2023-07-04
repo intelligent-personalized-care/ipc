@@ -138,7 +138,7 @@ class CameraXLivePreviewActivity :
         setupRecordingButton {
             if (exercise is ExerciseTotalInfo) {
                 val exe = exercise as ExerciseTotalInfo
-                viewModel.submitExerciseVideo(it, exe.planId, exe.dailyListId, exe.exercise.id)
+                viewModel.submitExerciseVideo(it, exe.planId, exe.dailyListId, exe.exercise.id, 1) // TODO(what is the set)
             }
         }
     }

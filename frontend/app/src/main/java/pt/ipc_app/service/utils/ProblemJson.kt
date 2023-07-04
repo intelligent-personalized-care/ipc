@@ -1,6 +1,5 @@
 package pt.ipc_app.service.utils
 
-import okhttp3.MediaType.Companion.toMediaType
 import java.net.URI
 
 /**
@@ -14,13 +13,7 @@ data class ProblemJson(
     val status: Int,
     val detail: String? = null,
     val instance: URI? = null
-) {
-    companion object {
-        private const val PROBLEM_MEDIA_TYPE = "application/problem+json"
-
-        val problemJsonMediaType = PROBLEM_MEDIA_TYPE.toMediaType()
-    }
-}
+)
 
 object Errors {
     val emailAlreadyExists = "This email already exists"

@@ -40,6 +40,7 @@ class ExerciseActivity: ComponentActivity() {
         setContent {
             ExerciseScreen(
                 exercise = exercise,
+                isToRecord = if (exercise is ExerciseTotalInfo) !(exercise as ExerciseTotalInfo).exercise.isDone else true,
                 exercisePreviewUrl = viewModel.getExercisePreviewUrl(exercise.exeID),
                 onRecordClick = {
                     finish()

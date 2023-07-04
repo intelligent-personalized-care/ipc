@@ -15,6 +15,8 @@ import pt.ipc_app.service.models.register.RegisterOutput
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.*
+import pt.ipc_app.service.utils.ContentType
+import pt.ipc_app.service.utils.MultipartEntry
 import java.io.File
 import java.io.IOException
 import java.util.UUID
@@ -298,12 +300,10 @@ class UsersService(
         role: Role,
         token: String
     ): APIResult<Any> =
-        postWithFile(
+        postWithMultipartBody(
             uri = "/users/${role.name.lowercase()}s/$userId/profile/photo",
             token = token,
-            multipartPropName = "photo",
-            file = image,
-            contentType = "image/jpeg"
+            multipartEntries = listOf(MultipartEntry(name = "photo", value = image, contentType = ContentType.IMAGE))
         )
 
     /**
@@ -318,12 +318,10 @@ class UsersService(
         monitorId: UUID,
         token: String
     ): APIResult<Any> =
-        postWithFile(
+        postWithMultipartBody(
             uri = "/users/monitors/$monitorId/credential",
             token = token,
-            multipartPropName = "credential",
-            file = doc,
-            contentType = "application/pdf"
+            multipartEntries = listOf(MultipartEntry(name = "credential", value = doc, contentType = ContentType.PDF))
         )
 
 }

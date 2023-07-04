@@ -22,6 +22,7 @@ import java.util.*
 fun ExerciseScreen(
     exercise: Exercise,
     exercisePreviewUrl: String,
+    isToRecord: Boolean = true,
     onRecordClick: () -> Unit = { }
 ) {
     var isPlaying by remember { mutableStateOf(true) }
@@ -56,21 +57,23 @@ fun ExerciseScreen(
                 style = MaterialTheme.typography.caption
             )
 
-            Spacer(modifier = Modifier.padding(top = 100.dp))
+            if (isToRecord) {
+                Spacer(modifier = Modifier.padding(top = 100.dp))
 
-            Button(
-                onClick = {
-                    isPlaying = false
-                    onRecordClick()
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
-                Text(
-                    text = "Record Video",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
+                Button(
+                    onClick = {
+                        isPlaying = false
+                        onRecordClick()
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
+                    Text(
+                        text = "Record Video",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                }
             }
         }
     }

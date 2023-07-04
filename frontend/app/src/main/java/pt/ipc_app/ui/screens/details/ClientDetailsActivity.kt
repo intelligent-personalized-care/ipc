@@ -48,8 +48,8 @@ class ClientDetailsActivity : ComponentActivity() {
 
         val monitorId = UUID.fromString(repo.userLoggedIn.id)
 
-        viewModel.getMonitorPlans(monitorId)
         viewModel.getClientDetails(client.id)
+        viewModel.getMonitorPlans(monitorId)
 
         setContent {
             val cl = viewModel.client.collectAsState().value

@@ -63,6 +63,7 @@ class ExercisesViewModel(
         planId: Int,
         dailyListId: Int,
         exerciseId: Int,
+        set: Int
     ) {
         val userInfo = sessionManager.userLoggedIn
         launchAndExecuteRequest(
@@ -74,6 +75,7 @@ class ExercisesViewModel(
                     planId = planId,
                     dailyListId = dailyListId,
                     exerciseId = exerciseId,
+                    set = set,
                     token = userInfo.token
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE

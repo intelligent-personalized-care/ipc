@@ -3,16 +3,15 @@ package pt.ipc_app.service
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import pt.ipc_app.service.connection.*
+import pt.ipc_app.service.utils.ContentType
+import pt.ipc_app.service.utils.MultipartEntry
 import pt.ipc_app.service.utils.ProblemJson
-import pt.ipc_app.service.utils.ProblemJson.Companion.problemJsonMediaType
 import java.io.File
 import java.io.IOException
 
@@ -43,9 +42,9 @@ abstract class HTTPService(
             val resJson = JsonReader(body.charStream())
 
             try {
-                if (response.isSuccessful && body.contentType() == applicationJsonMediaType)
+                if (response.isSuccessful && body.contentType() == ContentType.JSON.mediaType)
                     APIResult.Success(jsonEncoder.fromJson(resJson, T::class.java))
-                else if (body.contentType() == problemJsonMediaType)
+                else if (body.contentType() == ContentType.PROBLEM_JSON.mediaType)
                     APIResult.Failure(jsonEncoder.fromJson(resJson, ProblemJson::class.java))
                 else
                     throw IllegalArgumentException()
@@ -98,29 +97,37 @@ abstract class HTTPService(
             .post(
                 jsonEncoder
                     .toJson(body)
-                    .toRequestBody(applicationJsonMediaType)
+                    .toRequestBody(ContentType.JSON.mediaType)
             )
             .build()
             .getResponseResult()
 
-    protected suspend inline fun <reified T> postWithFile(
+    protected suspend inline fun <reified T> postWithMultipartBody(
         uri: String,
         token: String? = null,
-        multipartPropName: String,
-        file: File,
-        contentType: String
+        multipartEntries: List<MultipartEntry>
     ): APIResult<T> {
-        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-            .addFormDataPart(
-                multipartPropName,
-                file.name,
-                file.asRequestBody(contentType.toMediaTypeOrNull())
-            )
-            .build()
+        val requestBodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+
+        multipartEntries.forEach {
+            if (it.value is File)
+                requestBodyBuilder.addFormDataPart(
+                    it.name,
+                    it.value.name,
+                    it.value.asRequestBody(it.contentType?.mediaType)
+                )
+            else
+                requestBodyBuilder.addFormDataPart(
+                    it.name,
+                    it.value.toString()
+                )
+        }
+
+        val requestBody = requestBodyBuilder.build()
 
         return Request.Builder()
             .url(apiEndpoint + uri)
-            .header("Content-Type", "multipart/form-data")
+            .header("Content-Type", ContentType.MULTIPART.type)
             .checkAuthorization(BEARER_TOKEN, token)
             .post(requestBody)
             .build()
@@ -128,9 +135,6 @@ abstract class HTTPService(
     }
 
     companion object {
-        private const val APPLICATION_JSON = "application/json"
-        val applicationJsonMediaType = APPLICATION_JSON.toMediaType()
-
         const val BEARER_TOKEN = "Bearer"
     }
 }
