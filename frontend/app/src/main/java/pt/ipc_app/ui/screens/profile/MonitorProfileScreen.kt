@@ -1,29 +1,33 @@
 package pt.ipc_app.ui.screens.profile
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.HourglassBottom
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
-import pt.ipc_app.domain.user.Role
-import pt.ipc_app.session.UserInfo
-import pt.ipc_app.ui.components.ButtonToUpdatePicture
-import pt.ipc_app.ui.components.ProfilePicture
-import pt.ipc_app.ui.components.ProgressState
+import pt.ipc_app.service.models.users.DocState
+import pt.ipc_app.service.models.users.MonitorProfile
+import pt.ipc_app.service.models.users.Rating
+import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.screens.AppScreen
+import java.util.*
 
 @Composable
 fun MonitorProfileScreen(
-    monitor: UserInfo,
-    profilePictureUrl: String,
+    monitor: MonitorProfile,
+    profilePicture: @Composable () -> Unit = { },
     updateProfilePictureState: ProgressState = ProgressState.IDLE,
     onUpdateProfilePicture: () -> Unit = { },
     onSuccessUpdateProfilePicture: () -> Unit = { },
@@ -39,9 +43,9 @@ fun MonitorProfileScreen(
             Text(
                 text = stringResource(R.string.profile_title),
                 style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(bottom = 40.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
-            ProfilePicture(url = profilePictureUrl)
+            profilePicture()
             ButtonToUpdatePicture(
                 updateProfilePictureState = updateProfilePictureState,
                 onUpdateProfilePicture = onUpdateProfilePicture,
@@ -50,16 +54,65 @@ fun MonitorProfileScreen(
 
             Text(
                 text = monitor.name,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(top = 20.dp)
+                style = MaterialTheme.typography.h6
             )
 
-            Button(
-                onClick = onSubmitCredentialDocument,
-                enabled = submitCredentialDocumentState != ProgressState.WAITING,
-                modifier = Modifier.padding(top = 10.dp)
+            Row(
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
             ) {
-                Text("Submit Credential")
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null
+                )
+                Text(text = monitor.email)
+            }
+
+            MonitorRating(rating = monitor.rating)
+
+            Spacer(modifier = Modifier.padding(top = 200.dp))
+
+            if (monitor.docState == null)
+                Button(
+                    onClick = onSubmitCredentialDocument,
+                    enabled = submitCredentialDocumentState != ProgressState.WAITING,
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    Text("Submit Credential")
+                }
+            else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(60.dp)
+                        .background(Color.White)
+                        .border(1.dp, Color(204, 202, 202, 255))
+                        .padding(8.dp)
+                ) {
+                    Column {
+                        Text("Credential")
+                    }
+                    Spacer(modifier = Modifier.weight(0.1f))
+                    Row {
+                        when(monitor.documentState()) {
+                            DocState.VALID -> Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Document State Valid",
+                                tint = Color(131, 204, 46, 255)
+                            )
+                            DocState.WAITING -> Icon(
+                                imageVector = Icons.Default.HourglassBottom,
+                                contentDescription = "Document State Waiting",
+                                tint = Color(255, 217, 102, 255)
+                            )
+                            else -> Icon(
+                                imageVector = Icons.Default.Error,
+                                contentDescription = "Document State Invalid",
+                                tint = Color.Red
+                            )
+                        }
+                    }
+                }
             }
 
             if (submitCredentialDocumentState == ProgressState.WAITING) {
@@ -76,7 +129,6 @@ fun MonitorProfileScreen(
 @Composable
 fun MonitorProfileScreenPreview() {
     MonitorProfileScreen(
-        monitor = UserInfo("1", "Monitor Test", "", Role.MONITOR),
-        profilePictureUrl = ""
+        monitor = MonitorProfile(UUID.randomUUID(), "Test", "test@gmail.com", Rating(4F, 1), "Valid")
     )
 }

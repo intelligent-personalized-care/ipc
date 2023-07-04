@@ -9,6 +9,8 @@ import kotlin.coroutines.resumeWithException
 
 const val REQUEST_TAG = "REQUEST"
 
+const val AUTHORIZATION = "Authorization"
+
 /**
  * Extension function used to send [this] request using [okHttpClient] and process the
  * received response with the given [handler]. Note that [handler] is called from a
@@ -48,7 +50,7 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
 
 fun Request.Builder.checkAuthorization(type: String, token: String?): Request.Builder =
     if (token != null)
-        header("Authorization", "$type $token")
+        header(AUTHORIZATION, "$type $token")
     else this
 
 

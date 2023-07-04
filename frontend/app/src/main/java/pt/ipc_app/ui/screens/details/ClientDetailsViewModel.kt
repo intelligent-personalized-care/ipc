@@ -1,5 +1,7 @@
 package pt.ipc_app.ui.screens.details
 
+import android.content.Context
+import coil.request.ImageRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.PlansService
@@ -29,10 +31,15 @@ class ClientDetailsViewModel(
     val plans
         get() = _plans.asStateFlow()
 
-    fun getProfilePictureUrl(
+    fun getProfilePicture(
+        context: Context,
         clientId: UUID
-    ): String =
-        usersService.getProfilePictureUrl(clientId)
+    ): ImageRequest =
+        usersService.getProfilePicture(
+            context = context,
+            userId = clientId,
+            token = sessionManager.userLoggedIn.token
+        )
 
     /**
      * Attempts to get the client details.

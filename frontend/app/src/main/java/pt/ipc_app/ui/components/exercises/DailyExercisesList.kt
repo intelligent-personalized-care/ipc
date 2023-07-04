@@ -48,11 +48,11 @@ fun DailyExercisesList(
 @Composable
 fun PlanScreenPreview() {
     DailyExercisesList(
-        dailyListSelected = plan.dailyLists.first()
+        dailyListSelected = planTest.dailyLists.first()
     )
 }
 
-val plan = Plan(
+val planTest = Plan(
     1,
     title = "PlanTest",
     startDate = LocalDate.of(2023, 7, 3).toString(),

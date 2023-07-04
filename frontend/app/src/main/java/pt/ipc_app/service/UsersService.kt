@@ -1,10 +1,13 @@
 package pt.ipc_app.service
 
+import android.content.Context
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.connection.AUTHORIZATION
 import pt.ipc_app.service.models.ConnectionRequestInput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
@@ -77,6 +80,39 @@ class UsersService(
                 email = email,
                 password = password
             )
+        )
+
+
+    /**
+     * Gets the client profile.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getClientProfile(
+        clientId: UUID,
+        token: String
+    ): APIResult<ClientOutput> =
+        get(
+            uri = "/users/clients/$clientId/profile",
+            token = token
+        )
+
+    /**
+     * Gets the monitor profile.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getMonitorProfile(
+        monitorId: UUID,
+        token: String
+    ): APIResult<MonitorProfile> =
+        get(
+            uri = "/users/monitors/$monitorId/profile",
+            token = token
         )
 
     /**
@@ -213,10 +249,41 @@ class UsersService(
             body = requestDecision
         )
 
-    fun getProfilePictureUrl(
-        userId: UUID
-    ): String =
-        "$apiEndpoint/users/$userId/photo"
+    /**
+     * Rates the monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun rateMonitor(
+        monitorId: UUID,
+        clientId: UUID,
+        stars: Int,
+        token: String
+    ): APIResult<Any> =
+        post(
+            uri = "/users/monitors/$monitorId/rate",
+            token = token,
+            body = RatingInput(clientId, stars)
+        )
+
+    /**
+     * Gets the profile picture of an user.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    fun getProfilePicture(
+        context: Context,
+        userId: UUID,
+        token: String
+    ): ImageRequest =
+        ImageRequest.Builder(context)
+            .data("$apiEndpoint/users/$userId/photo")
+            .addHeader(AUTHORIZATION, "$BEARER_TOKEN $token")
+            .build()
 
     /**
      * Updates the profile picture of an user.

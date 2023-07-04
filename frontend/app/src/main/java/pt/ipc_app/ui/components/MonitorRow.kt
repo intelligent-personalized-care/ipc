@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.service.models.users.Rating
 import java.util.*
 
 @Composable
@@ -58,19 +59,36 @@ fun MonitorInfo(
         verticalArrangement = Arrangement.Center
     ) {
         Text(monitor.name)
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Star",
-                tint = Color(255, 217, 102, 255)
-            )
-            Text(
-                text = monitor.stars.toString() + " stars",
-                style = MaterialTheme.typography.overline,
-            )
-        }
+        MonitorRating(rating = monitor.rating)
+    }
+}
+
+@Composable
+fun MonitorRating(
+    rating: Rating
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Default.Star,
+            contentDescription = "Star",
+            tint = Color(255, 217, 102, 255)
+        )
+        Text(
+            text = rating.averageStarts.toString() + " stars",
+            style = MaterialTheme.typography.overline,
+        )
+
+        Icon(
+            imageVector = Icons.Default.RemoveRedEye,
+            contentDescription = "Review",
+            modifier = Modifier.padding(start = 10.dp, end = 4.dp)
+        )
+        Text(
+            text = rating.nrOfReviews.toString() + " reviews",
+            style = MaterialTheme.typography.overline,
+        )
     }
 }
 
@@ -84,6 +102,6 @@ fun MonitorRowWithoutMonitorPreview() {
 @Composable
 fun MonitorRowPreview() {
     MonitorRow(
-        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F)
+        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", Rating(4.8F, 3))
     )
 }

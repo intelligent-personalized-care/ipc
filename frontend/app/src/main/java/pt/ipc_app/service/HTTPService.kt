@@ -43,7 +43,7 @@ abstract class HTTPService(
             val resJson = JsonReader(body.charStream())
 
             try {
-                if (response.isSuccessful)
+                if (response.isSuccessful && body.contentType() == applicationJsonMediaType)
                     APIResult.Success(jsonEncoder.fromJson(resJson, T::class.java))
                 else if (body.contentType() == problemJsonMediaType)
                     APIResult.Failure(jsonEncoder.fromJson(resJson, ProblemJson::class.java))
@@ -55,7 +55,6 @@ abstract class HTTPService(
                 throw IllegalArgumentException()
             }
         }
-
 
     /**
      * Sends a GET request to the uri. If the [token] has an associated value, the request requires

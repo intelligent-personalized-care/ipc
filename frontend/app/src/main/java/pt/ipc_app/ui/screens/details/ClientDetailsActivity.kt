@@ -10,6 +10,8 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.ui.components.CheckProblemJson
+import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
@@ -54,7 +56,7 @@ class ClientDetailsActivity : ComponentActivity() {
             if (cl != null)
                 ClientDetailsScreen(
                     client = cl,
-                    profilePictureUrl = viewModel.getProfilePictureUrl(cl.id),
+                    profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, cl.id)) },
                     isMyClient = true,
                     onSendEmailRequest = { openSendEmail(client.email) },
                     plans = viewModel.plans.collectAsState().value.plans,
@@ -67,6 +69,10 @@ class ClientDetailsActivity : ComponentActivity() {
                         )
                     }
                 )
+            viewModel.error?.let {
+                CheckProblemJson(error = it)
+            }
+
         }
     }
 

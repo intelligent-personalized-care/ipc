@@ -24,7 +24,7 @@ import java.util.*
 @Composable
 fun ClientDetailsScreen(
     client: ClientOfMonitor,
-    profilePictureUrl: String,
+    profilePicture: @Composable () -> Unit = { },
     isMyClient: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
     plans: List<PlanInfoOutput> = listOf(),
@@ -44,7 +44,7 @@ fun ClientDetailsScreen(
                 modifier = Modifier.padding(bottom = 20.dp)
             )
 
-            ProfilePicture(url = profilePictureUrl)
+            profilePicture()
             Text(
                 text = client.name,
                 style = MaterialTheme.typography.h6
@@ -64,20 +64,11 @@ fun ClientDetailsScreen(
             Column(
                 modifier = Modifier.padding(vertical = 20.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.birthDate) + ": ${client.birthDate}"
-                )
-                Text(
-                    text = stringResource(id = R.string.weight) + ": ${client.weight}"
-                )
-                Text(
-                    text = stringResource(id = R.string.height) + ": ${client.height}"
-                )
-                Text(
-                    text = stringResource(id = R.string.physicalCondition) + ": ${client.physicalCondition}"
-                )
+                Text(text = stringResource(id = R.string.birthDate) + ": ${client.birthDate}")
+                Text(text = stringResource(id = R.string.weight) + ": ${client.weight}")
+                Text(text = stringResource(id = R.string.height) + ": ${client.height}")
+                Text(text = stringResource(id = R.string.physicalCondition) + ": ${client.physicalCondition}")
             }
-
 
             if (isMyClient) {
                 Row {
@@ -152,5 +143,5 @@ fun ClientDetailsScreen(
 @Preview
 @Composable
 fun ClientDetailsScreenPreview() {
-    ClientDetailsScreen(client = ClientOfMonitor(UUID.randomUUID(), "Mike", ""), "")
+    ClientDetailsScreen(client = ClientOfMonitor(UUID.randomUUID(), "Mike", ""))
 }

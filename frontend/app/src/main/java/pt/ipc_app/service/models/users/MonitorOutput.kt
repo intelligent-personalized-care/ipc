@@ -9,7 +9,13 @@ data class MonitorOutput(
     val id: UUID,
     val name: String,
     val email: String,
-    val stars: Float
+    val rating: Rating
+): Parcelable
+
+@Parcelize
+data class Rating(
+    val averageStarts: Float,
+    val nrOfReviews: Int
 ): Parcelable
 
 data class ListMonitorsOutput(

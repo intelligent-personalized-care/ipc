@@ -2,9 +2,11 @@ package pt.ipc_app.ui.screens.details
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,17 +17,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.ui.components.ProfilePicture
+import pt.ipc_app.service.models.users.Rating
+import pt.ipc_app.ui.components.MonitorRating
+import pt.ipc_app.ui.components.RateMonitor
 import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
 fun MonitorDetailsScreen(
     monitor: MonitorOutput,
-    profilePictureUrl: String,
+    profilePicture: @Composable () -> Unit = { },
     requestEnable: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
-    onRequestedConnection: () -> Unit = { }
+    onRequestedConnection: () -> Unit = { },
+    onRatedMonitor: (Int) -> Unit = { }
 ) {
     AppScreen {
         Column(
@@ -35,23 +40,29 @@ fun MonitorDetailsScreen(
             Text(
                 text = stringResource(R.string.monitor_details_title),
                 style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(bottom = 40.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
 
-            ProfilePicture(url = profilePictureUrl)
+            profilePicture()
             Text(
                 text = monitor.name,
                 style = MaterialTheme.typography.h6
             )
-
-        }
-        Column(
-            modifier = Modifier.padding(start = 30.dp, top = 300.dp)
-        ) {
-            Text(
-                text = monitor.email,
-                modifier = Modifier.clickable { onSendEmailRequest() }
-            )
+            Row(
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = null
+                )
+                Text(
+                    text = monitor.email,
+                    modifier = Modifier.clickable {
+                        onSendEmailRequest()
+                    }
+                )
+            }
+            MonitorRating(rating = monitor.rating)
 
             if (requestEnable) {
                 Button(
@@ -65,6 +76,11 @@ fun MonitorDetailsScreen(
                     )
                 }
             }
+
+            RateMonitor(
+                modifier = Modifier.padding(top = 200.dp),
+                onSubmitRating = onRatedMonitor
+            )
         }
     }
 
@@ -74,7 +90,6 @@ fun MonitorDetailsScreen(
 @Composable
 fun MonitorDetailsScreenPreview() {
     MonitorDetailsScreen(
-        monitor = MonitorOutput(UUID.randomUUID(), "Mike", "", 4.8F),
-        profilePictureUrl = ""
+        monitor = MonitorOutput(UUID.randomUUID(), "Mike", "", Rating(4.8F, 3))
     )
 }

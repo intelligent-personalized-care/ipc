@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
 import pt.ipc_app.utils.viewModelInit
 
@@ -40,9 +41,10 @@ class MonitorDetailsActivity : ComponentActivity() {
         setContent {
             MonitorDetailsScreen(
                 monitor = monitor,
-                profilePictureUrl = viewModel.getProfilePictureUrl(monitor.id),
+                profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, monitor.id)) },
                 onSendEmailRequest = { openSendEmail(monitor.email) },
-                onRequestedConnection = { viewModel.connectWithMonitor(monitor.id) }
+                onRequestedConnection = { viewModel.connectWithMonitor(monitor.id) },
+                onRatedMonitor = { viewModel.rateMonitor(monitor.id, it) }
             )
         }
     }

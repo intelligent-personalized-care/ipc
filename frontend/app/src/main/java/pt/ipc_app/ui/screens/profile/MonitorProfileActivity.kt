@@ -14,19 +14,15 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.getFileFromUri
 import pt.ipc_app.utils.viewModelInit
 import java.io.IOException
-
 
 /**
  * The monitor profile activity.
  */
 class MonitorProfileActivity : ComponentActivity() {
-
-    private val repo by lazy {
-        (application as DependenciesContainer).sessionManager
-    }
 
     private val viewModel by viewModels<MonitorProfileViewModel> {
         viewModelInit {
@@ -46,23 +42,29 @@ class MonitorProfileActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.getProfile()
+
         setContent {
-            MonitorProfileScreen(
-                monitor = repo.userLoggedIn,
-                profilePictureUrl = viewModel.getProfilePictureUrl(),
-                updateProfilePictureState = viewModel.pictureState.collectAsState().value,
-                onUpdateProfilePicture = {
-                    viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.PICTURE)
-                    checkReadStoragePermission()
-                },
-                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() },
-                submitCredentialDocumentState = viewModel.documentState.collectAsState().value,
-                onSubmitCredentialDocument = {
-                    viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
-                    checkReadStoragePermission()
-                },
-                onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
-            )
+            val profile = viewModel.monitorProfile.collectAsState().value
+            profile?.let {
+                MonitorProfileScreen(
+                    monitor = it,
+                    profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this)) },
+                    updateProfilePictureState = viewModel.pictureState.collectAsState().value,
+                    onUpdateProfilePicture = {
+                        viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.PICTURE)
+                        checkReadStoragePermission()
+                    },
+                    onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() },
+                    submitCredentialDocumentState = viewModel.documentState.collectAsState().value,
+                    onSubmitCredentialDocument = {
+                        viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
+                        checkReadStoragePermission()
+                    },
+                    onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
+                )
+            }
         }
     }
 
@@ -74,7 +76,13 @@ class MonitorProfileActivity : ComponentActivity() {
     }
 
     private fun openFileManager() {
-        fileChooserLauncher.launch("*/*")
+        val input = when (viewModel.fileToSubmit.value) {
+            MonitorProfileViewModel.FileToSubmit.PICTURE -> "image/*"
+            MonitorProfileViewModel.FileToSubmit.CREDENTIAL -> "application/pdf"
+            else -> "*/*"
+        }
+
+        fileChooserLauncher.launch(input)
     }
 
     private val requestReadStoragePermissionLauncher =

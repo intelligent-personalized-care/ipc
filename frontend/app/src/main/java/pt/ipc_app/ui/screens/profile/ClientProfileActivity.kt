@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.getFileFromUri
 import pt.ipc_app.utils.viewModelInit
 import java.io.IOException
@@ -23,10 +24,6 @@ import java.io.IOException
  * The client profile activity.
  */
 class ClientProfileActivity : ComponentActivity() {
-
-    private val repo by lazy {
-        (application as DependenciesContainer).sessionManager
-    }
 
     private val viewModel by viewModels<ClientProfileViewModel> {
         viewModelInit {
@@ -46,14 +43,20 @@ class ClientProfileActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.getProfile()
+
         setContent {
-            ClientProfileScreen(
-                client = repo.userLoggedIn,
-                profilePictureUrl = viewModel.getProfilePictureUrl(),
-                updateProfilePictureState = viewModel.state.collectAsState().value,
-                onUpdateProfilePicture = { checkReadStoragePermission() },
-                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
-            )
+            val profile = viewModel.clientProfile.collectAsState().value
+            profile?.let {
+                ClientProfileScreen(
+                    client = profile,
+                    profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this)) },
+                    updateProfilePictureState = viewModel.state.collectAsState().value,
+                    onUpdateProfilePicture = { checkReadStoragePermission() },
+                    onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
+                )
+            }
         }
     }
 

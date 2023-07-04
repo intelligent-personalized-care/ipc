@@ -16,6 +16,7 @@ import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.domain.user.*
 import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
+import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.components.bottomBar.ClientBottomBar
 import pt.ipc_app.ui.screens.AppScreen
@@ -26,7 +27,7 @@ import java.util.*
 fun ClientHomeScreen(
     client: UserInfo,
     monitor: MonitorOutput? = null,
-    planTest: Plan? = plan,//null,
+    plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
     onExerciseSelect: (ExerciseTotalInfo) -> Unit = { },
     onExercisesClick: () -> Unit = { },
@@ -36,7 +37,7 @@ fun ClientHomeScreen(
     var notifications by remember { mutableStateOf(true) }
 
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
-    var dailyListSelected: DailyList? by remember { mutableStateOf(planTest?.getListOfDayIfExists(daySelected)) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(plan?.getListOfDayIfExists(daySelected)) }
 
     AppScreen {
         Row(
@@ -72,7 +73,7 @@ fun ClientHomeScreen(
             ) {
 
                 Text(
-                    text = if (planTest != null) "${planTest.title} - ${planTest.dailyLists.size} days"
+                    text = if (plan != null) "${plan.title} - ${plan.dailyLists.size} days"
                             else "No current plan assigned"
                 )
 
@@ -81,7 +82,7 @@ fun ClientHomeScreen(
                     daySelected = daySelected,
                     onDaySelected = {
                         daySelected = it
-                        dailyListSelected = planTest?.getListOfDayIfExists(it)
+                        dailyListSelected = plan?.getListOfDayIfExists(it)
                     }
                 )
 
@@ -90,7 +91,7 @@ fun ClientHomeScreen(
                     onExerciseSelect = { ex ->
                         onExerciseSelect(
                             ExerciseTotalInfo(
-                                planId = planTest!!.id,
+                                planId = plan!!.id,
                                 dailyListId = dailyListSelected!!.id,
                                 exercise = ex
                             )
@@ -121,7 +122,7 @@ fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
 fun ClientHomeScreenWithoutPlanPreview() {
     ClientHomeScreen(
         client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
-        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F)
+        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", Rating(4.8F, 3))
     )
 }
 
@@ -130,7 +131,7 @@ fun ClientHomeScreenWithoutPlanPreview() {
 fun ClientHomeScreenPreview() {
     ClientHomeScreen(
         client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
-        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", 4.8F),
-        planTest = plan
+        monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", Rating(4.8F, 3)),
+        plan = planTest
     )
 }

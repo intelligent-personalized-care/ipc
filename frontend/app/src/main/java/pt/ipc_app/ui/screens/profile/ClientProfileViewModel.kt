@@ -1,10 +1,14 @@
 package pt.ipc_app.ui.screens.profile
 
+import android.content.Context
+import coil.request.ImageRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.service.models.users.MonitorProfile
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
@@ -25,8 +29,35 @@ class ClientProfileViewModel(
     val state
         get() = _state.asStateFlow()
 
-    fun getProfilePictureUrl(): String =
-        usersService.getProfilePictureUrl(UUID.fromString(sessionManager.userLoggedIn.id))
+    private val _clientProfile = MutableStateFlow<ClientOutput?>(null)
+    val clientProfile
+        get() = _clientProfile.asStateFlow()
+
+    fun getProfilePicture(
+        context: Context
+    ): ImageRequest =
+        usersService.getProfilePicture(
+            context = context,
+            userId = UUID.fromString(sessionManager.userLoggedIn.id),
+            token = sessionManager.userLoggedIn.token
+        )
+
+    /**
+     * Attempts to get the profile of client.
+     */
+    fun getProfile() {
+        launchAndExecuteRequest(
+            request = {
+                usersService.getClientProfile(
+                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    token = sessionManager.userLoggedIn.token
+                )
+            },
+            onSuccess = {
+                _clientProfile.value = it
+            }
+        )
+    }
 
     /**
      * Attempts to update the profile picture of client.

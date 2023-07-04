@@ -9,4 +9,8 @@ data class ClientOutput(
     val id: UUID,
     val name: String,
     val email: String,
+    val weight: Int? = null,
+    val height: Int? = null,
+    val physicalCondition: String? = null,
+    val birthDate: String? = null
 ): Parcelable
