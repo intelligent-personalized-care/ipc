@@ -9,7 +9,6 @@ import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
-import java.util.*
 
 /**
  * View model for the [SplashScreenActivity].
@@ -38,11 +37,9 @@ class SplashScreenViewModel(
         get() = _requests.asStateFlow()
 
     fun getCurrentPlanOfClient() {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getCurrentPlanOfClient(UUID.fromString(user.id), user.token)
+                usersService.getCurrentPlanOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _plan.value = it
@@ -51,11 +48,9 @@ class SplashScreenViewModel(
     }
 
     fun getMonitorOfClient() {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorOfClient(UUID.fromString(user.id), user.token)
+                usersService.getMonitorOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _monitor.value = it
@@ -64,11 +59,9 @@ class SplashScreenViewModel(
     }
 
     fun getClientsOfMonitor() {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getClientsOfMonitor(UUID.fromString(user.id), user.token)
+                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _clients.value = it
@@ -77,11 +70,9 @@ class SplashScreenViewModel(
     }
 
     fun getRequestsOfMonitor() {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorRequests(UUID.fromString(user.id), user.token)
+                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _requests.value = it

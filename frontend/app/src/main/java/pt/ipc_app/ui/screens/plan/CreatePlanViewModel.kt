@@ -10,7 +10,6 @@ import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.util.*
 
 /**
  * View model for the [CreatePlanActivity].
@@ -70,7 +69,7 @@ class CreatePlanViewModel(
                 _planState.value = ProgressState.WAITING
                 plansService.createPlan(
                     plan = plan,
-                    monitorId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    monitorId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 ).also {
                     _planState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE

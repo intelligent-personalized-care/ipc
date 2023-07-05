@@ -3,6 +3,7 @@ package pt.ipc_app.session
 import android.content.Context
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.domain.user.toRole
+import java.util.UUID
 
 /**
  * Session manager that uses shared preferences to store the session.
@@ -43,13 +44,20 @@ class SessionManagerSharedPrefs(private val context: Context) {
         }
 
     lateinit var userLoggedIn: UserInfo
+    lateinit var userUUID: UUID
+
 
     /**
      * Checks if the user is logged in.
      *
      * @return true if the user is logged in, false otherwise
      */
-    fun isLoggedIn(): Boolean = userInfo != null
+    fun isLoggedIn(): Boolean = (userInfo != null).also {
+        if (it) {
+            userLoggedIn = userInfo!!
+            userUUID = UUID.fromString(userLoggedIn.id)
+        }
+    }
 
     /**
      * Updates the session with the given tokens and username.
@@ -66,6 +74,7 @@ class SessionManagerSharedPrefs(private val context: Context) {
     ) {
         userInfo = UserInfo(id, name, token, role)
         userLoggedIn = userInfo!!
+        userUUID = UUID.fromString(userLoggedIn.id)
     }
 
     /**

@@ -2,11 +2,8 @@ package pt.ipc_app.ui.screens.details
 
 import android.content.Context
 import coil.request.ImageRequest
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.session.SessionManagerSharedPrefs
-import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 import java.util.*
 
@@ -40,7 +37,7 @@ class MonitorDetailsViewModel(
             request = {
                 usersService.connectMonitor(
                     monitorId = monitorId,
-                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    clientId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 )
             },
@@ -59,7 +56,7 @@ class MonitorDetailsViewModel(
             request = {
                 usersService.rateMonitor(
                     monitorId = monitorId,
-                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    clientId = sessionManager.userUUID,
                     stars = stars,
                     token = sessionManager.userLoggedIn.token
                 )

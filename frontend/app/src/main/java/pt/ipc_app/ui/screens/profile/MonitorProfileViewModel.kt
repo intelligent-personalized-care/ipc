@@ -12,7 +12,6 @@ import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 import java.io.File
-import java.util.*
 
 /**
  * View model for the [MonitorProfileActivity].
@@ -49,7 +48,7 @@ class MonitorProfileViewModel(
     fun getProfilePicture(context: Context): ImageRequest =
         usersService.getProfilePicture(
             context = context,
-            userId = UUID.fromString(sessionManager.userLoggedIn.id),
+            userId = sessionManager.userUUID,
             token = sessionManager.userLoggedIn.token
         )
 
@@ -60,7 +59,7 @@ class MonitorProfileViewModel(
         launchAndExecuteRequest(
             request = {
                 usersService.getMonitorProfile(
-                    monitorId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    monitorId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 )
             },
@@ -81,7 +80,7 @@ class MonitorProfileViewModel(
                 _pictureState.value = ProgressState.WAITING
                 usersService.updateProfilePicture(
                     image = image,
-                    userId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    userId = sessionManager.userUUID,
                     role = Role.MONITOR,
                     token = sessionManager.userLoggedIn.token
                 ).also {
@@ -105,7 +104,7 @@ class MonitorProfileViewModel(
                 _documentState.value = ProgressState.WAITING
                 usersService.submitCredentialDocument(
                     doc = doc,
-                    monitorId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    monitorId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 ).also {
                     if (it !is APIResult.Success) _documentState.value = ProgressState.IDLE

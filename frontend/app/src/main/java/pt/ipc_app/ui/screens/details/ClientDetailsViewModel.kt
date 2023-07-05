@@ -47,11 +47,9 @@ class ClientDetailsViewModel(
     fun getClientDetails(
         clientId: UUID
     ) {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getClientOfMonitor(UUID.fromString(user.id), clientId, user.token)
+                usersService.getClientOfMonitor(sessionManager.userUUID, clientId, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _client.value = it
@@ -62,13 +60,11 @@ class ClientDetailsViewModel(
     /**
      * Attempts to get the monitor plans.
      */
-    fun getMonitorPlans(
-        monitorId: UUID
-    ) {
+    fun getMonitorPlans() {
         launchAndExecuteRequest(
             request = {
                 plansService.getMonitorPlans(
-                    monitorId = monitorId,
+                    monitorId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 )
             },
@@ -82,7 +78,6 @@ class ClientDetailsViewModel(
      * Attempts to associate a plan to a client.
      */
     fun associatePlanToClient(
-        monitorId: UUID,
         clientId: UUID,
         planId: Int,
         startDate: String
@@ -90,7 +85,7 @@ class ClientDetailsViewModel(
         launchAndExecuteRequest(
             request = {
                 plansService.associatePlanToClient(
-                    monitorId = monitorId,
+                    monitorId = sessionManager.userUUID,
                     clientId = clientId,
                     token = sessionManager.userLoggedIn.token,
                     planId = planId,

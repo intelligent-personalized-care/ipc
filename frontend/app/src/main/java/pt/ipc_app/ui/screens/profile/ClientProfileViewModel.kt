@@ -8,12 +8,10 @@ import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.service.models.users.MonitorProfile
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 import java.io.File
-import java.util.*
 
 /**
  * View model for the [ClientProfileActivity].
@@ -38,7 +36,7 @@ class ClientProfileViewModel(
     ): ImageRequest =
         usersService.getProfilePicture(
             context = context,
-            userId = UUID.fromString(sessionManager.userLoggedIn.id),
+            userId = sessionManager.userUUID,
             token = sessionManager.userLoggedIn.token
         )
 
@@ -49,7 +47,7 @@ class ClientProfileViewModel(
         launchAndExecuteRequest(
             request = {
                 usersService.getClientProfile(
-                    clientId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    clientId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.token
                 )
             },
@@ -70,7 +68,7 @@ class ClientProfileViewModel(
                 _state.value = ProgressState.WAITING
                 usersService.updateProfilePicture(
                     image = image,
-                    userId = UUID.fromString(sessionManager.userLoggedIn.id),
+                    userId = sessionManager.userUUID,
                     role = Role.CLIENT,
                     token = sessionManager.userLoggedIn.token
                 ).also {

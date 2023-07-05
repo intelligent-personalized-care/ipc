@@ -65,18 +65,17 @@ class ExercisesViewModel(
         exerciseId: Int,
         set: Int
     ) {
-        val userInfo = sessionManager.userLoggedIn
         launchAndExecuteRequest(
             request = {
                 _state.value = ProgressState.WAITING
                 exercisesService.submitExerciseVideo(
                     video = video,
-                    clientId = UUID.fromString(userInfo.id),
+                    clientId = sessionManager.userUUID,
                     planId = planId,
                     dailyListId = dailyListId,
                     exerciseId = exerciseId,
                     set = set,
-                    token = userInfo.token
+                    token = sessionManager.userLoggedIn.token
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE
                 }

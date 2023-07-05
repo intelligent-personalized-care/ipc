@@ -20,10 +20,6 @@ import java.util.*
  */
 class ClientDetailsActivity : ComponentActivity() {
 
-    private val repo by lazy {
-        (application as DependenciesContainer).sessionManager
-    }
-
     private val viewModel by viewModels<ClientDetailsViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
@@ -45,10 +41,8 @@ class ClientDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val monitorId = UUID.fromString(repo.userLoggedIn.id)
-
         viewModel.getClientDetails(client.id)
-        viewModel.getMonitorPlans(monitorId)
+        viewModel.getMonitorPlans()
 
         setCustomContent(viewModel) {
             val cl = viewModel.client.collectAsState().value
@@ -61,7 +55,6 @@ class ClientDetailsActivity : ComponentActivity() {
                     plans = viewModel.plans.collectAsState().value.plans,
                     onAssociatePlan = { pid, startDate ->
                         viewModel.associatePlanToClient(
-                            monitorId = monitorId,
                             clientId = client.id,
                             planId = pid,
                             startDate = startDate

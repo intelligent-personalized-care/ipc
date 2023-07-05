@@ -24,11 +24,9 @@ class MonitorHomeViewModel(
         get() = _requests.asStateFlow()
 
     fun getRequestsOfMonitor() {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorRequests(UUID.fromString(user.id), user.token)
+                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.token)
             },
             onSuccess = {
                 _requests.value = it
@@ -40,15 +38,13 @@ class MonitorHomeViewModel(
         requestId: UUID,
         requestDecision: ConnectionRequestDecisionInput
     ) {
-        val user = sessionManager.userLoggedIn
-
         launchAndExecuteRequest(
             request = {
                 usersService.decideConnectionRequest(
-                    monitorId = UUID.fromString(user.id),
+                    monitorId = sessionManager.userUUID,
                     requestId = requestId,
                     requestDecision = requestDecision,
-                    token = user.token
+                    token = sessionManager.userLoggedIn.token
                 )
             },
             onSuccess = {}
