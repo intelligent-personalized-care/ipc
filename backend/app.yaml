@@ -1,4 +1,4 @@
-runtime: java14
+runtime: java17
 env: standard
 instance_class: B1
 handlers:
