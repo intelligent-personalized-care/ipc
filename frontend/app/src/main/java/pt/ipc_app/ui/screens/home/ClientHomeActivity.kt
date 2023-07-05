@@ -4,20 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.components.planTest
-import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
-import pt.ipc_app.ui.screens.profile.ClientProfileActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
-import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
+import pt.ipc_app.ui.setAppContentClient
+import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
 /**
@@ -27,6 +25,13 @@ class ClientHomeActivity : ComponentActivity() {
 
     private val repo by lazy {
         (application as DependenciesContainer).sessionManager
+    }
+
+    private val viewModel by viewModels<ClientHomeViewModel> {
+        viewModelInit {
+            val app = (application as DependenciesContainer)
+            ClientHomeViewModel(app.services.usersService, app.sessionManager)
+        }
     }
 
     companion object {
@@ -45,22 +50,19 @@ class ClientHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            val mon = monitor
+        if (monitor == null) viewModel.getMonitorOfClient()
+        if (plan == null) viewModel.getCurrentPlanOfClient()
+
+        setAppContentClient(viewModel) {
             ClientHomeScreen(
                 client = repo.userLoggedIn,
-                monitor = mon,
-                plan = planTest,
+                monitor = monitor ?: viewModel.monitor.collectAsState().value,
+                plan = planTest,// plan ?: viewModel.plan.collectAsState().value,
                 onMonitorClick = {
-                    if (mon != null)
-                        MonitorDetailsActivity.navigate(this, mon)
-                    else
-                        SearchMonitorsActivity.navigate(this)
+                    if (monitor != null) MonitorDetailsActivity.navigate(this, monitor!!)
+                    else SearchMonitorsActivity.navigate(this)
                 },
-                onExerciseSelect = { ExerciseActivity.navigate(this, it) },
-                onExercisesClick = { ExercisesListActivity.navigate(this) },
-                onUserInfoClick = { ClientProfileActivity.navigate(this) },
-                onAboutClick = { AboutActivity.navigate(this) }
+                onExerciseSelect = { ExerciseActivity.navigate(this, it) }
             )
         }
     }
