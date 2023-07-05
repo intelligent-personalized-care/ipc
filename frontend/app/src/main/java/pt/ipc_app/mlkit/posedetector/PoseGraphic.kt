@@ -111,10 +111,9 @@ class PoseGraphic internal constructor(
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
-          println(rightElbow!!.position.x)
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
-            rightShoulder.position.x + leftShoulder.position.x ,rightShoulder.position.x - rightWrist.position.x , 25, 0, 0.5,
-            2, 6,
+            rightShoulder.position.y + leftShoulder.position.y , rightShoulder.position.y + leftShoulder.position.y, 25, 0, 0.5,
+            2, 12,
             "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",
             exercise.exeSets, exercise.exeReps)
 
