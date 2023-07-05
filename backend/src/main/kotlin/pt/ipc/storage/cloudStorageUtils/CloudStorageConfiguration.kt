@@ -22,11 +22,7 @@ class CloudStorageConfiguration(
     private val retryDelayMultiplier = 3.0
 
     private val totalTimeOut: Duration = Duration.ofMinutes(3)
-
-    private val credentialsPath: String = System.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-
-    private val credentials: GoogleCredentials = GoogleCredentials.fromStream(Paths.get(credentialsPath).toFile().inputStream())
-
+    
     private val retryStorageOptions: RetrySettings = StorageOptions
         .getDefaultRetrySettings()
         .toBuilder()
@@ -36,9 +32,9 @@ class CloudStorageConfiguration(
         .build()
 
     private val storageOptions: StorageOptions = StorageOptions
-        .newBuilder()
+        .getDefaultInstance()
+        .toBuilder()
         .setRetrySettings(retryStorageOptions)
-        .setCredentials(credentials)
         .setProjectId(projectID)
         .build()
 

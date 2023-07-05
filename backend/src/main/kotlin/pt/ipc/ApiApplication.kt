@@ -1,5 +1,6 @@
 package pt.ipc
 
+import com.zaxxer.hikari.HikariDataSource
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -11,6 +12,7 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import pt.ipc.storage.repositories.jdbi.configure
 import java.io.File
+import java.util.*
 
 @Configuration
 class AppConfig {
@@ -33,13 +35,23 @@ class AppConfig {
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 class ApiApplication {
-
     @Bean
-    fun jdbi(): Jdbi = Jdbi.create(
-        PGSimpleDataSource().apply {
-            setURL(System.getenv("postgresql_database"))
-        }
-    ).configure()
+    fun jdbi(): Jdbi {
+        val jdbcURL = System.getenv("jdbcURL") // jbdcURL
+        val connProps = Properties()
+
+        connProps.setProperty("sslmode", "disable")
+        connProps.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
+        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) //cloudSqlInstance
+
+        val dataSource = HikariDataSource()
+        dataSource.jdbcUrl = jdbcURL
+        dataSource.username = System.getenv("postgresql_username") // postgresql_username
+        dataSource.password = System.getenv("postgresql_password") // postgresql_username
+        dataSource.dataSourceProperties = connProps
+
+        return Jdbi.create(dataSource).configure()
+    }
 }
 
 fun main(args: Array<String>) {
