@@ -2,7 +2,6 @@ package pt.ipc
 
 import com.zaxxer.hikari.HikariDataSource
 import org.jdbi.v3.core.Jdbi
-import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
@@ -42,7 +41,7 @@ class ApiApplication {
 
         connProps.setProperty("sslmode", "disable")
         connProps.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
-        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) //cloudSqlInstance
+        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) // cloudSqlInstance
 
         val dataSource = HikariDataSource()
         dataSource.jdbcUrl = jdbcURL
