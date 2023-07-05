@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.multipart.MultipartException
+import org.springframework.web.multipart.support.MissingServletRequestPartException
 import pt.ipc.domain.exceptions.BadRequest
 import pt.ipc.domain.exceptions.Conflict
 import pt.ipc.domain.exceptions.Forbidden
@@ -51,13 +52,13 @@ class ExceptionHandler {
         ).toResponseEntity()
 
     @ExceptionHandler(value = [Conflict::class])
-    fun handleConflit(
+    fun handleConflict(
         request: HttpServletRequest,
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
-            title = ex.message ?: "Conflit",
+            title = ex.message ?: "Conflict",
             status = HttpStatus.CONFLICT.value()
         ).toResponseEntity()
 
@@ -84,7 +85,7 @@ class ExceptionHandler {
         ).toResponseEntity()
 
     @ExceptionHandler(value = [UnableToExecuteStatementException::class])
-    fun handlePostgreSQLError(
+    fun handlePostgresSQLError(
         request: HttpServletRequest,
         ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {
@@ -107,6 +108,17 @@ class ExceptionHandler {
         Problem(
             type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message,
+            status = HttpStatus.BAD_REQUEST.value()
+        ).toResponseEntity()
+
+    @ExceptionHandler(value = [MissingServletRequestPartException::class])
+    fun handleMissingMultipartParameter(
+        request: HttpServletRequest,
+        ex: MissingServletRequestPartException
+    ): ResponseEntity<Any> =
+        Problem(
+            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
+            title = ex.message ?: "Required request part is not present",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
 
