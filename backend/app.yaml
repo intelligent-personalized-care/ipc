@@ -1,0 +1,17 @@
+runtime: java14
+env: standard
+instance_class: B1
+handlers:
+  - url: .*
+    script: auto
+basic_scaling:
+  max_instances: 3
+  idle_timeout: 10m
+service_account: organic-byway-391719@appspot.gserviceaccount.com
+env_variables:
+  jdbcURL: "jdbc:postgresql://google/ipc"
+  cloudSqlInstance: "organic-byway-391719:europe-southwest1:ipc"
+  postgresql_username: "ipc"
+  postgresql_password: "postgresql"
+
+
