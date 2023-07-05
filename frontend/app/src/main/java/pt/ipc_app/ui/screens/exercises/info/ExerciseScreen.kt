@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.ui.components.VideoPlayer
-import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
@@ -27,53 +26,51 @@ fun ExerciseScreen(
 ) {
     var isPlaying by remember { mutableStateOf(true) }
 
-    AppScreen {
-        Column(
-            modifier = Modifier.padding(16.dp)
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(30.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = exercise.exeTitle.uppercase(),
+                style = MaterialTheme.typography.h6
+            )
+        }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(30.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = exercise.exeTitle.uppercase(),
-                    style = MaterialTheme.typography.h6
-                )
-            }
+        VideoPlayer(url = exercisePreviewUrl, playing = isPlaying)
 
-            VideoPlayer(url = exercisePreviewUrl, playing = isPlaying)
+        Spacer(modifier = Modifier.padding(top = 100.dp))
 
+        Text(
+            text = "Description",
+            style = MaterialTheme.typography.subtitle1
+        )
+        Text(
+            text = exercise.exeDescription,
+            style = MaterialTheme.typography.caption
+        )
+
+        if (isToRecord) {
             Spacer(modifier = Modifier.padding(top = 100.dp))
 
-            Text(
-                text = "Description",
-                style = MaterialTheme.typography.subtitle1
-            )
-            Text(
-                text = exercise.exeDescription,
-                style = MaterialTheme.typography.caption
-            )
-
-            if (isToRecord) {
-                Spacer(modifier = Modifier.padding(top = 100.dp))
-
-                Button(
-                    onClick = {
-                        isPlaying = false
-                        onRecordClick()
-                    },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
-                    Text(
-                        text = "Record Video",
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(start = 5.dp)
-                    )
-                }
+            Button(
+                onClick = {
+                    isPlaying = false
+                    onRecordClick()
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
+                Text(
+                    text = "Record Video",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 5.dp)
+                )
             }
         }
     }

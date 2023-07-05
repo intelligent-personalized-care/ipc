@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ClientsTable
-import pt.ipc_app.ui.screens.AppScreen
 import java.util.UUID
 
 @Composable
@@ -18,23 +17,21 @@ fun SearchClientsScreen(
     clients: List<ClientOutput>,
     onClientClick: (ClientOutput) -> Unit = { },
 ) {
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text = stringResource(id = R.string.search_results),
-                style = MaterialTheme.typography.h4,
-            )
-            ClientsTable(
-                columnText = stringResource(id = R.string.search_clients),
-                clients = clients,
-                modifier = Modifier.weight(weight = 1f, fill = false)
-            )
-        }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(id = R.string.search_results),
+            style = MaterialTheme.typography.h4,
+        )
+        ClientsTable(
+            columnText = stringResource(id = R.string.search_clients),
+            clients = clients,
+            modifier = Modifier.weight(weight = 1f, fill = false)
+        )
     }
 }
 

@@ -89,7 +89,7 @@ abstract class HTTPService(
     protected suspend inline fun <reified T> post(
         uri: String,
         token: String? = null,
-        body: Any
+        body: Any? = null
     ): APIResult<T> =
         Request.Builder()
             .url(apiEndpoint + uri)

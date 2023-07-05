@@ -17,61 +17,59 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ButtonToUpdatePicture
-import pt.ipc_app.ui.components.ClientPlansList
 import pt.ipc_app.ui.components.ProgressState
-import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
 fun ClientProfileScreen(
-    client: ClientOutput,
+    client: ClientOutput?,
     profilePicture: @Composable () -> Unit = { },
     updateProfilePictureState: ProgressState = ProgressState.IDLE,
     onUpdateProfilePicture: () -> Unit = { },
     onSuccessUpdateProfilePicture: () -> Unit = { }
 ) {
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(30.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.profile_title),
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(bottom = 40.dp)
-            )
-            profilePicture()
-            ButtonToUpdatePicture(
-                updateProfilePictureState = updateProfilePictureState,
-                onUpdateProfilePicture = onUpdateProfilePicture,
-                onSuccessUpdateProfilePicture = onSuccessUpdateProfilePicture,
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.profile_title),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+        profilePicture()
+        ButtonToUpdatePicture(
+            updateProfilePictureState = updateProfilePictureState,
+            onUpdateProfilePicture = onUpdateProfilePicture,
+            onSuccessUpdateProfilePicture = onSuccessUpdateProfilePicture,
+        )
 
+        client?.let {
             Text(
-                text = client.name,
+                text = it.name,
                 style = MaterialTheme.typography.h6
             )
-
-            Row(
-                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null
-                )
-                Text(text = client.email)
-            }
-
-            Column(
-                modifier = Modifier.padding(vertical = 20.dp)
-            ) {
-                Text(text = stringResource(id = R.string.birthDate) + ": ${client.birthDate}")
-                Text(text = stringResource(id = R.string.weight) + ": ${client.weight}")
-                Text(text = stringResource(id = R.string.height) + ": ${client.height}")
-                Text(text = stringResource(id = R.string.physicalCondition) + ": ${client.physicalCondition}")
-            }
-
         }
+
+        Row(
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Email,
+                contentDescription = null
+            )
+            client?.let { Text(text = it.email) }
+        }
+
+        Column(
+            modifier = Modifier.padding(vertical = 20.dp)
+        ) {
+            Text(text = stringResource(id = R.string.birthDate) + ": ${client?.birthDate ?: ""}")
+            Text(text = stringResource(id = R.string.weight) + ": ${client?.weight ?: ""}")
+            Text(text = stringResource(id = R.string.height) + ": ${client?.height ?: ""}")
+            Text(text = stringResource(id = R.string.physicalCondition) + ": ${client?.physicalCondition ?: ""}")
+        }
+
     }
 }
 

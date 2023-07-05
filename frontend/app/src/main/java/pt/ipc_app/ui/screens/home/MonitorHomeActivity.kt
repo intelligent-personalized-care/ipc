@@ -11,11 +11,8 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.ClientsOfMonitor
-import pt.ipc_app.ui.screens.about.AboutActivity
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
-import pt.ipc_app.ui.screens.plan.CreatePlanActivity
-import pt.ipc_app.ui.screens.profile.MonitorProfileActivity
-import pt.ipc_app.ui.setCustomContent
+import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
@@ -50,23 +47,26 @@ class MonitorHomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setCustomContent(viewModel) {
-            var clientsList by remember { mutableStateOf(clients?.clients ?: listOf()) }
-            var requestsList by remember { mutableStateOf(requests?.requests ?: listOf()) }
+
+        if (clients == null) viewModel.getClientsOfMonitor()
+        if (requests == null) viewModel.getRequestsOfMonitor()
+
+        setAppContentMonitor(viewModel) {
+            var clientsList by remember { mutableStateOf(clients?.clients) }
+            var requestsList by remember { mutableStateOf(requests?.requests) }
 
             MonitorHomeScreen(
                 monitor = repo.userLoggedIn,
-                clientsOfMonitor = clientsList,
-                requestsOfMonitor = requestsList,
+                clientsOfMonitor = clientsList ?: viewModel.clients.collectAsState().value?.clients ?: listOf(),
+                requestsOfMonitor = requestsList ?: viewModel.requests.value?.requests ?: listOf(),
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
                 onClientRequestAccepted = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)
-                    clientsList = clientsList + ClientOutput(request.clientID, request.clientName, request.clientEmail)
-                    requestsList = requestsList - requestsList.first {it == request}
-                },
-                onPlanCreateClick = { CreatePlanActivity.navigate(this) },
-                onUserInfoClick = { MonitorProfileActivity.navigate(this) },
-                onAboutClick = { AboutActivity.navigate(this) }
+                    clientsList = (clientsList ?: listOf()) + ClientOutput(request.clientID, request.clientName, request.clientEmail)
+                    requestsList?.let { reqs ->
+                        requestsList = reqs - reqs.first {it == request}
+                    }
+                }
             )
         }
     }

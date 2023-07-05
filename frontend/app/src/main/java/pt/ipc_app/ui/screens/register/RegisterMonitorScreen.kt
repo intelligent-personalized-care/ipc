@@ -14,7 +14,6 @@ import pt.ipc_app.domain.user.User
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.RegisterButton
-import pt.ipc_app.ui.screens.AppScreen
 
 /**
  * Register monitor screen.
@@ -33,32 +32,30 @@ fun RegisterMonitorScreen(
         Monitor.monitorOrNull(it.name, it.email, it.password)
     }
 
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row {
-                Text(
-                    text = stringResource(id = R.string.register_monitor_screen_title),
-                    style = MaterialTheme.typography.h5,
-                    color = Color.Black,
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                RegisterUser(
-                    userValidation = { userInfo = it },
-                    error = error
-                )
-            }
-            RegisterButton(
-                validationInfo = monitorValidation,
-                state = progressState,
-                onClick = { if (monitorValidation != null) onSaveRequest(monitorValidation) }
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row {
+            Text(
+                text = stringResource(id = R.string.register_monitor_screen_title),
+                style = MaterialTheme.typography.h5,
+                color = Color.Black,
             )
         }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            RegisterUser(
+                userValidation = { userInfo = it },
+                error = error
+            )
+        }
+        RegisterButton(
+            validationInfo = monitorValidation,
+            state = progressState,
+            onClick = { if (monitorValidation != null) onSaveRequest(monitorValidation) }
+        )
     }
 }

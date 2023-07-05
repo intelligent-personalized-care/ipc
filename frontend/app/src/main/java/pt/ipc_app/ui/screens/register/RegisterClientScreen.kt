@@ -20,7 +20,6 @@ import pt.ipc_app.domain.user.Client
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.*
-import pt.ipc_app.ui.screens.AppScreen
 
 private const val WEIGHT_METRIC = " kg"
 private const val HEIGHT_METRIC = " cm"
@@ -49,75 +48,73 @@ fun RegisterClientScreen(
         )
     }
 
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row {
-                Text(
-                    text = stringResource(id = R.string.register_client_screen_title),
-                    style = MaterialTheme.typography.h5,
-                    color = Color.Black,
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                RegisterUser(
-                    userValidation = { userInfo = it },
-                    error = error
-                )
-
-                val dt = DatePicker(
-                    onDateSelected = { birthDate = it }
-                )
-                MyDatePicker(
-                    fieldType = TextFieldType.BIRTH_DATE,
-                    value = birthDate,
-                    onValueChange = { birthDate = it },
-                    onClick = { dt.show() }
-                )
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                ) {
-                    CustomTextField(
-                        fieldType = TextFieldType.WEIGHT,
-                        textToDisplay = if (weight != 0) "$weight$WEIGHT_METRIC" else "",
-                        updateText = { weight = it.toInteger(WEIGHT_METRIC, Client.WEIGHT_LENGTH_MAX) },
-                        iconImageVector = Icons.Default.MonitorWeight,
-                        keyboardType = KeyboardType.Number,
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(start = 48.dp, end = 5.dp)
-                    )
-                    CustomTextField(
-                        fieldType = TextFieldType.HEIGHT,
-                        textToDisplay = if (height != 0) "$height$HEIGHT_METRIC" else "",
-                        updateText = { height = it.toInteger(HEIGHT_METRIC, Client.HEIGHT_LENGTH_MAX) },
-                        iconImageVector = Icons.Default.Height,
-                        keyboardType = KeyboardType.Number,
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(start = 5.dp, end = 48.dp)
-                    )
-                }
-                CustomTextField(
-                    fieldType = TextFieldType.PHYSICAL_CONDITION,
-                    textToDisplay = physicalCondition,
-                    updateText = { physicalCondition = it },
-                    maxLength = Client.PHYSICAL_CONDITION_LENGTH_RANGE.last,
-                    isToTrim = false,
-                    iconImageVector = Icons.Default.Edit,
-                )
-            }
-            RegisterButton(
-                validationInfo = clientValidation,
-                state = progressState,
-                onClick = { if (clientValidation != null) onSaveRequest(clientValidation) }
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row {
+            Text(
+                text = stringResource(id = R.string.register_client_screen_title),
+                style = MaterialTheme.typography.h5,
+                color = Color.Black,
             )
         }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            RegisterUser(
+                userValidation = { userInfo = it },
+                error = error
+            )
+
+            val dt = DatePicker(
+                onDateSelected = { birthDate = it }
+            )
+            MyDatePicker(
+                fieldType = TextFieldType.BIRTH_DATE,
+                value = birthDate,
+                onValueChange = { birthDate = it },
+                onClick = { dt.show() }
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                CustomTextField(
+                    fieldType = TextFieldType.WEIGHT,
+                    textToDisplay = if (weight != 0) "$weight$WEIGHT_METRIC" else "",
+                    updateText = { weight = it.toInteger(WEIGHT_METRIC, Client.WEIGHT_LENGTH_MAX) },
+                    iconImageVector = Icons.Default.MonitorWeight,
+                    keyboardType = KeyboardType.Number,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .padding(start = 48.dp, end = 5.dp)
+                )
+                CustomTextField(
+                    fieldType = TextFieldType.HEIGHT,
+                    textToDisplay = if (height != 0) "$height$HEIGHT_METRIC" else "",
+                    updateText = { height = it.toInteger(HEIGHT_METRIC, Client.HEIGHT_LENGTH_MAX) },
+                    iconImageVector = Icons.Default.Height,
+                    keyboardType = KeyboardType.Number,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .padding(start = 5.dp, end = 48.dp)
+                )
+            }
+            CustomTextField(
+                fieldType = TextFieldType.PHYSICAL_CONDITION,
+                textToDisplay = physicalCondition,
+                updateText = { physicalCondition = it },
+                maxLength = Client.PHYSICAL_CONDITION_LENGTH_RANGE.last,
+                isToTrim = false,
+                iconImageVector = Icons.Default.Edit,
+            )
+        }
+        RegisterButton(
+            validationInfo = clientValidation,
+            state = progressState,
+            onClick = { if (clientValidation != null) onSaveRequest(clientValidation) }
+        )
     }
 }
 

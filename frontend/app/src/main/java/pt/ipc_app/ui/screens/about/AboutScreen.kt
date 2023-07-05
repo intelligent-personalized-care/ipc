@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
-import pt.ipc_app.ui.screens.AppScreen
 import pt.ipc_app.ui.components.AuthorInfo
 import pt.ipc_app.ui.components.AuthorInfoView
 
@@ -38,34 +37,32 @@ fun AboutScreen(
     onOpenUrl: (Uri) -> Unit = { },
     onSendEmail: (String) -> Unit = { }
 ) {
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                text = stringResource(R.string.about_title),
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(top = 60.dp, bottom = 20.dp)
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(R.string.about_title),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(top = 60.dp, bottom = 20.dp)
+        )
 
-            authors.forEach { author ->
-                AuthorInfoView(
-                    author = author,
-                    onSendEmail = onSendEmail,
-                    onOpenUrl = onOpenUrl
-                )
-            }
-
-            Text(text = stringResource(R.string.about_repo_github))
-            Image(
-                painter = painterResource(R.drawable.ic_github_dark),
-                contentDescription = "Github Logo",
-                modifier = Modifier
-                    .clickable { onOpenUrl(githubRepoUrl) }
-                    .padding(8.dp)
+        authors.forEach { author ->
+            AuthorInfoView(
+                author = author,
+                onSendEmail = onSendEmail,
+                onOpenUrl = onOpenUrl
             )
         }
+
+        Text(text = stringResource(R.string.about_repo_github))
+        Image(
+            painter = painterResource(R.drawable.ic_github_dark),
+            contentDescription = "Github Logo",
+            modifier = Modifier
+                .clickable { onOpenUrl(githubRepoUrl) }
+                .padding(8.dp)
+        )
     }
 }
 

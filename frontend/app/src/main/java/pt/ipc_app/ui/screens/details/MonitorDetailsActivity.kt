@@ -10,7 +10,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
-import pt.ipc_app.ui.setCustomContent
+import pt.ipc_app.ui.setAppContentClient
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -38,7 +38,7 @@ class MonitorDetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setCustomContent(viewModel) {
+        setAppContentClient(viewModel) {
             MonitorDetailsScreen(
                 monitor = monitor,
                 profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, monitor.id)) },

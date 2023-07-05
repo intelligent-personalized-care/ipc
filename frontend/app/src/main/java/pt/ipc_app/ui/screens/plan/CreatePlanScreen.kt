@@ -26,7 +26,6 @@ import pt.ipc_app.service.models.exercises.ExerciseInput
 import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.components.exercises.ExercisesInfoPagination
-import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun CreatePlanScreen(
@@ -41,52 +40,50 @@ fun CreatePlanScreen(
     var daySelected: Int by remember { mutableStateOf(0) }
     var dayCounter: Int by remember { mutableStateOf(1) }
 
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 100.dp)
-        ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 100.dp)
+    ) {
 
-            Text(
-                text = stringResource(id = R.string.create_plan_screen_title),
-                style = MaterialTheme.typography.h5,
-                color = Color.Black,
-            )
+        Text(
+            text = stringResource(id = R.string.create_plan_screen_title),
+            style = MaterialTheme.typography.h5,
+            color = Color.Black,
+        )
 
-            CustomTextField(
-                fieldType = TextFieldType.PLAN_NAME,
-                textToDisplay = planTitle,
-                updateText = { planTitle = it },
-                isToTrim = false,
-                iconImageVector = Icons.Default.Edit,
-            )
+        CustomTextField(
+            fieldType = TextFieldType.PLAN_NAME,
+            textToDisplay = planTitle,
+            updateText = { planTitle = it },
+            isToTrim = false,
+            iconImageVector = Icons.Default.Edit,
+        )
 
-            DaysOfWeekRowWithoutLocalDate(
-                daySelected = daySelected,
-                totalDays = dayCounter,
-                onDaySelected = { daySelected = it },
-                onDayAdded = {
-                    plan = plan.addDailyList(DailyListInput())
-                    dayCounter++
-                }
-            )
-            ExercisesInfoPagination(
-                exercises = exercises,
-                onExerciseChosen = { plan = plan.addExerciseInDailyList(daySelected, ExerciseInput(it.exeID, it.exeSets, it.exeReps)) },
-                isClickExerciseEnabled = { !plan.dailyLists[daySelected]!!.containsExercise(it.id) },
-                onPaginationClick = onExercisesPaginationClick,
-                modifier = Modifier.height(320.dp)
-            )
-
-            Button(
-                onClick = { onPlanCreation(plan.copy(planTitle)) },
-                enabled = planTitle.isNotEmpty(),
-                shape = CircleShape,
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Create Plan")
+        DaysOfWeekRowWithoutLocalDate(
+            daySelected = daySelected,
+            totalDays = dayCounter,
+            onDaySelected = { daySelected = it },
+            onDayAdded = {
+                plan = plan.addDailyList(DailyListInput())
+                dayCounter++
             }
+        )
+        ExercisesInfoPagination(
+            exercises = exercises,
+            onExerciseChosen = { plan = plan.addExerciseInDailyList(daySelected, ExerciseInput(it.exeID, it.exeSets, it.exeReps)) },
+            isClickExerciseEnabled = { !plan.dailyLists[daySelected]!!.containsExercise(it.id) },
+            onPaginationClick = onExercisesPaginationClick,
+            modifier = Modifier.height(320.dp)
+        )
+
+        Button(
+            onClick = { onPlanCreation(plan.copy(title = planTitle)) },
+            enabled = planTitle.isNotEmpty(),
+            shape = CircleShape,
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Create Plan")
         }
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
-import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun ChooseRoleScreen(
@@ -18,34 +17,31 @@ fun ChooseRoleScreen(
     onRoleChoose: (Role?) -> Unit,
     onRoleSelect: (Role) -> Unit
 ) {
-
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row {
-                Button(
-                    onClick = { onRoleChoose(if (role != Role.CLIENT) Role.CLIENT else null) },
-                    colors = styleButtonIf(role == Role.CLIENT)
-                ) {
-                    Text(stringResource(id = R.string.client))
-                }
-                Button(
-                    onClick = { onRoleChoose(if (role != Role.MONITOR) Role.MONITOR else null) },
-                    colors = styleButtonIf(role == Role.MONITOR)
-                ) {
-                    Text(stringResource(id = R.string.monitor))
-                }
-            }
-
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row {
             Button(
-                onClick = { role?.let { onRoleSelect(it) } },
-                enabled = role != null
+                onClick = { onRoleChoose(if (role != Role.CLIENT) Role.CLIENT else null) },
+                colors = styleButtonIf(role == Role.CLIENT)
             ) {
-                Text(stringResource(id = R.string.select))
+                Text(stringResource(id = R.string.client))
             }
+            Button(
+                onClick = { onRoleChoose(if (role != Role.MONITOR) Role.MONITOR else null) },
+                colors = styleButtonIf(role == Role.MONITOR)
+            ) {
+                Text(stringResource(id = R.string.monitor))
+            }
+        }
+
+        Button(
+            onClick = { role?.let { onRoleSelect(it) } },
+            enabled = role != null
+        ) {
+            Text(stringResource(id = R.string.select))
         }
     }
 }

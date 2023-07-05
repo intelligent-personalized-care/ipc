@@ -7,7 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.setCustomContent
+import pt.ipc_app.ui.components.bottomBar.ButtonBarType
+import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -34,9 +35,10 @@ class CreatePlanActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.changeButtonBar(ButtonBarType.PLANS)
         viewModel.getExercises()
 
-        setCustomContent(viewModel) {
+        setAppContentMonitor(viewModel) {
             CreatePlanScreen(
                 exercises = viewModel.exercises.collectAsState().value,
                 onPlanCreation = {

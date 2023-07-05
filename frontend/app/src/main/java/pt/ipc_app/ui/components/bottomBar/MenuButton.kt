@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MenuButton(
     icon: ImageVector,
+    color: Color,
     onClick: () -> Unit
 ) {
     Box(
@@ -36,7 +37,7 @@ fun MenuButton(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color(27, 69, 113),
+                tint = color,
                 modifier = Modifier.size(30.dp)
             )
         }

@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.ui.components.CustomTextField
 import pt.ipc_app.ui.components.TextFieldType
-import pt.ipc_app.ui.screens.AppScreen
 import pt.ipc_app.R
 
 @Composable
@@ -25,34 +24,32 @@ fun SearchScreen(
     labelId: Int,
     onSearchRequest: (String) -> Unit = { },
 ) {
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            var typedUsername by remember { mutableStateOf(value = "") }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        var typedUsername by remember { mutableStateOf(value = "") }
 
-            Text(
-                text = stringResource(id = labelId),
-                style = MaterialTheme.typography.h4,
+        Text(
+            text = stringResource(id = labelId),
+            style = MaterialTheme.typography.h4,
+        )
+
+        CustomTextField(
+            fieldType = TextFieldType.SEARCH,
+            textToDisplay = typedUsername,
+            updateText = { typedUsername = it },
+            iconImageVector = Icons.Default.Search
+        )
+
+        Button(onClick = { onSearchRequest(typedUsername) }) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = Color.White
             )
-
-            CustomTextField(
-                fieldType = TextFieldType.SEARCH,
-                textToDisplay = typedUsername,
-                updateText = { typedUsername = it },
-                iconImageVector = Icons.Default.Search
-            )
-
-            Button(onClick = { onSearchRequest(typedUsername) }) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search",
-                    tint = Color.White
-                )
-            }
         }
     }
 }

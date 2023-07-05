@@ -12,7 +12,6 @@ import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
 import pt.ipc_app.ui.components.exercises.ExercisesInfoPagination
-import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun ExercisesListScreen(
@@ -20,21 +19,19 @@ fun ExercisesListScreen(
     onExerciseClick: (Exercise) -> Unit = { },
     onPaginationClick: (Int) -> Unit = { },
 ) {
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(30.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.exercises_title),
-                style = MaterialTheme.typography.h4
-            )
-            ExercisesInfoPagination(
-                exercises = exercises,
-                onExerciseChosen = onExerciseClick,
-                onPaginationClick = onPaginationClick,
-                modifier = Modifier.height(620.dp)
-            )
-        }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.exercises_title),
+            style = MaterialTheme.typography.h4
+        )
+        ExercisesInfoPagination(
+            exercises = exercises,
+            onExerciseChosen = onExerciseClick,
+            onPaginationClick = onPaginationClick,
+            modifier = Modifier.height(620.dp)
+        )
     }
 }

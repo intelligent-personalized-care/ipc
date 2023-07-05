@@ -9,11 +9,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionContext
 import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
 import pt.ipc_app.ui.components.CheckProblemJson
+import pt.ipc_app.ui.screens.AppClientScreen
+import pt.ipc_app.ui.screens.AppMonitorScreen
 import pt.ipc_app.ui.screens.AppViewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -53,7 +54,7 @@ fun Context.getFileFromUri(imageUri: Uri): File? {
     }
 }
 
-fun ComponentActivity.setCustomContent(
+private fun ComponentActivity.setAppContent(
     viewModel: AppViewModel,
     content: @Composable () -> Unit
 ) {
@@ -62,5 +63,29 @@ fun ComponentActivity.setCustomContent(
         viewModel.error?.let {
             CheckProblemJson(error = it)
         }
+    }
+}
+
+fun ComponentActivity.setAppContentClient(
+    viewModel: AppViewModel,
+    content: @Composable () -> Unit
+) {
+    setAppContent(viewModel) {
+        AppClientScreen(
+            buttonBarClicked = viewModel.buttonBarClicked,
+            content = content
+        )
+    }
+}
+
+fun ComponentActivity.setAppContentMonitor(
+    viewModel: AppViewModel,
+    content: @Composable () -> Unit
+) {
+    setAppContent(viewModel) {
+        AppMonitorScreen(
+            buttonBarClicked = viewModel.buttonBarClicked,
+            content = content
+        )
     }
 }

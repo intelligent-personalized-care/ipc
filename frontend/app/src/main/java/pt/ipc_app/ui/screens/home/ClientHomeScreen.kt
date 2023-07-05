@@ -18,8 +18,6 @@ import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.*
-import pt.ipc_app.ui.components.bottomBar.ClientBottomBar
-import pt.ipc_app.ui.screens.AppScreen
 import java.time.LocalDate
 import java.util.*
 
@@ -29,83 +27,74 @@ fun ClientHomeScreen(
     monitor: MonitorOutput? = null,
     plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
-    onExerciseSelect: (ExerciseTotalInfo) -> Unit = { },
-    onExercisesClick: () -> Unit = { },
-    onUserInfoClick: () -> Unit = { },
-    onAboutClick: () -> Unit = { }
+    onExerciseSelect: (ExerciseTotalInfo) -> Unit = { }
 ) {
     var notifications by remember { mutableStateOf(true) }
 
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
-    var dailyListSelected: DailyList? by remember { mutableStateOf(plan?.getListOfDayIfExists(daySelected)) }
+    var dailyListSelected: DailyList? by remember { mutableStateOf(null) }
 
-    AppScreen {
-        Row(
-            modifier = Modifier.padding(30.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.hello) + " ${client.name}",
-                style = MaterialTheme.typography.h6,
-                textAlign = TextAlign.End
-            )
-        }
+    dailyListSelected = plan?.getListOfDayIfExists(daySelected)
 
-        NotificationIcon(
-            notifications = notifications,
-            onClick = { if (notifications) notifications = false }
+    Row(
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.hello) + " ${client.name}",
+            style = MaterialTheme.typography.h6,
+            textAlign = TextAlign.End
         )
+    }
+
+    NotificationIcon(
+        notifications = notifications,
+        onClick = { if (notifications) notifications = false }
+    )
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(top = 130.dp)
+    ) {
+        MonitorRow(
+            monitor = monitor,
+            onMonitorClick = onMonitorClick
+        )
+
+        Spacer(modifier = Modifier.padding(top = 80.dp))
 
         Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(top = 130.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            MonitorRow(
-                monitor = monitor,
-                onMonitorClick = onMonitorClick
+
+            Text(
+                text = if (plan != null) "${plan.title} - ${plan.dailyLists.size} days"
+                        else "No current plan assigned"
             )
 
-            Spacer(modifier = Modifier.padding(top = 80.dp))
+            DaysOfWeekRow(
+                centerDay = LocalDate.now(),
+                daySelected = daySelected,
+                onDaySelected = {
+                    daySelected = it
+                    dailyListSelected = plan?.getListOfDayIfExists(it)
+                }
+            )
 
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-
-                Text(
-                    text = if (plan != null) "${plan.title} - ${plan.dailyLists.size} days"
-                            else "No current plan assigned"
-                )
-
-                DaysOfWeekRow(
-                    centerDay = LocalDate.now(),
-                    daySelected = daySelected,
-                    onDaySelected = {
-                        daySelected = it
-                        dailyListSelected = plan?.getListOfDayIfExists(it)
-                    }
-                )
-
-                DailyExercisesList(
-                    dailyListSelected = dailyListSelected,
-                    onExerciseSelect = { ex ->
-                        onExerciseSelect(
-                            ExerciseTotalInfo(
-                                planId = plan!!.id,
-                                dailyListId = dailyListSelected!!.id,
-                                exercise = ex
-                            )
+            DailyExercisesList(
+                dailyListSelected = dailyListSelected,
+                onExerciseSelect = { ex ->
+                    onExerciseSelect(
+                        ExerciseTotalInfo(
+                            planId = plan!!.id,
+                            dailyListId = dailyListSelected!!.id,
+                            exercise = ex
                         )
-                    }
-                )
-            }
+                    )
+                }
+            )
         }
-
-        ClientBottomBar(
-            onExercisesClick = onExercisesClick,
-            onUserInfoClick = onUserInfoClick,
-            onAboutClick = onAboutClick
-        )
     }
 }
 

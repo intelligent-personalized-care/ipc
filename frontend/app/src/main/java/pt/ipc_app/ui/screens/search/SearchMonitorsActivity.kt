@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
-import pt.ipc_app.ui.setCustomContent
+import pt.ipc_app.ui.setAppContentClient
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -36,7 +36,7 @@ class SearchMonitorsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setCustomContent(viewModel) {
+        setAppContentClient(viewModel) {
             val monitors = viewModel.monitors.collectAsState().value
 
             if (monitors.isEmpty()) {

@@ -21,12 +21,11 @@ import pt.ipc_app.service.models.users.DocState
 import pt.ipc_app.service.models.users.MonitorProfile
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.*
-import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
 fun MonitorProfileScreen(
-    monitor: MonitorProfile,
+    monitor: MonitorProfile?,
     profilePicture: @Composable () -> Unit = { },
     updateProfilePictureState: ProgressState = ProgressState.IDLE,
     onUpdateProfilePicture: () -> Unit = { },
@@ -35,38 +34,40 @@ fun MonitorProfileScreen(
     onSubmitCredentialDocument: () -> Unit = { },
     onSuccessSubmitCredentialDocument: () -> Unit = { }
 ) {
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(30.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.profile_title),
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(bottom = 20.dp)
-            )
-            profilePicture()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.profile_title),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(bottom = 20.dp)
+        )
+        profilePicture()
+        monitor?.let {
             ButtonToUpdatePicture(
                 updateProfilePictureState = updateProfilePictureState,
                 onUpdateProfilePicture = onUpdateProfilePicture,
                 onSuccessUpdateProfilePicture = onSuccessUpdateProfilePicture,
             )
+        }
 
-            Text(
-                text = monitor.name,
-                style = MaterialTheme.typography.h6
+        Text(
+            text = monitor?.name ?: "",
+            style = MaterialTheme.typography.h6
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Email,
+                contentDescription = null
             )
+            Text(text = monitor?.email ?: "")
+        }
 
-            Row(
-                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null
-                )
-                Text(text = monitor.email)
-            }
-
+        monitor?.let {
             MonitorRating(rating = monitor.rating)
 
             Spacer(modifier = Modifier.padding(top = 200.dp))
@@ -94,7 +95,7 @@ fun MonitorProfileScreen(
                     }
                     Spacer(modifier = Modifier.weight(0.1f))
                     Row {
-                        when(monitor.documentState()) {
+                        when (monitor.documentState()) {
                             DocState.VALID -> Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "Document State Valid",

@@ -20,7 +20,6 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.MonitorRating
 import pt.ipc_app.ui.components.RateMonitor
-import pt.ipc_app.ui.screens.AppScreen
 import java.util.*
 
 @Composable
@@ -32,58 +31,55 @@ fun MonitorDetailsScreen(
     onRequestedConnection: () -> Unit = { },
     onRatedMonitor: (Int) -> Unit = { }
 ) {
-    AppScreen {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(30.dp)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.monitor_details_title),
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(bottom = 20.dp)
+        )
+
+        profilePicture()
+        Text(
+            text = monitor.name,
+            style = MaterialTheme.typography.h6
+        )
+        Row(
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
         ) {
-            Text(
-                text = stringResource(R.string.monitor_details_title),
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier.padding(bottom = 20.dp)
+            Icon(
+                imageVector = Icons.Default.Email,
+                contentDescription = null
             )
-
-            profilePicture()
             Text(
-                text = monitor.name,
-                style = MaterialTheme.typography.h6
-            )
-            Row(
-                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null
-                )
-                Text(
-                    text = monitor.email,
-                    modifier = Modifier.clickable {
-                        onSendEmailRequest()
-                    }
-                )
-            }
-            MonitorRating(rating = monitor.rating)
-
-            if (requestEnable) {
-                Button(
-                    onClick = { onRequestedConnection() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PersonAdd,
-                        contentDescription = "Request",
-                        tint = Color.White
-                    )
+                text = monitor.email,
+                modifier = Modifier.clickable {
+                    onSendEmailRequest()
                 }
-            }
-
-            RateMonitor(
-                modifier = Modifier.padding(top = 200.dp),
-                onSubmitRating = onRatedMonitor
             )
         }
-    }
+        MonitorRating(rating = monitor.rating)
 
+        if (requestEnable) {
+            Button(
+                onClick = { onRequestedConnection() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PersonAdd,
+                    contentDescription = "Request",
+                    tint = Color.White
+                )
+            }
+        }
+
+        RateMonitor(
+            modifier = Modifier.padding(top = 200.dp),
+            onSubmitRating = onRatedMonitor
+        )
+    }
 }
 
 @Preview

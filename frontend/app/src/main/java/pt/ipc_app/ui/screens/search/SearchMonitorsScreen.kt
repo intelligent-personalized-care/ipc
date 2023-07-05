@@ -11,12 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import pt.ipc_app.R
-import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.ui.components.ClientsTable
 import pt.ipc_app.ui.components.MonitorsTable
 import pt.ipc_app.ui.components.ProgressState
-import pt.ipc_app.ui.screens.AppScreen
 
 @Composable
 fun SearchMonitorsScreen(
@@ -24,25 +21,23 @@ fun SearchMonitorsScreen(
     requestState: ProgressState,
     onMonitorClick: (MonitorOutput) -> Unit = { },
 ) {
-    AppScreen {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text = stringResource(id = R.string.search_results),
-                style = MaterialTheme.typography.h4,
-            )
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(id = R.string.search_results),
+            style = MaterialTheme.typography.h4,
+        )
 
-            if (requestState == ProgressState.WAITING)
-                CircularProgressIndicator()
+        if (requestState == ProgressState.WAITING)
+            CircularProgressIndicator()
 
-            MonitorsTable(
-                monitors = monitors,
-                onMonitorClick = onMonitorClick
-            )
-        }
+        MonitorsTable(
+            monitors = monitors,
+            onMonitorClick = onMonitorClick
+        )
     }
 }

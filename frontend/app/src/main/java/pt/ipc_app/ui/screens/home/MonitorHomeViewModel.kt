@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
+import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
 import java.util.*
@@ -19,9 +20,24 @@ class MonitorHomeViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
+    private val _clients = MutableStateFlow<ClientsOfMonitor?>(null)
+    val clients
+        get() = _clients.asStateFlow()
+
     private val _requests = MutableStateFlow<RequestsOfMonitor?>(null)
     val requests
         get() = _requests.asStateFlow()
+
+    fun getClientsOfMonitor() {
+        launchAndExecuteRequest(
+            request = {
+                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+            },
+            onSuccess = {
+                _clients.value = it
+            }
+        )
+    }
 
     fun getRequestsOfMonitor() {
         launchAndExecuteRequest(
@@ -47,7 +63,9 @@ class MonitorHomeViewModel(
                     token = sessionManager.userLoggedIn.token
                 )
             },
-            onSuccess = {}
+            onSuccess = {
+
+            }
         )
     }
 

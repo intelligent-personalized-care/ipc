@@ -11,7 +11,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
-import pt.ipc_app.ui.setCustomContent
+import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
@@ -44,7 +44,7 @@ class ClientDetailsActivity : ComponentActivity() {
         viewModel.getClientDetails(client.id)
         viewModel.getMonitorPlans()
 
-        setCustomContent(viewModel) {
+        setAppContentMonitor(viewModel) {
             val cl = viewModel.client.collectAsState().value
             if (cl != null)
                 ClientDetailsScreen(
