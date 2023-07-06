@@ -1,14 +1,14 @@
 package pt.ipc_app.ui.components.bottomBar
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class ButtonBarType {
-    HOME,
-    PLANS,
-    EXERCISES,
-    PROFILE,
-    ABOUT
+enum class ButtonBarType(val iconEnabled: ImageVector, val iconDisabled: ImageVector) {
+    HOME(Icons.Filled.Home, Icons.Outlined.Home),
+    PLANS(Icons.Filled.PostAdd, Icons.Outlined.PostAdd),
+    EXERCISES(Icons.Filled.SportsGymnastics, Icons.Outlined.SportsGymnastics),
+    PROFILE(Icons.Filled.Face, Icons.Outlined.Face),
+    ABOUT(Icons.Filled.Info, Icons.Outlined.Info)
 }
-
-fun buttonColor(buttonClicked: ButtonBarType, button: ButtonBarType): Color =
-    if (buttonClicked == button) Color(27, 69, 113) else Color.LightGray

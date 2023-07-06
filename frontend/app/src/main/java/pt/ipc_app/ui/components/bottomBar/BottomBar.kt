@@ -2,9 +2,6 @@ package pt.ipc_app.ui.components.bottomBar
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,31 +30,31 @@ fun BottomBar(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             MenuButton(
-                icon = if (buttonClicked == ButtonBarType.HOME) Icons.Filled.Home else Icons.Outlined.Home,
-                color = buttonColor(buttonClicked, ButtonBarType.HOME),
-                onClick = { if (buttonClicked != ButtonBarType.HOME) onHomeClick() }
+                type = ButtonBarType.HOME,
+                enable = buttonClicked == ButtonBarType.HOME,
+                onClick = { onHomeClick() }
             )
             if (role.isClient())
                 MenuButton(
-                    icon = if (buttonClicked == ButtonBarType.EXERCISES) Icons.Filled.SportsGymnastics else Icons.Outlined.SportsGymnastics,
-                    color = buttonColor(buttonClicked, ButtonBarType.EXERCISES),
-                    onClick = { if (buttonClicked != ButtonBarType.EXERCISES) onExercisesClick() }
+                    type = ButtonBarType.EXERCISES,
+                    enable = buttonClicked == ButtonBarType.EXERCISES,
+                    onClick = { onExercisesClick() }
                 )
             else
                 MenuButton(
-                    icon = if (buttonClicked == ButtonBarType.PLANS) Icons.Filled.PostAdd else Icons.Outlined.PostAdd,
-                    color = buttonColor(buttonClicked, ButtonBarType.PLANS),
-                    onClick = { if (buttonClicked != ButtonBarType.PLANS) onPlanCreateClick() }
+                    type = ButtonBarType.PLANS,
+                    enable = buttonClicked == ButtonBarType.PLANS,
+                    onClick = { onPlanCreateClick() }
                 )
             MenuButton(
-                icon = if (buttonClicked == ButtonBarType.PROFILE) Icons.Filled.Face else Icons.Outlined.Face,
-                color = buttonColor(buttonClicked, ButtonBarType.PROFILE),
-                onClick = { if (buttonClicked != ButtonBarType.PROFILE) onProfileClick() }
+                type = ButtonBarType.PROFILE,
+                enable = buttonClicked == ButtonBarType.PROFILE,
+                onClick = { onProfileClick() }
             )
             MenuButton(
-                icon = if (buttonClicked == ButtonBarType.ABOUT) Icons.Filled.Info else Icons.Outlined.Info,
-                color = buttonColor(buttonClicked, ButtonBarType.ABOUT),
-                onClick = { if (buttonClicked != ButtonBarType.ABOUT) onAboutClick() }
+                type = ButtonBarType.ABOUT,
+                enable = buttonClicked == ButtonBarType.ABOUT,
+                onClick = { onAboutClick() }
             )
         }
     }
