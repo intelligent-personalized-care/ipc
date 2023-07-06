@@ -129,10 +129,15 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
     feedback_monitor    VARCHAR(200),-- can be null, no answer or waiting
     nr_set              INT NOT NULL,
 
-    CONSTRAINT unique_nr_set UNIQUE(nr_set,id)
+    CONSTRAINT unique_nr_set UNIQUE(nr_set,id),
+    CONSTRAINT valid_nr_set check (nr_set > 0)
+
+
+
 
 );
 
 CREATE TABLE IF NOT EXISTS dbo.admin(
     id                  UUID references dbo.users(id)
-)
+);
+

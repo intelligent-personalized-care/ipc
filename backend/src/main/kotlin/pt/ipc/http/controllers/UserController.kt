@@ -14,7 +14,7 @@ import pt.ipc.domain.User
 import pt.ipc.http.models.LoginInput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
-import pt.ipc.http.utils.SseEmitterUtils
+import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.UserService
 import pt.ipc.services.dtos.CredentialsOutput
@@ -22,7 +22,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping(produces = ["application/json", "image/png", Problem.PROBLEM_MEDIA_TYPE])
-class UserController(private val userService: UserService, private val sseEmitterUtils: SseEmitterUtils) {
+class UserController(private val userService: UserService, private val sseEmitterRepository: SseEmitterRepository) {
 
     @PostMapping(Uris.USERS_LOGIN)
     fun login(@RequestBody loginInput: LoginInput): ResponseEntity<CredentialsOutput> {
@@ -33,13 +33,13 @@ class UserController(private val userService: UserService, private val sseEmitte
     @Authentication
     @PostMapping(Uris.USERS_SUBSCRIBE)
     fun subscribeToServerSendEvents(user: User): SseEmitter {
-        return sseEmitterUtils.createConnection(userID = user.id)
+        return sseEmitterRepository.createConnection(userID = user.id)
     }
 
     @Authentication
     @PostMapping(Uris.USERS_UNSUBSCRIBE)
     fun unsubscribeToServerSendEvents(user: User): ResponseEntity<Unit> {
-        sseEmitterUtils.endConnection(userID = user.id)
+        sseEmitterRepository.endConnection(userID = user.id)
         return ResponseEntity.ok().build()
     }
 

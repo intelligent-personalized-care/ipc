@@ -31,7 +31,7 @@ import pt.ipc.http.models.emitter.PlanAssociation
 import pt.ipc.http.models.emitter.RequestAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
-import pt.ipc.http.utils.SseEmitterUtils
+import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.MonitorService
 import pt.ipc.services.dtos.CredentialsOutput
@@ -41,7 +41,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping(produces = ["application/json", "image/png", PROBLEM_MEDIA_TYPE])
-class MonitorsController(private val monitorService: MonitorService, private val sseEmitterUtils: SseEmitterUtils) {
+class MonitorsController(private val monitorService: MonitorService, private val sseEmitterRepository: SseEmitterRepository) {
 
     @PostMapping(Uris.MONITORS)
     fun registerMonitor(@RequestBody registerInput: RegisterInput): ResponseEntity<CredentialsOutput> {
@@ -122,7 +122,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
             accept = decision.accept
         )
 
-        if (decision.accept) sseEmitterUtils.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
+        if (decision.accept) sseEmitterRepository.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }
@@ -184,7 +184,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
             planID = planInfo.planID
         )
 
-        sseEmitterUtils.send(userID = clientID, obj = PlanAssociation(planTitle = title, startDate = planInfo.startDate))
+        sseEmitterRepository.send(userID = clientID, obj = PlanAssociation(planTitle = title, startDate = planInfo.startDate))
 
         return ResponseEntity.ok().build()
     }
@@ -217,7 +217,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
             clientID = clientID
         )
 
-        sseEmitterUtils.send(userID = clientID, obj = MonitorFeedBack(feedBack = feedbackInput.feedback))
+        sseEmitterRepository.send(userID = clientID, obj = MonitorFeedBack(feedBack = feedbackInput.feedback))
 
         return ResponseEntity.ok().build()
     }

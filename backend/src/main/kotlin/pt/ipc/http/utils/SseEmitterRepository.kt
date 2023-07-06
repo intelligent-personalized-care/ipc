@@ -8,12 +8,13 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
 @Component
-class SseEmitterUtils {
+class SseEmitterRepository {
 
     private class AcceptConnection(val accept: String = "Connection Accepted")
+
     private val accept = AcceptConnection()
 
-    private data class Object(val className: String, val obj: Any) {
+    private data class SenderObject(val className: String, val obj: Any) {
         init {
             require(obj::class.simpleName != null)
         }
@@ -25,7 +26,7 @@ class SseEmitterUtils {
 
     fun createConnection(userID: UUID): SseEmitter {
         val emitter = SseEmitter(0)
-        emitters[userID] = emitter
+        emitters.put(userID, emitter)?.complete()
         send(userID = userID, accept)
         return emitter
     }
@@ -33,14 +34,14 @@ class SseEmitterUtils {
     fun send(userID: UUID, obj: Any) {
         val emitter = emitters[userID] ?: return
 
-        val newObject = Object(
+        val newSenderObject = SenderObject(
             className = obj::class.simpleName ?: throw IllegalArgumentException("Class can not be anonymous"),
             obj = obj
         )
 
         nonBlockingService.execute {
             try {
-                emitter.send(newObject)
+                emitter.send(newSenderObject)
             } catch (ex: Exception) {
                 emitter.completeWithError(ex)
             }

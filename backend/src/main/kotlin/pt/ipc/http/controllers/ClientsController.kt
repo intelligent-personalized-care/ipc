@@ -27,21 +27,20 @@ import pt.ipc.http.models.emitter.PostedVideo
 import pt.ipc.http.models.emitter.RequestMonitor
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
-import pt.ipc.http.utils.SseEmitterUtils
+import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ClientsService
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.RegisterClientInput
 import java.time.LocalDate
 import java.util.UUID
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping(produces = ["application/json", PROBLEM_MEDIA_TYPE])
-class ClientsController(private val clientsService: ClientsService, private val sseEmitterUtils: SseEmitterUtils) {
+class ClientsController(private val clientsService: ClientsService, private val sseEmitterRepository: SseEmitterRepository) {
 
     @PostMapping(Uris.CLIENT_REGISTER)
-    fun registerClient(@RequestBody registerClientInput: RegisterClientInput, response: HttpServletResponse): ResponseEntity<CredentialsOutput> {
+    fun registerClient(@RequestBody registerClientInput: RegisterClientInput): ResponseEntity<CredentialsOutput> {
         val credentialsOutput: CredentialsOutput = clientsService.registerClient(registerClientInput)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(credentialsOutput)
@@ -96,7 +95,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
         val (requestID, clientName) = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
 
-        sseEmitterUtils.send(userID = monitorID, obj = RequestMonitor(requestID = requestID, name = clientName))
+        sseEmitterRepository.send(userID = monitorID, obj = RequestMonitor(requestID = requestID, name = clientName))
 
         return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
     }
@@ -170,7 +169,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
             feedback = feedBack
         )
 
-        sseEmitterUtils.send(userID = monitorID, obj = PostedVideo(name = clientName))
+        sseEmitterRepository.send(userID = monitorID, obj = PostedVideo(name = clientName))
 
         return ResponseEntity.ok().build()
     }

@@ -85,7 +85,7 @@ class ExceptionHandler {
         ).toResponseEntity()
 
     @ExceptionHandler(value = [UnableToExecuteStatementException::class])
-    fun handlePostgresSQLError(
+    fun handlePostgresError(
         request: HttpServletRequest,
         ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {

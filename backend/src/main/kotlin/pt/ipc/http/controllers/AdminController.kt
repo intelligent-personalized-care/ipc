@@ -16,7 +16,7 @@ import pt.ipc.http.models.Decision
 import pt.ipc.http.models.ListOfUnverifiedMonitors
 import pt.ipc.http.models.emitter.CredentialAcceptance
 import pt.ipc.http.pipeline.authentication.Authentication
-import pt.ipc.http.utils.SseEmitterUtils
+import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.AdminService
 import pt.ipc.services.dtos.CredentialsOutput
@@ -24,7 +24,7 @@ import pt.ipc.services.dtos.RegisterInput
 import java.util.UUID
 
 @RestController
-class AdminController(private val adminService: AdminService, private val sseEmitterUtils: SseEmitterUtils) {
+class AdminController(private val adminService: AdminService, private val sseEmitterRepository: SseEmitterRepository) {
 
     @Authentication
     @PostMapping(Uris.ADMIN_CREATION)
@@ -59,7 +59,7 @@ class AdminController(private val adminService: AdminService, private val sseEmi
     fun decideCredentialOfMonitor(@PathVariable monitorID: UUID, @RequestBody decision: Decision): ResponseEntity<Unit> {
         adminService.decideMonitorCredential(monitorID = monitorID, accept = decision.accept)
 
-        sseEmitterUtils.send(userID = monitorID, CredentialAcceptance(acceptance = decision.accept))
+        sseEmitterRepository.send(userID = monitorID, CredentialAcceptance(acceptance = decision.accept))
 
         return ResponseEntity.ok().build()
     }
