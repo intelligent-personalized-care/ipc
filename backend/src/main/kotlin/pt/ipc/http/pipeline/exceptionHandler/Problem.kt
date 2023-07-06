@@ -1,14 +1,10 @@
 package pt.ipc.http.pipeline.exceptionHandler
 
 import org.springframework.http.ResponseEntity
-import java.net.URI
 
 data class Problem(
-    val type: URI,
     val title: String,
     val status: Int,
-    val detail: String? = null,
-    val instance: URI? = null
 ) {
 
     fun toResponseEntity() = ResponseEntity

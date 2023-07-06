@@ -23,7 +23,6 @@ import pt.ipc.domain.exceptions.NotFound
 import pt.ipc.domain.exceptions.UnauthorizedRequest
 import pt.ipc.domain.jwt.message
 import pt.ipc.storage.repositories.exceptions.ExceptionsDB
-import java.net.URI
 import javax.servlet.http.HttpServletRequest
 
 @ControllerAdvice
@@ -35,7 +34,6 @@ class ExceptionHandler {
         ex: NullPointerException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Null Pointer Exception",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -46,7 +44,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Bad Request",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -57,7 +54,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Conflict",
             status = HttpStatus.CONFLICT.value()
         ).toResponseEntity()
@@ -68,7 +64,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Not Found",
             status = HttpStatus.NOT_FOUND.value()
         ).toResponseEntity()
@@ -79,7 +74,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = "${ex.message}",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -94,7 +88,6 @@ class ExceptionHandler {
         val key = ex.shortMessage.substringAfter("constraint \"").substringBefore("\"")
 
         return Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ExceptionsDB.map[key] ?: "Error in database",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -106,7 +99,6 @@ class ExceptionHandler {
         ex: MissingServletRequestParameterException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message,
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -117,7 +109,6 @@ class ExceptionHandler {
         ex: MissingServletRequestPartException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Required request part is not present",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -128,7 +119,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> {
         return Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + "multipart"),
             title = ex.message ?: "Multipart File Problem without message",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -140,7 +130,6 @@ class ExceptionHandler {
         ex: JwtException
     ): ResponseEntity<Any> {
         return Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + "JWT"),
             title = ex.message(),
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -152,7 +141,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Unauthorized",
             status = HttpStatus.UNAUTHORIZED.value()
         ).toResponseEntity()
@@ -163,7 +151,6 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.message ?: "Forbidden",
             status = HttpStatus.FORBIDDEN.value()
         ).toResponseEntity()
@@ -174,7 +161,6 @@ class ExceptionHandler {
         ex: MethodArgumentNotValidException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + ex.toProblemType()),
             title = ex.bindingResult.fieldErrors.firstOrNull()?.defaultMessage ?: "Validation Error",
             status = HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
@@ -185,7 +171,6 @@ class ExceptionHandler {
         ex: HttpRequestMethodNotSupportedException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create("${PROBLEMS_DOCS_URI}method-not-allowed"),
             title = "${ex.method} Not allowed",
             status = HttpStatus.METHOD_NOT_ALLOWED.value()
         ).toResponseEntity()
@@ -196,7 +181,6 @@ class ExceptionHandler {
         ex: HttpMessageNotReadableException
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create("${PROBLEMS_DOCS_URI}invalid-request-body"),
             title = "Invalid request body${
             ex.rootCause.let {
                 ": " +
@@ -217,18 +201,9 @@ class ExceptionHandler {
         ex: Exception
     ): ResponseEntity<Any> =
         Problem(
-            type = URI.create(PROBLEMS_DOCS_URI + "internal-server-error"),
             title = ex.message ?: "Internal server Error",
             status = HttpStatus.INTERNAL_SERVER_ERROR.value()
         ).toResponseEntity()
             .also { ex.printStackTrace() }
 
-    companion object {
-        const val PROBLEMS_DOCS_URI = "https://github.com/intelligent-personalized-care/ipc/tree/main/api/docs/problems/"
-
-        fun Exception.toProblemType(): String =
-            (this::class.simpleName ?: "Unknown")
-                .replace(Regex("([a-z])([A-Z])")) { "${it.groupValues[1]}-${it.groupValues[2]}" }
-                .lowercase()
-    }
 }

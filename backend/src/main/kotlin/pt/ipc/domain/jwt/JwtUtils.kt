@@ -14,7 +14,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
     private val userID = "userID"
     private val userRole = "role"
 
-    private val acessTokenKey = SecretKeySpec(
+    private val accessTokenKey = SecretKeySpec(
         jwtConfiguration.accessTokenSecret.toByteArray(),
         SECRET_KEY_ALGORITHM
     )
@@ -34,7 +34,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
         return JWToken(
             token = Jwts.builder()
                 .setClaims(jwtPayload.claims)
-                .signWith(acessTokenKey)
+                .signWith(accessTokenKey)
                 .compact()
         )
     }
@@ -50,7 +50,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
     private fun getClaimsOfToken(token: String): Claims {
         return Jwts.parserBuilder()
-            .setSigningKey(acessTokenKey)
+            .setSigningKey(accessTokenKey)
             .build()
             .parseClaimsJws(token).body
     }

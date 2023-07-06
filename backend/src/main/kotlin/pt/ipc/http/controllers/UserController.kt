@@ -31,7 +31,7 @@ class UserController(private val userService: UserService, private val sseEmitte
     }
 
     @Authentication
-    @PostMapping(Uris.USERS_SUBSCRIBE)
+    @GetMapping(Uris.USERS_SUBSCRIBE)
     fun subscribeToServerSendEvents(user: User): SseEmitter {
         return sseEmitterRepository.createConnection(userID = user.id)
     }
