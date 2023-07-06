@@ -57,7 +57,7 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = repo.userLoggedIn,
                 monitor = monitor ?: viewModel.monitor.collectAsState().value,
-                plan = planTest,// plan ?: viewModel.plan.collectAsState().value,
+                plan = /*planTest,*/ plan ?: viewModel.plan.collectAsState().value,
                 onMonitorClick = {
                     if (monitor != null) MonitorDetailsActivity.navigate(this, monitor!!)
                     else SearchMonitorsActivity.navigate(this)

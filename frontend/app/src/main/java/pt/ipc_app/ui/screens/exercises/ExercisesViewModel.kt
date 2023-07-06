@@ -31,6 +31,20 @@ class ExercisesViewModel(
     val exercises
         get() = _exercises.asStateFlow()
 
+    private var _nrSet = MutableStateFlow(1)
+    val nrSet
+        get() = _nrSet.asStateFlow()
+
+    /**
+     * Increments the current set of an exercise
+     */
+    fun incrementSet() = _nrSet.value++
+
+    /**
+     * After an exercise is completed resets the number of sets value
+     */
+    fun resetSet() { _nrSet.value = 1}
+
     /**
      * Attempts to get a preview url of an exercise.
      */
@@ -63,7 +77,8 @@ class ExercisesViewModel(
         planId: Int,
         dailyListId: Int,
         exerciseId: Int,
-        set: Int
+        set: Int,
+        onSuccess : () -> Unit
     ) {
         launchAndExecuteRequest(
             request = {
@@ -82,6 +97,7 @@ class ExercisesViewModel(
             },
             onSuccess = {
                 _state.value = ProgressState.FINISHED
+                onSuccess()
             }
         )
     }

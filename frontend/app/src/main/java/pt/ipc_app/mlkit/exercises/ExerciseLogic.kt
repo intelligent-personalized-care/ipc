@@ -24,7 +24,5 @@ data class ExerciseLogic(
     //line text of conditions
     val lTextCondOne: String,
     val lTextCondTwo: String,
-    val lTextCondThree: String,
-    val sets: Int?,
-    val reps: Int?,
+    val lTextCondThree: String
     )

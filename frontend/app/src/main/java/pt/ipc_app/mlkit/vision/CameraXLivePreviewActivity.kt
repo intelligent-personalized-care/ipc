@@ -29,12 +29,17 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -52,6 +57,7 @@ import pt.ipc_app.mlkit.VisionImageProcessor
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
+import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import pt.ipc_app.utils.viewModelInit
 import java.io.File
@@ -76,6 +82,7 @@ class CameraXLivePreviewActivity :
 
     private var isRecording = false
     private lateinit var outputDirectory: File
+    private lateinit var file: File
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
 
@@ -138,7 +145,13 @@ class CameraXLivePreviewActivity :
         setupRecordingButton {
             if (exercise is ExerciseTotalInfo) {
                 val exe = exercise as ExerciseTotalInfo
-                viewModel.submitExerciseVideo(it, exe.planId, exe.dailyListId, exe.exercise.id, 1) // TODO(what is the set)
+                viewModel.submitExerciseVideo(file, exe.planId, exe.dailyListId, exe.exercise.id, viewModel.nrSet.value) {
+                    if (viewModel.nrSet.value == exercise.exeSets){
+                        viewModel.resetSet()
+                        finish()
+                    }
+                }
+                viewModel.incrementSet()
             }
         }
     }
@@ -261,7 +274,22 @@ class CameraXLivePreviewActivity :
                         PoseDetectorProcessor(
                             context = this,
                             options = poseDetectorOptions as PoseDetectorOptions,
-                            exercise = exercise
+                            exercise = exercise,
+                            onSetConclusion = {
+                                //serve para controlar o storp vid com o numero do reps concluido
+                                /*stopRecording {
+                                    if (exercise is ExerciseTotalInfo) {
+                                        val exe = exercise as ExerciseTotalInfo
+                                        viewModel.submitExerciseVideo(
+                                            file,
+                                            exe.planId,
+                                            exe.dailyListId,
+                                            exe.exercise.id,
+                                            viewModel.nrSet.value
+                                        )
+                                    }
+                                }*/
+                            }
                         )
                     }
 
@@ -334,13 +362,13 @@ class CameraXLivePreviewActivity :
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
-    private fun startRecording(onSubmission: (File) -> Unit) {
+    private fun startRecording(onSubmission: () -> Unit) {
         val videoName =
             if (exercise is ExerciseTotalInfo)
-                (exercise as ExerciseTotalInfo).exercise.id
+                (exercise as ExerciseTotalInfo).exercise.id.toString() + "(${viewModel.nrSet.value}set)"
             else UUID.randomUUID()
 
-        val file = File(outputDirectory, "$videoName.mp4")
+        file = File(outputDirectory, "$videoName.mp4")
         val outputFileOptions = VideoCapture.OutputFileOptions.Builder(file).build()
 
         videoCapture.startRecording(
@@ -349,7 +377,8 @@ class CameraXLivePreviewActivity :
             object : VideoCapture.OnVideoSavedCallback {
                 override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
                     Log.d(TAG, "Video saved: ${file.absolutePath}")
-                    onSubmission(file)
+                    onSubmission()
+                    //viewModel.incrementSet()
                 }
 
                 override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
@@ -360,8 +389,13 @@ class CameraXLivePreviewActivity :
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
-    private fun stopRecording() {
+    private fun stopRecording(onSubmission: () -> Unit) {
         videoCapture.stopRecording()
+        //onSubmission()
+        //viewModel.incrementSet()
+        //verifies if the total number of sets is done
+
+
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
@@ -375,11 +409,11 @@ class CameraXLivePreviewActivity :
 
     }
 
-    private fun setupRecordingButton(onSubmission: (File) -> Unit) {
+    private fun setupRecordingButton(onSubmission: () -> Unit) {
         val recordButton: Button = findViewById(R.id.camera_button)
         recordButton.setOnClickListener {
             if (isRecording) {
-                stopRecording()
+                stopRecording(onSubmission)
                 recordButton.text = "R"//"Start Recording"
             } else {
                 startRecording(onSubmission)
@@ -389,6 +423,7 @@ class CameraXLivePreviewActivity :
             isRecording = !isRecording
         }
     }
+
 
 
     //----------------------------------- Checking Permissions ----------------------------------

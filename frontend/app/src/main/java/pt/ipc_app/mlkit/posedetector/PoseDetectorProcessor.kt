@@ -32,7 +32,8 @@ import pt.ipc_app.mlkit.vision.VisionProcessorBase
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
-  private val exercise: Exercise
+  private val exercise: Exercise,
+  private val onSetConclusion: () -> Unit = { }
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {
@@ -49,7 +50,7 @@ class PoseDetectorProcessor(
     graphicOverlay: GraphicOverlay
   ) {
     //added exercise to monitor the different exercises in PoseGraphic
-    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise))
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise, onSetConclusion))
   }
 
   override fun onFailure(e: Exception) {

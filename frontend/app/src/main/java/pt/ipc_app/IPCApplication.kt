@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.IPCService
 import pt.ipc_app.session.SessionManagerSharedPrefs
+import java.util.concurrent.TimeUnit
 
 /**
  * The contract for the object that holds all the globally relevant dependencies.
@@ -36,11 +37,11 @@ class IPCApplication : DependenciesContainer, Application() {
 
     override val services = IPCService(
         apiEndpoint = API_ENDPOINT,
-        httpClient = OkHttpClient(),
+        httpClient = OkHttpClient.Builder().connectTimeout(300, TimeUnit.SECONDS).build(),
         jsonEncoder = jsonEncoder
     )
 
     companion object {
-        private const val API_ENDPOINT = "https://700b-2a01-11-8120-3c10-b830-3ecd-8428-e0bc.ngrok-free.app"
+        private const val API_ENDPOINT = "https://9ffe-2a01-11-8120-4ce0-7963-322f-6b07-1390.ngrok-free.app"
     }
 }

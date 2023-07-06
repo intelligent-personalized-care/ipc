@@ -42,9 +42,9 @@ class SplashScreenActivity: ComponentActivity() {
         )
          */
         repo.setSession(
-            id = "9eb13cff-28a6-4510-880e-6b64a7a4b7f5",
+            id = "a26a52cb-6d7d-4957-91b3-b78e941dd384",
             name = "Tiago",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI5ZWIxM2NmZi0yOGE2LTQ1MTAtODgwZS02YjY0YTdhNGI3ZjUiLCJyb2xlIjoiQ0xJRU5UIn0.cRXp0VeFbHtald-QHR3znL2pxOipQDBv2_umt8y2iAYq0PWFdo3EjmLv_R0kxtUP4BsnVxvfnKHrL_0kTcNqFA",
+            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhMjZhNTJjYi02ZDdkLTQ5NTctOTFiMy1iNzhlOTQxZGQzODQiLCJyb2xlIjoiQ0xJRU5UIn0.qlZwLDuM6t_TrYwCy0YXkx8BmLeA66YeEwqESeZoxu0jkkDfTMUcEQoMOI2z8tmlVcMEAiAJwhUEffsfZypHIg",
             role = Role.CLIENT
         )
         CoroutineScope(Dispatchers.Main).launch {

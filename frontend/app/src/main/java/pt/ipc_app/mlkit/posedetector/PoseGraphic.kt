@@ -33,7 +33,8 @@ import kotlin.math.atan2
 class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
-  private val exercise: Exercise
+  private val exercise: Exercise,
+  private val onSetConclusion: () -> Unit = { }
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint
@@ -93,11 +94,11 @@ class PoseGraphic internal constructor(
           //Calculate whether the distance between the shoulder and the foot is the same width
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
+          //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightHip!!,rightKnee!!,rightAnkle,yRightHand,yLeftHand,ratio,
             rightShoulder.position.y + leftShoulder.position.y, rightAnkle.position.y - rightHip.position.y, 5, 0, 0.5,
-          2, 5,
-            "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart",
-          exercise.exeSets, exercise.exeReps)
+            2, 5,
+            "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart",)
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -109,13 +110,14 @@ class PoseGraphic internal constructor(
           val yRightHand = differenceBetweenCoordinates(rightShoulder!!.position.y,rightWrist!!.position.y)
           val yLeftHand = differenceBetweenCoordinates(leftShoulder!!.position.y, leftWrist!!.position.y)
 
+          //Calculate whether the distance between the shoulder and the foot is the same width
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
+          //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightShoulder.position.y + leftShoulder.position.y , rightShoulder.position.y + leftShoulder.position.y, 25, 0, 0.5,
             2, 12,
-            "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",
-            exercise.exeSets, exercise.exeReps)
+            "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",)
 
           doExerciseLogic(canvas, exerciseLogic)
           toDraw = !toDraw
@@ -129,11 +131,11 @@ class PoseGraphic internal constructor(
 
           val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
+          //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightWrist.position.y + leftWrist.position.y ,rightElbow.position.y + leftElbow!!.position.y, 110, 0, 0.5,
             2, 12,
-            "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",
-            exercise.exeSets, exercise.exeReps)
+            "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",)
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -345,7 +347,7 @@ class PoseGraphic internal constructor(
 
     val angle = getAngle(exerciseLogic.firstPoint, exerciseLogic.midPoint, exerciseLogic.lastPoint)
 
-    if (((180 - abs(angle)) > exerciseLogic.condOne /*|| (isDown && abs(angle) < 180 / 2)*/) && !isCount) {
+    if (((180 - abs(angle)) > exerciseLogic.condOne) && !isCount) {
       reInitParams()
       lineOneText = exerciseLogic.lTextCondOne
     } else if (exerciseLogic.leftHandPos > exerciseLogic.condTwo || exerciseLogic.rightHandPos > exerciseLogic.condTwo) {
@@ -390,7 +392,12 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineOneText, 1)
     drawText(canvas, lineTwoText, 2)
     drawText(canvas, "count: $upCount", 3)
-    //verificar reps igual a upcount caso seja para e envia o video
-    /*exerciseLogic.reps*/
+
+    println("upcount $upCount")
+    println("reps ${exercise.exeReps}")
+    if (upCount == exercise.exeReps) {
+      println("inside of if")
+      onSetConclusion
+    }
   }
 }
