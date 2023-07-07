@@ -56,12 +56,13 @@ class ExercisesViewModel(
     /**
      * Decrements the rest time
      */
-    fun decrementRestTime() {
+    fun decrementRestTime(onFinish: () -> Unit = {} ) {
         CoroutineScope(Dispatchers.IO).launch{
             while (_restTime.value > 0 ){
                 delay(1000)
                 _restTime.value--
             }
+            onFinish()
         }
     }
 

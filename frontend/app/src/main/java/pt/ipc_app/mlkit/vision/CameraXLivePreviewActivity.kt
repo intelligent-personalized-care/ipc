@@ -148,13 +148,14 @@ class CameraXLivePreviewActivity :
                 val exe = exercise as ExerciseTotalInfo
                 viewModel.submitExerciseVideo(file, exe.planId, exe.dailyListId, exe.exercise.id, viewModel.nrSet.value)
                 viewModel.decrementRestTime()
-                    if (viewModel.nrSet.value == exercise.exeSets && viewModel.restTime.value == 0){
-                        //in the final set waits a little to assure the response arrives
-                       /* viewModel.resetRestTime()
-                        viewModel.decrementRestTime()*/
+                if (viewModel.nrSet.value == exercise.exeSets) {
+                    //in the final set waits a little to assure the response arrives
+                    viewModel.resetRestTime()
+                    viewModel.decrementRestTime{
                         viewModel.resetSet()
                         finish()
                     }
+                }
                 viewModel.incrementSet()
                 viewModel.resetRestTime()
             }
@@ -176,7 +177,6 @@ class CameraXLivePreviewActivity :
     @Synchronized
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
         // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
         selectedModel = parent?.getItemAtPosition(pos).toString()
         Log.d(TAG, "Selected model: $selectedModel")
         bindAnalysisUseCase()
@@ -384,6 +384,7 @@ class CameraXLivePreviewActivity :
                 override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
                     Log.d(TAG, "Video saved: ${file.absolutePath}")
                     onSubmission()
+
                     //viewModel.incrementSet()
                 }
 

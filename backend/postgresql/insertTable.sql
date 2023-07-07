@@ -1,7 +1,6 @@
 insert into dbo.exercises_info values
-                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd12', 'Push ups', 'Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
-                "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
-                "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.', 'Byceps'),
+                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd12', 'Push ups', '1. Contract your abs and tighten your core by pulling your belly button toward your spine. 2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.
+                                                                                        3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.', 'Chest'),
                                    ('40c806c4-d4e7-472f-88f8-ed547e8afd13', 'Squats', '1. Stand with feet a little wider than hip width, toes facing front.
 2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…
 3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.
@@ -17,7 +16,8 @@ insert into dbo.exercises_info values
                                    ('40c806c4-d4e7-472f-88f8-ed547e8afd21', 'Forearms', 'abcdefghijkl', 'Byceps'),
                                    ('40c806c4-d4e7-472f-88f8-ed547e8afd22', 'Calves', 'abcdefghijkl', 'Legs'),
                                    ('40c806c4-d4e7-472f-88f8-ed547e8afd23', 'Quads', 'abcdefghijkl', 'Legs'),
-                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd24', 'Deadlifts', 'abcdefghijkl', 'Legs');
+                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd24', 'Deadlifts', 'abcdefghijkl', 'Legs'),
+                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd25', 'Shoulder press', 'abcdefghijkl', 'Shoulders');
 
 insert into dbo.monitor_rating values
                                    ('d137ac09-d07a-4998-8236-c04013ec6a07', '53f3c2b1-9c19-448e-aa56-a4753e41ea96', 5),
