@@ -13,15 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.domain.user.User
 
 @Composable
-fun RegisterButton(
-    validationInfo: User?,
+fun AuthenticationButton(
+    isEnabled: Boolean = true,
     state: ProgressState = ProgressState.IDLE,
-    onClick: (User) -> Unit = { }
+    onClick: () -> Unit = { }
 ) {
-    Spacer(modifier = Modifier.height(5.dp))
 
     val size = 56.dp
 
@@ -31,30 +29,20 @@ fun RegisterButton(
         )
     }
     else {
-        var editing by remember { mutableStateOf(validationInfo == null) }
-
         Button(
-            onClick = {
-                if (!editing) editing = true
-                else if (validationInfo != null) {
-                    onClick(validationInfo)
-                }
-            },
-            enabled = validationInfo != null,
+            onClick = onClick,
+            enabled = isEnabled,
             shape = CircleShape,
             modifier = Modifier
                 .defaultMinSize(minWidth = size, minHeight = size)
         ) {
-            Icon(imageVector = Icons.Default.Login, contentDescription = "")
+            Icon(imageVector = Icons.Default.Login, contentDescription = "Authentication")
         }
     }
 }
 
 @Preview
 @Composable
-fun RegisterButtonPreview() {
-    RegisterButton(
-        validationInfo = null,
-        state = ProgressState.WAITING
-    )
+fun AuthenticationButtonPreview() {
+    AuthenticationButton()
 }

@@ -4,10 +4,10 @@ import pt.ipc_app.R
 import pt.ipc_app.service.utils.Errors
 import pt.ipc_app.service.utils.ProblemJson
 
-enum class TextFieldType(val labelId: Int) {
-    NAME(R.string.register_screen_label_name),
-    EMAIL(R.string.register_screen_label_email),
-    PASSWORD(R.string.register_screen_label_password),
+enum class TextFieldType(val labelId: Int, val required: Boolean = false) {
+    NAME(R.string.register_screen_label_name, true),
+    EMAIL(R.string.register_screen_label_email, true),
+    PASSWORD(R.string.register_screen_label_password, true),
 
     BIRTH_DATE(R.string.birthDate),
     WEIGHT(R.string.weight),

@@ -9,6 +9,8 @@ import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.AUTHORIZATION
 import pt.ipc_app.service.models.ConnectionRequestInput
+import pt.ipc_app.service.models.login.LoginInput
+import pt.ipc_app.service.models.login.LoginOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
@@ -79,6 +81,25 @@ class UsersService(
             uri = "/users/monitors",
             body = RegisterMonitorInput(
                 name = name,
+                email = email,
+                password = password
+            )
+        )
+
+    /**
+     * Logs in the user with the given [email] and [password].
+     *
+     * @return the API result of the register request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun login(
+        email: String,
+        password: String
+    ): APIResult<LoginOutput> =
+        post(
+            uri = "/users/login",
+            body = LoginInput(
                 email = email,
                 password = password
             )

@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import pt.ipc_app.DependenciesContainer
+import pt.ipc_app.ui.screens.login.LoginActivity
 import pt.ipc_app.ui.screens.register.RegisterActivity
 import pt.ipc_app.ui.screens.register.RegisterViewModel
 import pt.ipc_app.utils.viewModelInit
@@ -42,7 +43,14 @@ class ChooseRoleActivity : ComponentActivity() {
             ChooseRoleScreen(
                 role = roleChose,
                 onRoleChoose = { viewModel.selectRole(it) },
-                onRoleSelect = { RegisterActivity.navigate(this, it.name) }
+                onRoleSelect = {
+                    RegisterActivity.navigate(this, it.name)
+                    finish()
+                },
+                onLoginClick = {
+                    LoginActivity.navigate(this)
+                    finish()
+                }
             )
         }
     }

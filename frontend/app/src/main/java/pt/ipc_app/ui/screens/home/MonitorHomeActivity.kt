@@ -55,10 +55,15 @@ class MonitorHomeActivity : ComponentActivity() {
             var clientsList by remember { mutableStateOf(clients?.clients) }
             var requestsList by remember { mutableStateOf(requests?.requests) }
 
+            if (clientsList == null)
+                clientsList = viewModel.clients.collectAsState().value?.clients
+            if (requestsList == null)
+                requestsList = viewModel.requests.collectAsState().value?.requests
+
             MonitorHomeScreen(
                 monitor = repo.userLoggedIn,
-                clientsOfMonitor = clientsList ?: viewModel.clients.collectAsState().value?.clients ?: listOf(),
-                requestsOfMonitor = requestsList ?: viewModel.requests.value?.requests ?: listOf(),
+                clientsOfMonitor = clientsList ?: listOf(),
+                requestsOfMonitor = requestsList ?: listOf(),
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
                 onClientRequestAccepted = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)

@@ -25,7 +25,7 @@ private const val WEIGHT_METRIC = " kg"
 private const val HEIGHT_METRIC = " cm"
 
 /**
- * Register user screen.
+ * Register client screen.
  *
  * @param onSaveRequest callback to be invoked when the register button is clicked
  */
@@ -56,7 +56,7 @@ fun RegisterClientScreen(
         Row {
             Text(
                 text = stringResource(id = R.string.register_client_screen_title),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.h4,
                 color = Color.Black,
             )
         }
@@ -110,8 +110,8 @@ fun RegisterClientScreen(
                 iconImageVector = Icons.Default.Edit,
             )
         }
-        RegisterButton(
-            validationInfo = clientValidation,
+        AuthenticationButton(
+            isEnabled = clientValidation != null,
             state = progressState,
             onClick = { if (clientValidation != null) onSaveRequest(clientValidation) }
         )

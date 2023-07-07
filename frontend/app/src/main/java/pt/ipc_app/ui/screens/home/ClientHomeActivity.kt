@@ -54,12 +54,13 @@ class ClientHomeActivity : ComponentActivity() {
         if (plan == null) viewModel.getCurrentPlanOfClient()
 
         setAppContentClient(viewModel) {
+            val mon = monitor ?: viewModel.monitor.collectAsState().value
             ClientHomeScreen(
                 client = repo.userLoggedIn,
-                monitor = monitor ?: viewModel.monitor.collectAsState().value,
+                monitor = mon,
                 plan = /*planTest,*/ plan ?: viewModel.plan.collectAsState().value,
                 onMonitorClick = {
-                    if (monitor != null) MonitorDetailsActivity.navigate(this, monitor!!)
+                    if (mon != null) MonitorDetailsActivity.navigate(this, mon)
                     else SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) }

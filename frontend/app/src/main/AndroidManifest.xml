@@ -53,6 +53,12 @@
         </activity>
 
         <activity
+            android:name=".ui.screens.login.LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".ui.screens.exercises.list.ExercisesListActivity"
             android:exported="false"
             android:screenOrientation="portrait">

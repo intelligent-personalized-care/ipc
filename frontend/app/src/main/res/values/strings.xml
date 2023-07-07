@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">IPC</string>
 
+    <string name="choose_role_screen_title">Choose a Role</string>
     <string name="register_client_screen_title">Register Client</string>
     <string name="register_monitor_screen_title">Register Monitor</string>
+    <string name="login_screen_title">Login</string>
 
     <string name="register_screen_label_name">Name</string>
     <string name="register_screen_label_email">Email</string>
@@ -15,6 +17,8 @@
     <string name="client">Client</string>
     <string name="monitor">Monitor</string>
     <string name="select">Select</string>
+
+    <string name="already_have_account">Already have an account? Login here</string>
 
     <string name="hello">Hello</string>
 

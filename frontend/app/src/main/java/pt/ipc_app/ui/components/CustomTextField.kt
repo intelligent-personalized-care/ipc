@@ -56,7 +56,13 @@ fun CustomTextField(
             onValueChange = updateText,
             enabled = enabled,
             singleLine = true,
-            label = { Text(stringResource(fieldType.labelId)) },
+            label = {
+                Row {
+                    Text(stringResource(fieldType.labelId))
+                    if (fieldType.required)
+                        Text(text = " *", color = Color.Red)
+                }
+            },
             leadingIcon = { iconImageVector?.let { Icon(it, contentDescription = null) } },
             readOnly = readOnly,
             modifier = Modifier

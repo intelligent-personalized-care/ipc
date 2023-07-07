@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.register
+package pt.ipc_app.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -8,8 +8,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.domain.user.User.Companion.userOrNull
 import pt.ipc_app.service.utils.ProblemJson
-import pt.ipc_app.ui.components.CustomTextField
-import pt.ipc_app.ui.components.TextFieldType
 
 @Composable
 fun RegisterUser(

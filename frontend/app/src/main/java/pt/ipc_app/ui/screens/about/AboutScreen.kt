@@ -44,7 +44,7 @@ fun AboutScreen(
         Text(
             text = stringResource(R.string.about_title),
             style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(top = 60.dp, bottom = 20.dp)
+            modifier = Modifier.padding(top = 30.dp, bottom = 20.dp)
         )
 
         authors.forEach { author ->

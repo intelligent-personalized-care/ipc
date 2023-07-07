@@ -13,7 +13,8 @@ import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
-import pt.ipc_app.ui.components.RegisterButton
+import pt.ipc_app.ui.components.AuthenticationButton
+import pt.ipc_app.ui.components.RegisterUser
 
 /**
  * Register monitor screen.
@@ -40,7 +41,7 @@ fun RegisterMonitorScreen(
         Row {
             Text(
                 text = stringResource(id = R.string.register_monitor_screen_title),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.h4,
                 color = Color.Black,
             )
         }
@@ -52,8 +53,8 @@ fun RegisterMonitorScreen(
                 error = error
             )
         }
-        RegisterButton(
-            validationInfo = monitorValidation,
+        AuthenticationButton(
+            isEnabled = monitorValidation != null,
             state = progressState,
             onClick = { if (monitorValidation != null) onSaveRequest(monitorValidation) }
         )

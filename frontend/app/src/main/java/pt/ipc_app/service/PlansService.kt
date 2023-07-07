@@ -8,7 +8,6 @@ import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.service.models.plans.PlanToClient
 import java.io.IOException
-import java.time.LocalDate
 import java.util.UUID
 
 /**
