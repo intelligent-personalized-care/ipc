@@ -1,6 +1,7 @@
 buildscript {
     ext {
         compose_ui_version = '1.4.1'
+        material_ui_version = '1.4.3'
     }
     repositories {
         // Make sure that you have the following two repositories
