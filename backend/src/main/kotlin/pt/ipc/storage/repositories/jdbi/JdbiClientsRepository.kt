@@ -4,6 +4,7 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
 import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.Role
 import pt.ipc.domain.User
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.repositories.ClientsRepository
@@ -36,6 +37,13 @@ class JdbiClientsRepository(
             .bind("clientID", clientID)
             .mapTo<ClientOutput>()
             .singleOrNull()
+
+    override fun updateToken(userID: UUID, token : String) {
+        handle.createUpdate("update dbo.tokens set token_hash = :token where user_id = :userID")
+            .bind("token",token)
+            .bind("userID",userID)
+            .execute()
+    }
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
         handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) values (:monitorID,:clientID,:requestID,:requestText)")
@@ -76,6 +84,17 @@ class JdbiClientsRepository(
             .bind("passwordHash", passwordHash)
             .mapTo<CredentialsOutput>()
             .singleOrNull()
+
+    override fun getRoleByID(userID: UUID): Role =
+        handle.createQuery("select 'CLIENT' from dbo.clients where c_id = :userID")
+            .bind("userID",userID)
+            .mapTo<Role>()
+            .singleOrNull() ?:
+        handle.createQuery("select 'MONITOR' from dbo.monitors where m_id = :userID")
+            .bind("userID",userID)
+            .mapTo<Role>()
+            .singleOrNull() ?: Role.ADMIN
+
 
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")

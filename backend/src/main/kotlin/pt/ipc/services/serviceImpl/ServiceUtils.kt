@@ -51,7 +51,11 @@ class ServiceUtils(
 
         val token = jwtUtils.createJWToken(id = id, role = role)
 
-        return Pair(token.token, id)
+        return Pair(first = token, second = id)
+    }
+
+    fun createToken(id : UUID, role : Role) : String{
+        return jwtUtils.createJWToken(id = id, role = role)
     }
 
     fun isValidEmail(email: String) = email.matches(Regex(EMAIL_REGEX))

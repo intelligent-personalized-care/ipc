@@ -18,8 +18,6 @@ interface ClientsService {
 
     fun getClientProfile(clientID: UUID): ClientOutput
 
-    fun login(email: String, password: String): CredentialsOutput
-
     fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable>
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID, String>

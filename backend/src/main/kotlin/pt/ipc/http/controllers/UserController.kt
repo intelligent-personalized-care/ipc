@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import pt.ipc.domain.User
 import pt.ipc.http.models.LoginInput
+import pt.ipc.http.models.LoginOutput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.SseEmitterRepository
@@ -25,9 +26,9 @@ import java.util.UUID
 class UserController(private val userService: UserService, private val sseEmitterRepository: SseEmitterRepository) {
 
     @PostMapping(Uris.USERS_LOGIN)
-    fun login(@RequestBody loginInput: LoginInput): ResponseEntity<CredentialsOutput> {
-        val credentialsOutput = userService.login(email = loginInput.email, password = loginInput.password)
-        return ResponseEntity.ok(credentialsOutput)
+    fun login(@RequestBody loginInput: LoginInput): ResponseEntity<LoginOutput> {
+        val loginOutput = userService.login(email = loginInput.email, password = loginInput.password)
+        return ResponseEntity.ok(loginOutput)
     }
 
     @Authentication

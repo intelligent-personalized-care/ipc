@@ -78,15 +78,6 @@ class ClientsServiceImpl(
             }
         )
 
-    override fun login(email: String, password: String): CredentialsOutput =
-        transactionManager.runBlock(
-            block = {
-                val hashedPassword = encryptionUtils.encrypt(plainText = password)
-                val credentials = it.clientsRepository.login(email = email, passwordHash = hashedPassword) ?: throw LoginFailed
-
-                credentials.copy(token = encryptionUtils.decrypt(encryptedText = credentials.token))
-            }
-        )
 
     override fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable> =
         transactionManager.runBlock(
