@@ -1,7 +1,11 @@
 package pt.ipc_app.ui.screens.exercises
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import pt.ipc_app.domain.exercise.ExerciseInfo
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
@@ -35,6 +39,10 @@ class ExercisesViewModel(
     val nrSet
         get() = _nrSet.asStateFlow()
 
+    private var _restTime = MutableStateFlow(30)
+    val restTime
+        get() = _restTime .asStateFlow()
+
     /**
      * Increments the current set of an exercise
      */
@@ -44,6 +52,23 @@ class ExercisesViewModel(
      * After an exercise is completed resets the number of sets value
      */
     fun resetSet() { _nrSet.value = 1}
+
+    /**
+     * Decrements the rest time
+     */
+    fun decrementRestTime() {
+        CoroutineScope(Dispatchers.IO).launch{
+            while (_restTime.value > 0 ){
+                delay(1000)
+                _restTime.value--
+            }
+        }
+    }
+
+    /**
+     * After a rest period is completed resets the timer
+     */
+    fun resetRestTime() { _restTime.value = 30}
 
     /**
      * Attempts to get a preview url of an exercise.
@@ -77,8 +102,7 @@ class ExercisesViewModel(
         planId: Int,
         dailyListId: Int,
         exerciseId: Int,
-        set: Int,
-        onSuccess : () -> Unit
+        set: Int
     ) {
         launchAndExecuteRequest(
             request = {
@@ -97,7 +121,6 @@ class ExercisesViewModel(
             },
             onSuccess = {
                 _state.value = ProgressState.FINISHED
-                onSuccess()
             }
         )
     }

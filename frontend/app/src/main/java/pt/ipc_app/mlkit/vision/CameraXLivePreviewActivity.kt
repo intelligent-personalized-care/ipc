@@ -40,6 +40,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -145,13 +146,17 @@ class CameraXLivePreviewActivity :
         setupRecordingButton {
             if (exercise is ExerciseTotalInfo) {
                 val exe = exercise as ExerciseTotalInfo
-                viewModel.submitExerciseVideo(file, exe.planId, exe.dailyListId, exe.exercise.id, viewModel.nrSet.value) {
-                    if (viewModel.nrSet.value == exercise.exeSets){
+                viewModel.submitExerciseVideo(file, exe.planId, exe.dailyListId, exe.exercise.id, viewModel.nrSet.value)
+                viewModel.decrementRestTime()
+                    if (viewModel.nrSet.value == exercise.exeSets && viewModel.restTime.value == 0){
+                        //in the final set waits a little to assure the response arrives
+                       /* viewModel.resetRestTime()
+                        viewModel.decrementRestTime()*/
                         viewModel.resetSet()
                         finish()
                     }
-                }
                 viewModel.incrementSet()
+                viewModel.resetRestTime()
             }
         }
     }
@@ -276,7 +281,7 @@ class CameraXLivePreviewActivity :
                             options = poseDetectorOptions as PoseDetectorOptions,
                             exercise = exercise,
                             onSetConclusion = {
-                                //serve para controlar o storp vid com o numero do reps concluido
+                                //serve para controlar o stop vid com o numero do reps concluido
                                 /*stopRecording {
                                     if (exercise is ExerciseTotalInfo) {
                                         val exe = exercise as ExerciseTotalInfo
@@ -289,7 +294,8 @@ class CameraXLivePreviewActivity :
                                         )
                                     }
                                 }*/
-                            }
+                            },
+                            viewModel
                         )
                     }
 
@@ -402,8 +408,6 @@ class CameraXLivePreviewActivity :
     private fun createVideoCapture() {
         videoCapture = VideoCapture.Builder().apply {
             setTargetAspectRatio(AspectRatio.RATIO_16_9)
-            //setVideoFrameRate(30)
-            //setTargetRotation(previewView!!.display.rotation)
             lensFacing
         }.build()
 
@@ -411,13 +415,21 @@ class CameraXLivePreviewActivity :
 
     private fun setupRecordingButton(onSubmission: () -> Unit) {
         val recordButton: Button = findViewById(R.id.camera_button)
+
+        //to disable the button when in rest time
+       // recordButton.isEnabled = viewModel.restTime.value == 30
+       // recordButton.setBackgroundColor(Color.Red.value.toInt())
+        if(viewModel.restTime.value < 30 && viewModel.restTime.value != 0) recordButton.text = "W"
+
         recordButton.setOnClickListener {
             if (isRecording) {
                 stopRecording(onSubmission)
                 recordButton.text = "R"//"Start Recording"
             } else {
-                startRecording(onSubmission)
-                recordButton.text = "NR"//Stop Recording
+                if(viewModel.restTime.value == 30 || viewModel.restTime.value == 0 ) {
+                    startRecording(onSubmission)
+                    recordButton.text = "NR"//Stop Recording
+                }
             }
 
             isRecording = !isRecording

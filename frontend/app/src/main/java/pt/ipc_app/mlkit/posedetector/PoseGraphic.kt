@@ -21,11 +21,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.text.TextUtils
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.exercises.ExerciseLogic
+import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -34,7 +37,8 @@ class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val exercise: Exercise,
-  private val onSetConclusion: () -> Unit = { }
+  private val onSetConclusion: () -> Unit,
+  private  val viewModel: ExercisesViewModel
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint
@@ -42,6 +46,7 @@ class PoseGraphic internal constructor(
   private val whitePaint: Paint
   private val tipPaint: Paint
   private var toDraw = false
+  private var setsLeft =  0 //exercise.exeSets
   override fun draw(canvas: Canvas) {
     val landmarks = pose.allPoseLandmarks
     if (landmarks.isEmpty()) return
@@ -98,7 +103,7 @@ class PoseGraphic internal constructor(
           val exerciseLogic = ExerciseLogic(rightHip!!,rightKnee!!,rightAnkle,yRightHand,yLeftHand,ratio,
             rightShoulder.position.y + leftShoulder.position.y, rightAnkle.position.y - rightHip.position.y, 5, 0, 0.5,
             2, 5,
-            "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart",)
+            "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart")
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -117,7 +122,7 @@ class PoseGraphic internal constructor(
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightShoulder.position.y + leftShoulder.position.y , rightShoulder.position.y + leftShoulder.position.y, 25, 0, 0.5,
             2, 12,
-            "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart",)
+            "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart")
 
           doExerciseLogic(canvas, exerciseLogic)
           toDraw = !toDraw
@@ -135,7 +140,7 @@ class PoseGraphic internal constructor(
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
             rightWrist.position.y + leftWrist.position.y ,rightElbow.position.y + leftElbow!!.position.y, 110, 0, 0.5,
             2, 12,
-            "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart",)
+            "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart")
 
           doExerciseLogic(canvas, exerciseLogic)
 
@@ -392,12 +397,8 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineOneText, 1)
     drawText(canvas, lineTwoText, 2)
     drawText(canvas, "count: $upCount", 3)
-
-    println("upcount $upCount")
-    println("reps ${exercise.exeReps}")
-    if (upCount == exercise.exeReps) {
-      println("inside of if")
-      onSetConclusion
-    }
+    drawText(canvas, "Sets to do: ${exercise.exeSets}", 4)
+    drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}",5)
+    drawText(canvas, "Rest Time: ${viewModel.restTime.value}", 6)
   }
 }

@@ -27,13 +27,15 @@ import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.vision.VisionProcessorBase
+import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 
 /** A processor to run pose detector.  */
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
   private val exercise: Exercise,
-  private val onSetConclusion: () -> Unit = { }
+  private val onSetConclusion: () -> Unit = { },
+  private  val viewModel: ExercisesViewModel
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {
@@ -50,7 +52,7 @@ class PoseDetectorProcessor(
     graphicOverlay: GraphicOverlay
   ) {
     //added exercise to monitor the different exercises in PoseGraphic
-    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise, onSetConclusion))
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise, onSetConclusion, viewModel))
   }
 
   override fun onFailure(e: Exception) {
