@@ -132,9 +132,6 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
     CONSTRAINT unique_nr_set UNIQUE(nr_set,id),
     CONSTRAINT valid_nr_set check (nr_set > 0)
 
-
-
-
 );
 
 CREATE TABLE IF NOT EXISTS dbo.admin(
