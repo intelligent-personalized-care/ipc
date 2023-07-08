@@ -144,7 +144,9 @@ class PoseGraphic internal constructor(
 
           toDraw = !toDraw
         }
-        else -> {}
+        else -> {
+          //present a text saying that this exercise is not yet supported
+        }
     }
 
 
