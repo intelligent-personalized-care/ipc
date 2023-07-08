@@ -34,7 +34,6 @@ class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
   private val exercise: Exercise,
-  private val onSetConclusion: () -> Unit = { },
   private  val viewModel: ExercisesViewModel
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
@@ -52,7 +51,7 @@ class PoseDetectorProcessor(
     graphicOverlay: GraphicOverlay
   ) {
     //added exercise to monitor the different exercises in PoseGraphic
-    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise, onSetConclusion, viewModel))
+    graphicOverlay.add(PoseGraphic(graphicOverlay, results, exercise, viewModel))
   }
 
   override fun onFailure(e: Exception) {

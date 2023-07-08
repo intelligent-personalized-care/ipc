@@ -22,6 +22,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color.RED
+import android.graphics.Color.parseColor
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -43,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
@@ -280,22 +283,7 @@ class CameraXLivePreviewActivity :
                             context = this,
                             options = poseDetectorOptions as PoseDetectorOptions,
                             exercise = exercise,
-                            onSetConclusion = {
-                                //serve para controlar o stop vid com o numero do reps concluido
-                                /*stopRecording {
-                                    if (exercise is ExerciseTotalInfo) {
-                                        val exe = exercise as ExerciseTotalInfo
-                                        viewModel.submitExerciseVideo(
-                                            file,
-                                            exe.planId,
-                                            exe.dailyListId,
-                                            exe.exercise.id,
-                                            viewModel.nrSet.value
-                                        )
-                                    }
-                                }*/
-                            },
-                            viewModel
+                            viewModel = viewModel
                         )
                     }
 
@@ -384,8 +372,6 @@ class CameraXLivePreviewActivity :
                 override fun onVideoSaved(outputFileResults: VideoCapture.OutputFileResults) {
                     Log.d(TAG, "Video saved: ${file.absolutePath}")
                     onSubmission()
-
-                    //viewModel.incrementSet()
                 }
 
                 override fun onError(videoCaptureError: Int, message: String, cause: Throwable?) {
@@ -396,13 +382,8 @@ class CameraXLivePreviewActivity :
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
-    private fun stopRecording(onSubmission: () -> Unit) {
+    private fun stopRecording() {
         videoCapture.stopRecording()
-        //onSubmission()
-        //viewModel.incrementSet()
-        //verifies if the total number of sets is done
-
-
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
@@ -424,8 +405,11 @@ class CameraXLivePreviewActivity :
 
         recordButton.setOnClickListener {
             if (isRecording) {
-                stopRecording(onSubmission)
+                stopRecording()
                 recordButton.text = "R"//"Start Recording"
+                //recordButton.solidColor.toColor().red()
+
+                //recordButton.setBackgroundColor(parseColor("#880808"))
             } else {
                 if(viewModel.restTime.value == 30 || viewModel.restTime.value == 0 ) {
                     startRecording(onSubmission)

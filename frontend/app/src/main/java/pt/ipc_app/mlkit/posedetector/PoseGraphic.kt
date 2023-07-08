@@ -37,7 +37,6 @@ class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val exercise: Exercise,
-  private val onSetConclusion: () -> Unit,
   private  val viewModel: ExercisesViewModel
 ): GraphicOverlay.Graphic(overlay) {
 
@@ -46,7 +45,6 @@ class PoseGraphic internal constructor(
   private val whitePaint: Paint
   private val tipPaint: Paint
   private var toDraw = false
-  private var setsLeft =  0 //exercise.exeSets
   override fun draw(canvas: Canvas) {
     val landmarks = pose.allPoseLandmarks
     if (landmarks.isEmpty()) return
@@ -146,9 +144,7 @@ class PoseGraphic internal constructor(
 
           toDraw = !toDraw
         }
-        else -> {
-
-        }
+        else -> {}
     }
 
 
@@ -237,6 +233,9 @@ class PoseGraphic internal constructor(
     }
   }
 
+  /**
+   * Resets the base parameters
+   * */
   private fun reInitParams() {
     lineOneText = ""
     lineTwoText = ""
@@ -249,6 +248,9 @@ class PoseGraphic internal constructor(
     downCount = 0
   }
 
+  /**
+   * Draws a point of the pose
+   * */
   private fun drawPoint(canvas: Canvas, point: PointF?, paint: Paint?) {
     if (point == null) return
 
@@ -260,6 +262,9 @@ class PoseGraphic internal constructor(
     )
   }
 
+  /**
+   * Draws a line between points of the pose
+   * */
   private fun drawLine(
     canvas: Canvas,
     start: PointF?,
@@ -275,10 +280,14 @@ class PoseGraphic internal constructor(
     )
   }
 
-  private fun drawText(canvas: Canvas, text:String, line:Int) {
+  /**
+   * Draws the text received in the specific line
+   * */
+  private fun drawText(canvas: Canvas, text:String, xline: Int?, yline: Int = 1) {
     if (TextUtils.isEmpty(text)) return
 
-    canvas.drawText(text, TEXT_SIZE * 1.5f, TEXT_SIZE * 3*2 + TEXT_SIZE * line, tipPaint)
+    xline?.let {canvas.drawText(text, TEXT_SIZE * 1.5f * it, TEXT_SIZE * 3*2 + TEXT_SIZE * yline, tipPaint)}
+      ?: canvas.drawText(text, TEXT_SIZE * 1.5f, TEXT_SIZE * 3*2 + TEXT_SIZE * yline, tipPaint)
   }
 
   companion object {
@@ -308,7 +317,7 @@ class PoseGraphic internal constructor(
     rightPaint.color = Color.YELLOW
 
     tipPaint = Paint()
-    tipPaint.color = Color.GREEN
+    tipPaint.color = Color.BLACK
     tipPaint.textSize = 40f
   }
 
@@ -394,11 +403,14 @@ class PoseGraphic internal constructor(
         lastHeight = currentHeight
       }
     }
-    drawText(canvas, lineOneText, 1)
-    drawText(canvas, lineTwoText, 2)
-    drawText(canvas, "count: $upCount", 3)
-    drawText(canvas, "Sets to do: ${exercise.exeSets}", 4)
-    drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}",5)
-    drawText(canvas, "Rest Time: ${viewModel.restTime.value}", 6)
+    drawText(canvas, lineOneText, null,-3)
+    drawText(canvas, lineTwoText, null,-2)
+    drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
+    drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}/${exercise.exeSets}",null,1)
+    drawText(canvas, "Rest Time: ${viewModel.restTime.value}",null, 3 )
+    if(viewModel.restTime.value == 0 && (viewModel.nrSet.value - 1) < exercise.exeSets )
+      drawText(canvas, "GO! You can start recording the next set",null, 4)
+    else
+      if(viewModel.restTime.value < 30) drawText(canvas, "Time to REST!",null, 4)
   }
 }

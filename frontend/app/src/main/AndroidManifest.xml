@@ -126,10 +126,10 @@
 
         <!-- ML KIT Activities -->
 
+        <!--android:theme="@style/Theme.IPC_APP"-->
         <activity
             android:name=".mlkit.vision.CameraXLivePreviewActivity"
             android:exported="false"
-            android:theme="@style/Theme.IPC_APP"
             android:screenOrientation="portrait">
         </activity>
 
