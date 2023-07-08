@@ -42,7 +42,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
             token = Jwts.builder()
                 .setClaims(jwtPayload.claims)
                 .signWith(accessTokenKey)
-                .setExpiration(Date.from(Instant.now().plus(accessTokenExpirationDate, ChronoUnit.FOREVER)))
+                .setExpiration(Date.from(Instant.now().plus(accessTokenExpirationDate, ChronoUnit.DAYS)))
                 .compact()
         ).token
     }
@@ -55,7 +55,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
             token = Jwts.builder()
                 .setClaims(claims)
                 .signWith(accessTokenKey)
-                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpirationDate, ChronoUnit.FOREVER)))
+                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpirationDate, ChronoUnit.DAYS)))
                 .compact()
         ).token
     }
