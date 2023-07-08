@@ -412,6 +412,10 @@ class CameraXLivePreviewActivity :
             if (isRecording) {
                 stopRecording()
                 recordButton.text = "R" //Start Recording
+                //recordButton.setBackgroundColor(resources.getColor(R.color.blueCustom))
+                //recordButton.setBackgroundResource(R.drawable.camera_button)
+                //recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.red_200);
+
             } else {
                 if(viewModel.restTime.value == 30 || viewModel.restTime.value == 0 ) {
                     startRecording(onSubmission)
