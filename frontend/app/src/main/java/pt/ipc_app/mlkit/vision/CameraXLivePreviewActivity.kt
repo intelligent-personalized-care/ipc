@@ -22,32 +22,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color.RED
-import android.graphics.Color.parseColor
 import android.os.Build
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.*
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
@@ -61,15 +50,15 @@ import pt.ipc_app.mlkit.VisionImageProcessor
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
-import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
+import pt.ipc_app.ui.workers.VideoSubmissionOneTimeWorker
+import pt.ipc_app.ui.workers.WorkerKeys
 import pt.ipc_app.utils.viewModelInit
 import java.io.File
 import java.util.*
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
-@RequiresApi(VERSION_CODES.LOLLIPOP)
 class CameraXLivePreviewActivity :
     AppCompatActivity(), OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -95,6 +84,29 @@ class CameraXLivePreviewActivity :
             val app = (application as DependenciesContainer)
             ExercisesViewModel(app.services.exercisesService, app.sessionManager)
         }
+    }
+
+    private fun createWorker() {
+        val exe = exercise as ExerciseTotalInfo
+        val inputData = Data.Builder()
+            .putString(WorkerKeys.FILE_PATH, file.absolutePath)
+            .putString(WorkerKeys.PLAN_ID, exe.planId.toString())
+            .putString(WorkerKeys.DAILY_LIST_ID, exe.dailyListId.toString())
+            .putString(WorkerKeys.EXERCISE_ID, exe.exercise.id.toString())
+            .putString(WorkerKeys.NR_SET, viewModel.nrSet.value.toString())
+            .build()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val fileSubmissionWorkRequest = OneTimeWorkRequestBuilder<VideoSubmissionOneTimeWorker>()
+            .setConstraints(constraints)
+            .setInputData(inputData)
+            .build()
+
+        WorkManager.getInstance(applicationContext)
+            .enqueue(fileSubmissionWorkRequest)
     }
 
     @SuppressLint("MissingPermission", "RestrictedApi", "UnsafeExperimentalUsageError")
@@ -123,12 +135,11 @@ class CameraXLivePreviewActivity :
             .get(CameraXViewModel::class.java)
             .processCameraProvider
             .observe(
-                this,
-                Observer { provider: ProcessCameraProvider? ->
-                    cameraProvider = provider
-                    bindAllCameraUseCases()
-                }
-            )
+                this
+            ) { provider: ProcessCameraProvider? ->
+                cameraProvider = provider
+                bindAllCameraUseCases()
+            }
 
         val settingsButton = findViewById<ImageView>(R.id.settings_button)
         settingsButton.setOnClickListener {
@@ -148,9 +159,8 @@ class CameraXLivePreviewActivity :
 
         setupRecordingButton {
             if (exercise is ExerciseTotalInfo) {
-                val exe = exercise as ExerciseTotalInfo
-                viewModel.submitExerciseVideo(file, exe.planId, exe.dailyListId, exe.exercise.id, viewModel.nrSet.value)
-                viewModel.decrementRestTime()
+                createWorker()
+
                 if (viewModel.nrSet.value == exercise.exeSets) {
                     //in the final set waits a little to assure the response arrives
                     viewModel.resetRestTime()
@@ -159,6 +169,8 @@ class CameraXLivePreviewActivity :
                         finish()
                     }
                 }
+                else viewModel.decrementRestTime()
+
                 viewModel.incrementSet()
                 viewModel.resetRestTime()
             }
@@ -185,9 +197,7 @@ class CameraXLivePreviewActivity :
         bindAnalysisUseCase()
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        // Do nothing.
-    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         if (cameraProvider == null)
@@ -202,7 +212,7 @@ class CameraXLivePreviewActivity :
         val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
         try {
             if (cameraProvider!!.hasCamera(newCameraSelector)) {
-                Log.d(TAG, "Set facing to " + newLensFacing)
+                Log.d(TAG, "Set facing to $newLensFacing")
                 lensFacing = newLensFacing
                 cameraSelector = newCameraSelector
                 bindAllCameraUseCases()
@@ -398,22 +408,14 @@ class CameraXLivePreviewActivity :
     private fun setupRecordingButton(onSubmission: () -> Unit) {
         val recordButton: Button = findViewById(R.id.camera_button)
 
-        //to disable the button when in rest time
-       // recordButton.isEnabled = viewModel.restTime.value == 30
-       // recordButton.setBackgroundColor(Color.Red.value.toInt())
-        if(viewModel.restTime.value < 30 && viewModel.restTime.value != 0) recordButton.text = "W"
-
         recordButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()
-                recordButton.text = "R"//"Start Recording"
-                //recordButton.solidColor.toColor().red()
-
-                //recordButton.setBackgroundColor(parseColor("#880808"))
+                recordButton.text = "R" //Start Recording
             } else {
                 if(viewModel.restTime.value == 30 || viewModel.restTime.value == 0 ) {
                     startRecording(onSubmission)
-                    recordButton.text = "NR"//Stop Recording
+                    recordButton.text = "NR" //Stop Recording
                 }
             }
 
@@ -426,11 +428,8 @@ class CameraXLivePreviewActivity :
     //----------------------------------- Checking Permissions ----------------------------------
     private fun allRuntimePermissionsGranted(): Boolean {
         for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
-            permission?.let {
-                if (!isPermissionGranted(this, it)) {
-                    return false
-                }
-            }
+            if (!isPermissionGranted(this, permission))
+                return false
         }
         return true
     }
@@ -438,10 +437,8 @@ class CameraXLivePreviewActivity :
     private fun getRuntimePermissions() {
         val permissionsToRequest = ArrayList<String>()
         for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
-            permission?.let {
-                if (!isPermissionGranted(this, it)) {
-                    permissionsToRequest.add(permission)
-                }
+            if (!isPermissionGranted(this, permission)) {
+                permissionsToRequest.add(permission)
             }
         }
 
