@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.components
+package pt.ipc_app.ui.components.exercises
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +18,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
+import pt.ipc_app.ui.components.CustomTextField
+import pt.ipc_app.ui.components.TextFieldType
 
 @Composable
 fun ExerciseInfoRow(

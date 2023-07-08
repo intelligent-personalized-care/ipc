@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.ui.components.planTest
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
@@ -58,7 +57,7 @@ class ClientHomeActivity : ComponentActivity() {
             ClientHomeScreen(
                 client = repo.userLoggedIn,
                 monitor = mon,
-                plan = /*planTest,*/ plan ?: viewModel.plan.collectAsState().value,
+                plan = plan ?: viewModel.plan.collectAsState().value,
                 onMonitorClick = {
                     if (mon != null) MonitorDetailsActivity.navigate(this, mon)
                     else SearchMonitorsActivity.navigate(this)

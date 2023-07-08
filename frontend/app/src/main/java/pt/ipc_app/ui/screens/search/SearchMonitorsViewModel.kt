@@ -10,9 +10,9 @@ import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 
 /**
- * View model for the [SearchClientsActivity] or the [SearchMonitorsActivity].
+ * View model for the [SearchMonitorsActivity].
  */
-class SearchViewModel(
+class SearchMonitorsViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {

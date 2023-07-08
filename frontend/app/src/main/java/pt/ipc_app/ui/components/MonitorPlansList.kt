@@ -25,7 +25,7 @@ fun MonitorPlansList(
     LazyColumn(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
-            .padding(top = 10.dp, bottom = 20.dp)
+            .padding(top = 10.dp, bottom = 60.dp)
             .border(1.dp, Color(204, 202, 202, 255))
     ) {
         items(plans) {

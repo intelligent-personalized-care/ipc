@@ -17,10 +17,10 @@ import pt.ipc_app.utils.viewModelInit
  */
 class SearchMonitorsActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<SearchViewModel> {
+    private val viewModel by viewModels<SearchMonitorsViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            SearchViewModel(app.services.usersService, app.sessionManager)
+            SearchMonitorsViewModel(app.services.usersService, app.sessionManager)
         }
     }
 

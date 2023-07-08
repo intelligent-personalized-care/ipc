@@ -14,6 +14,7 @@ import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
+import java.time.LocalDate
 import java.util.*
 
 /**
@@ -50,8 +51,10 @@ class MonitorHomeActivity : ComponentActivity() {
 
         if (clients == null) viewModel.getClientsOfMonitor()
         if (requests == null) viewModel.getRequestsOfMonitor()
+        viewModel.getExercisesOfClients(LocalDate.now())
 
         setAppContentMonitor(viewModel) {
+
             var clientsList by remember { mutableStateOf(clients?.clients) }
             var requestsList by remember { mutableStateOf(requests?.requests) }
 
@@ -64,14 +67,23 @@ class MonitorHomeActivity : ComponentActivity() {
                 monitor = repo.userLoggedIn,
                 clientsOfMonitor = clientsList ?: listOf(),
                 requestsOfMonitor = requestsList ?: listOf(),
+                clientsExercisesToDo = viewModel.clientsExercises.collectAsState().value?.clientsExercises ?: listOf(),
+                clientsExercisesToDoProgressState = viewModel.clientsExercisesState.collectAsState().value,
+                onDaySelected = {
+                    viewModel.getExercisesOfClients(it)
+                },
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
-                onClientRequestAccepted = { request, decision ->
+                onClientRequestDecided = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)
-                    clientsList = (clientsList ?: listOf()) + ClientOutput(request.clientID, request.clientName, request.clientEmail)
+
+                    if (decision.accept)
+                        clientsList = (clientsList ?: listOf()) + ClientOutput(request.clientID, request.clientName, request.clientEmail)
+
                     requestsList?.let { reqs ->
                         requestsList = reqs - reqs.first {it == request}
                     }
-                }
+                },
+                onClientExercisesSelected = { }
             )
         }
     }

@@ -35,9 +35,8 @@ fun ClientsTable(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize(fraction = .8f)
-            .padding(16.dp)
-            .size(1.dp)
+            .padding(horizontal = 50.dp)
+            .height(200.dp)
     ) {
         stickyHeader {
             Row(modifier = Modifier.background(DarkBlue)) {

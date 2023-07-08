@@ -1,8 +1,10 @@
-package pt.ipc_app.ui.components
+package pt.ipc_app.ui.components.exercises
 
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,12 +28,12 @@ fun DailyExercisesList(
     Spacer(modifier = Modifier.padding(top = 20.dp))
 
     if (dailyListSelected != null) {
-        Column(
+        LazyColumn(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .border(1.dp, Color(204, 202, 202, 255))
         ) {
-                dailyListSelected.exercises.forEach { ex ->
+                items(dailyListSelected.exercises) { ex ->
                     DailyExerciseRow(
                         exercise = ex,
                         onExerciseSelect = onExerciseSelect

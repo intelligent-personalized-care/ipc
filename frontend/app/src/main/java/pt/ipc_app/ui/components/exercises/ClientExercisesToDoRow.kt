@@ -3,23 +3,20 @@ package pt.ipc_app.ui.components.exercises
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.HourglassBottom
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.domain.exercise.DailyExercise
+import pt.ipc_app.service.models.exercises.ClientExercises
+import java.util.UUID
 
 @Composable
-fun DailyExerciseRow(
-    exercise: DailyExercise,
-    onExerciseSelect: (DailyExercise) -> Unit = {}
+fun ClientExercisesToDoRow(
+    clientExercise: ClientExercises,
+    onClientSelect: (UUID) -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -28,30 +25,20 @@ fun DailyExerciseRow(
             .height(60.dp)
             .background(Color.White)
             .clickable {
-                onExerciseSelect(exercise)
+                onClientSelect(clientExercise.id)
             }
             .padding(8.dp)
     ) {
         Column {
-            Text(exercise.title)
+            Text(clientExercise.name)
             Text(
-                text = "${exercise.reps} reps - ${exercise.sets} sets",
+                text = "${clientExercise.exercises.size} exercises to do",
                 style = MaterialTheme.typography.overline,
             )
         }
         Spacer(modifier = Modifier.weight(0.1f))
         Row {
-            ExerciseIconDone(exercise.isDone)
+            ExerciseIconDone(clientExercise.allExercisesDone())
         }
     }
-}
-
-@Composable
-fun ExerciseIconDone(done: Boolean) {
-    Icon(
-        imageVector = if (done) Icons.Default.Check else Icons.Default.HourglassBottom,
-        contentDescription = "Exercise is done",
-        tint = if (done) Color(131, 204, 46, 255)
-        else Color(255, 217, 102, 255)
-    )
 }

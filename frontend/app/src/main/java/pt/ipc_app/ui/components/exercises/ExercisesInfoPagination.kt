@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
-import pt.ipc_app.ui.components.ExercisesInfoList
 
 @Composable
 fun ExercisesInfoPagination(

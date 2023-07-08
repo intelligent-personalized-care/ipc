@@ -9,6 +9,7 @@ import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.AUTHORIZATION
 import pt.ipc_app.service.models.ConnectionRequestInput
+import pt.ipc_app.service.models.exercises.ExercisesOfClients
 import pt.ipc_app.service.models.login.LoginInput
 import pt.ipc_app.service.models.login.LoginOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
@@ -21,6 +22,7 @@ import pt.ipc_app.service.utils.ContentType
 import pt.ipc_app.service.utils.MultipartEntry
 import java.io.File
 import java.io.IOException
+import java.time.LocalDate
 import java.util.UUID
 
 /**
@@ -250,6 +252,23 @@ class UsersService(
     ): APIResult<RequestsOfMonitor> =
         get(
             uri = "/users/monitors/$monitorId/requests",
+            token = token
+        )
+
+    /**
+     * Gets all exercises of clients of monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getExercisesOfClients(
+        monitorId: UUID,
+        date: LocalDate,
+        token: String
+    ): APIResult<ExercisesOfClients> =
+        get(
+            uri = "/users/monitors/$monitorId/clients/exercises?date=$date",
             token = token
         )
 

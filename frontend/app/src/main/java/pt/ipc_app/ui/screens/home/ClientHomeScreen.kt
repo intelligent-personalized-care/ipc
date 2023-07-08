@@ -18,6 +18,8 @@ import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.*
+import pt.ipc_app.ui.components.exercises.DailyExercisesList
+import pt.ipc_app.ui.components.exercises.planTest
 import java.time.LocalDate
 import java.util.*
 

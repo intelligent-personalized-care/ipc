@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.components
+package pt.ipc_app.ui.components.exercises
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
+import pt.ipc_app.ui.components.exercises.ExerciseInfoRow
 
 @Composable
 fun ExercisesInfoList(
