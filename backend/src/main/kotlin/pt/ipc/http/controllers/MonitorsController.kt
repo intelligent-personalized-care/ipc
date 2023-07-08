@@ -223,6 +223,21 @@ class MonitorsController(private val monitorService: MonitorService, private val
     }
 
     @Authentication
+    @GetMapping(Uris.PLAN_OF_CLIENT)
+    fun planOfClient(
+        @PathVariable monitorID: UUID,
+        @PathVariable clientID: UUID,
+        @PathVariable planID: Int,
+        user: User
+    ): ResponseEntity<PlanOutput> {
+        if (user.id != monitorID) throw ForbiddenRequest
+
+        val plan = monitorService.getPlanOfClient(clientID = clientID, planID = planID)
+
+        return ResponseEntity.ok(plan)
+    }
+
+    @Authentication
     @GetMapping(Uris.EXERCISES_OF_CLIENTS)
     fun exercisesOfClients(
         @PathVariable monitorID: UUID,

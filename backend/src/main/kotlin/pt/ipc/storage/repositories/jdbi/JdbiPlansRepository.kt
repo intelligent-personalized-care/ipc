@@ -117,6 +117,21 @@ class JdbiPlansRepository(
             .toList()
     }
 
+    override fun getPlanOfClient(clientID: UUID, planID: Int): PlanOutput? {
+        val plan = handle.createQuery(
+            """
+                select cp.plan_id, cp.dt_start from dbo.client_plans cp 
+                where cp.client_id = :clientID and cp.plan_id = :planID
+            """.trimIndent()
+        )
+            .bind("clientID", clientID)
+            .bind("planID", planID)
+            .mapTo<PlanStartDate>()
+            .singleOrNull() ?: return null
+
+        return getPlan(plan.planId)?.copy(startDate = plan.dtStart)
+    }
+
     private data class PlanStartDate(val planId: Int, val dtStart: LocalDate)
 
     override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput? {

@@ -1,6 +1,6 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientDailyExercises
 import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.User
@@ -44,5 +44,5 @@ interface MonitorRepository {
 
     fun isMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean
 
-    fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises>
+    fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises>
 }

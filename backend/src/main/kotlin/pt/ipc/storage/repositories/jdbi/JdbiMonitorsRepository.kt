@@ -3,7 +3,7 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.mapper.reflect.ColumnName
-import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientDailyExercises
 import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.DailyExercise
 import pt.ipc.domain.MonitorDetails
@@ -236,7 +236,7 @@ class JdbiMonitorsRepository(
             .mapTo<Int>()
             .single() == 1
 
-    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises> {
+    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises> {
         val clients = handle.createQuery(
             "select u.id,u.name from dbo.client_to_monitor ctm " +
                 "inner join dbo.monitors m on m.m_id = ctm.monitor_id " +
@@ -247,19 +247,19 @@ class JdbiMonitorsRepository(
             .toList()
             .ifEmpty { return emptyList() }
 
-        return clients.map { client ->
-            ClientExercises(id = client.id, name = client.name, exercises = getDailyExerciseOfClient(clientID = client.id, date = date))
-        }.filter { it.exercises.isNotEmpty() }
+        return clients.mapNotNull { client ->
+            getExercisesTotalInfoOfClient(client, date)
+        }
     }
 
     private data class ClientData(val id: UUID, val name: String)
 
-    private fun getDailyExerciseOfClient(clientID: UUID, date: LocalDate): List<DailyExercise> {
+    private fun getExercisesTotalInfoOfClient(clientData: ClientData, date: LocalDate): ClientDailyExercises? {
         val planInfo = handle.createQuery("select cp.plan_id,cp.dt_start from dbo.client_plans cp where client_id = :clientID and :date between cp.dt_start and cp.dt_end")
-            .bind("clientID", clientID)
+            .bind("clientID", clientData.id)
             .bind("date", date)
             .mapTo<PlanInfo>()
-            .singleOrNull() ?: return emptyList()
+            .singleOrNull() ?: return null
 
         val dayIndex = Duration.between(planInfo.dtStart.atStartOfDay(), date.atStartOfDay()).toDays().toInt()
 
@@ -269,9 +269,9 @@ class JdbiMonitorsRepository(
                 .bind("planID", planInfo.id)
                 .mapTo<Int>().single()
 
-        return handle.createQuery(
+        val exercises = handle.createQuery(
             """
-                select de.id,de.ex_id,dl.plan_id as planID, dl.id as dailyListID,title, description, type, sets, reps,
+                select de.id, de.ex_id, title, description, type, sets, reps,
                     case when ev.dt_submit is null then 0 else 1 end as is_done
                 from dbo.daily_exercises de
                 inner join dbo.daily_lists dl on de.daily_list_id = dl.id 
@@ -283,6 +283,14 @@ class JdbiMonitorsRepository(
             .bind("dailyListID", dailyListID)
             .mapTo<DailyExercise>()
             .toList()
+
+        return ClientDailyExercises(
+                id = clientData.id,
+                name = clientData.name,
+                planId = planInfo.id,
+                dailyListId = dailyListID,
+                exercises = exercises
+            )
     }
 
     private data class PlanInfo(@ColumnName("plan_id") val id: Int, @ColumnName("dt_start") val dtStart: LocalDate)

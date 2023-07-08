@@ -1,7 +1,7 @@
 package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientDailyExercises
 import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
@@ -225,7 +225,15 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises> =
+    override fun getPlanOfClient(clientID: UUID, planID: Int): PlanOutput =
+        transactionManager.runBlock(
+            block = {
+                it.plansRepository.getPlanOfClient(clientID = clientID, planID = planID) ?: throw PlanNotFound
+            }
+        )
+
+
+    override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises> =
         transactionManager.runBlock(
             block = {
                 it.monitorRepository.exercisesOfClients(monitorID = monitorID, date = date)

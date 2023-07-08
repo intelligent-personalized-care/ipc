@@ -11,12 +11,16 @@ data class Exercise(
     val reps: Int
 )
 
+data class ExerciseTotalInfo(
+    val planId: Int,
+    val dailyListId: Int,
+    val exercise: DailyExercise
+)
+
 data class DailyExercise(
     val id: Int,
     @ColumnName("ex_id")
     val exerciseInfoID: UUID,
-    val planID: Int,
-    val dailyListID: Int,
     val title: String,
     val description: String,
     val type: String,

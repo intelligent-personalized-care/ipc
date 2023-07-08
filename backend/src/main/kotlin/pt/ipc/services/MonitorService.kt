@@ -1,6 +1,6 @@
 package pt.ipc.services
 
-import pt.ipc.domain.ClientExercises
+import pt.ipc.domain.ClientDailyExercises
 import pt.ipc.domain.ClientOfMonitor
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanInput
@@ -46,5 +46,7 @@ interface MonitorService {
 
     fun giveFeedbackOfExercise(monitorID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int, feedback: String, clientID: UUID)
 
-    fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientExercises>
+    fun getPlanOfClient(clientID: UUID, planID: Int): PlanOutput
+
+    fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises>
 }
