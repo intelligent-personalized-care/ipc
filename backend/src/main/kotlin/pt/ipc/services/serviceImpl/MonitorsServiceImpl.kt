@@ -38,9 +38,10 @@ class MonitorsServiceImpl(
     override fun registerMonitor(registerInput: RegisterInput): CredentialsOutput {
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
-        val (token, userID) = serviceUtils.createCredentials(role = Role.MONITOR)
+        val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.MONITOR)
 
-        val encryptedToken = encryptionUtils.encrypt(token)
+        val encryptedAccessToken = encryptionUtils.encrypt(accessToken)
+        val encryptedRefreshToken = encryptionUtils.encrypt(refreshToken)
 
         val user = User(
             id = userID,
@@ -51,11 +52,11 @@ class MonitorsServiceImpl(
 
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.registerMonitor(user = user, encryptedToken = encryptedToken)
+                it.monitorRepository.registerMonitor(user = user, sessionID = sessionID)
             }
         )
 
-        return CredentialsOutput(id = userID, token = token)
+        return CredentialsOutput(id = userID, accessToken = accessToken, refreshToken = refreshToken)
     }
 
     override fun insertCredential(monitorID: UUID, credential: ByteArray) {

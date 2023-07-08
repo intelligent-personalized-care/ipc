@@ -7,6 +7,7 @@ object Uris {
 
     const val USERS_LOGIN = "/users/login"
     const val USER_PHOTO = "/users/{userID}/photo"
+    const val REFRESH_TOKEN = "/users/refresh"
 
     const val CLIENT_REGISTER = "/users/clients"
     const val CLIENT_PROFILE = "/users/clients/{clientID}/profile"

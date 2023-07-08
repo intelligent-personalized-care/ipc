@@ -6,9 +6,9 @@ import java.util.UUID
 
 interface AdminRepository {
 
-    fun getUserByID(id: UUID): User?
+    fun getUserByIDAndSession(id: UUID, sessionID: UUID): User?
 
-    fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, tokenHash: String)
+    fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, sessionID: UUID)
 
     fun getUnverifiedMonitors(): List<MonitorInfo>
 

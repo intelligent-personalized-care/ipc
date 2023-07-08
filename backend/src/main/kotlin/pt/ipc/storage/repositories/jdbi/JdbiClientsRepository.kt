@@ -4,12 +4,9 @@ import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.Client
 import pt.ipc.domain.ClientOutput
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
-import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 class JdbiClientsRepository(
     private val handle: Handle
@@ -23,12 +20,6 @@ class JdbiClientsRepository(
             .single() == 1
     }
 
-    override fun getUserByID(id: UUID): User? =
-        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u where u.id = :id")
-            .bind("id", id)
-            .mapTo<User>()
-            .singleOrNull()
-
     override fun getClient(clientID: UUID): ClientOutput? =
         handle.createQuery(
             "select u.id, u.name, u.email, c.weight, c.height, c.physical_condition as physicalCondition, c.birth_date as birthDate " +
@@ -37,13 +28,6 @@ class JdbiClientsRepository(
             .bind("clientID", clientID)
             .mapTo<ClientOutput>()
             .singleOrNull()
-
-    override fun updateToken(userID: UUID, token: String) {
-        handle.createUpdate("update dbo.tokens set token_hash = :token where user_id = :userID")
-            .bind("token", token)
-            .bind("userID", userID)
-            .execute()
-    }
 
     override fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String?) {
         handle.createUpdate("insert into dbo.monitor_requests (monitor_id, client_id, request_id, request_text) values (:monitorID,:clientID,:requestID,:requestText)")
@@ -54,7 +38,7 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun registerClient(input: Client, token: String) {
+    override fun registerClient(input: Client, sessionID: UUID) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
             .bind("id", input.id)
             .bind("u_name", input.name)
@@ -72,28 +56,11 @@ class JdbiClientsRepository(
             .bind("birth_date", input.birthDate)
             .execute()
 
-        handle.createUpdate("insert into dbo.tokens (token_hash, user_id) values (:token_hash, :user_id)")
-            .bind("token_hash", token)
-            .bind("user_id", input.id)
+        handle.createUpdate("insert into dbo.session(user_id, session) values(:userID, :sessionID)")
+            .bind("userID", input.id)
+            .bind("sessionID", sessionID)
             .execute()
     }
-
-    override fun login(email: String, passwordHash: String): CredentialsOutput? =
-        handle.createQuery("select id,token_hash from dbo.users inner join dbo.tokens on users.id = tokens.user_id where email = :email  and password_hash = :passwordHash")
-            .bind("email", email)
-            .bind("passwordHash", passwordHash)
-            .mapTo<CredentialsOutput>()
-            .singleOrNull()
-
-    override fun getRoleByID(userID: UUID): Role =
-        handle.createQuery("select 'CLIENT' from dbo.clients where c_id = :userID")
-            .bind("userID", userID)
-            .mapTo<Role>()
-            .singleOrNull()
-            ?: handle.createQuery("select 'MONITOR' from dbo.monitors where m_id = :userID")
-            .bind("userID", userID)
-            .mapTo<Role>()
-            .singleOrNull() ?: Role.ADMIN
 
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")

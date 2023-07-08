@@ -2,9 +2,6 @@ package pt.ipc.storage.repositories
 
 import pt.ipc.domain.Client
 import pt.ipc.domain.ClientOutput
-import pt.ipc.domain.Role
-import pt.ipc.domain.User
-import pt.ipc.services.dtos.CredentialsOutput
 import java.time.LocalDate
 import java.util.*
 
@@ -12,17 +9,8 @@ interface ClientsRepository {
 
     fun existsEmail(email: String): Boolean
 
-    fun getUserByID(id: UUID): User?
-
     fun getClient(clientID: UUID): ClientOutput?
-
-    fun updateToken(userID: UUID, token: String)
-
-    fun registerClient(input: Client, token: String)
-
-    fun login(email: String, passwordHash: String): CredentialsOutput?
-
-    fun getRoleByID(userID: UUID): Role
+    fun registerClient(input: Client, sessionID: UUID)
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 

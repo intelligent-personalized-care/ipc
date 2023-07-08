@@ -32,6 +32,7 @@ dependencies {
 
     implementation("com.google.cloud.sql:postgres-socket-factory:1.2.2")
     implementation("org.postgresql:postgresql:42.2.27")
+
     // Spring dependencies
     implementation("org.springframework:spring-context:5.3.22")
     implementation("org.springframework.security:spring-security-core:5.7.7")
@@ -65,6 +66,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(kotlin("test"))
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 tasks.withType<KotlinCompile> {

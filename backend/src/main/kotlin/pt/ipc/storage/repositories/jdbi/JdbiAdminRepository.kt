@@ -11,13 +11,24 @@ class JdbiAdminRepository(
     private val handle: Handle
 ) : AdminRepository {
 
-    override fun getUserByID(id: UUID): User? =
-        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.admin a on u.id = a.id where u.id = :id")
+    override fun getUserByIDAndSession(id: UUID, sessionID: UUID): User? =
+        handle.createQuery(
+            "select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.admin a on u.id = a.id " +
+                "inner join dbo.session s on u.id = s.user_id " +
+                " where s.user_id = :id and s.session = :sessionID"
+        )
             .bind("id", id)
+            .bind("sessionID", sessionID)
             .mapTo<User>()
             .singleOrNull()
 
-    override fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, tokenHash: String) {
+    override fun createAdmin(
+        id: UUID,
+        email: String,
+        name: String,
+        passwordHash: String,
+        sessionID: UUID
+    ) {
         handle.createUpdate("insert into dbo.users(id, name, email, password_hash) values(:id, :name, :email, :passwordHash)")
             .bind("id", id)
             .bind("name", name)
@@ -27,9 +38,9 @@ class JdbiAdminRepository(
 
         handle.createUpdate("insert into dbo.admin(id) values(:id)").bind("id", id).execute()
 
-        handle.createUpdate("insert into dbo.tokens(token_hash, user_id) values(:tokenHash,:id)")
-            .bind("tokenHash", tokenHash)
-            .bind("id", id)
+        handle.createUpdate("insert into dbo.session(user_id, session) values(:userID, :sessionID)")
+            .bind("userID", id)
+            .bind("sessionID", sessionID)
             .execute()
     }
 

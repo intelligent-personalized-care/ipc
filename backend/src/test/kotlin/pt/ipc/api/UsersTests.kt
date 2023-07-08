@@ -198,7 +198,7 @@ class UsersTests {
         httpClient.post()
             .uri(uri)
             .bodyValue(registerInput)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${credentialsOutput.token}")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ${credentialsOutput.accessToken}")
             .exchange()
             .expectStatus().is4xxClientError
             .expectBody(Problem::class.java)

@@ -29,9 +29,9 @@ class AuthorizationHeaderProcessor(
 
         val token: String = parts[1]
 
-        val (id, role) = jwtUtils.getUserInfo(token = token)
+        val (id, role, sessionID) = jwtUtils.getUserInfo(token = token)
 
-        val user = serviceUtils.getUser(id = id, role = role) ?: throw UserNotExists
+        val user = serviceUtils.getUser(id = id, role = role, sessionID = sessionID) ?: throw UserNotExists
 
         return Pair(first = user, second = role)
     }

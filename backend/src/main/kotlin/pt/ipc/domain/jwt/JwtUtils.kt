@@ -13,7 +13,8 @@ import javax.crypto.spec.SecretKeySpec
 @Component
 class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
-    private val expirationDate = 8L
+    private val accessTokenExpirationDate = 1L
+    private val refreshTokenExpirationDate = 1L
 
     private val sessionID = "sessionID"
     private val userID = "userID"
@@ -26,33 +27,52 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
     private data class JwtPayload(val claims: Claims)
 
-    private fun createJwtPayload(id: UUID, role: Role): JwtPayload {
+    private fun createJwtPayload(id: UUID, role: Role, session: UUID): JwtPayload {
         val claims = Jwts.claims()
         claims[userID] = id
         claims[userRole] = role
-        claims[sessionID] = UUID.randomUUID()
+        claims[sessionID] = session
         return JwtPayload(claims = claims)
     }
 
-    fun createJWToken(id: UUID, role: Role): String {
-        val jwtPayload = createJwtPayload(id = id, role = role)
+    fun createAccessToken(userID: UUID, role: Role, sessionID: UUID): String {
+        val jwtPayload = createJwtPayload(id = userID, role = role, session = sessionID)
 
         return JWToken(
             token = Jwts.builder()
                 .setClaims(jwtPayload.claims)
                 .signWith(accessTokenKey)
-                .setExpiration(Date.from(Instant.now().plus(expirationDate, ChronoUnit.HOURS)))
+                .setExpiration(Date.from(Instant.now().plus(accessTokenExpirationDate, ChronoUnit.HOURS)))
                 .compact()
         ).token
     }
 
-    fun getUserInfo(token: String): Pair<UUID, Role> {
+    fun createRefreshToken(session: UUID): String {
+        val claims = Jwts.claims()
+        claims[sessionID] = session
+
+        return JWToken(
+            token = Jwts.builder()
+                .setClaims(claims)
+                .signWith(accessTokenKey)
+                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpirationDate, ChronoUnit.DAYS)))
+                .compact()
+        ).token
+    }
+
+    fun getUserInfo(token: String): Triple<UUID, Role, UUID> {
         val claims = getClaimsOfToken(token = token)
 
         val id = UUID.fromString(claims[userID].toString())
         val role = claims[userRole].toString().toRole()
+        val sessionID = UUID.fromString(claims[sessionID].toString())
 
-        return Pair(first = id, second = role)
+        return Triple(first = id, second = role, third = sessionID)
+    }
+
+    fun getSessionID(token: String): UUID {
+        val claims = getClaimsOfToken(token = token)
+        return UUID.fromString(claims[sessionID].toString())
     }
 
     private fun getClaimsOfToken(token: String): Claims {

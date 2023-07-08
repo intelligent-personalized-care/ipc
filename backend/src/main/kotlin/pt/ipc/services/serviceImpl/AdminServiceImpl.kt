@@ -21,21 +21,21 @@ class AdminServiceImpl(
     override fun createAdminAccount(registerInput: RegisterInput): CredentialsOutput {
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
-        val (token, id) = serviceUtils.createCredentials(role = Role.ADMIN)
+        val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.ADMIN)
 
         transactionManager.runBlock(
             block = {
                 it.adminRepository.createAdmin(
-                    id = id,
+                    id = userID,
                     email = registerInput.email,
                     name = registerInput.name,
                     passwordHash = encryptionUtils.encrypt(plainText = registerInput.password),
-                    tokenHash = encryptionUtils.encrypt(plainText = token)
+                    sessionID = sessionID
                 )
             }
         )
 
-        return CredentialsOutput(id = id, token = token)
+        return CredentialsOutput(id = userID, accessToken = accessToken, refreshToken = refreshToken)
     }
 
     override fun getUnverifiedMonitors(): List<MonitorInfo> =

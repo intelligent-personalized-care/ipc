@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS dbo.users(
     CONSTRAINT email_is_valid CHECK ( email ~ '^[A-Za-z0-9+_.-]+@(.+)$' )
 );
 
-CREATE TABLE IF NOT EXISTS dbo.tokens(
-    token_hash       text PRIMARY KEY,
-    user_id          UUID REFERENCES dbo.users(id)
+CREATE TABLE IF NOT EXISTS  dbo.session(
+    user_id UUID PRIMARY KEY REFERENCES dbo.users(id),
+    session UUID NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dbo.monitors(

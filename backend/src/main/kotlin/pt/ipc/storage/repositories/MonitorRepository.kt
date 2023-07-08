@@ -14,11 +14,11 @@ import java.util.UUID
 
 interface MonitorRepository {
 
-    fun registerMonitor(user: User, encryptedToken: String)
+    fun registerMonitor(user: User, sessionID: UUID)
 
     fun insertCredential(monitorID: UUID, dtSubmit: LocalDate)
 
-    fun getUserByID(id: UUID): User?
+    fun getUserByIDAndSession(id: UUID, sessionID: UUID): User?
 
     fun getMonitorProfile(monitorID: UUID): MonitorProfile?
 

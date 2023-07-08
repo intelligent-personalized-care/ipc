@@ -23,7 +23,7 @@ class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
 
-    override fun registerMonitor(user: User, encryptedToken: String) {
+    override fun registerMonitor(user: User, sessionID: UUID) {
         handle.createUpdate("insert into dbo.users values(:id,:u_name,:u_email,:password_hash)")
             .bind("id", user.id)
             .bind("u_name", user.name)
@@ -35,9 +35,9 @@ class JdbiMonitorsRepository(
             .bind("id", user.id)
             .execute()
 
-        handle.createUpdate("insert into dbo.tokens values(:token_hash,:user_id)")
-            .bind("token_hash", encryptedToken)
-            .bind("user_id", user.id)
+        handle.createUpdate("insert into dbo.session(user_id, session) values(:userID, :sessionID)")
+            .bind("userID", user.id)
+            .bind("sessionID", sessionID)
             .execute()
     }
 
@@ -48,9 +48,15 @@ class JdbiMonitorsRepository(
             .execute()
     }
 
-    override fun getUserByID(id: UUID): User? =
-        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.monitors m on u.id = m.m_id where u.id = :id")
+    override fun getUserByIDAndSession(id: UUID, sessionID: UUID): User? =
+        handle.createQuery(
+            "select u.id,u.name,u.email,u.password_hash from dbo.users u " +
+                "inner join dbo.monitors m on u.id = m.m_id " +
+                "inner join dbo.session s on u.id = s.user_id " +
+                " where s.user_id = :id and s.session = :sessionID "
+        )
             .bind("id", id)
+            .bind("sessionID", sessionID)
             .mapTo<User>()
             .singleOrNull()
 
@@ -265,9 +271,11 @@ class JdbiMonitorsRepository(
 
         return handle.createQuery(
             """
-                select de.id, de.ex_id, title, description, type, sets, reps,
+                select de.id,de.ex_id,dl.plan_id as planID, dl.id as dailyListID,title, description, type, sets, reps,
                     case when ev.dt_submit is null then 0 else 1 end as is_done
-                from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                from dbo.daily_exercises de
+                inner join dbo.daily_lists dl on de.daily_list_id = dl.id 
+                inner join dbo.exercises_info ei on ei.id = de.ex_id
                 left join dbo.exercises_video ev on de.id = ev.ex_id
                 where daily_list_id = :dailyListID
             """.trimIndent()

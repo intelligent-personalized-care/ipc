@@ -2,6 +2,7 @@ package pt.ipc.services.serviceImpl
 
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
+import pt.ipc.domain.Session
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.BadEmail
 import pt.ipc.domain.exceptions.MonitorNotVerified
@@ -20,21 +21,21 @@ class ServiceUtils(
         private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
     }
 
-    fun getUser(id: UUID, role: Role): User? =
+    fun getUser(id: UUID, role: Role, sessionID: UUID): User? =
         when (role) {
             Role.MONITOR -> transactionManager.runBlock(
                 block = {
-                    it.monitorRepository.getUserByID(id = id)
+                    it.monitorRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
                 }
             )
             Role.CLIENT -> transactionManager.runBlock(
                 block = {
-                    it.clientsRepository.getUserByID(id = id)
+                    it.usersRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
                 }
             )
             Role.ADMIN -> transactionManager.runBlock(
                 block = {
-                    it.adminRepository.getUserByID(id = id)
+                    it.adminRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
                 }
             )
         }
@@ -46,17 +47,24 @@ class ServiceUtils(
             }
         )
 
-    fun createCredentials(role: Role): Pair<String, UUID> {
-        val id = UUID.randomUUID()
+    fun createCredentials(role: Role): Session {
+        val userID = UUID.randomUUID()
 
-        val token = jwtUtils.createJWToken(id = id, role = role)
+        val sessionID = UUID.randomUUID()
 
-        return Pair(first = token, second = id)
+        val (accessToken, refreshToken) = createTokens(id = userID, role = role, sessionID = sessionID)
+
+        return Session(userID = userID, accessToken = accessToken, refreshToken = refreshToken, sessionID = sessionID)
     }
 
-    fun createToken(id: UUID, role: Role): String {
-        return jwtUtils.createJWToken(id = id, role = role)
+    fun createTokens(id: UUID, role: Role, sessionID: UUID): Pair<String, String> {
+        return Pair(
+            jwtUtils.createAccessToken(userID = id, role = role, sessionID = sessionID),
+            jwtUtils.createRefreshToken(session = sessionID)
+        )
     }
+
+    fun getSessionID(refreshToken: String): UUID = jwtUtils.getSessionID(token = refreshToken)
 
     fun isValidEmail(email: String) = email.matches(Regex(EMAIL_REGEX))
 

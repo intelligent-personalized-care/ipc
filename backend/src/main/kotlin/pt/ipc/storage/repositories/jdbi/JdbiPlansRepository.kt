@@ -2,8 +2,8 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.DailyListOutput
 import pt.ipc.domain.DailyExercise
+import pt.ipc.domain.DailyListOutput
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.PlanInfoOutput
@@ -70,12 +70,14 @@ class JdbiPlansRepository(
             val exercises: List<DailyExercise>? =
                 handle.createQuery(
                     """
-                    select de.id, de.ex_id, ei.title, ei.description, ei.type, de.sets, de.reps,
+                    select de.id, de.ex_id,dl.plan_id as planID, dl.id as dailyListID, ei.title, ei.description, ei.type, de.sets, de.reps,
                         case when count(ev.ex_id) != de.sets then 0 else 1 end as is_done
-                    from dbo.daily_exercises de inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    from dbo.daily_exercises de 
+                    inner join dbo.daily_lists dl on de.daily_list_id = dl.id
+                    inner join dbo.exercises_info ei on ei.id = de.ex_id
                     left join dbo.exercises_video ev on de.id = ev.ex_id
                     where daily_list_id = :dailyListID
-                    group by de.id, ei.title, ei.description, ei.type, de.sets, de.reps
+                    group by de.id, dl.plan_id, dl.id,ei.title, ei.description, ei.type, de.sets, de.reps
                     """.trimIndent()
                 )
                     .bind("dailyListID", dailyListID)

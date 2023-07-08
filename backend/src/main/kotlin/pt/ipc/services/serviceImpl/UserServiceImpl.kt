@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.LoginFailed
 import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.domain.jwt.PairOfTokens
 import pt.ipc.http.models.LoginOutput
 import pt.ipc.services.UserService
 import pt.ipc.storage.transaction.TransactionManager
@@ -26,17 +27,38 @@ class UserServiceImpl(
     override fun login(email: String, password: String): LoginOutput =
         transactionManager.runBlock(
             block = {
-                val credentialsOutput = it.clientsRepository.login(email = email, passwordHash = encryptionUtils.encrypt(plainText = password)) ?: throw LoginFailed
+                val userID = it.usersRepository.login(email = email, passwordHash = encryptionUtils.encrypt(plainText = password)) ?: throw LoginFailed
 
-                val user = it.clientsRepository.getUserByID(id = credentialsOutput.id) ?: throw UserNotExists
+                val user = it.usersRepository.getUserByID(userID = userID) ?: throw UserNotExists
 
-                val role = it.clientsRepository.getRoleByID(userID = user.id)
+                val role = it.usersRepository.getRoleByID(userID = user.id)
 
-                val newToken = serviceUtils.createToken(id = user.id, role = role)
+                val sessionID = UUID.randomUUID()
 
-                it.clientsRepository.updateToken(userID = user.id, encryptionUtils.encrypt(plainText = newToken))
+                val (accessToken, refreshToken) = serviceUtils.createTokens(id = user.id, role = role, sessionID = sessionID)
 
-                LoginOutput(id = user.id, token = newToken, name = user.name, role = role)
+                it.usersRepository.updateSession(userID = userID, sessionID = sessionID)
+
+                LoginOutput(id = user.id, accessToken = accessToken, refreshToken = refreshToken, name = user.name, role = role)
+            }
+        )
+
+    override fun refreshToken(refreshToken: String): PairOfTokens =
+        transactionManager.runBlock(
+            block = {
+                val sessionID = serviceUtils.getSessionID(refreshToken = refreshToken)
+
+                val userID = it.usersRepository.getUserBySession(sessionID = sessionID) ?: throw UserNotExists
+
+                val role = it.usersRepository.getRoleByID(userID = userID)
+
+                val newSessionID = UUID.randomUUID()
+
+                it.usersRepository.updateSession(userID = userID, sessionID = newSessionID)
+
+                val (newAccessToken, newRefreshToken) = serviceUtils.createTokens(id = userID, role = role, sessionID = newSessionID)
+
+                PairOfTokens(accessToken = newAccessToken, refreshToken = newRefreshToken)
             }
         )
 }

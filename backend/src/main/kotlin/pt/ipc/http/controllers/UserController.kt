@@ -1,6 +1,7 @@
 package pt.ipc.http.controllers
 
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import pt.ipc.domain.User
+import pt.ipc.domain.jwt.PairOfTokens
 import pt.ipc.http.models.LoginInput
 import pt.ipc.http.models.LoginOutput
+import pt.ipc.http.models.RefreshTokenInput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.SseEmitterRepository
@@ -28,6 +31,13 @@ class UserController(private val userService: UserService, private val sseEmitte
     fun login(@RequestBody loginInput: LoginInput): ResponseEntity<LoginOutput> {
         val loginOutput = userService.login(email = loginInput.email, password = loginInput.password)
         return ResponseEntity.ok(loginOutput)
+    }
+
+    @PostMapping(Uris.REFRESH_TOKEN)
+    fun refreshToken(@RequestBody refreshToken: RefreshTokenInput): ResponseEntity<PairOfTokens> {
+        val pairOfTokens = userService.refreshToken(refreshToken = refreshToken.refreshToken)
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(pairOfTokens)
     }
 
     @Authentication

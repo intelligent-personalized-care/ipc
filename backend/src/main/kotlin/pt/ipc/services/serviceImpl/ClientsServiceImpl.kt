@@ -35,12 +35,10 @@ class ClientsServiceImpl(
     override fun registerClient(input: RegisterClientInput): CredentialsOutput {
         serviceUtils.checkDetails(email = input.email, password = input.password)
 
-        val (token, id) = serviceUtils.createCredentials(role = Role.CLIENT)
-
-        val encryptedToken = encryptionUtils.encrypt(token)
+        val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.CLIENT)
 
         val encryptedClient = Client(
-            id = id,
+            id = userID,
             name = input.name,
             email = input.email,
             password = encryptionUtils.encrypt(input.password),
@@ -54,12 +52,12 @@ class ClientsServiceImpl(
             block = {
                 it.clientsRepository.registerClient(
                     input = encryptedClient,
-                    token = encryptedToken
+                    sessionID = sessionID
                 )
             }
         )
 
-        return CredentialsOutput(id = id, token = token)
+        return CredentialsOutput(id = userID, accessToken = accessToken, refreshToken = refreshToken)
     }
 
     override fun addProfilePicture(clientID: UUID, profilePicture: ByteArray) {

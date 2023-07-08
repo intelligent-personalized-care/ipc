@@ -7,6 +7,7 @@ import pt.ipc.storage.repositories.ClientsRepository
 import pt.ipc.storage.repositories.ExerciseRepository
 import pt.ipc.storage.repositories.MonitorRepository
 import pt.ipc.storage.repositories.PlansRepository
+import pt.ipc.storage.repositories.UsersRepository
 
 @Component
 interface Transaction {
@@ -22,4 +23,6 @@ interface Transaction {
     val cloudStorage: CloudStorageUtils
 
     val adminRepository: AdminRepository
+
+    val usersRepository: UsersRepository
 }
