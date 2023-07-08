@@ -285,12 +285,12 @@ class JdbiMonitorsRepository(
             .toList()
 
         return ClientDailyExercises(
-                id = clientData.id,
-                name = clientData.name,
-                planId = planInfo.id,
-                dailyListId = dailyListID,
-                exercises = exercises
-            )
+            id = clientData.id,
+            name = clientData.name,
+            planId = planInfo.id,
+            dailyListId = dailyListID,
+            exercises = exercises
+        )
     }
 
     private data class PlanInfo(@ColumnName("plan_id") val id: Int, @ColumnName("dt_start") val dtStart: LocalDate)

@@ -57,7 +57,7 @@ class JdbiUsersRepository(
             .mapTo<Role>()
             .singleOrNull()
             ?: handle.createQuery("select 'MONITOR' from dbo.monitors where m_id = :userID")
-            .bind("userID", userID)
-            .mapTo<Role>()
-            .singleOrNull() ?: Role.ADMIN
+                .bind("userID", userID)
+                .mapTo<Role>()
+                .singleOrNull() ?: Role.ADMIN
 }

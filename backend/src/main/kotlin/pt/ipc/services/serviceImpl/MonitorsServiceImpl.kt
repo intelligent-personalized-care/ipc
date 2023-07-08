@@ -39,7 +39,6 @@ class MonitorsServiceImpl(
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
         val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.MONITOR)
-        
 
         val user = User(
             id = userID,
@@ -229,7 +228,6 @@ class MonitorsServiceImpl(
                 it.plansRepository.getPlanOfClient(clientID = clientID, planID = planID) ?: throw PlanNotFound
             }
         )
-
 
     override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises> =
         transactionManager.runBlock(
