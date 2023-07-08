@@ -14,6 +14,8 @@ interface PlansRepository {
 
     fun getPlan(planID: Int): PlanOutput?
 
+    fun getPlanOfMonitor(planID: Int) : PlanOutput?
+
     fun getPlans(monitorID: UUID): List<PlanInfoOutput>
 
     fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput?

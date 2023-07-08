@@ -70,6 +70,57 @@ class JdbiPlansRepository(
             val exercises: List<DailyExercise>? =
                 handle.createQuery(
                     """
+                    select de.id, de.ex_id,dl.plan_id as planID, dl.id as dailyListID, ei.title, ei.description, ei.type, de.sets, de.reps,
+                        case when count(ev.ex_id) != de.sets then 0 else 1 end as is_done
+                    from dbo.daily_exercises de 
+                    inner join dbo.daily_lists dl on de.daily_list_id = dl.id
+                    inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    left join dbo.exercises_video ev on de.id = ev.ex_id
+                    where daily_list_id = :dailyListID
+                    group by de.id, dl.plan_id, dl.id,ei.title, ei.description, ei.type, de.sets, de.reps
+                    """.trimIndent()
+                )
+                    .bind("dailyListID", dailyListID)
+                    .mapTo<DailyExercise>()
+                    .toList()
+                    .ifEmpty { null }
+
+            dailyLists.add(
+                index,
+                if (exercises != null) {
+                    DailyListOutput(dailyListID, exercises)
+                } else {
+                    null
+                }
+            )
+        }
+
+        return PlanOutput(
+            id = planID,
+            title = title,
+            dailyLists = dailyLists
+        )
+    }
+
+    override fun getPlanOfMonitor(planID: Int): PlanOutput? {
+        val title = handle.createQuery("select title from dbo.plans where id = :planID")
+            .bind("planID", planID)
+            .mapTo<String>()
+            .singleOrNull() ?: return null
+
+        val dailyListsID: List<Int> =
+            handle.createQuery("select id from dbo.daily_lists where plan_id = :planID")
+                .bind("planID", planID)
+                .mapTo<Int>()
+                .toList()
+
+        val dailyLists = mutableListOf<DailyListOutput?>()
+
+        dailyListsID.forEachIndexed { index, dailyListID ->
+
+            val exercises: List<DailyExercise>? =
+                handle.createQuery(
+                    """
                     select de.id, de.ex_id,dl.plan_id as planID, dl.id as dailyListID, ei.title, ei.description, ei.type, de.sets, de.reps
                     from dbo.daily_exercises de 
                     inner join dbo.daily_lists dl on de.daily_list_id = dl.id

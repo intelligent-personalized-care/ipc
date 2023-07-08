@@ -39,9 +39,7 @@ class MonitorsServiceImpl(
         serviceUtils.checkDetails(email = registerInput.email, password = registerInput.password)
 
         val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.MONITOR)
-
-        val encryptedAccessToken = encryptionUtils.encrypt(accessToken)
-        val encryptedRefreshToken = encryptionUtils.encrypt(refreshToken)
+        
 
         val user = User(
             id = userID,
@@ -169,7 +167,7 @@ class MonitorsServiceImpl(
         return transactionManager.runBlock(
             block = {
                 if (!it.plansRepository.checkIfPlanIsOfMonitor(monitorID = monitorID, planID = planID)) throw NotPlanOfMonitor
-                it.plansRepository.getPlan(planID) ?: throw PlanNotFound
+                it.plansRepository.getPlanOfMonitor(planID) ?: throw PlanNotFound
             }
         )
     }
