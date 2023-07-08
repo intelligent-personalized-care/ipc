@@ -36,8 +36,7 @@ class UserServiceImpl(
 
                 it.clientsRepository.updateToken(userID = user.id, encryptionUtils.encrypt(plainText = newToken))
 
-                LoginOutput(id = user.id, token = newToken, name = user.name, role = role  )
-
+                LoginOutput(id = user.id, token = newToken, name = user.name, role = role)
             }
         )
 }

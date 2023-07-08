@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity
 
 data class Problem(
     val title: String,
-    val status: Int,
+    val status: Int
 ) {
 
     fun toResponseEntity() = ResponseEntity

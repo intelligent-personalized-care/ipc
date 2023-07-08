@@ -54,7 +54,7 @@ class ServiceUtils(
         return Pair(first = token, second = id)
     }
 
-    fun createToken(id : UUID, role : Role) : String{
+    fun createToken(id: UUID, role: Role): String {
         return jwtUtils.createJWToken(id = id, role = role)
     }
 

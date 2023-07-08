@@ -18,7 +18,6 @@ import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.UserService
-import pt.ipc.services.dtos.CredentialsOutput
 import java.util.UUID
 
 @RestController

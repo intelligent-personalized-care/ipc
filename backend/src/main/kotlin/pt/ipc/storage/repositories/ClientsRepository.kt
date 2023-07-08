@@ -10,20 +10,19 @@ import java.util.*
 
 interface ClientsRepository {
 
-
     fun existsEmail(email: String): Boolean
 
     fun getUserByID(id: UUID): User?
 
     fun getClient(clientID: UUID): ClientOutput?
 
-    fun updateToken(userID : UUID, token : String)
+    fun updateToken(userID: UUID, token: String)
 
     fun registerClient(input: Client, token: String)
 
     fun login(email: String, passwordHash: String): CredentialsOutput?
 
-    fun getRoleByID(userID : UUID) : Role
+    fun getRoleByID(userID: UUID): Role
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 

@@ -205,5 +205,4 @@ class ExceptionHandler {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value()
         ).toResponseEntity()
             .also { ex.printStackTrace() }
-
 }

@@ -12,7 +12,6 @@ import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
 import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
 import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
-import pt.ipc.domain.exceptions.LoginFailed
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.exceptions.UserNotExists
@@ -77,7 +76,6 @@ class ClientsServiceImpl(
                 it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
             }
         )
-
 
     override fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable> =
         transactionManager.runBlock(

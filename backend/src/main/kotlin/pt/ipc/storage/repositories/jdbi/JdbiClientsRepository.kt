@@ -24,7 +24,7 @@ class JdbiClientsRepository(
     }
 
     override fun getUserByID(id: UUID): User? =
-        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u inner join dbo.clients c on u.id = c.c_id where c.c_id = :id")
+        handle.createQuery("select u.id,u.name,u.email,u.password_hash from dbo.users u where u.id = :id")
             .bind("id", id)
             .mapTo<User>()
             .singleOrNull()
@@ -38,10 +38,10 @@ class JdbiClientsRepository(
             .mapTo<ClientOutput>()
             .singleOrNull()
 
-    override fun updateToken(userID: UUID, token : String) {
+    override fun updateToken(userID: UUID, token: String) {
         handle.createUpdate("update dbo.tokens set token_hash = :token where user_id = :userID")
-            .bind("token",token)
-            .bind("userID",userID)
+            .bind("token", token)
+            .bind("userID", userID)
             .execute()
     }
 
@@ -87,14 +87,13 @@ class JdbiClientsRepository(
 
     override fun getRoleByID(userID: UUID): Role =
         handle.createQuery("select 'CLIENT' from dbo.clients where c_id = :userID")
-            .bind("userID",userID)
+            .bind("userID", userID)
             .mapTo<Role>()
-            .singleOrNull() ?:
-        handle.createQuery("select 'MONITOR' from dbo.monitors where m_id = :userID")
-            .bind("userID",userID)
+            .singleOrNull()
+            ?: handle.createQuery("select 'MONITOR' from dbo.monitors where m_id = :userID")
+            .bind("userID", userID)
             .mapTo<Role>()
             .singleOrNull() ?: Role.ADMIN
-
 
     override fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean =
         handle.createQuery("select count(*) from dbo.monitor_rating where client_id = :clientID and monitor_id = :monitorID ")

@@ -7,6 +7,6 @@ import java.util.UUID
 data class LoginOutput(
     val id: UUID,
     @ColumnName("token_hash") val token: String,
-    val name : String,
-    val role : Role
+    val name: String,
+    val role: Role
 )
