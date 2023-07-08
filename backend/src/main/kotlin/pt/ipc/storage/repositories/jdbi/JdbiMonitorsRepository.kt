@@ -5,7 +5,7 @@ import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.mapper.reflect.ColumnName
 import pt.ipc.domain.ClientExercises
 import pt.ipc.domain.ClientOfMonitor
-import pt.ipc.domain.ExerciseTotalInfo
+import pt.ipc.domain.DailyExercise
 import pt.ipc.domain.MonitorDetails
 import pt.ipc.domain.PlanOfClient
 import pt.ipc.domain.User
@@ -242,13 +242,13 @@ class JdbiMonitorsRepository(
             .ifEmpty { return emptyList() }
 
         return clients.map { client ->
-            ClientExercises(id = client.id, name = client.name, exercises = getExerciseTotalInfoOfClient(clientID = client.id, date = date))
-        }
+            ClientExercises(id = client.id, name = client.name, exercises = getDailyExerciseOfClient(clientID = client.id, date = date))
+        }.filter { it.exercises.isNotEmpty() }
     }
 
     private data class ClientData(val id: UUID, val name: String)
 
-    private fun getExerciseTotalInfoOfClient(clientID: UUID, date: LocalDate): List<ExerciseTotalInfo> {
+    private fun getDailyExerciseOfClient(clientID: UUID, date: LocalDate): List<DailyExercise> {
         val planInfo = handle.createQuery("select cp.plan_id,cp.dt_start from dbo.client_plans cp where client_id = :clientID and :date between cp.dt_start and cp.dt_end")
             .bind("clientID", clientID)
             .bind("date", date)
@@ -273,7 +273,7 @@ class JdbiMonitorsRepository(
             """.trimIndent()
         )
             .bind("dailyListID", dailyListID)
-            .mapTo<ExerciseTotalInfo>()
+            .mapTo<DailyExercise>()
             .toList()
     }
 

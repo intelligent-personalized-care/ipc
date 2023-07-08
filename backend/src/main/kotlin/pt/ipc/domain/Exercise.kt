@@ -10,7 +10,7 @@ data class Exercise(
     val reps: Int
 )
 
-data class ExerciseTotalInfo(
+data class DailyExercise(
     val id: Int,
     @ColumnName("ex_id")
     val exerciseInfoID: UUID,

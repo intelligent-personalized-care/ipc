@@ -3,7 +3,7 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import pt.ipc.domain.DailyListOutput
-import pt.ipc.domain.ExerciseTotalInfo
+import pt.ipc.domain.DailyExercise
 import pt.ipc.domain.PlanInput
 import pt.ipc.domain.PlanOutput
 import pt.ipc.http.models.PlanInfoOutput
@@ -67,7 +67,7 @@ class JdbiPlansRepository(
 
         dailyListsID.forEachIndexed { index, dailyListID ->
 
-            val exercises: List<ExerciseTotalInfo>? =
+            val exercises: List<DailyExercise>? =
                 handle.createQuery(
                     """
                     select de.id, de.ex_id, ei.title, ei.description, ei.type, de.sets, de.reps,
@@ -79,7 +79,7 @@ class JdbiPlansRepository(
                     """.trimIndent()
                 )
                     .bind("dailyListID", dailyListID)
-                    .mapTo<ExerciseTotalInfo>()
+                    .mapTo<DailyExercise>()
                     .toList()
                     .ifEmpty { null }
 
