@@ -3,7 +3,7 @@ package pt.ipc.http.pipeline.authentication
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.UserNotExists
+import pt.ipc.domain.exceptions.Unauthenticated
 import pt.ipc.domain.jwt.JwtUtils
 import pt.ipc.services.serviceImpl.ServiceUtils
 import java.util.UUID
@@ -31,7 +31,7 @@ class AuthorizationHeaderProcessor(
 
         val (id, role, sessionID) = jwtUtils.getUserInfo(token = token)
 
-        val user = serviceUtils.getUser(id = id, role = role, sessionID = sessionID) ?: throw UserNotExists
+        val user = serviceUtils.getUser(id = id, role = role, sessionID = sessionID) ?: throw Unauthenticated
 
         return Pair(first = user, second = role)
     }

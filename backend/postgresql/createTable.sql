@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS dbo.plans(
 );
 
 CREATE TABLE IF NOT EXISTS dbo.client_plans(
-    plan_id   INT NOT NULL REFERENCES dbo.plans (id),
-    client_id UUID NOT NULL REFERENCES dbo.clients (c_id),
-    dt_start  DATE NOT NULL,
-    dt_end  DATE NOT NULL,
+    plan_id     INT NOT NULL REFERENCES dbo.plans (id),
+    client_id   UUID NOT NULL REFERENCES dbo.clients (c_id),
+    dt_start    DATE NOT NULL,
+    dt_end      DATE NOT NULL,
 
     PRIMARY KEY (plan_id, client_id,dt_start,dt_end),
 
@@ -135,6 +135,6 @@ CREATE TABLE IF NOT EXISTS dbo.exercises_video(
 );
 
 CREATE TABLE IF NOT EXISTS dbo.admin(
-    id                  UUID references dbo.users(id)
+    id  UUID references dbo.users(id)
 );
 

@@ -108,7 +108,8 @@ class JdbiMonitorsRepository(
             "select p.id,p.title,cp.dt_start as startDate,cp.dt_end as endDate from dbo.clients c " +
                 "inner join dbo.client_plans cp on c.c_id = cp.client_id " +
                 "inner join dbo.plans p on p.id = cp.plan_id " +
-                "where cp.client_id = :clientID "
+                "where cp.client_id = :clientID " +
+                "order by cp.dt_start"
         )
             .bind("clientID", clientID)
             .mapTo<PlanOfClient>()
