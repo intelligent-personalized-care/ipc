@@ -30,6 +30,8 @@ import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import kotlin.math.abs
 import kotlin.math.atan2
 
+private const val SECONDS_PER_MINUTE = 60
+
 /** Draw the detected pose in preview.  */
 class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
@@ -43,7 +45,6 @@ class PoseGraphic internal constructor(
   private val whitePaint: Paint
   private val tipPaint: Paint
   private var toDraw = false
-  private val defaultRestTime = 30
   private val textSizeCoordinateX = 1.5f
   private val textSizeCoordinateY = 6
   override fun draw(canvas: Canvas) {
@@ -414,22 +415,24 @@ class PoseGraphic internal constructor(
     drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
     drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}/${exercise.exeSets}",null,1)
 
-    if(viewModel.restTime.value in 1 until defaultRestTime) drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
+    if (viewModel.isResting()) {
+      drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
+      drawText(canvas, "Time to REST!",null, 4)
+    }
 
-    if(viewModel.restTime.value == 0 && (viewModel.nrSet.value - 1) < exercise.exeSets)
+    if(viewModel.isRecording()) {
+      drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
       drawText(canvas, "GO! Do the next set",null, 4)
-    else
-      if(viewModel.restTime.value in 1 until defaultRestTime) drawText(canvas, "Time to REST!",null, 4)
+    }
 
-    if(viewModel.recordTime.value != 0)  drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
   }
 
   /**
    * Formats the parameter received into MM:SS format
    * */
   private fun timeFormat(totalSecs: Int) : String{
-    val minutes = (totalSecs % 3600) / 60;
-    val seconds = totalSecs % 60;
+    val minutes = (totalSecs % (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)) / SECONDS_PER_MINUTE;
+    val seconds = totalSecs % SECONDS_PER_MINUTE;
 
     return String.format("%02d:%02d", minutes, seconds);
   }

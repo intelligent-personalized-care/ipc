@@ -79,8 +79,6 @@ class CameraXLivePreviewActivity :
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
 
-    private val defaultRestTime = 30
-
     private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
@@ -418,7 +416,7 @@ class CameraXLivePreviewActivity :
                 recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
 
             } else {
-                if(viewModel.restTime.value == defaultRestTime || viewModel.restTime.value == 0 ) {
+                if (!viewModel.isResting()) {
                     startRecording(onSubmission)
                     //increments clock and if the recording time surpasses the limit stops the video
                     viewModel.incrementRecordTime{
@@ -502,7 +500,6 @@ class CameraXLivePreviewActivity :
             )
 
         const val EXERCISE = "EXERCISE_TO_DO"
-
         fun navigate(context: Context, exercise: Exercise) {
             with(context) {
                 val intent = Intent(this, CameraXLivePreviewActivity::class.java)

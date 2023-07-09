@@ -83,7 +83,13 @@ class ExercisesViewModel(
     /**
      * After a rest period is completed resets the timer
      */
-    fun resetRestTime() { _restTime.value = defaultRestTime}
+    fun resetRestTime() { _restTime.value = defaultRestTime }
+
+    /**
+     * Returns true if client is resting
+     */
+    fun isResting() =
+        restTime.value in 1 until defaultRestTime
 
     /**
      * Increment the record time
@@ -107,6 +113,12 @@ class ExercisesViewModel(
         _stopRecordTime.value = true
         _recordTime.value = 0
     }
+
+    /**
+     * Returns true if client is recording
+     */
+    fun isRecording() =
+        recordTime.value != 0
 
 
     /**
