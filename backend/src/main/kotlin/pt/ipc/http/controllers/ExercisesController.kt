@@ -1,5 +1,6 @@
 package pt.ipc.http.controllers
 
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
+import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.User
 import pt.ipc.http.models.ListOfExercisesInfo
 import pt.ipc.http.models.VideoFeedBack
@@ -17,6 +19,7 @@ import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.ExercisesService
+import java.time.LocalDate
 import java.util.UUID
 
 @RestController
@@ -100,6 +103,21 @@ class ExercisesController(private val exercisesService: ExercisesService) {
         )
 
         return ResponseEntity.ok(videoFeedBack)
+    }
+
+    @Authentication
+    @GetMapping(Uris.PLAN_CURRENT)
+    fun getPlanOfClientContainingDate(
+        @PathVariable clientID: UUID,
+        @RequestParam(required = false)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        date: LocalDate?,
+        user: User
+    ): ResponseEntity<PlanOutput> {
+        val planOutput: PlanOutput =
+            exercisesService.getPlanOfClientContainingDate(userID = user.id, clientID = clientID, date = date ?: LocalDate.now())
+
+        return ResponseEntity.ok(planOutput)
     }
 
     companion object {

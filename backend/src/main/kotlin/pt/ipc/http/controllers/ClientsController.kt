@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.RatingInput
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.ForbiddenRequest
@@ -108,19 +107,6 @@ class ClientsController(private val clientsService: ClientsService, private val 
         val monitorOutput = clientsService.getMonitorOfClient(clientID = clientID)
 
         return ResponseEntity.status(HttpStatus.OK).body(monitorOutput)
-    }
-
-    @Authentication
-    @GetMapping(Uris.PLAN_CURRENT)
-    fun getPlanOfClientContainingDate(
-        @PathVariable clientID: UUID,
-        @RequestParam(required = false)
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        date: LocalDate?
-    ): ResponseEntity<PlanOutput> {
-        val planOutput: PlanOutput = clientsService.getPlanOfClientContainingDate(clientID = clientID, date = date ?: LocalDate.now())
-
-        return ResponseEntity.ok(planOutput)
     }
 
     @Authentication

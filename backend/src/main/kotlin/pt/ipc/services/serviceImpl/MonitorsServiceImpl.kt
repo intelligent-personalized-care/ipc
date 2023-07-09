@@ -222,13 +222,6 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun getPlanOfClient(clientID: UUID, planID: Int): PlanOutput =
-        transactionManager.runBlock(
-            block = {
-                it.plansRepository.getPlanOfClient(clientID = clientID, planID = planID) ?: throw PlanNotFound
-            }
-        )
-
     override fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises> =
         transactionManager.runBlock(
             block = {

@@ -3,12 +3,15 @@ package pt.ipc.services.serviceImpl
 import org.springframework.stereotype.Service
 import pt.ipc.domain.ExerciseInfo
 import pt.ipc.domain.ExerciseType
+import pt.ipc.domain.PlanOutput
+import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientNotPostedVideo
 import pt.ipc.domain.exceptions.ExerciseNotExists
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.models.VideoFeedBack
 import pt.ipc.services.ExercisesService
 import pt.ipc.storage.transaction.TransactionManager
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
@@ -91,4 +94,15 @@ class ExercisesServiceImpl(
             }
         )
     }
+
+    override fun getPlanOfClientContainingDate(userID: UUID, clientID: UUID, date: LocalDate): PlanOutput =
+        transactionManager.runBlock(
+            block = {
+                if (userID != clientID) {
+                    if (!it.monitorRepository.isMonitorOfClient(monitorID = userID, clientID = clientID)) throw ForbiddenRequest
+                }
+
+                it.plansRepository.getPlanOfClientContainingDate(clientID = clientID, date = date) ?: throw ClientDontHavePlan
+            }
+        )
 }

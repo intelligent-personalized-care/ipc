@@ -4,12 +4,10 @@ import org.springframework.stereotype.Service
 import pt.ipc.domain.Client
 import pt.ipc.domain.ClientOutput
 import pt.ipc.domain.Exercise
-import pt.ipc.domain.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
 import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
-import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientDontHaveThisExercise
 import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
 import pt.ipc.domain.exceptions.MonitorNotFound
@@ -109,13 +107,6 @@ class ClientsServiceImpl(
             }
         )
     }
-
-    override fun getPlanOfClientContainingDate(clientID: UUID, date: LocalDate): PlanOutput =
-        transactionManager.runBlock(
-            block = {
-                it.plansRepository.getPlanOfClientContainingDate(clientID = clientID, date = date) ?: throw ClientDontHavePlan
-            }
-        )
 
     override fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip: Int, limit: Int): List<Exercise> {
         return transactionManager.runBlock(

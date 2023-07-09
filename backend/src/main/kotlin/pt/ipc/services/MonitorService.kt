@@ -46,7 +46,5 @@ interface MonitorService {
 
     fun giveFeedbackOfExercise(monitorID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int, feedback: String, clientID: UUID)
 
-    fun getPlanOfClient(clientID: UUID, planID: Int): PlanOutput
-
     fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises>
 }
