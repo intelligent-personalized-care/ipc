@@ -30,7 +30,7 @@ enum class Role {
         }
 }
 
-fun String.toRole(): Role =
+fun Any?.toRole(): Role =
     when (this) {
         "CLIENT" -> Role.CLIENT
         "MONITOR" -> Role.MONITOR
