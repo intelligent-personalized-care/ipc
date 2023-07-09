@@ -12,6 +12,8 @@ import pt.ipc_app.service.models.ConnectionRequestInput
 import pt.ipc_app.service.models.exercises.ExercisesOfClients
 import pt.ipc_app.service.models.login.LoginInput
 import pt.ipc_app.service.models.login.LoginOutput
+import pt.ipc_app.service.models.refresh.RefreshTokenInput
+import pt.ipc_app.service.models.refresh.RefreshTokenOutput
 import pt.ipc_app.service.models.register.RegisterClientInput
 import pt.ipc_app.service.models.register.RegisterMonitorInput
 import pt.ipc_app.service.models.register.RegisterOutput
@@ -107,6 +109,20 @@ class UsersService(
             )
         )
 
+    /**
+     * Updates the tokens of user.
+     *
+     * @return the API result of the register request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun refreshTokens(
+        refreshToken: String
+    ): APIResult<RefreshTokenOutput> =
+        post(
+            uri = "/users/refresh",
+            body = RefreshTokenInput(refreshToken)
+        )
 
     /**
      * Gets the client profile.

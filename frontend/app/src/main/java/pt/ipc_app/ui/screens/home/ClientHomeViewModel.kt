@@ -43,7 +43,7 @@ class ClientHomeViewModel(
                 usersService.getMonitorOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
-                _monitor.value = null
+                _monitor.value = it
             }
         )
     }

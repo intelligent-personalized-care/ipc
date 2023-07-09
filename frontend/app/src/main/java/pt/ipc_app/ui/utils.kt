@@ -103,16 +103,3 @@ fun ComponentActivity.setAppContentMonitor(
         )
     }
 }
-
-fun Context.createNotification() {
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(
-            "download_channel",
-            "File download",
-            NotificationManager.IMPORTANCE_HIGH
-        )
-
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-    }
-}

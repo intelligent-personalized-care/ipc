@@ -1,11 +1,13 @@
 package pt.ipc_app
 
 import android.app.Application
+import androidx.work.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.IPCService
 import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.ui.workers.RefreshTokensPeriodicWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeUnit
  * @property services the service used to handle the ipc application
  */
 interface DependenciesContainer {
+    val okHttp: OkHttpClient
     val jsonEncoder: Gson
     val sessionManager: SessionManagerSharedPrefs
     val services: IPCService
@@ -31,15 +34,49 @@ const val TAG = "IntelligentPersonalizedCare"
  */
 class IPCApplication : DependenciesContainer, Application() {
 
-    override val jsonEncoder: Gson = GsonBuilder().create()
+    override val okHttp: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(300, TimeUnit.SECONDS)
+            .build()
+    }
 
-    override val sessionManager = SessionManagerSharedPrefs(this)
+    override val jsonEncoder: Gson by lazy {
+        GsonBuilder()
+            .create()
+    }
+
+    override val sessionManager: SessionManagerSharedPrefs by lazy {
+        SessionManagerSharedPrefs(this)
+    }
 
     override val services = IPCService(
         apiEndpoint = API_ENDPOINT,
-        httpClient = OkHttpClient.Builder().connectTimeout(300, TimeUnit.SECONDS).build(),
+        httpClient = okHttp,
         jsonEncoder = jsonEncoder
     )
+
+    private val workerConstraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (sessionManager.isLoggedIn()) {
+            val periodicWorkRequest =
+                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.MINUTES)
+                .setConstraints(workerConstraints)
+                .build()
+
+            WorkManager.getInstance(applicationContext)
+                .enqueueUniquePeriodicWork(
+                    "LoginPeriodicWorker",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    periodicWorkRequest
+                )
+        }
+
+    }
 
     companion object {
         private const val API_ENDPOINT = "https://8f5c-2a01-11-8120-4ce0-d137-9c70-f3b1-2d72.ngrok-free.app"

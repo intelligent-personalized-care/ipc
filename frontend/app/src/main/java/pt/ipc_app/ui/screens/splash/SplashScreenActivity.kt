@@ -1,7 +1,6 @@
 package pt.ipc_app.ui.screens.splash
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import kotlinx.coroutines.*
@@ -33,21 +32,30 @@ class SplashScreenActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-        /*
+/*
         repo.setSession(
-            id = "54729911-225f-41dc-a6de-a230bf6e0c07",
+            id = "78d82d8d-36a5-4f15-bc71-b846887555fe",
             name = "Tiago",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI1NDcyOTkxMS0yMjVmLTQxZGMtYTZkZS1hMjMwYmY2ZTBjMDciLCJyb2xlIjoiTU9OSVRPUiJ9.pX37fZ0lF1EINdtu-4719NCVdNJxGdNY3076FdTIPDtGm1Orz3cdgVgUBHsSYnriicqc5ngeOE5C2OcNV2Dbmw",
+            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI3OGQ4MmQ4ZC0zNmE1LTRmMTUtYmM3MS1iODQ2ODg3NTU1ZmUiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImYxMTZlYTUzLWE4ZDEtNDE3OS05Nzg0LWM1MzM3MDVmNzNhMSIsImV4cCI6MTY4ODk2NTIwNn0.W_Vt7RFqddS_to4a_kpDmV0j5oOJ2KS5AQrx-BFfANf1YbNfuxjHg8LbrpqImLi2S2jU6VJDL5F7IFwxG78LSg",
+            refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMTE2ZWE1My1hOGQxLTQxNzktOTc4NC1jNTMzNzA1ZjczYTEiLCJleHAiOjE2ODg5NjUyMDZ9.abZ4Jkiw2czDsW0GmF2uT_V6o-hNTGqDfXh1lzayS7FyuPoZ5ELQtQH-MCJPIQ0mptr-DgBURb69deUlCGV88Q",
             role = Role.MONITOR
         )
-         */
+
+ */
+
+/*
         repo.setSession(
             id = "a26a52cb-6d7d-4957-91b3-b78e941dd384",
             name = "Tiago",
-            token = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhMjZhNTJjYi02ZDdkLTQ5NTctOTFiMy1iNzhlOTQxZGQzODQiLCJyb2xlIjoiQ0xJRU5UIn0.qlZwLDuM6t_TrYwCy0YXkx8BmLeA66YeEwqESeZoxu0jkkDfTMUcEQoMOI2z8tmlVcMEAiAJwhUEffsfZypHIg",
+            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhMjZhNTJjYi02ZDdkLTQ5NTctOTFiMy1iNzhlOTQxZGQzODQiLCJyb2xlIjoiQ0xJRU5UIiwic2Vzc2lvbklEIjoiZmQ1MTdjODEtYzkzOC00ZjY3LTg4NGYtZTdkNzc1OTkxYTM4IiwiZXhwIjoxNjg4OTgwMjY5fQ.y-H-sSfZ_HhuQVUVAUZDoRRAu5ajIQL8SAsiRkMSprTW1eyB2iNKxo3aO6d1mBmmh4jp34S5i4K8rNh0kBIpDw",
+            refreshToken = "",
             role = Role.CLIENT
         )
+
+ */
+        //repo.clearSession()
         CoroutineScope(Dispatchers.Main).launch {
+            //viewModel.subscribeToServerSendEvents()
             if (repo.isLoggedIn()) {
                 if (repo.userLoggedIn.role.isClient()) {
                     viewModel.getMonitorOfClient()
@@ -58,7 +66,7 @@ class SplashScreenActivity: ComponentActivity() {
                 }
             }
 
-            delay(3000)
+            delay(SPLASH_TIME)
 
             if (!repo.isLoggedIn()) {
                 ChooseRoleActivity.navigate(this@SplashScreenActivity)
@@ -71,5 +79,9 @@ class SplashScreenActivity: ComponentActivity() {
             }
             finish()
         }
+    }
+
+    companion object {
+        const val SPLASH_TIME = 3000L
     }
 }
