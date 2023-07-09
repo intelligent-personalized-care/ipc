@@ -1,27 +1,27 @@
 package pt.ipc_app.ui
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
-import pt.ipc_app.ui.components.CheckProblemJson
+import pt.ipc_app.service.utils.ProblemJson
+import pt.ipc_app.ui.components.ErrorAlert
 import pt.ipc_app.ui.screens.AppClientScreen
 import pt.ipc_app.ui.screens.AppMonitorScreen
 import pt.ipc_app.ui.screens.AppViewModel
 import pt.ipc_app.ui.screens.login.LoginActivity
 import java.io.File
 import java.io.FileOutputStream
+import java.net.HttpURLConnection
 
 fun Context.openSendEmail(email: String) {
     try {
@@ -64,10 +64,10 @@ private fun ComponentActivity.setAppContent(
 ) {
     setContent {
         content()
-        viewModel.error?.let {
-            if (it.title == "Unauthenticated")
-                CheckProblemJson(
-                    error = it,
+        viewModel.error.collectAsState().value?.let {
+            if (it is ProblemJson && it.status == HttpURLConnection.HTTP_UNAUTHORIZED)
+                ErrorAlert(
+                    title = it.title,
                     message = "You need to authenticate yourself.",
                     onDismiss = {
                         LoginActivity.navigate(this)
@@ -75,7 +75,10 @@ private fun ComponentActivity.setAppContent(
                     }
                 )
             else
-                CheckProblemJson(error = it)
+                ErrorAlert(
+                    title = it.title,
+                    message = it.message
+                )
         }
     }
 }
@@ -86,7 +89,7 @@ fun ComponentActivity.setAppContentClient(
 ) {
     setAppContent(viewModel) {
         AppClientScreen(
-            buttonBarClicked = viewModel.buttonBarClicked,
+            buttonBarClicked = viewModel.buttonBarClicked.collectAsState().value,
             content = content
         )
     }
@@ -98,7 +101,7 @@ fun ComponentActivity.setAppContentMonitor(
 ) {
     setAppContent(viewModel) {
         AppMonitorScreen(
-            buttonBarClicked = viewModel.buttonBarClicked,
+            buttonBarClicked = viewModel.buttonBarClicked.collectAsState().value,
             content = content
         )
     }

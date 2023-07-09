@@ -1,5 +1,5 @@
 package pt.ipc_app.domain
 
-import pt.ipc_app.service.utils.ProblemJson
+import pt.ipc_app.service.utils.ResponseError
 
-class APIException(val error: ProblemJson) : Exception()
+class APIException(val error: ResponseError) : Exception()

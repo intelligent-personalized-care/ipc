@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.user.Role
+import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
@@ -44,11 +45,12 @@ class RegisterActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val state by viewModel.state.collectAsState()
+            val error by viewModel.error.collectAsState()
 
             if (Role.isClient(role))
                 RegisterClientScreen(
                     progressState = state,
-                    error = viewModel.error,
+                    error = if (error is ProblemJson) error as ProblemJson else null,
                     onSaveRequest = {
                         viewModel.registerClient(
                             it.name, it.email, it.password, it.weight, it.height, it.birthDate, it.physicalCondition
@@ -58,7 +60,7 @@ class RegisterActivity : ComponentActivity() {
             else
                 RegisterMonitorScreen(
                     progressState = state,
-                    error = viewModel.error,
+                    error = if (error is ProblemJson) error as ProblemJson else null,
                     onSaveRequest = {
                         viewModel.registerMonitor(
                             it.name, it.email, it.password

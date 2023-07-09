@@ -1,20 +1,25 @@
 package pt.ipc_app.service.utils
 
-import java.net.URI
+open class ResponseError(
+    val title: String,
+    val message: String? = null
+)
 
 /**
  * A problem that occurred during the processing of a request.
  *
  * @see <a href="https://tools.ietf.org/html/rfc7807">Problem Details for HTTP APIs</a>
  */
-data class ProblemJson(
-    val type: URI,
-    val title: String,
-    val status: Int,
-    val detail: String? = null,
-    val instance: URI? = null
-)
+class ProblemJson(
+    title: String,
+    val status: Int
+): ResponseError(title)
+
+class NoInternetConnection(
+    title: String = "No Internet Connection",
+    message: String = "Please check your internet connection and try again."
+): ResponseError(title, message)
 
 object Errors {
-    val emailAlreadyExists = "This email already exists"
+    const val emailAlreadyExists = "This email already exists"
 }

@@ -1,6 +1,6 @@
 package pt.ipc_app.service.connection
 
-import pt.ipc_app.service.utils.ProblemJson
+import pt.ipc_app.service.utils.ResponseError
 
 /**
  * API Response result.
@@ -19,7 +19,7 @@ sealed class APIResult<out T> {
     /**
      * The response was unsuccessful.
      *
-     * @property error the ProblemJson object
+     * @property error the ResponseError object
      */
-    class Failure(val error: ProblemJson) : APIResult<Nothing>()
+    class Failure(val error: ResponseError) : APIResult<Nothing>()
 }

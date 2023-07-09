@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import pt.ipc_app.service.utils.Errors
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.theme.Grey
-import java.net.URI
 
 private const val MAX_INPUT_SIZE = 100
 
@@ -102,6 +101,6 @@ fun CustomTextFieldPreview() {
         textToDisplay = "",
         updateText = { },
         iconImageVector = Icons.Default.Face,
-        error = ProblemJson(URI(""), Errors.emailAlreadyExists, 1)
+        error = ProblemJson(Errors.emailAlreadyExists, status = 1)
     )
 }

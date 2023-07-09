@@ -51,7 +51,6 @@ class LoginActivity : ComponentActivity() {
 
             LoginScreen(
                 progressState = state,
-                error = viewModel.error,
                 onSaveRequest = { email, password ->
                     viewModel.login(email, password)
                 }

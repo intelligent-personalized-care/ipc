@@ -9,9 +9,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import pt.ipc_app.service.connection.*
-import pt.ipc_app.service.utils.ContentType
-import pt.ipc_app.service.utils.MultipartEntry
-import pt.ipc_app.service.utils.ProblemJson
+import pt.ipc_app.service.utils.*
 import java.io.File
 import java.io.IOException
 
@@ -44,14 +42,20 @@ abstract class HTTPService(
             try {
                 if (response.isSuccessful && body.contentType() == ContentType.JSON.mediaType)
                     APIResult.Success(jsonEncoder.fromJson(resJson, T::class.java))
-                else if (body.contentType() == ContentType.PROBLEM_JSON.mediaType)
+                else if (!response.isSuccessful && response.code.toString().startsWith("5"))
+                    APIResult.Failure(
+                        ResponseError(
+                            title = "Try Again Later",
+                            message = "We're sorry, but something went wrong. Please try again later."
+                        )
+                    )
+                else if (!response.isSuccessful && body.contentType() == ContentType.PROBLEM_JSON.mediaType)
                     APIResult.Failure(jsonEncoder.fromJson(resJson, ProblemJson::class.java))
-                else
-                    throw IllegalArgumentException()
+                else throw UnexpectedResponseException(response)
 
             } catch (e: JsonSyntaxException) {
                 e.printStackTrace()
-                throw IllegalArgumentException()
+                throw UnexpectedResponseException(response)
             }
         }
 

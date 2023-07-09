@@ -27,7 +27,6 @@ import pt.ipc_app.ui.components.*
 @Composable
 fun LoginScreen(
     progressState: ProgressState = ProgressState.IDLE,
-    error: ProblemJson? = null,
     onSaveRequest: (email: String, password: String) -> Unit = { _,_ -> }
 ) {
     var email by remember { mutableStateOf("") }
@@ -54,8 +53,7 @@ fun LoginScreen(
                 updateText = { email = it },
                 maxLength = User.EMAIL_LENGTH_RANGE.last,
                 iconImageVector = Icons.Default.Email,
-                keyboardType = KeyboardType.Email,
-                error = error
+                keyboardType = KeyboardType.Email
             )
             CustomTextField(
                 fieldType = TextFieldType.PASSWORD,
