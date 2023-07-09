@@ -9,7 +9,7 @@ data class Plan(
     val id: Int,
     val title: String,
     val startDate: String,
-    val dailyLists: List<DailyList>
+    val dailyLists: List<DailyList?>
 ) : Parcelable {
 
     fun days() =
