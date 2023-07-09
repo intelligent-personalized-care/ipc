@@ -43,6 +43,9 @@ class PoseGraphic internal constructor(
   private val whitePaint: Paint
   private val tipPaint: Paint
   private var toDraw = false
+  private val defaultRestTime = 30
+  private val textSizeCoordinateX = 1.5f
+  private val textSizeCoordinateY = 6
   override fun draw(canvas: Canvas) {
     val landmarks = pose.allPoseLandmarks
     if (landmarks.isEmpty()) return
@@ -280,11 +283,11 @@ class PoseGraphic internal constructor(
   /**
    * Draws the text received in the specific line
    * */
-  private fun drawText(canvas: Canvas, text:String, xline: Int?, yline: Int = 1) {
+  private fun drawText(canvas: Canvas, text:String, xline: Int?, yline: Int) {
     if (TextUtils.isEmpty(text)) return
 
-    xline?.let {canvas.drawText(text, TEXT_SIZE * 1.5f * it, TEXT_SIZE * 3*2 + TEXT_SIZE * yline, tipPaint)}
-      ?: canvas.drawText(text, TEXT_SIZE * 1.5f, TEXT_SIZE * 3*2 + TEXT_SIZE * yline, tipPaint)
+    xline?.let {canvas.drawText(text, TEXT_SIZE * textSizeCoordinateX * it, TEXT_SIZE * textSizeCoordinateY + TEXT_SIZE * yline, tipPaint)}
+      ?: canvas.drawText(text, TEXT_SIZE * textSizeCoordinateX, TEXT_SIZE * textSizeCoordinateY + TEXT_SIZE * yline, tipPaint)
   }
 
   companion object {
@@ -411,12 +414,12 @@ class PoseGraphic internal constructor(
     drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
     drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}/${exercise.exeSets}",null,1)
 
-    if(viewModel.restTime.value in 1 until 30) drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
+    if(viewModel.restTime.value in 1 until defaultRestTime) drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
 
     if(viewModel.restTime.value == 0 && (viewModel.nrSet.value - 1) < exercise.exeSets)
       drawText(canvas, "GO! Do the next set",null, 4)
     else
-      if(viewModel.restTime.value in 1 until 30) drawText(canvas, "Time to REST!",null, 4)
+      if(viewModel.restTime.value in 1 until defaultRestTime) drawText(canvas, "Time to REST!",null, 4)
 
     if(viewModel.recordTime.value != 0)  drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
   }

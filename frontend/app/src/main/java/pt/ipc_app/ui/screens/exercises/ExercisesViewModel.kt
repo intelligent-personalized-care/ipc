@@ -27,6 +27,11 @@ class ExercisesViewModel(
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
+    private val defaultRestTime = 30
+    private val defaultDelay = 1000
+    private val defaultNofSets = 1
+    private val defaultMaxRecordTimeLimit = 180
+
     private val _state = MutableStateFlow(ProgressState.IDLE)
     val state
         get() = _state.asStateFlow()
@@ -35,11 +40,11 @@ class ExercisesViewModel(
     val exercises
         get() = _exercises.asStateFlow()
 
-    private var _nrSet = MutableStateFlow(1)
+    private var _nrSet = MutableStateFlow(defaultNofSets)
     val nrSet
         get() = _nrSet.asStateFlow()
 
-    private var _restTime = MutableStateFlow(30)
+    private var _restTime = MutableStateFlow(defaultRestTime)
     val restTime
         get() = _restTime .asStateFlow()
 
@@ -60,7 +65,7 @@ class ExercisesViewModel(
     /**
      * After an exercise is completed resets the number of sets value
      */
-    fun resetSet() { _nrSet.value = 1}
+    fun resetSet() { _nrSet.value = defaultNofSets}
 
     /**
      * Decrements the rest time
@@ -68,7 +73,7 @@ class ExercisesViewModel(
     fun decrementRestTime(onFinish: () -> Unit = {} ) {
         CoroutineScope(Dispatchers.IO).launch{
             while (restTime.value > 0 ){
-                delay(1000)
+                delay(defaultDelay.toLong())
                 _restTime.value--
             }
             onFinish()
@@ -78,7 +83,7 @@ class ExercisesViewModel(
     /**
      * After a rest period is completed resets the timer
      */
-    fun resetRestTime() { _restTime.value = 30}
+    fun resetRestTime() { _restTime.value = defaultRestTime}
 
     /**
      * Increment the record time
@@ -86,12 +91,11 @@ class ExercisesViewModel(
     fun incrementRecordTime(onStop: () -> Unit) {
         _stopRecordTime.value = false
         CoroutineScope(Dispatchers.IO).launch{
-            //180000 max time allowed of video time
-            while (recordTime.value < 10 && !stopRecordTime.value){
-                delay(1000)
+            //max time allowed of a video
+            while (recordTime.value < defaultMaxRecordTimeLimit && !stopRecordTime.value){
+                delay(defaultDelay.toLong())
                 _recordTime.value++
             }
-           // stopRecordTime()
             onStop()
         }
     }
