@@ -48,7 +48,7 @@ class JdbiMonitorsRepository(
             .execute()
     }
 
-    override fun getUserByIDAndSession(id: UUID, sessionID: UUID): User? =
+    override fun getUserByIDAndSession(id: UUID, sessionID: String): User? =
         handle.createQuery(
             "select u.id,u.name,u.email,u.password_hash from dbo.users u " +
                 "inner join dbo.monitors m on u.id = m.m_id " +

@@ -11,13 +11,13 @@ class JdbiUsersRepository(
     private val handle: Handle
 ) : UsersRepository {
 
-    override fun getUserBySession(sessionID: UUID): UUID? =
+    override fun getUserBySession(sessionID: String): UUID? =
         handle.createQuery("select user_id  from dbo.session s where s.session = :sessionID")
             .bind("sessionID", sessionID)
             .mapTo<UUID>()
             .singleOrNull()
 
-    override fun updateSession(userID: UUID, sessionID: UUID) {
+    override fun updateSession(userID: UUID, sessionID: String) {
         handle.createUpdate(
             "insert into dbo.session (user_id, session) values (:userID,:sessionID)" +
                 "on conflict(user_id) do update set session = :sessionID "
@@ -27,7 +27,7 @@ class JdbiUsersRepository(
             .execute()
     }
 
-    override fun getUserByIDAndSession(id: UUID, sessionID: UUID): User? =
+    override fun getUserByIDAndSession(id: UUID, sessionID: String): User? =
         handle.createQuery(
             "select u.id,u.name,u.email,u.password_hash from dbo.users u " +
                 "inner join dbo.session s on s.user_id = u.id " +

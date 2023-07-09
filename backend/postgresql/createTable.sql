@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS dbo.users(
 
 CREATE TABLE IF NOT EXISTS  dbo.session(
     user_id UUID PRIMARY KEY REFERENCES dbo.users(id),
-    session UUID NOT NULL
+    session text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dbo.monitors(

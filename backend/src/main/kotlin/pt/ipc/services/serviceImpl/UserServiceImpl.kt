@@ -37,7 +37,7 @@ class UserServiceImpl(
 
                 val (accessToken, refreshToken) = serviceUtils.createTokens(id = user.id, role = role, sessionID = sessionID)
 
-                it.usersRepository.updateSession(userID = userID, sessionID = sessionID)
+                it.usersRepository.updateSession(userID = userID, sessionID = encryptionUtils.encrypt(plainText = sessionID.toString()))
 
                 LoginOutput(id = user.id, accessToken = accessToken, refreshToken = refreshToken, name = user.name, role = role)
             }
@@ -48,13 +48,13 @@ class UserServiceImpl(
             block = {
                 val sessionID = serviceUtils.getSessionID(refreshToken = refreshToken)
 
-                val userID = it.usersRepository.getUserBySession(sessionID = sessionID) ?: throw UserNotExists
+                val userID = it.usersRepository.getUserBySession(sessionID = encryptionUtils.encrypt(plainText = sessionID.toString())) ?: throw UserNotExists
 
                 val role = it.usersRepository.getRoleByID(userID = userID)
 
                 val newSessionID = UUID.randomUUID()
 
-                it.usersRepository.updateSession(userID = userID, sessionID = newSessionID)
+                it.usersRepository.updateSession(userID = userID, sessionID = encryptionUtils.encrypt(plainText = newSessionID.toString()))
 
                 val (newAccessToken, newRefreshToken) = serviceUtils.createTokens(id = userID, role = role, sessionID = newSessionID)
 

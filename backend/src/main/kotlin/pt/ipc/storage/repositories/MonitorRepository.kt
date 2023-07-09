@@ -18,7 +18,7 @@ interface MonitorRepository {
 
     fun insertCredential(monitorID: UUID, dtSubmit: LocalDate)
 
-    fun getUserByIDAndSession(id: UUID, sessionID: UUID): User?
+    fun getUserByIDAndSession(id: UUID, sessionID: String): User?
 
     fun getMonitorProfile(monitorID: UUID): MonitorProfile?
 

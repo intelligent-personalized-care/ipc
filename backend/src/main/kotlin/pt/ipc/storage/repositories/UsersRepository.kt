@@ -12,9 +12,9 @@ interface UsersRepository {
 
     fun getRoleByID(userID: UUID): Role
 
-    fun getUserBySession(sessionID: UUID): UUID?
+    fun getUserBySession(sessionID: String): UUID?
 
-    fun updateSession(userID: UUID, sessionID: UUID)
+    fun updateSession(userID: UUID, sessionID: String)
 
-    fun getUserByIDAndSession(id: UUID, sessionID: UUID): User?
+    fun getUserByIDAndSession(id: UUID, sessionID: String): User?
 }

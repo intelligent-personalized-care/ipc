@@ -6,7 +6,7 @@ import java.util.UUID
 
 interface AdminRepository {
 
-    fun getUserByIDAndSession(id: UUID, sessionID: UUID): User?
+    fun getUserByIDAndSession(id: UUID, sessionID: String): User?
 
     fun createAdmin(id: UUID, email: String, name: String, passwordHash: String, sessionID: UUID)
 

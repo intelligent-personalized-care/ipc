@@ -21,7 +21,7 @@ class ServiceUtils(
         private const val EMAIL_REGEX = "^[A-Za-z\\d+_.-]+@(.+)$"
     }
 
-    fun getUser(id: UUID, role: Role, sessionID: UUID): User? =
+    fun getUser(id: UUID, role: Role, sessionID: String): User? =
         when (role) {
             Role.MONITOR -> transactionManager.runBlock(
                 block = {
