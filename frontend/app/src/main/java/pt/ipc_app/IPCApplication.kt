@@ -64,7 +64,7 @@ class IPCApplication : DependenciesContainer, Application() {
 
         if (sessionManager.isLoggedIn()) {
             val periodicWorkRequest =
-                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.MINUTES)
+                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.DAYS)//alter to minutes after
                 .setConstraints(workerConstraints)
                 .build()
 
@@ -79,6 +79,6 @@ class IPCApplication : DependenciesContainer, Application() {
     }
 
     companion object {
-        private const val API_ENDPOINT = "https://8f5c-2a01-11-8120-4ce0-d137-9c70-f3b1-2d72.ngrok-free.app"
+        private const val API_ENDPOINT = "https://7617-95-93-220-19.ngrok-free.app"
     }
 }

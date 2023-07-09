@@ -35,6 +35,8 @@ class ClientsServiceImpl(
 
         val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.CLIENT)
 
+        val encryptedSession = encryptionUtils.encrypt(plainText = sessionID.toString())
+
         val encryptedClient = Client(
             id = userID,
             name = input.name,
@@ -50,7 +52,7 @@ class ClientsServiceImpl(
             block = {
                 it.clientsRepository.registerClient(
                     input = encryptedClient,
-                    sessionID = sessionID
+                    sessionID = encryptedSession
                 )
             }
         )

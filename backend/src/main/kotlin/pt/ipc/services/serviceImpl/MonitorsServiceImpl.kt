@@ -47,9 +47,11 @@ class MonitorsServiceImpl(
             passwordHash = encryptionUtils.encrypt(registerInput.password)
         )
 
+        val encryptedSession = encryptionUtils.encrypt(plainText = sessionID.toString())
+
         transactionManager.runBlock(
             block = {
-                it.monitorRepository.registerMonitor(user = user, sessionID = sessionID)
+                it.monitorRepository.registerMonitor(user = user, sessionID = encryptedSession)
             }
         )
 

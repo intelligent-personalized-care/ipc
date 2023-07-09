@@ -27,7 +27,7 @@ class JdbiAdminRepository(
         email: String,
         name: String,
         passwordHash: String,
-        sessionID: UUID
+        sessionID: String
     ) {
         handle.createUpdate("insert into dbo.users(id, name, email, password_hash) values(:id, :name, :email, :passwordHash)")
             .bind("id", id)

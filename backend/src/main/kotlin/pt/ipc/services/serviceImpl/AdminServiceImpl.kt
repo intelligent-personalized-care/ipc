@@ -23,6 +23,8 @@ class AdminServiceImpl(
 
         val (userID, accessToken, refreshToken, sessionID) = serviceUtils.createCredentials(role = Role.ADMIN)
 
+        val encryptedSession = encryptionUtils.encrypt(plainText = sessionID.toString())
+
         transactionManager.runBlock(
             block = {
                 it.adminRepository.createAdmin(
@@ -30,7 +32,7 @@ class AdminServiceImpl(
                     email = registerInput.email,
                     name = registerInput.name,
                     passwordHash = encryptionUtils.encrypt(plainText = registerInput.password),
-                    sessionID = sessionID
+                    sessionID = encryptedSession
                 )
             }
         )

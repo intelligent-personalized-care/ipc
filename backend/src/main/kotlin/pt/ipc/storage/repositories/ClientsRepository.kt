@@ -10,7 +10,8 @@ interface ClientsRepository {
     fun existsEmail(email: String): Boolean
 
     fun getClient(clientID: UUID): ClientOutput?
-    fun registerClient(input: Client, sessionID: UUID)
+
+    fun registerClient(input: Client, sessionID: String)
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 

@@ -6,10 +6,9 @@ data class ExerciseInfo(val id: UUID, val title: String, val description: String
 
 enum class ExerciseType {
     Legs,
-    Byceps,
     Shoulders,
     Back,
-    Gluts,
     Abdominals,
-    Chest
+    Chest,
+    Forearms
 }

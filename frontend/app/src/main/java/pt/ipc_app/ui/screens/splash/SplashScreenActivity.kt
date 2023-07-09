@@ -34,25 +34,23 @@ class SplashScreenActivity: ComponentActivity() {
         setContentView(R.layout.activity_splash_screen)
 /*
         repo.setSession(
-            id = "78d82d8d-36a5-4f15-bc71-b846887555fe",
+            id = "a5e102e5-aed8-412e-b9fd-b8b1cbe2d228",
             name = "Tiago",
-            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI3OGQ4MmQ4ZC0zNmE1LTRmMTUtYmM3MS1iODQ2ODg3NTU1ZmUiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImYxMTZlYTUzLWE4ZDEtNDE3OS05Nzg0LWM1MzM3MDVmNzNhMSIsImV4cCI6MTY4ODk2NTIwNn0.W_Vt7RFqddS_to4a_kpDmV0j5oOJ2KS5AQrx-BFfANf1YbNfuxjHg8LbrpqImLi2S2jU6VJDL5F7IFwxG78LSg",
-            refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMTE2ZWE1My1hOGQxLTQxNzktOTc4NC1jNTMzNzA1ZjczYTEiLCJleHAiOjE2ODg5NjUyMDZ9.abZ4Jkiw2czDsW0GmF2uT_V6o-hNTGqDfXh1lzayS7FyuPoZ5ELQtQH-MCJPIQ0mptr-DgBURb69deUlCGV88Q",
+            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhNWUxMDJlNS1hZWQ4LTQxMmUtYjlmZC1iOGIxY2JlMmQyMjgiLCJyb2xlIjoiQ0xJRU5UIiwic2Vzc2lvbklEIjoiNmM1NDY3MGQtOTJhNC00NDEwLWIyMjktZWY2ZWY0N2UyODkwIiwiZXhwIjoxNjg5MDA4MTA0fQ.kd4lh-ibNpWqwqbWYBaeLC1klyVmMuW_0CoPY2tjlIs7C7rZZaKHaCpmpU-KyfroFmap06eqb8E1gxqSuvEiRA",
+            refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiI2YzU0NjcwZC05MmE0LTQ0MTAtYjIyOS1lZjZlZjQ3ZTI4OTAiLCJleHAiOjE2ODkwMDgxMDR9.5eYLo7JshEfJtPABjYzNgQebqMrvBjyRG5UGSqTeXqjUbkULPMrpxc5VhRix7Eh8cBVXlpoPLogSP6tpUp2gIA",
             role = Role.MONITOR
         )
 
  */
 
-/*
         repo.setSession(
-            id = "a26a52cb-6d7d-4957-91b3-b78e941dd384",
-            name = "Tiago",
-            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhMjZhNTJjYi02ZDdkLTQ5NTctOTFiMy1iNzhlOTQxZGQzODQiLCJyb2xlIjoiQ0xJRU5UIiwic2Vzc2lvbklEIjoiZmQ1MTdjODEtYzkzOC00ZjY3LTg4NGYtZTdkNzc1OTkxYTM4IiwiZXhwIjoxNjg4OTgwMjY5fQ.y-H-sSfZ_HhuQVUVAUZDoRRAu5ajIQL8SAsiRkMSprTW1eyB2iNKxo3aO6d1mBmmh4jp34S5i4K8rNh0kBIpDw",
-            refreshToken = "",
+            id = "ba5117d7-f202-4ba2-ab7f-364f1fbae149",
+            name = "Guilherme",
+            accessToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJiYTUxMTdkNy1mMjAyLTRiYTItYWI3Zi0zNjRmMWZiYWUxNDkiLCJyb2xlIjoiQ0xJRU5UIiwic2Vzc2lvbklEIjoiM2RmNTcyNWQtNWUyOC00YjdhLWI1MDgtNTQyN2M0MjNlMjdiIiwiZXhwIjoxNjg5MDEyMDc1fQ.97guPe2au4STP0VyyIaGL31aVSnj27U9IuHuZXcVgmntM-idl3HtyX3KyjuxFxfgGn1sudkChEdms5UG89WhEg",
+            refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiIzZGY1NzI1ZC01ZTI4LTRiN2EtYjUwOC01NDI3YzQyM2UyN2IiLCJleHAiOjE2ODkwMTIwNzV9.4g6nmMB-KiWpJzUobTO_6ngmfVLJfV0--g3idYSEL5WMbxWvecQCQgM_j20HGMl3KKdORNVFOPgmx2cesD1ErQ",
             role = Role.CLIENT
         )
 
- */
         //repo.clearSession()
         CoroutineScope(Dispatchers.Main).launch {
             //viewModel.subscribeToServerSendEvents()

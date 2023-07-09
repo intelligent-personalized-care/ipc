@@ -23,7 +23,7 @@ class JdbiMonitorsRepository(
     private val handle: Handle
 ) : MonitorRepository {
 
-    override fun registerMonitor(user: User, sessionID: UUID) {
+    override fun registerMonitor(user: User, sessionID: String) {
         handle.createUpdate("insert into dbo.users values(:id,:u_name,:u_email,:password_hash)")
             .bind("id", user.id)
             .bind("u_name", user.name)

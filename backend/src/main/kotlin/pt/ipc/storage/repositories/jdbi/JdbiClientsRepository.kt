@@ -38,7 +38,7 @@ class JdbiClientsRepository(
             .execute()
     }
 
-    override fun registerClient(input: Client, sessionID: UUID) {
+    override fun registerClient(input: Client, sessionID: String) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
             .bind("id", input.id)
             .bind("u_name", input.name)

@@ -14,7 +14,7 @@ import java.util.UUID
 
 interface MonitorRepository {
 
-    fun registerMonitor(user: User, sessionID: UUID)
+    fun registerMonitor(user: User, sessionID: String)
 
     fun insertCredential(monitorID: UUID, dtSubmit: LocalDate)
 
