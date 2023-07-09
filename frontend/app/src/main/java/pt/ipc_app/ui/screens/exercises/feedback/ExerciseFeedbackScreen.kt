@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.exercises.info
+package pt.ipc_app.ui.screens.exercises.feedback
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -18,14 +18,10 @@ import pt.ipc_app.ui.components.VideoPlayer
 import java.util.*
 
 @Composable
-fun ExerciseScreen(
+fun ExerciseFeedbackScreen(
     exercise: Exercise,
-    exercisePreviewUrl: String,
-    isToRecord: Boolean = true,
-    onRecordClick: () -> Unit = { }
+    exercisePreviewUrl: String
 ) {
-    var isPlaying by remember { mutableStateOf(true) }
-
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -42,9 +38,9 @@ fun ExerciseScreen(
             )
         }
 
-        VideoPlayer(url = exercisePreviewUrl, playing = isPlaying)
+        VideoPlayer(url = exercisePreviewUrl)
 
-        Spacer(modifier = Modifier.padding(top = 50.dp))
+        Spacer(modifier = Modifier.padding(top = 100.dp))
 
         Text(
             text = "Description",
@@ -55,31 +51,13 @@ fun ExerciseScreen(
             style = MaterialTheme.typography.caption
         )
 
-        if (isToRecord) {
-            Spacer(modifier = Modifier.padding(top = 100.dp))
-
-            Button(
-                onClick = {
-                    isPlaying = false
-                    onRecordClick()
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera")
-                Text(
-                    text = "Record Video",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
-        }
     }
 }
 
 @Preview
 @Composable
-fun ExerciseScreenPreview() {
-    ExerciseScreen(
+fun ExerciseFeedbackScreenPreview() {
+    ExerciseFeedbackScreen(
         exercise = Exercise(UUID.randomUUID(), "Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
                 "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
                 "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", 15, 3),

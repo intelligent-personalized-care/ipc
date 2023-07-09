@@ -24,7 +24,7 @@ class MonitorDetailsViewModel(
         usersService.getProfilePicture(
             context = context,
             userId = monitorId,
-            token = sessionManager.userLoggedIn.token
+            token = sessionManager.userLoggedIn.accessToken
         )
 
     /**
@@ -38,7 +38,7 @@ class MonitorDetailsViewModel(
                 usersService.connectMonitor(
                     monitorId = monitorId,
                     clientId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = { }
@@ -58,7 +58,7 @@ class MonitorDetailsViewModel(
                     monitorId = monitorId,
                     clientId = sessionManager.userUUID,
                     stars = stars,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = { }

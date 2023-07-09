@@ -42,15 +42,13 @@ fun CreatePlanScreen(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 100.dp)
+        modifier = Modifier.padding(30.dp)
     ) {
 
         Text(
             text = stringResource(id = R.string.create_plan_screen_title),
-            style = MaterialTheme.typography.h5,
-            color = Color.Black,
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.padding(bottom = 20.dp)
         )
 
         CustomTextField(
@@ -59,9 +57,10 @@ fun CreatePlanScreen(
             updateText = { planTitle = it },
             isToTrim = false,
             iconImageVector = Icons.Default.Edit,
+            modifier = Modifier.padding(bottom = 20.dp)
         )
 
-        DaysOfWeekRowWithoutLocalDate(
+        DaysRow(
             daySelected = daySelected,
             totalDays = dayCounter,
             onDaySelected = { daySelected = it },

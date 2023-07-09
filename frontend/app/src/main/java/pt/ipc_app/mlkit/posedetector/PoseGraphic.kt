@@ -413,7 +413,7 @@ class PoseGraphic internal constructor(
     drawText(canvas, lineOneText, null,-3)
     drawText(canvas, lineTwoText, null,-2)
     drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
-    drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}/${exercise.exeSets}",null,1)
+    drawText(canvas, "Sets done: ${viewModel.nrSetDone.value - 1}/${exercise.exeSets}",null,1)
 
     if (viewModel.isResting()) {
       drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)

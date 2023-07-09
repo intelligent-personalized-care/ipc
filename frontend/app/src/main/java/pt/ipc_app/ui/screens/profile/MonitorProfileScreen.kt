@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.HourglassBottom
 import androidx.compose.runtime.Composable
@@ -36,7 +35,9 @@ fun MonitorProfileScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.profile_title),
@@ -57,20 +58,16 @@ fun MonitorProfileScreen(
             style = MaterialTheme.typography.h6
         )
 
-        Row(
+        TextEmail(
+            email = monitor?.email ?: "",
+            clickable = false,
             modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = null
-            )
-            Text(text = monitor?.email ?: "")
-        }
+        )
 
         monitor?.let {
             MonitorRating(rating = monitor.rating)
 
-            Spacer(modifier = Modifier.padding(top = 200.dp))
+            Spacer(modifier = Modifier.padding(top = 100.dp))
 
             if (monitor.docState == null)
                 Button(

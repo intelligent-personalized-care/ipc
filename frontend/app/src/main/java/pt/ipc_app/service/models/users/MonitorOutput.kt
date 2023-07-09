@@ -9,7 +9,9 @@ data class MonitorOutput(
     val id: UUID,
     val name: String,
     val email: String,
-    val rating: Rating
+    val rating: Rating,
+    val requested: Boolean = true,
+    val isMyMonitor: Boolean = false
 ): Parcelable
 
 @Parcelize

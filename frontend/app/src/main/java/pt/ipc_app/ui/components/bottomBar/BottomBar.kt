@@ -17,8 +17,7 @@ fun BottomBar(
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
     onPlanCreateClick: () -> Unit = { },
-    onProfileClick: () -> Unit = { },
-    onAboutClick: () -> Unit = { }
+    onProfileClick: () -> Unit = { }
 ) {
     Column(
         verticalArrangement = Arrangement.Bottom
@@ -51,11 +50,6 @@ fun BottomBar(
                 enable = buttonClicked == ButtonBarType.PROFILE,
                 onClick = { onProfileClick() }
             )
-            MenuButton(
-                type = ButtonBarType.ABOUT,
-                enable = buttonClicked == ButtonBarType.ABOUT,
-                onClick = { onAboutClick() }
-            )
         }
     }
 }
@@ -65,16 +59,14 @@ fun ClientBottomBar(
     buttonClicked: ButtonBarType = ButtonBarType.HOME,
     onHomeClick: () -> Unit = { },
     onExercisesClick: () -> Unit = { },
-    onProfileClick: () -> Unit = { },
-    onAboutClick: () -> Unit = { }
+    onProfileClick: () -> Unit = { }
 ) {
     BottomBar(
         role = Role.CLIENT,
         buttonClicked = buttonClicked,
         onHomeClick = onHomeClick,
         onExercisesClick = onExercisesClick,
-        onProfileClick = onProfileClick,
-        onAboutClick = onAboutClick
+        onProfileClick = onProfileClick
     )
 }
 
@@ -83,16 +75,14 @@ fun MonitorBottomBar(
     buttonClicked: ButtonBarType = ButtonBarType.HOME,
     onHomeClick: () -> Unit = { },
     onPlanCreateClick: () -> Unit = { },
-    onProfileClick: () -> Unit = { },
-    onAboutClick: () -> Unit = { }
+    onProfileClick: () -> Unit = { }
 ) {
     BottomBar(
         role = Role.MONITOR,
         buttonClicked = buttonClicked,
         onHomeClick = onHomeClick,
         onPlanCreateClick = onPlanCreateClick,
-        onProfileClick = onProfileClick,
-        onAboutClick = onAboutClick
+        onProfileClick = onProfileClick
     )
 }
 

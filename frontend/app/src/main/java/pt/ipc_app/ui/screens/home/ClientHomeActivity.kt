@@ -59,7 +59,7 @@ class ClientHomeActivity : ComponentActivity() {
                 monitor = mon,
                 plan = plan ?: viewModel.plan.collectAsState().value,
                 onMonitorClick = {
-                    if (mon != null) MonitorDetailsActivity.navigate(this, mon)
+                    if (mon != null) MonitorDetailsActivity.navigate(this, mon.copy(isMyMonitor = true))
                     else SearchMonitorsActivity.navigate(this)
                 },
                 onExerciseSelect = { ExerciseActivity.navigate(this, it) }

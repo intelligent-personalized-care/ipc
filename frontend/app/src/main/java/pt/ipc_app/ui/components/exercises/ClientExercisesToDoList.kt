@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.service.models.exercises.ClientExercises
+import pt.ipc_app.service.models.exercises.ClientDailyExercises
+import java.time.LocalDate
 import java.util.UUID
 
 @Composable
 fun ClientExercisesToDoList(
-    exercisesOfClients: List<ClientExercises>,
-    onClientSelect: (UUID) -> Unit = { }
+    exercisesOfClients: List<ClientDailyExercises>,
+    onClientSelect: (ClientDailyExercises) -> Unit = { }
 ) {
-
-    Spacer(modifier = Modifier.padding(top = 20.dp))
 
     if (exercisesOfClients.isNotEmpty()) {
         LazyColumn(

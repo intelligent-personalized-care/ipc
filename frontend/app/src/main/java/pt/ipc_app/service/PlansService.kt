@@ -2,12 +2,14 @@ package pt.ipc_app.service
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
+import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.plans.CreatePlanOutput
 import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.service.models.plans.PlanInput
 import pt.ipc_app.service.models.plans.PlanToClient
 import java.io.IOException
+import java.time.LocalDate
 import java.util.UUID
 
 /**
@@ -39,6 +41,23 @@ class PlansService(
             uri = "/users/monitors/$monitorId/plans",
             token = token,
             body = plan
+        )
+
+    /**
+     * Gets a plan of client.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getPlanOfClient(
+        clientId: UUID,
+        date: String,
+        token: String
+    ): APIResult<Plan> =
+        get(
+            uri = "/users/clients/$clientId/plans?date=$date",
+            token = token
         )
 
     /**

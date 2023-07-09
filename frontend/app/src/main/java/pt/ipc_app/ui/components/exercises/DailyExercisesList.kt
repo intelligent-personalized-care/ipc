@@ -25,8 +25,6 @@ fun DailyExercisesList(
     onExerciseSelect: (DailyExercise) -> Unit = { }
 ) {
 
-    Spacer(modifier = Modifier.padding(top = 20.dp))
-
     if (dailyListSelected != null) {
         LazyColumn(
             horizontalAlignment = Alignment.Start,

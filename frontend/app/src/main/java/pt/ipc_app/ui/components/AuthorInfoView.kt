@@ -26,7 +26,7 @@ import pt.ipc_app.R
 private const val DEV_INFO_PADDING = 16
 private const val DEV_INFO_MAX_WIDTH_FACTOR = 0.8f
 private const val DEV_INFO_CORNER_RADIUS = 8
-private const val DEV_INFO_HEIGHT = 140
+private const val DEV_INFO_HEIGHT = 120
 
 /**
  * Shows the information of a specific author.

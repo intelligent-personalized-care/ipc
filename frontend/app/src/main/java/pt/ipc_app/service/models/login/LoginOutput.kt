@@ -5,7 +5,8 @@ import java.util.*
 
 data class LoginOutput(
     val id: UUID,
-    val token: String,
+    val accessToken: String,
+    val refreshToken: String,
     val name : String,
     val role : Role
 )

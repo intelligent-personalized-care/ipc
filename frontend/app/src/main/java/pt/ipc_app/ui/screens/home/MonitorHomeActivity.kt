@@ -12,6 +12,7 @@ import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.ui.screens.details.ClientDetailsActivity
+import pt.ipc_app.ui.screens.plan.PlanActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.time.LocalDate
@@ -69,9 +70,7 @@ class MonitorHomeActivity : ComponentActivity() {
                 requestsOfMonitor = requestsList ?: listOf(),
                 clientsExercisesToDo = viewModel.clientsExercises.collectAsState().value?.clientsExercises ?: listOf(),
                 clientsExercisesToDoProgressState = viewModel.clientsExercisesState.collectAsState().value,
-                onDaySelected = {
-                    viewModel.getExercisesOfClients(it)
-                },
+                onDaySelected = { viewModel.getExercisesOfClients(it) },
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
                 onClientRequestDecided = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)
@@ -83,7 +82,9 @@ class MonitorHomeActivity : ComponentActivity() {
                         requestsList = reqs - reqs.first {it == request}
                     }
                 },
-                onClientExercisesSelected = { }
+                onClientExercisesSelected = { clientId, clientName, planDate ->
+                    PlanActivity.navigate(this, clientId, clientName, planDate.toString())
+                }
             )
         }
     }

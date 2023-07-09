@@ -10,10 +10,11 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@android:color/white</item>
-        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:statusBarColor" >@color/blueCustom</item>
+        <item name="android:navigationBarColor">@color/blueCustom</item>
+        <item name="android:windowLightStatusBar">false</item>
 
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="Theme.AppSplash" parent="Theme.MaterialComponents.Light.NoActionBar">

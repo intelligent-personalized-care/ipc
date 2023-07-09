@@ -93,7 +93,7 @@ class CameraXLivePreviewActivity :
             .putString(WorkerKeys.PLAN_ID, exe.planId.toString())
             .putString(WorkerKeys.DAILY_LIST_ID, exe.dailyListId.toString())
             .putString(WorkerKeys.EXERCISE_ID, exe.exercise.id.toString())
-            .putString(WorkerKeys.NR_SET, viewModel.nrSet.value.toString())
+            .putString(WorkerKeys.NR_SET, viewModel.nrSetDone.value.toString())
             .build()
 
         val constraints = Constraints.Builder()
@@ -161,7 +161,7 @@ class CameraXLivePreviewActivity :
             //free exercises aren't sent to storage, only the exercises in a plan
             if (exercise is ExerciseTotalInfo) createWorker()
 
-            if (viewModel.nrSet.value == exercise.exeSets) {
+            if (viewModel.nrSetDone.value == exercise.exeSets) {
                 //in the final set waits a little to assure the response arrives
                 viewModel.resetRestTime()
                 viewModel.decrementRestTime{
@@ -369,7 +369,7 @@ class CameraXLivePreviewActivity :
     private fun startRecording(onSubmission: () -> Unit) {
         val videoName =
             if (exercise is ExerciseTotalInfo)
-                (exercise as ExerciseTotalInfo).exercise.id.toString() + "(${viewModel.nrSet.value}set)"
+                (exercise as ExerciseTotalInfo).exercise.id.toString() + "(${viewModel.nrSetDone.value}set)"
             else UUID.randomUUID()
 
         file = File(outputDirectory, "$videoName.mp4")

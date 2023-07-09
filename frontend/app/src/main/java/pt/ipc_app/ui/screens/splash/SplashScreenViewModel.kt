@@ -39,7 +39,7 @@ class SplashScreenViewModel(
     fun getCurrentPlanOfClient() {
         launchAndExecuteRequest(
             request = {
-                usersService.getCurrentPlanOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getCurrentPlanOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _plan.value = it
@@ -50,7 +50,7 @@ class SplashScreenViewModel(
     fun getMonitorOfClient() {
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getMonitorOfClient(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _monitor.value = it
@@ -61,7 +61,7 @@ class SplashScreenViewModel(
     fun getClientsOfMonitor() {
         launchAndExecuteRequest(
             request = {
-                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _clients.value = it
@@ -72,7 +72,7 @@ class SplashScreenViewModel(
     fun getRequestsOfMonitor() {
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _requests.value = it

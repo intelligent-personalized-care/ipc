@@ -37,20 +37,13 @@ class SearchMonitorsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setAppContentClient(viewModel) {
-            val monitors = viewModel.monitors.collectAsState().value
 
-            if (monitors.isEmpty()) {
-                SearchScreen(
-                    labelId = R.string.search_monitors,
-                    onSearchRequest = { viewModel.searchMonitors(it) }
-                )
-            } else {
-                SearchMonitorsScreen(
-                    monitors = monitors,
-                    requestState = viewModel.state.collectAsState().value,
-                    onMonitorClick = { MonitorDetailsActivity.navigate(this, it) }
-                )
-            }
+            SearchMonitorsScreen(
+                monitors = viewModel.monitors.collectAsState().value,
+                requestState = viewModel.state.collectAsState().value,
+                onSearchRequest = { viewModel.searchMonitors(it) },
+                onMonitorClick = { MonitorDetailsActivity.navigate(this, it) }
+            )
         }
     }
 }

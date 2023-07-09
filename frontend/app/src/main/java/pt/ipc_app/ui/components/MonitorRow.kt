@@ -73,7 +73,8 @@ fun MonitorRating(
         Icon(
             imageVector = Icons.Default.Star,
             contentDescription = "Star",
-            tint = Color(255, 217, 102, 255)
+            tint = Color(255, 217, 102, 255),
+            modifier = Modifier.padding(end = 4.dp)
         )
         Text(
             text = rating.averageStarts.toString() + " stars",

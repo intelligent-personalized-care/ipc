@@ -44,6 +44,14 @@ class ExercisesService(
     ): String =
         "$apiEndpoint/exercises/$exerciseInfoId/video"
 
+    fun getExerciseVideoOfClientUrl(
+        clientId: String,
+        planId: Int,
+        dailyListId: Int,
+        exerciseId: Int
+    ): String =
+        "$apiEndpoint/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId?set=1"
+
     /**
      * Submit an exercise video of Client.
      *

@@ -1,43 +1,60 @@
 package pt.ipc_app.ui.screens.search
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.ui.components.MonitorsTable
-import pt.ipc_app.ui.components.ProgressState
+import pt.ipc_app.ui.components.*
+import pt.ipc_app.ui.components.TextFieldType
 
 @Composable
 fun SearchMonitorsScreen(
     monitors: List<MonitorOutput>,
     requestState: ProgressState,
+    onSearchRequest: (String) -> Unit = { },
     onMonitorClick: (MonitorOutput) -> Unit = { },
 ) {
+    var typedUsername by remember { mutableStateOf(value = "") }
+
     Column(
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .padding(top = 30.dp)
     ) {
+
         Text(
-            text = stringResource(id = R.string.search_results),
+            text = stringResource(id = R.string.search_monitors),
             style = MaterialTheme.typography.h4,
         )
 
-        if (requestState == ProgressState.WAITING)
-            CircularProgressIndicator()
-
-        MonitorsTable(
-            monitors = monitors,
-            onMonitorClick = onMonitorClick
+        CustomTextField(
+            fieldType = TextFieldType.SEARCH,
+            textToDisplay = typedUsername,
+            updateText = { typedUsername = it },
+            iconImageVector = Icons.Default.Search
         )
+
+        CircularButton(
+            icon = Icons.Default.Search,
+            isEnabled = requestState != ProgressState.WAITING,
+            state = requestState,
+            onClick = { onSearchRequest(typedUsername) }
+        )
+
+        Spacer(modifier = Modifier.padding(top = 10.dp))
+
+        if (monitors.isNotEmpty())
+            MonitorsTable(
+                monitors = monitors,
+                onMonitorClick = onMonitorClick
+            )
     }
 }

@@ -37,7 +37,7 @@ class ClientProfileViewModel(
         usersService.getProfilePicture(
             context = context,
             userId = sessionManager.userUUID,
-            token = sessionManager.userLoggedIn.token
+            token = sessionManager.userLoggedIn.accessToken
         )
 
     /**
@@ -48,7 +48,7 @@ class ClientProfileViewModel(
             request = {
                 usersService.getClientProfile(
                     clientId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = {
@@ -70,7 +70,7 @@ class ClientProfileViewModel(
                     image = image,
                     userId = sessionManager.userUUID,
                     role = Role.CLIENT,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE
                 }

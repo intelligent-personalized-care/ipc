@@ -45,6 +45,7 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        repo.clearSession()
         setContent {
             val state by viewModel.state.collectAsState()
 

@@ -40,9 +40,14 @@ class ExercisesViewModel(
     val exercises
         get() = _exercises.asStateFlow()
 
-    private var _nrSet = MutableStateFlow(defaultNofSets)
-    val nrSet
-        get() = _nrSet.asStateFlow()
+
+    private var _nrSetToSee = MutableStateFlow(1)
+    val nrSetToSee
+        get() = _nrSetToSee.asStateFlow()
+
+    private var _nrSetDone = MutableStateFlow(1)
+    val nrSetDone
+        get() = _nrSetDone.asStateFlow()
 
     private var _restTime = MutableStateFlow(defaultRestTime)
     val restTime
@@ -60,12 +65,12 @@ class ExercisesViewModel(
     /**
      * Increments the current set of an exercise
      */
-    fun incrementSet() = _nrSet.value++
+    fun incrementSet() = _nrSetDone.value++
 
     /**
      * After an exercise is completed resets the number of sets value
      */
-    fun resetSet() { _nrSet.value = defaultNofSets}
+    fun resetSet() { _nrSetDone.value = defaultNofSets }
 
     /**
      * Decrements the rest time
@@ -129,6 +134,22 @@ class ExercisesViewModel(
     ): String =
         exercisesService.getExercisePreviewUrl(exerciseInfoId)
 
+    /**
+     * Attempts to get a client video url of an exercise.
+     */
+    fun getExerciseVideoOfClientUrl(
+        clientId: String,
+        planId: Int,
+        dailyListId: Int,
+        exerciseId: Int
+    ): String =
+        exercisesService.getExerciseVideoOfClientUrl(
+            clientId = clientId,
+            planId = planId,
+            dailyListId = dailyListId,
+            exerciseId = exerciseId
+        )
+
     fun getExercises(
         skip: Int = 0
     ) {
@@ -136,7 +157,7 @@ class ExercisesViewModel(
             request = {
                 exercisesService.getExercises(
                     skip = skip,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = {
@@ -165,7 +186,7 @@ class ExercisesViewModel(
                     dailyListId = dailyListId,
                     exerciseId = exerciseId,
                     set = set,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     if (it !is APIResult.Success) _state.value = ProgressState.IDLE
                 }

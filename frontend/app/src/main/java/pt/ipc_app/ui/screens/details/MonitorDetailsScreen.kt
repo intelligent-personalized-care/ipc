@@ -1,12 +1,10 @@
 package pt.ipc_app.ui.screens.details
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +18,7 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.MonitorRating
 import pt.ipc_app.ui.components.RateMonitor
+import pt.ipc_app.ui.components.TextEmail
 import java.util.*
 
 @Composable
@@ -33,7 +32,7 @@ fun MonitorDetailsScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier.fillMaxWidth().padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.monitor_details_title),
@@ -46,20 +45,11 @@ fun MonitorDetailsScreen(
             text = monitor.name,
             style = MaterialTheme.typography.h6
         )
-        Row(
+        TextEmail(
+            email = monitor.email,
+            onClick = onSendEmailRequest,
             modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = null
-            )
-            Text(
-                text = monitor.email,
-                modifier = Modifier.clickable {
-                    onSendEmailRequest()
-                }
-            )
-        }
+        )
         MonitorRating(rating = monitor.rating)
 
         if (requestEnable) {
@@ -75,10 +65,11 @@ fun MonitorDetailsScreen(
             }
         }
 
-        RateMonitor(
-            modifier = Modifier.padding(top = 200.dp),
-            onSubmitRating = onRatedMonitor
-        )
+        if (monitor.isMyMonitor)
+            RateMonitor(
+                modifier = Modifier.padding(top = 150.dp),
+                onSubmitRating = onRatedMonitor
+            )
     }
 }
 

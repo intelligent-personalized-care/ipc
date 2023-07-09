@@ -47,14 +47,22 @@ fun ErrorAlert(
 }
 
 @Composable
-fun CheckProblemJson(error: ProblemJson) {
+fun CheckProblemJson(
+    error: ProblemJson,
+    message: String? = null,
+    onDismiss: () -> Unit = { }
+) {
     var showDialog by remember { mutableStateOf(true) }
 
     if (showDialog) {
         ErrorAlert(
             title = error.title,
+            message = message,
             buttonText = "OK",
-            onDismiss = { showDialog = false }
+            onDismiss = {
+                showDialog = false
+                onDismiss()
+            }
         )
     }
 }

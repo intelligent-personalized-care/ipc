@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Height
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -110,7 +111,8 @@ fun RegisterClientScreen(
                 iconImageVector = Icons.Default.Edit,
             )
         }
-        AuthenticationButton(
+        CircularButton(
+            icon = Icons.Default.Login,
             isEnabled = clientValidation != null,
             state = progressState,
             onClick = { if (clientValidation != null) onSaveRequest(clientValidation) }

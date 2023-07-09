@@ -1,9 +1,12 @@
 package pt.ipc_app.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -16,6 +19,7 @@ import pt.ipc_app.ui.components.CheckProblemJson
 import pt.ipc_app.ui.screens.AppClientScreen
 import pt.ipc_app.ui.screens.AppMonitorScreen
 import pt.ipc_app.ui.screens.AppViewModel
+import pt.ipc_app.ui.screens.login.LoginActivity
 import java.io.File
 import java.io.FileOutputStream
 
@@ -61,7 +65,17 @@ private fun ComponentActivity.setAppContent(
     setContent {
         content()
         viewModel.error?.let {
-            CheckProblemJson(error = it)
+            if (it.title == "Unauthenticated")
+                CheckProblemJson(
+                    error = it,
+                    message = "You need to authenticate yourself.",
+                    onDismiss = {
+                        LoginActivity.navigate(this)
+                        finish()
+                    }
+                )
+            else
+                CheckProblemJson(error = it)
         }
     }
 }
@@ -87,5 +101,18 @@ fun ComponentActivity.setAppContentMonitor(
             buttonBarClicked = viewModel.buttonBarClicked,
             content = content
         )
+    }
+}
+
+fun Context.createNotification() {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            "download_channel",
+            "File download",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
     }
 }

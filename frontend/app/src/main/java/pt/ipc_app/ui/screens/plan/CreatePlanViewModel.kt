@@ -45,7 +45,7 @@ class CreatePlanViewModel(
                 _exercisesState.value = ProgressState.WAITING
                 exercisesService.getExercises(
                     skip = skip,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     _exercisesState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }
@@ -70,7 +70,7 @@ class CreatePlanViewModel(
                 plansService.createPlan(
                     plan = plan,
                     monitorId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     _planState.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }

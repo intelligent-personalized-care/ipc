@@ -38,10 +38,12 @@ class MonitorDetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
         setAppContentClient(viewModel) {
             MonitorDetailsScreen(
                 monitor = monitor,
                 profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, monitor.id)) },
+                requestEnable = !monitor.requested,
                 onSendEmailRequest = { openSendEmail(monitor.email) },
                 onRequestedConnection = { viewModel.connectWithMonitor(monitor.id) },
                 onRatedMonitor = { viewModel.rateMonitor(monitor.id, it) }

@@ -20,10 +20,11 @@ class SessionManagerSharedPrefs(private val context: Context) {
         get() {
             val savedId = prefs.getString(ID, null)
             val savedName = prefs.getString(NAME, null)
-            val savedToken = prefs.getString(TOKEN, null)
+            val savedAccessToken = prefs.getString(ACCESS_TOKEN, null)
+            val savedRefreshToken = prefs.getString(REFRESH_TOKEN, null)
             val savedRole = prefs.getString(ROLE, null)
 
-            return getUserInfo(savedId, savedName, savedToken, savedRole)
+            return getUserInfo(savedId, savedName, savedAccessToken, savedRefreshToken, savedRole)
         }
 
         set(value) {
@@ -31,21 +32,22 @@ class SessionManagerSharedPrefs(private val context: Context) {
                 prefs.edit()
                     .remove(ID)
                     .remove(NAME)
-                    .remove(TOKEN)
+                    .remove(ACCESS_TOKEN)
+                    .remove(REFRESH_TOKEN)
                     .remove(ROLE)
                     .apply()
             else
                 prefs.edit()
                     .putString(ID, value.id)
                     .putString(NAME, value.name)
-                    .putString(TOKEN, value.token)
+                    .putString(ACCESS_TOKEN, value.accessToken)
+                    .putString(REFRESH_TOKEN, value.refreshToken)
                     .putString(ROLE, value.role.name)
                     .apply()
         }
 
     lateinit var userLoggedIn: UserInfo
     lateinit var userUUID: UUID
-
 
     /**
      * Checks if the user is logged in.
@@ -62,17 +64,34 @@ class SessionManagerSharedPrefs(private val context: Context) {
     /**
      * Updates the session with the given tokens and username.
      *
+     * @param id the user's id
      * @param name the user's name
-     * @param token the user's token
+     * @param accessToken the user's access token
+     * @param refreshToken the user's refresh token
      * @param role the user's role
      */
     fun setSession(
         id: String,
         name: String,
-        token: String,
+        accessToken: String,
+        refreshToken: String,
         role: Role
     ) {
-        userInfo = UserInfo(id, name, token, role)
+        userInfo = UserInfo(id, name, accessToken, refreshToken, role)
+        userLoggedIn = userInfo!!
+        userUUID = UUID.fromString(userLoggedIn.id)
+    }
+
+    /**
+     * Updates the session with the given tokens.
+     *
+     * @param accessToken the user's token
+     */
+    fun updateTokens(
+        accessToken: String,
+        refreshToken: String
+    ) {
+        userInfo = userInfo!!.copy(accessToken = accessToken, refreshToken = refreshToken)
         userLoggedIn = userInfo!!
         userUUID = UUID.fromString(userLoggedIn.id)
     }
@@ -84,13 +103,14 @@ class SessionManagerSharedPrefs(private val context: Context) {
         userInfo = null
     }
 
-    private fun getUserInfo(id: String?, name: String?, token: String?, role: String?): UserInfo? {
-        return if (id != null && name != null && token != null && role != null) {
+    private fun getUserInfo(id: String?, name: String?, accessToken: String?, refreshToken: String?, role: String?): UserInfo? {
+        return if (id != null && name != null && accessToken != null && refreshToken != null && role != null) {
             val roleValidation = role.toRole() ?: return null
             UserInfo(
                 id = id,
                 name = name,
-                token = token,
+                accessToken = accessToken,
+                refreshToken = refreshToken,
                 role = roleValidation
             )
         } else null
@@ -101,7 +121,8 @@ class SessionManagerSharedPrefs(private val context: Context) {
 
         private const val ID = "id"
         private const val NAME = "name"
-        private const val TOKEN = "token"
+        private const val ACCESS_TOKEN = "access_token"
+        private const val REFRESH_TOKEN = "refresh_token"
         private const val ROLE = "role"
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IPC</string>
+    <string name="app_name">IPCare</string>
 
     <string name="choose_role_screen_title">Choose a Role</string>
     <string name="register_client_screen_title">Register Client</string>
@@ -23,6 +23,7 @@
     <string name="hello">Hello</string>
 
     <string name="create_plan_screen_title">Create Plan</string>
+    <string name="plan_screen_title">Plan Details</string>
 
     <string name="create_plan_screen_label_name">Plan Name</string>
     <string name="create_plan_screen_label_startDate">Start Date</string>

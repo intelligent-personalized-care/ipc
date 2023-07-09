@@ -1,13 +1,9 @@
 package pt.ipc_app.ui.screens.profile
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +14,7 @@ import pt.ipc_app.R
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ButtonToUpdatePicture
 import pt.ipc_app.ui.components.ProgressState
+import pt.ipc_app.ui.components.TextEmail
 import java.util.*
 
 @Composable
@@ -51,15 +48,11 @@ fun ClientProfileScreen(
             )
         }
 
-        Row(
+        TextEmail(
+            email = client?.email ?: "",
+            clickable = false,
             modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = null
-            )
-            client?.let { Text(text = it.email) }
-        }
+        )
 
         Column(
             modifier = Modifier.padding(vertical = 20.dp)

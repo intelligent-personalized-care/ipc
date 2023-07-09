@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -65,7 +66,8 @@ fun LoginScreen(
                 keyboardType = KeyboardType.Password,
             )
         }
-        AuthenticationButton(
+        CircularButton(
+            icon = Icons.Default.Login,
             isEnabled = User.validateEmail(email) && User.validatePassword(password),
             state = progressState,
             onClick = { onSaveRequest(email, password) }

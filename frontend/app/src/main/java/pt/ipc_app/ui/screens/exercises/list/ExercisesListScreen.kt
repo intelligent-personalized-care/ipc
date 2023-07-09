@@ -21,7 +21,7 @@ fun ExercisesListScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier.fillMaxWidth().padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.exercises_title),
@@ -31,7 +31,7 @@ fun ExercisesListScreen(
             exercises = exercises,
             onExerciseChosen = onExerciseClick,
             onPaginationClick = onPaginationClick,
-            modifier = Modifier.height(620.dp)
+            modifier = Modifier.height(500.dp)
         )
     }
 }

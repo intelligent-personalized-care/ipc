@@ -10,13 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.service.models.exercises.ClientExercises
+import pt.ipc_app.service.models.exercises.ClientDailyExercises
+import java.time.LocalDate
 import java.util.UUID
 
 @Composable
 fun ClientExercisesToDoRow(
-    clientExercise: ClientExercises,
-    onClientSelect: (UUID) -> Unit = {}
+    clientExercise: ClientDailyExercises,
+    onClientSelect: (ClientDailyExercises) -> Unit = {  }
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -25,7 +26,7 @@ fun ClientExercisesToDoRow(
             .height(60.dp)
             .background(Color.White)
             .clickable {
-                onClientSelect(clientExercise.id)
+                onClientSelect(clientExercise)
             }
             .padding(8.dp)
     ) {

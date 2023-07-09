@@ -38,7 +38,7 @@ class ClientDetailsViewModel(
         usersService.getProfilePicture(
             context = context,
             userId = clientId,
-            token = sessionManager.userLoggedIn.token
+            token = sessionManager.userLoggedIn.accessToken
         )
 
     /**
@@ -49,7 +49,7 @@ class ClientDetailsViewModel(
     ) {
         launchAndExecuteRequest(
             request = {
-                usersService.getClientOfMonitor(sessionManager.userUUID, clientId, sessionManager.userLoggedIn.token)
+                usersService.getClientOfMonitor(sessionManager.userUUID, clientId, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _client.value = it
@@ -65,7 +65,7 @@ class ClientDetailsViewModel(
             request = {
                 plansService.getMonitorPlans(
                     monitorId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = {
@@ -87,7 +87,7 @@ class ClientDetailsViewModel(
                 plansService.associatePlanToClient(
                     monitorId = sessionManager.userUUID,
                     clientId = clientId,
-                    token = sessionManager.userLoggedIn.token,
+                    token = sessionManager.userLoggedIn.accessToken,
                     planId = planId,
                     startDate = startDate
                 )

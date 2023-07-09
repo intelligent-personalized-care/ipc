@@ -11,6 +11,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
+import pt.ipc_app.ui.screens.plan.PlanActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
@@ -59,6 +60,9 @@ class ClientDetailsActivity : ComponentActivity() {
                             planId = pid,
                             startDate = startDate
                         )
+                    },
+                    onPlanSelected = {
+                        PlanActivity.navigate(this, cl.id, cl.name, it)
                     }
                 )
         }

@@ -43,7 +43,7 @@ class MonitorHomeViewModel(
     fun getClientsOfMonitor() {
         launchAndExecuteRequest(
             request = {
-                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getClientsOfMonitor(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _clients.value = it
@@ -54,7 +54,7 @@ class MonitorHomeViewModel(
     fun getRequestsOfMonitor() {
         launchAndExecuteRequest(
             request = {
-                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.token)
+                usersService.getMonitorRequests(sessionManager.userUUID, sessionManager.userLoggedIn.accessToken)
             },
             onSuccess = {
                 _requests.value = it
@@ -68,7 +68,7 @@ class MonitorHomeViewModel(
         launchAndExecuteRequest(
             request = {
                 _clientsExercisesState.value = ProgressState.WAITING
-                usersService.getExercisesOfClients(sessionManager.userUUID, date, sessionManager.userLoggedIn.token).also {
+                usersService.getExercisesOfClients(sessionManager.userUUID, date, sessionManager.userLoggedIn.accessToken).also {
                     if (it !is APIResult.Success) _clientsExercisesState.value = ProgressState.IDLE
                 }
             },
@@ -89,7 +89,7 @@ class MonitorHomeViewModel(
                     monitorId = sessionManager.userUUID,
                     requestId = requestId,
                     requestDecision = requestDecision,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = {

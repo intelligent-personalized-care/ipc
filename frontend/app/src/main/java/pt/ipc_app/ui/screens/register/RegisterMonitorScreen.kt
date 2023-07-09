@@ -3,6 +3,8 @@ package pt.ipc_app.ui.screens.register
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,7 +15,7 @@ import pt.ipc_app.domain.user.Monitor
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
-import pt.ipc_app.ui.components.AuthenticationButton
+import pt.ipc_app.ui.components.CircularButton
 import pt.ipc_app.ui.components.RegisterUser
 
 /**
@@ -53,7 +55,8 @@ fun RegisterMonitorScreen(
                 error = error
             )
         }
-        AuthenticationButton(
+        CircularButton(
+            icon = Icons.Default.Login,
             isEnabled = monitorValidation != null,
             state = progressState,
             onClick = { if (monitorValidation != null) onSaveRequest(monitorValidation) }

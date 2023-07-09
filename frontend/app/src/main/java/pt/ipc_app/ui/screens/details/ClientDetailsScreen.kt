@@ -1,10 +1,7 @@
 package pt.ipc_app.ui.screens.details
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,14 +24,15 @@ fun ClientDetailsScreen(
     isMyClient: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
     plans: List<PlanInfoOutput> = listOf(),
-    onAssociatePlan: (Int, String) -> Unit = { _, _ -> }
+    onAssociatePlan: (Int, String) -> Unit = { _, _ -> },
+    onPlanSelected: (String) -> Unit = { }
 ) {
     var showPlansOfClient by remember { mutableStateOf(true) }
     var showPlansOfMonitor by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier.fillMaxWidth().padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.client_details_title),
@@ -47,18 +45,11 @@ fun ClientDetailsScreen(
             text = client.name,
             style = MaterialTheme.typography.h6
         )
-        Row {
-            Icon(
-                imageVector = Icons.Default.Email,
-                contentDescription = null
-            )
-            Text(
-                text = client.email,
-                modifier = Modifier.clickable {
-                    onSendEmailRequest()
-                }
-            )
-        }
+        TextEmail(
+            email = client.email,
+            onClick = onSendEmailRequest,
+            modifier = Modifier.padding(top = 10.dp)
+        )
         Column(
             modifier = Modifier.padding(vertical = 20.dp)
         ) {
@@ -109,7 +100,8 @@ fun ClientDetailsScreen(
 
             if (showPlansOfClient) {
                 ClientPlansList(
-                    plans = client.plans
+                    plans = client.plans,
+                    onPlanClick = { onPlanSelected(it.startDate) }
                 )
             }
 

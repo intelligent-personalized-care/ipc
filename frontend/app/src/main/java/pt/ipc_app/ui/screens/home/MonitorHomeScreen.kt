@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.domain.user.Role
-import pt.ipc_app.service.models.exercises.ClientExercises
+import pt.ipc_app.service.models.exercises.ClientDailyExercises
 import pt.ipc_app.session.UserInfo
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestInformation
@@ -29,12 +29,12 @@ fun MonitorHomeScreen(
     monitor: UserInfo,
     clientsOfMonitor: List<ClientOutput>,
     requestsOfMonitor: List<RequestInformation>,
-    clientsExercisesToDo: List<ClientExercises>,
+    clientsExercisesToDo: List<ClientDailyExercises>,
     clientsExercisesToDoProgressState: ProgressState = ProgressState.IDLE,
     onDaySelected: (LocalDate) -> Unit = { },
     onClientSelected: (ClientOutput) -> Unit = { },
     onClientRequestDecided: (RequestInformation, ConnectionRequestDecisionInput) -> Unit = { _, _ -> },
-    onClientExercisesSelected: (UUID) -> Unit = { }
+    onClientExercisesSelected:  (clientId: UUID, clientName: String, planDate: LocalDate) -> Unit = { _, _, _ -> }
 ) {
     var notificationsExpanded by remember { mutableStateOf(false) }
 
@@ -74,15 +74,14 @@ fun MonitorHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(top = 130.dp)
     ) {
-
         ClientsTable(
             columnText = stringResource(id = R.string.my_clients),
             clients = clientsOfMonitor,
             onClientClick = { onClientSelected(it) }
         )
 
-        DaysOfWeekRow(
-            centerDay = LocalDate.now(),
+        DaysWithLocalDateRow(
+            days = daysOfWeek(LocalDate.now()),
             daySelected = daySelected,
             onDaySelected = {
                 daySelected = it
@@ -92,10 +91,11 @@ fun MonitorHomeScreen(
 
         if (clientsExercisesToDoProgressState == ProgressState.WAITING)
             CircularProgressIndicator()
-        else ClientExercisesToDoList(
-            exercisesOfClients = clientsExercisesToDo,
-            onClientSelect = onClientExercisesSelected
-        )
+        else
+            ClientExercisesToDoList(
+                exercisesOfClients = clientsExercisesToDo,
+                onClientSelect = { onClientExercisesSelected(it.id, it.name, daySelected) }
+            )
 
     }
 }
@@ -104,11 +104,19 @@ fun MonitorHomeScreen(
 @Composable
 fun MonitorHomeScreenPreview() {
     MonitorHomeScreen(
-        monitor = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.MONITOR),
+        monitor = UserInfo(UUID.randomUUID().toString(), "Test", "", "", Role.MONITOR),
         clientsOfMonitor = listOf(ClientOutput(UUID.randomUUID(), "Tiago", "")),
         requestsOfMonitor = listOf(),
-        clientsExercisesToDo = listOf(ClientExercises(UUID.randomUUID(), "Tiago", listOf(
-            DailyExercise(1, UUID.randomUUID(), "Push ups", "", "")
-        )))
+        clientsExercisesToDo = listOf(
+            ClientDailyExercises(
+                id = UUID.randomUUID(),
+                name = "Tiago",
+                planId = 1,
+                dailyListId = 1,
+                exercises = listOf(
+                    DailyExercise(1, UUID.randomUUID(), "Push ups", "", "")
+                )
+            )
+        )
     )
 }

@@ -43,7 +43,6 @@ class CreatePlanActivity : ComponentActivity() {
                 exercises = viewModel.exercises.collectAsState().value,
                 onPlanCreation = {
                     viewModel.createPlan(it)
-                    finish()
                 },
                 onExercisesPaginationClick = { viewModel.getExercises(it) }
             )

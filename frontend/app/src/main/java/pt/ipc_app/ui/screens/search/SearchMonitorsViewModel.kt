@@ -36,7 +36,7 @@ class SearchMonitorsViewModel(
                 _state.value = ProgressState.WAITING
                 usersService.searchMonitorsAvailable(
                     name = name,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     _state.value = if (it is APIResult.Success) ProgressState.FINISHED else ProgressState.IDLE
                 }

@@ -43,7 +43,7 @@ class LoginViewModel(
                 }
             },
             onSuccess = {
-                sessionManager.setSession(it.id.toString(), it.name, it.token, it.role)
+                sessionManager.setSession(it.id.toString(), it.name, it.accessToken, it.refreshToken, it.role)
                 _state.value = ProgressState.FINISHED
             }
         )

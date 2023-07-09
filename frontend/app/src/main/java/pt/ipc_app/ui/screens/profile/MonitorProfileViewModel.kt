@@ -49,7 +49,7 @@ class MonitorProfileViewModel(
         usersService.getProfilePicture(
             context = context,
             userId = sessionManager.userUUID,
-            token = sessionManager.userLoggedIn.token
+            token = sessionManager.userLoggedIn.accessToken
         )
 
     /**
@@ -60,7 +60,7 @@ class MonitorProfileViewModel(
             request = {
                 usersService.getMonitorProfile(
                     monitorId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 )
             },
             onSuccess = {
@@ -82,7 +82,7 @@ class MonitorProfileViewModel(
                     image = image,
                     userId = sessionManager.userUUID,
                     role = Role.MONITOR,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     if (it !is APIResult.Success) _pictureState.value = ProgressState.IDLE
                 }
@@ -105,7 +105,7 @@ class MonitorProfileViewModel(
                 usersService.submitCredentialDocument(
                     doc = doc,
                     monitorId = sessionManager.userUUID,
-                    token = sessionManager.userLoggedIn.token
+                    token = sessionManager.userLoggedIn.accessToken
                 ).also {
                     if (it !is APIResult.Success) _documentState.value = ProgressState.IDLE
                 }

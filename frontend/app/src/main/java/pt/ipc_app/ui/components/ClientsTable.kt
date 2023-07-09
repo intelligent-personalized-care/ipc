@@ -3,30 +3,22 @@ package pt.ipc_app.ui.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import pt.ipc_app.R
 import pt.ipc_app.service.models.users.ClientOutput
-import pt.ipc_app.ui.theme.DarkBlue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClientsTable(
     columnText: String,
-    icon: ImageVector? = null,
     clients: List<ClientOutput>,
     modifier: Modifier = Modifier,
     onClientClick: (ClientOutput) -> Unit = { }
@@ -36,10 +28,12 @@ fun ClientsTable(
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 50.dp)
-            .height(200.dp)
+            .height(180.dp)
     ) {
         stickyHeader {
-            Row(modifier = Modifier.background(DarkBlue)) {
+            Row(
+                modifier = Modifier.background(Color(27, 69, 113))
+            ) {
                 ClientInfoEntry(
                     text = columnText,
                     textColor = Color.White,
@@ -57,17 +51,6 @@ fun ClientsTable(
                     onPersonClick = { onClientClick(it) },
                     enable = true
                 )
-
-                Spacer(modifier = Modifier.weight(0.1f))
-                icon?.let {
-                    Row {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = "Connect Client",
-                            tint = Color(131, 204, 46, 255)
-                        )
-                    }
-                }
             }
         }
     }
@@ -88,9 +71,12 @@ fun RowScope.ClientInfoEntry(
         modifier = Modifier
             .weight(weight)
             .padding(8.dp)
-            .clickable(enabled = enable) {
-                onPersonClick()
-            },
+            .clickable(
+                enabled = enable,
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = onPersonClick
+            ),
         textAlign = textAlign
     )
 }

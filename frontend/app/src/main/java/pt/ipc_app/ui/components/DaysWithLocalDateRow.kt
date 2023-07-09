@@ -5,8 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -24,22 +23,23 @@ import java.time.format.TextStyle
 import java.util.*
 
 @Composable
-fun DaysOfWeekRow(
-    centerDay: LocalDate = LocalDate.now(),
+fun DaysWithLocalDateRow(
+    days: List<LocalDate>,
     daySelected: LocalDate,
-    onDaySelected: (LocalDate) -> Unit
+    onDaySelected: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Row(
+    LazyRow(
         modifier = Modifier
             .padding(28.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        daysOfWeek(centerDay).forEach {
+        items(days) {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
+                modifier = modifier
                     .size(56.dp)
                     .border(1.dp, Color(131, 129, 129, 255), RoundedCornerShape(10.dp))
                     .clip(RoundedCornerShape(10.dp))
@@ -58,34 +58,6 @@ fun DaysOfWeekRow(
                     fontSize = 10.sp
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun DaysOfWeekRowWithoutLocalDate(
-    daySelected: Int,
-    totalDays: Int,
-    onDaySelected: (Int) -> Unit,
-    onDayAdded: () -> Unit
-) {
-    LazyRow(
-        modifier = Modifier
-            .padding(28.dp)
-            .fillMaxWidth()
-    ) {
-        items(totalDays) {
-            BoxDay(
-                day = it,
-                daySelected = daySelected,
-                onClick = onDaySelected,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-        }
-        item {
-            BoxDay(
-                onClick = { onDayAdded() }
-            )
         }
     }
 }

@@ -47,11 +47,13 @@ fun ClientHomeScreen(
             textAlign = TextAlign.End
         )
     }
-
-    NotificationIcon(
-        notifications = notifications,
-        onClick = { if (notifications) notifications = false }
-    )
+    Row {
+        Spacer(modifier = Modifier.weight(0.1f))
+        NotificationIcon(
+            notifications = notifications,
+            onClick = { if (notifications) notifications = false }
+        )
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,8 +77,8 @@ fun ClientHomeScreen(
                         else "No current plan assigned"
             )
 
-            DaysOfWeekRow(
-                centerDay = LocalDate.now(),
+            DaysWithLocalDateRow(
+                days = daysOfWeek(LocalDate.now()),
                 daySelected = daySelected,
                 onDaySelected = {
                     daySelected = it
@@ -104,7 +106,7 @@ fun ClientHomeScreen(
 @Composable
 fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT)
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", "", Role.CLIENT)
     )
 }
 
@@ -112,7 +114,7 @@ fun ClientHomeScreenWithoutMonitorAndPlanPreview() {
 @Composable
 fun ClientHomeScreenWithoutPlanPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", "", Role.CLIENT),
         monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", Rating(4.8F, 3))
     )
 }
@@ -121,7 +123,7 @@ fun ClientHomeScreenWithoutPlanPreview() {
 @Composable
 fun ClientHomeScreenPreview() {
     ClientHomeScreen(
-        client = UserInfo(UUID.randomUUID().toString(), "Test", "", Role.CLIENT),
+        client = UserInfo(UUID.randomUUID().toString(), "Test", "", "", Role.CLIENT),
         monitor = MonitorOutput(UUID.randomUUID(), "Miguel", "miguel@gmail.com", Rating(4.8F, 3)),
         plan = planTest
     )

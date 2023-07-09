@@ -16,7 +16,7 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 @Composable
 fun VideoPlayer(
     url: String,
-    playing: Boolean
+    playing: Boolean = true
 ) {
     val context = LocalContext.current
 

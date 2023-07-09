@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseInfo
@@ -51,7 +52,8 @@ fun ExercisesInfoPagination(
                         onPaginationClick(curSkip)
                     }
                 )
-                .padding(end = 230.dp)
+                .padding(end = 230.dp),
+            tint = if (curSkip != 0) Color.Black else Color.LightGray
         )
 
         Icon(
@@ -65,7 +67,8 @@ fun ExercisesInfoPagination(
                     curSkip += 10
                     onPaginationClick(curSkip)
                 }
-            )
+            ),
+            tint = if (exercises.size == 10) Color.Black else Color.LightGray
         )
     }
 }

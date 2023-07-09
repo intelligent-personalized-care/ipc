@@ -29,7 +29,7 @@ class VideoSubmissionOneTimeWorker(
                 dailyListId = dailyListId.toInt(),
                 exerciseId = exerciseId.toInt(),
                 set = nrSet.toInt(),
-                token = app.sessionManager.userLoggedIn.token
+                token = app.sessionManager.userLoggedIn.accessToken
             )
 
             when (res) {
