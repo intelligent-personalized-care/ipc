@@ -86,7 +86,7 @@ class ExercisesViewModel(
     fun incrementRecordTime(onStop: () -> Unit) {
         _stopRecordTime.value = false
         CoroutineScope(Dispatchers.IO).launch{
-            //300000 max time allowed of video time
+            //180000 max time allowed of video time
             while (recordTime.value < 10 && !stopRecordTime.value){
                 delay(1000)
                 _recordTime.value++

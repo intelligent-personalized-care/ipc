@@ -21,8 +21,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.text.TextUtils
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import pt.ipc_app.domain.exercise.Exercise
@@ -50,8 +48,8 @@ class PoseGraphic internal constructor(
     if (landmarks.isEmpty()) return
 
     val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
-    val lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
-    val lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
+    val leftEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
+    val leftEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
     val leftEyeOuter = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
     val rightEyeInner = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_INNER)
     val rightEye = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE)
@@ -85,17 +83,16 @@ class PoseGraphic internal constructor(
     val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
     val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
+    //Calculate whether the distance between the shoulder and the foot is the same width
+    val ratio = ratio(leftShoulder!!.position.x, rightShoulder!!.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
 
     //to divide each exercise logic
     when(exercise.exeTitle){
         "Squats" -> {
 
           //Calculate whether the hand exceeds the shoulder
-          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
-          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
-
-          //Calculate whether the distance between the shoulder and the foot is the same width
-          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder.position.y)
 
           //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightHip!!,rightKnee!!,rightAnkle,yRightHand,yLeftHand,ratio,
@@ -103,18 +100,15 @@ class PoseGraphic internal constructor(
             2, 5,
             "Please stand up straight", "Please hold your hands behind your head", "Please spread your feet shoulder-width apart")
 
-          doExerciseLogic(canvas, exerciseLogic)
+          doExerciseLogic(exerciseLogic)
 
           toDraw = !toDraw
         }
         "Push ups" -> {
 
           //Calculate whether the hand is in front of the shoulder
-          val yRightHand = differenceBetweenCoordinates(rightShoulder!!.position.y,rightWrist!!.position.y)
-          val yLeftHand = differenceBetweenCoordinates(leftShoulder!!.position.y, leftWrist!!.position.y)
-
-          //Calculate whether the distance between the shoulder and the foot is the same width
-          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+          val yRightHand = differenceBetweenCoordinates(rightShoulder.position.y,rightWrist!!.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftShoulder.position.y, leftWrist!!.position.y)
 
           //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
@@ -122,17 +116,15 @@ class PoseGraphic internal constructor(
             2, 12,
             "Please keep in a push up position", "Please hold your hands straight out in front of your body ", "Please spread your feet shoulder-width apart")
 
-          doExerciseLogic(canvas, exerciseLogic)
+          doExerciseLogic(exerciseLogic)
           toDraw = !toDraw
 
         }
         "Shoulder press" -> {
 
           //Calculate whether the hand exceeds the shoulder
-          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder!!.position.y)
-          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder!!.position.y)
-
-          val ratio = ratio(leftShoulder.position.x, rightShoulder.position.x, leftAnkle!!.position.x, rightAnkle!!.position.x)
+          val yRightHand = differenceBetweenCoordinates(rightWrist!!.position.y, rightShoulder.position.y)
+          val yLeftHand = differenceBetweenCoordinates(leftWrist!!.position.y, leftShoulder.position.y)
 
           //defining specific exercise logic
           val exerciseLogic = ExerciseLogic(rightWrist,rightElbow!!,rightShoulder,yRightHand,yLeftHand,ratio,
@@ -140,7 +132,7 @@ class PoseGraphic internal constructor(
             2, 12,
             "Please put your elbows slightly above shoulder height", "Please hold your hands above your shoulders ", "Please spread your feet shoulder-width apart")
 
-          doExerciseLogic(canvas, exerciseLogic)
+          doExerciseLogic(exerciseLogic)
 
           toDraw = !toDraw
         }
@@ -154,17 +146,17 @@ class PoseGraphic internal constructor(
       //draw points
       //left
       drawPoint(canvas, nose!!.position, whitePaint)
-      drawPoint(canvas, lefyEyeInner!!.position, leftPaint)
-      drawPoint(canvas, lefyEye!!.position, leftPaint)
+      drawPoint(canvas, leftEyeInner!!.position, leftPaint)
+      drawPoint(canvas, leftEye!!.position, leftPaint)
       drawPoint(canvas, leftEyeOuter!!.position, leftPaint)
       drawPoint(canvas, leftEar!!.position, leftPaint)
       drawPoint(canvas, leftMouth!!.position, leftPaint)
-      drawPoint(canvas, leftShoulder!!.position, leftPaint)
+      drawPoint(canvas, leftShoulder.position, leftPaint)
       drawPoint(canvas, leftElbow!!.position, leftPaint)
       drawPoint(canvas, leftWrist!!.position, leftPaint)
       drawPoint(canvas, leftHip!!.position, leftPaint)
       drawPoint(canvas, leftKnee!!.position, leftPaint)
-      drawPoint(canvas, leftAnkle!!.position, leftPaint)
+      drawPoint(canvas, leftAnkle.position, leftPaint)
       drawPoint(canvas, leftPinky!!.position, leftPaint)
       drawPoint(canvas, leftIndex!!.position, leftPaint)
       drawPoint(canvas, leftThumb!!.position, leftPaint)
@@ -177,12 +169,12 @@ class PoseGraphic internal constructor(
       drawPoint(canvas, rightEyeOuter!!.position, rightPaint)
       drawPoint(canvas, rightEar!!.position, rightPaint)
       drawPoint(canvas, rightMouth!!.position, rightPaint)
-      drawPoint(canvas, rightShoulder!!.position, rightPaint)
+      drawPoint(canvas, rightShoulder.position, rightPaint)
       drawPoint(canvas, rightElbow!!.position, rightPaint)
       drawPoint(canvas, rightWrist!!.position, rightPaint)
       drawPoint(canvas, rightHip!!.position, rightPaint)
       drawPoint(canvas, rightKnee!!.position, rightPaint)
-      drawPoint(canvas, rightAnkle!!.position, rightPaint)
+      drawPoint(canvas, rightAnkle.position, rightPaint)
       drawPoint(canvas, rightPinky!!.position, rightPaint)
       drawPoint(canvas, rightIndex!!.position, rightPaint)
       drawPoint(canvas, rightThumb!!.position, rightPaint)
@@ -192,9 +184,9 @@ class PoseGraphic internal constructor(
 
       //draw lines between points
       // Face
-      drawLine(canvas, nose.position, lefyEyeInner.position, whitePaint)
-      drawLine(canvas, lefyEyeInner.position, lefyEye.position, whitePaint)
-      drawLine(canvas, lefyEye.position, leftEyeOuter.position, whitePaint)
+      drawLine(canvas, nose.position, leftEyeInner.position, whitePaint)
+      drawLine(canvas, leftEyeInner.position, leftEye.position, whitePaint)
+      drawLine(canvas, leftEye.position, leftEyeOuter.position, whitePaint)
       drawLine(canvas, leftEyeOuter.position, leftEar.position, whitePaint)
       drawLine(canvas, nose.position, rightEyeInner.position, whitePaint)
       drawLine(canvas, rightEyeInner.position, rightEye.position, whitePaint)
@@ -232,6 +224,9 @@ class PoseGraphic internal constructor(
       drawLine(canvas, rightAnkle.position, rightHeel.position, rightPaint)
       drawLine(canvas, rightHeel.position, rightFootIndex.position, rightPaint)
       drawLine(canvas, rightAnkle.position, rightFootIndex.position, rightPaint)
+
+      //draws all the info regarding the exercise
+      drawInfoOnScreen(canvas)
     }
   }
 
@@ -359,7 +354,7 @@ class PoseGraphic internal constructor(
   /**
    * Implements the exercise logic
    * */
-  private fun doExerciseLogic(canvas: Canvas, exerciseLogic: ExerciseLogic){
+  private fun doExerciseLogic(exerciseLogic: ExerciseLogic){
 
     val angle = getAngle(exerciseLogic.firstPoint, exerciseLogic.midPoint, exerciseLogic.lastPoint)
 
@@ -405,18 +400,25 @@ class PoseGraphic internal constructor(
         lastHeight = currentHeight
       }
     }
+  }
+
+  /**
+   * Draw all the text needed in pose detection screen
+   * */
+  private fun drawInfoOnScreen(canvas: Canvas) {
     drawText(canvas, lineOneText, null,-3)
     drawText(canvas, lineTwoText, null,-2)
     drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
     drawText(canvas, "Sets done: ${viewModel.nrSet.value - 1}/${exercise.exeSets}",null,1)
-    drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3 )
+
+    if(viewModel.restTime.value in 1 until 30) drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
 
     if(viewModel.restTime.value == 0 && (viewModel.nrSet.value - 1) < exercise.exeSets)
       drawText(canvas, "GO! Do the next set",null, 4)
     else
       if(viewModel.restTime.value in 1 until 30) drawText(canvas, "Time to REST!",null, 4)
 
-    drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 5)
+    if(viewModel.recordTime.value != 0)  drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
   }
 
   /**
