@@ -189,7 +189,7 @@ class JdbiMonitorsRepository(
             .bind("skip", skip)
             .bind("limit", limit)
             .mapTo<MonitorAvailable>()
-            .toList()
+            .toList().map { it.copy(rating = getMonitorRating(it.id)) }
     }
 
     override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID, decision: Boolean) {
@@ -270,20 +270,22 @@ class JdbiMonitorsRepository(
                 .bind("planID", planInfo.id)
                 .mapTo<Int>().single()
 
-        val exercises = handle.createQuery(
-            """
-                select de.id, de.ex_id, title, description, type, sets, reps,
-                    case when ev.dt_submit is null then 0 else 1 end as is_done
-                from dbo.daily_exercises de
-                inner join dbo.daily_lists dl on de.daily_list_id = dl.id 
-                inner join dbo.exercises_info ei on ei.id = de.ex_id
-                left join dbo.exercises_video ev on de.id = ev.ex_id
-                where daily_list_id = :dailyListID
-            """.trimIndent()
-        )
-            .bind("dailyListID", dailyListID)
-            .mapTo<DailyExercise>()
-            .toList()
+        val exercises: List<DailyExercise> =
+            handle.createQuery(
+                """
+                    select de.id, de.ex_id, ei.title, ei.description, ei.type, de.sets, de.reps,
+                        case when count(ev.ex_id) != de.sets then 0 else 1 end as is_done
+                    from dbo.daily_exercises de 
+                    inner join dbo.daily_lists dl on de.daily_list_id = dl.id
+                    inner join dbo.exercises_info ei on ei.id = de.ex_id
+                    left join dbo.exercises_video ev on de.id = ev.ex_id
+                    where daily_list_id = :dailyListID
+                    group by de.id, dl.plan_id, dl.id,ei.title, ei.description, ei.type, de.sets, de.reps
+                    """.trimIndent()
+            )
+                .bind("dailyListID", dailyListID)
+                .mapTo<DailyExercise>()
+                .toList()
 
         return ClientDailyExercises(
             id = clientData.id,

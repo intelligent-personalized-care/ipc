@@ -1,6 +1,7 @@
 package pt.ipc_app.ui.screens.profile
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,7 +28,7 @@ fun ClientProfileScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier.fillMaxWidth().padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.profile_title),

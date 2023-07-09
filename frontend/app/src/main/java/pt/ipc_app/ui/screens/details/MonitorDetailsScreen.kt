@@ -52,7 +52,7 @@ fun MonitorDetailsScreen(
         )
         MonitorRating(rating = monitor.rating)
 
-        if (requestEnable) {
+        if (!monitor.isMyMonitor && requestEnable) {
             Button(
                 onClick = { onRequestedConnection() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
