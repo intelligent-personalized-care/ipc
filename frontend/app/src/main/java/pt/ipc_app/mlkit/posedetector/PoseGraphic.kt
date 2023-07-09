@@ -141,7 +141,8 @@ class PoseGraphic internal constructor(
           toDraw = !toDraw
         }
         else -> {
-          //present a text saying that this exercise is not yet supported
+          //presents a text saying that this exercise is not yet supported
+          drawText(canvas,"Exercise not yet supported",3, -3)
         }
     }
 
@@ -228,10 +229,11 @@ class PoseGraphic internal constructor(
       drawLine(canvas, rightAnkle.position, rightHeel.position, rightPaint)
       drawLine(canvas, rightHeel.position, rightFootIndex.position, rightPaint)
       drawLine(canvas, rightAnkle.position, rightFootIndex.position, rightPaint)
-
-      //draws all the info regarding the exercise
-      drawInfoOnScreen(canvas)
     }
+
+    //draws all the info regarding the exercise
+    drawInfoOnScreen(canvas,toDraw)
+
   }
 
   /**
@@ -409,11 +411,16 @@ class PoseGraphic internal constructor(
   /**
    * Draw all the text needed in pose detection screen
    * */
-  private fun drawInfoOnScreen(canvas: Canvas) {
-    drawText(canvas, lineOneText, null,-3)
-    drawText(canvas, lineTwoText, null,-2)
-    drawText(canvas, "Rep count: $upCount/${exercise.exeReps}",null, -1)
-    drawText(canvas, "Sets done: ${viewModel.nrSetDone.value - 1}/${exercise.exeSets}",null,1)
+  private fun drawInfoOnScreen(canvas: Canvas, isPoseDetectionSupported: Boolean) {
+    if(isPoseDetectionSupported) {
+      drawText(canvas, lineOneText, null, -3)
+      drawText(canvas, lineTwoText, null, -2)
+      drawText(canvas, "Rep count: $upCount/${exercise.exeReps}", null, -1)
+    }else{
+      drawText(canvas, "Reps to do: ${exercise.exeReps}", null, -1)
+    }
+
+    drawText(canvas, "Sets done: ${viewModel.nrSetDone.value - 1}/${exercise.exeSets}", null, 1)
 
     if (viewModel.isResting()) {
       drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
@@ -422,9 +429,9 @@ class PoseGraphic internal constructor(
 
     if(viewModel.isRecording()) {
       drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
-      drawText(canvas, "GO! Do the next set",null, 4)
     }
 
+    if(!viewModel.isResting()) drawText(canvas, "GO! Do the next set",null, 4)
   }
 
   /**
