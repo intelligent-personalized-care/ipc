@@ -57,7 +57,7 @@ import pt.ipc_app.utils.viewModelInit
 import java.io.File
 import java.util.*
 
-/** Live preview demo app for ML Kit APIs using CameraX. */
+/** Live preview using CameraX. */
 @KeepName
 class CameraXLivePreviewActivity :
     AppCompatActivity(), OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
@@ -148,7 +148,7 @@ class CameraXLivePreviewActivity :
             startActivity(intent)
         }
 
-        //verifies all permissions before acessing camera
+        //verifies all permissions before accessing camera
         if (!allRuntimePermissionsGranted())
             getRuntimePermissions()
 
@@ -158,22 +158,22 @@ class CameraXLivePreviewActivity :
         createVideoCapture()
 
         setupRecordingButton {
-            if (exercise is ExerciseTotalInfo) {
-                createWorker()
+            //free exercises aren't sent to storage, only the exercises in a plan
+            if (exercise is ExerciseTotalInfo) createWorker()
 
-                if (viewModel.nrSet.value == exercise.exeSets) {
-                    //in the final set waits a little to assure the response arrives
-                    viewModel.resetRestTime()
-                    viewModel.decrementRestTime{
-                        viewModel.resetSet()
-                        finish()
-                    }
-                }
-                else viewModel.decrementRestTime()
-
-                viewModel.incrementSet()
+            if (viewModel.nrSet.value == exercise.exeSets) {
+                //in the final set waits a little to assure the response arrives
                 viewModel.resetRestTime()
+                viewModel.decrementRestTime{
+                    viewModel.resetSet()
+                    finish()
+                }
             }
+            else viewModel.decrementRestTime()
+
+            viewModel.incrementSet()
+            viewModel.resetRestTime()
+
         }
     }
 
@@ -411,12 +411,19 @@ class CameraXLivePreviewActivity :
         recordButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()
+                viewModel.stopRecordTime()
                 //when pressed alters the camera button color
                 recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
 
             } else {
                 if(viewModel.restTime.value == 30 || viewModel.restTime.value == 0 ) {
                     startRecording(onSubmission)
+                    //increments clock and if the recording time surpasses the limit stops the video
+                    viewModel.incrementRecordTime{
+                        stopRecording()
+                        viewModel.stopRecordTime()
+                        recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
+                    }
                     //when pressed alters the camera button color
                     recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.red_200)
                 }
@@ -465,7 +472,7 @@ class CameraXLivePreviewActivity :
     }
 
 
-    //--------------------------- for different exercices -------------------------------
+    //--------------------------- for different exercises -------------------------------
 
     @Suppress("deprecation")
     private val exercise: Exercise by lazy {

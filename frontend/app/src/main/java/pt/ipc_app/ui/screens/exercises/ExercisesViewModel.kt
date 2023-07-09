@@ -43,6 +43,15 @@ class ExercisesViewModel(
     val restTime
         get() = _restTime .asStateFlow()
 
+    private var _recordTime = MutableStateFlow(0)
+    val recordTime
+        get() = _recordTime .asStateFlow()
+
+    private var _stopRecordTime = MutableStateFlow(false)
+    val stopRecordTime
+        get() = _stopRecordTime .asStateFlow()
+
+
     /**
      * Increments the current set of an exercise
      */
@@ -58,7 +67,7 @@ class ExercisesViewModel(
      */
     fun decrementRestTime(onFinish: () -> Unit = {} ) {
         CoroutineScope(Dispatchers.IO).launch{
-            while (_restTime.value > 0 ){
+            while (restTime.value > 0 ){
                 delay(1000)
                 _restTime.value--
             }
@@ -70,6 +79,31 @@ class ExercisesViewModel(
      * After a rest period is completed resets the timer
      */
     fun resetRestTime() { _restTime.value = 30}
+
+    /**
+     * Increment the record time
+     */
+    fun incrementRecordTime(onStop: () -> Unit) {
+        _stopRecordTime.value = false
+        CoroutineScope(Dispatchers.IO).launch{
+            //300000 max time allowed of video time
+            while (recordTime.value < 10 && !stopRecordTime.value){
+                delay(1000)
+                _recordTime.value++
+            }
+           // stopRecordTime()
+            onStop()
+        }
+    }
+
+    /**
+     * Changes the stopRecordTime var to allow the stoppage of a video and resets the timer
+     */
+    fun stopRecordTime() {
+        _stopRecordTime.value = true
+        _recordTime.value = 0
+    }
+
 
     /**
      * Attempts to get a preview url of an exercise.
