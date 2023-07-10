@@ -1,9 +1,9 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.Exercise
-import pt.ipc.domain.ExerciseInfo
-import pt.ipc.domain.ExerciseType
-import pt.ipc.http.models.VideoFeedBack
+import pt.ipc.domain.exercises.Exercise
+import pt.ipc.domain.exercises.ExerciseInfo
+import pt.ipc.domain.exercises.ExerciseType
+import pt.ipc.domain.plan.VideoFeedBack
 import java.time.LocalDate
 import java.util.UUID
 

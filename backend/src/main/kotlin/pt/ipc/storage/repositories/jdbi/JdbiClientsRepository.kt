@@ -2,8 +2,8 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.Client
-import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.client.Client
+import pt.ipc.domain.client.ClientOutput
 import pt.ipc.storage.repositories.ClientsRepository
 import java.time.LocalDate
 import java.util.UUID

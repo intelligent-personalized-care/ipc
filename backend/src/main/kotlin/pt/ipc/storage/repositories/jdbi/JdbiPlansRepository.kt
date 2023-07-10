@@ -2,11 +2,11 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.DailyExercise
-import pt.ipc.domain.DailyListOutput
-import pt.ipc.domain.PlanInput
-import pt.ipc.domain.PlanOutput
-import pt.ipc.http.models.PlanInfoOutput
+import pt.ipc.domain.exercises.DailyExercise
+import pt.ipc.domain.plan.DailyListOutput
+import pt.ipc.domain.plan.PlanInfoOutput
+import pt.ipc.domain.plan.PlanInput
+import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.storage.repositories.PlansRepository
 import java.time.LocalDate
 import java.util.*

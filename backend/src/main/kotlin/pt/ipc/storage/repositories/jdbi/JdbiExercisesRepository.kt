@@ -2,10 +2,10 @@ package pt.ipc.storage.repositories.jdbi
 
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import pt.ipc.domain.Exercise
-import pt.ipc.domain.ExerciseInfo
-import pt.ipc.domain.ExerciseType
-import pt.ipc.http.models.VideoFeedBack
+import pt.ipc.domain.exercises.Exercise
+import pt.ipc.domain.exercises.ExerciseInfo
+import pt.ipc.domain.exercises.ExerciseType
+import pt.ipc.domain.plan.VideoFeedBack
 import pt.ipc.storage.repositories.ExerciseRepository
 import java.time.Duration
 import java.time.LocalDate

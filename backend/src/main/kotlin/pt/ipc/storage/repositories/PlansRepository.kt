@@ -1,8 +1,8 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.PlanInput
-import pt.ipc.domain.PlanOutput
-import pt.ipc.http.models.PlanInfoOutput
+import pt.ipc.domain.plan.PlanInfoOutput
+import pt.ipc.domain.plan.PlanInput
+import pt.ipc.domain.plan.PlanOutput
 import java.time.LocalDate
 import java.util.*
 

@@ -6,7 +6,7 @@ import pt.ipc.domain.User
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.Unauthenticated
 import pt.ipc.domain.jwt.JwtUtils
-import pt.ipc.services.serviceImpl.ServiceUtils
+import pt.ipc.services.ServiceUtils
 import java.util.UUID
 
 @Component

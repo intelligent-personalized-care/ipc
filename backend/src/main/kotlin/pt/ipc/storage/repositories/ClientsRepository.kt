@@ -1,7 +1,7 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.Client
-import pt.ipc.domain.ClientOutput
+import pt.ipc.domain.client.Client
+import pt.ipc.domain.client.ClientOutput
 import java.time.LocalDate
 import java.util.*
 

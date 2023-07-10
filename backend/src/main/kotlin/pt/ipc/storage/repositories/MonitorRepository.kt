@@ -1,14 +1,14 @@
 package pt.ipc.storage.repositories
 
-import pt.ipc.domain.ClientDailyExercises
-import pt.ipc.domain.ClientOfMonitor
-import pt.ipc.domain.MonitorDetails
+import pt.ipc.domain.client.ClientDailyExercises
+import pt.ipc.domain.client.ClientOfMonitor
+import pt.ipc.domain.monitor.MonitorDetails
 import pt.ipc.domain.User
-import pt.ipc.http.models.ClientInformation
-import pt.ipc.http.models.MonitorAvailable
-import pt.ipc.http.models.MonitorProfile
-import pt.ipc.http.models.Rating
-import pt.ipc.http.models.RequestInformation
+import pt.ipc.domain.client.ClientInformation
+import pt.ipc.domain.monitor.MonitorAvailable
+import pt.ipc.domain.monitor.MonitorProfile
+import pt.ipc.domain.monitor.Rating
+import pt.ipc.domain.monitor.RequestInformation
 import java.time.LocalDate
 import java.util.UUID
 

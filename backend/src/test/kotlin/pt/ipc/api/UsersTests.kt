@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.dtos.CredentialsOutput
-import pt.ipc.services.dtos.RegisterClientInput
+import pt.ipc.http.controllers.clients.models.RegisterClientInput
 import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.storage.repositories.jdbi.configure
 import java.util.*

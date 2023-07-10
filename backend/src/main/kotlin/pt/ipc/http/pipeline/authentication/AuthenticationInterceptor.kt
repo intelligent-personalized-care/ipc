@@ -6,9 +6,9 @@ import org.springframework.web.servlet.HandlerInterceptor
 import pt.ipc.domain.User
 import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.domain.exceptions.Unauthenticated
-import pt.ipc.http.controllers.AdminController
-import pt.ipc.http.controllers.ClientsController
-import pt.ipc.http.controllers.MonitorsController
+import pt.ipc.http.controllers.admin.AdminController
+import pt.ipc.http.controllers.clients.ClientsController
+import pt.ipc.http.controllers.monitors.MonitorsController
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
