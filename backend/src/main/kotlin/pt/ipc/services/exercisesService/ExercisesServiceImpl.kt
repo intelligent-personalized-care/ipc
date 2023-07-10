@@ -1,13 +1,13 @@
 package pt.ipc.services.exercisesService
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.exercises.ExerciseInfo
-import pt.ipc.domain.exercises.ExerciseType
-import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.domain.exceptions.ClientDontHavePlan
 import pt.ipc.domain.exceptions.ClientNotPostedVideo
 import pt.ipc.domain.exceptions.ExerciseNotExists
 import pt.ipc.domain.exceptions.ForbiddenRequest
+import pt.ipc.domain.exercises.ExerciseInfo
+import pt.ipc.domain.exercises.ExerciseType
+import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.domain.plan.VideoFeedBack
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate

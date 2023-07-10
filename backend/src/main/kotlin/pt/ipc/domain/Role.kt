@@ -11,6 +11,18 @@ enum class Role {
             CLIENT, ADMIN -> false
         }
 
+    fun isClient(): Boolean =
+        when (this) {
+            CLIENT -> true
+            MONITOR, ADMIN -> false
+        }
+
+    fun isAdmin(): Boolean =
+        when (this) {
+            ADMIN -> true
+            MONITOR, CLIENT -> false
+        }
+
     fun notAdmin(): Boolean =
         when (this) {
             CLIENT, MONITOR -> true

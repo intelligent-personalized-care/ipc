@@ -5,5 +5,3 @@ import pt.ipc.domain.monitor.MonitorAvailable
 data class AllMonitorsAvailableOutput(
     val monitors: List<MonitorAvailable>
 )
-
-

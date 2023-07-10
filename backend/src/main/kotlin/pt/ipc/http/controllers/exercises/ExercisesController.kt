@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import pt.ipc.domain.User
 import pt.ipc.domain.exercises.ExerciseInfo
 import pt.ipc.domain.exercises.ExerciseType
 import pt.ipc.domain.plan.PlanOutput
-import pt.ipc.domain.User
-import pt.ipc.http.controllers.exercises.models.ListOfExercisesInfo
 import pt.ipc.domain.plan.VideoFeedBack
+import pt.ipc.http.controllers.exercises.models.ListOfExercisesInfo
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.Uris

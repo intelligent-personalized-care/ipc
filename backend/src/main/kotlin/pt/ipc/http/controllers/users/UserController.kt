@@ -14,12 +14,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import pt.ipc.domain.User
 import pt.ipc.domain.jwt.PairOfTokens
 import pt.ipc.http.controllers.users.models.LoginInput
-import pt.ipc.services.dtos.LoginOutput
 import pt.ipc.http.controllers.users.models.RefreshTokenInput
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem
 import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
+import pt.ipc.services.dtos.LoginOutput
 import pt.ipc.services.userService.UserService
 import java.util.UUID
 

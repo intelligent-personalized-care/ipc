@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import pt.ipc.domain.User
 import pt.ipc.domain.client.ClientOutput
+import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.domain.exercises.Exercise
 import pt.ipc.domain.monitor.RatingInput
-import pt.ipc.domain.User
-import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.http.controllers.clients.models.AllMonitorsAvailableOutput
 import pt.ipc.http.controllers.clients.models.ConnectionRequest
 import pt.ipc.http.controllers.clients.models.ListOfExercisesOfClient
-import pt.ipc.services.dtos.MonitorOutput
+import pt.ipc.http.controllers.clients.models.RegisterClientInput
 import pt.ipc.http.controllers.clients.models.RequestIdOutput
 import pt.ipc.http.models.emitter.PostedVideo
 import pt.ipc.http.models.emitter.RequestMonitor
@@ -29,7 +29,7 @@ import pt.ipc.http.utils.SseEmitterRepository
 import pt.ipc.http.utils.Uris
 import pt.ipc.services.clientService.ClientsService
 import pt.ipc.services.dtos.CredentialsOutput
-import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.services.dtos.MonitorOutput
 import java.time.LocalDate
 import java.util.UUID
 

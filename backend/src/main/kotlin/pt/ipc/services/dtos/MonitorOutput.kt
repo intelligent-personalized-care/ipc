@@ -9,5 +9,3 @@ data class MonitorOutput(
     val email: String,
     val rating: Rating
 )
-
-

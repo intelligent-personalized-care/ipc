@@ -1,9 +1,9 @@
 package pt.ipc.services.adminService
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.exercises.ExerciseType
 import pt.ipc.domain.Role
 import pt.ipc.domain.encryption.EncryptionUtils
+import pt.ipc.domain.exercises.ExerciseType
 import pt.ipc.services.ServiceUtils
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.MonitorInfo

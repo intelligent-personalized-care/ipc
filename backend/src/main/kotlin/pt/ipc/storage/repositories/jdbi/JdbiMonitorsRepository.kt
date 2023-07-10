@@ -3,17 +3,17 @@ package pt.ipc.storage.repositories.jdbi
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 import org.jdbi.v3.core.mapper.reflect.ColumnName
+import pt.ipc.domain.User
 import pt.ipc.domain.client.ClientDailyExercises
+import pt.ipc.domain.client.ClientInformation
 import pt.ipc.domain.client.ClientOfMonitor
 import pt.ipc.domain.exercises.DailyExercise
-import pt.ipc.domain.monitor.MonitorDetails
-import pt.ipc.domain.plan.PlanOfClient
-import pt.ipc.domain.User
-import pt.ipc.domain.client.ClientInformation
 import pt.ipc.domain.monitor.MonitorAvailable
+import pt.ipc.domain.monitor.MonitorDetails
 import pt.ipc.domain.monitor.MonitorProfile
 import pt.ipc.domain.monitor.Rating
 import pt.ipc.domain.monitor.RequestInformation
+import pt.ipc.domain.plan.PlanOfClient
 import pt.ipc.storage.repositories.MonitorRepository
 import java.time.Duration
 import java.time.LocalDate
@@ -281,7 +281,7 @@ class JdbiMonitorsRepository(
                     left join dbo.exercises_video ev on de.id = ev.ex_id
                     where daily_list_id = :dailyListID
                     group by de.id, dl.plan_id, dl.id,ei.title, ei.description, ei.type, de.sets, de.reps
-                    """.trimIndent()
+                """.trimIndent()
             )
                 .bind("dailyListID", dailyListID)
                 .mapTo<DailyExercise>()

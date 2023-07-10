@@ -1,10 +1,10 @@
 package pt.ipc.services.clientService
 
 import org.springframework.stereotype.Service
+import pt.ipc.domain.Role
 import pt.ipc.domain.client.Client
 import pt.ipc.domain.client.ClientOutput
-import pt.ipc.domain.exercises.Exercise
-import pt.ipc.domain.Role
+import pt.ipc.domain.client.toLocalDate
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.AlreadyRatedThisMonitor
 import pt.ipc.domain.exceptions.ClientAlreadyHaveMonitor
@@ -13,12 +13,12 @@ import pt.ipc.domain.exceptions.ExerciseAlreadyUploaded
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
 import pt.ipc.domain.exceptions.UserNotExists
-import pt.ipc.domain.client.toLocalDate
+import pt.ipc.domain.exercises.Exercise
 import pt.ipc.domain.monitor.MonitorAvailable
-import pt.ipc.services.dtos.MonitorOutput
+import pt.ipc.http.controllers.clients.models.RegisterClientInput
 import pt.ipc.services.ServiceUtils
 import pt.ipc.services.dtos.CredentialsOutput
-import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.services.dtos.MonitorOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
 import java.util.UUID

@@ -1,7 +1,6 @@
 package pt.ipc.domain.jwt
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import org.springframework.stereotype.Component
 import pt.ipc.domain.Role
@@ -63,7 +62,6 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
     }
 
     fun getUserInfo(token: String): Triple<UUID, Role, UUID> {
-
         val claims = getClaimsOfToken(token = token)
 
         val id = claims[userID].toUUID()
@@ -71,7 +69,6 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
         val sessionID = claims[sessionID].toUUID()
 
         return Triple(first = id, second = role, third = sessionID)
-
     }
 
     fun getSessionID(token: String): UUID {
@@ -86,10 +83,10 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
             .parseClaimsJws(token).body
     }
 
-    private fun Any?.toUUID() : UUID{
-        return try{
+    private fun Any?.toUUID(): UUID {
+        return try {
             UUID.fromString(this.toString())
-        }catch (e : Exception){
+        } catch (e: Exception) {
             throw Unauthenticated
         }
     }

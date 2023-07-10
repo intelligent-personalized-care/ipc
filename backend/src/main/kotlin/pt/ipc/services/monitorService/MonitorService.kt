@@ -1,14 +1,14 @@
 package pt.ipc.services.monitorService
 
 import pt.ipc.domain.client.ClientDailyExercises
+import pt.ipc.domain.client.ClientInformation
 import pt.ipc.domain.client.ClientOfMonitor
 import pt.ipc.domain.monitor.MonitorDetails
+import pt.ipc.domain.monitor.MonitorProfile
+import pt.ipc.domain.monitor.RequestInformation
+import pt.ipc.domain.plan.PlanInfoOutput
 import pt.ipc.domain.plan.PlanInput
 import pt.ipc.domain.plan.PlanOutput
-import pt.ipc.domain.client.ClientInformation
-import pt.ipc.domain.monitor.MonitorProfile
-import pt.ipc.domain.plan.PlanInfoOutput
-import pt.ipc.domain.monitor.RequestInformation
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.RegisterInput
 import java.time.LocalDate

@@ -1,13 +1,11 @@
 package pt.ipc.services.monitorService
 
 import org.springframework.stereotype.Service
-import pt.ipc.domain.client.ClientDailyExercises
-import pt.ipc.domain.client.ClientOfMonitor
-import pt.ipc.domain.monitor.MonitorDetails
-import pt.ipc.domain.plan.PlanInput
-import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.domain.Role
 import pt.ipc.domain.User
+import pt.ipc.domain.client.ClientDailyExercises
+import pt.ipc.domain.client.ClientInformation
+import pt.ipc.domain.client.ClientOfMonitor
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
 import pt.ipc.domain.exceptions.HasNotUploadedVideo
@@ -17,10 +15,12 @@ import pt.ipc.domain.exceptions.NotPlanOfMonitor
 import pt.ipc.domain.exceptions.PlanNotFound
 import pt.ipc.domain.exceptions.RequestNotExists
 import pt.ipc.domain.exceptions.UserNotExists
-import pt.ipc.domain.client.ClientInformation
+import pt.ipc.domain.monitor.MonitorDetails
 import pt.ipc.domain.monitor.MonitorProfile
 import pt.ipc.domain.monitor.RequestInformation
 import pt.ipc.domain.plan.PlanInfoOutput
+import pt.ipc.domain.plan.PlanInput
+import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.services.ServiceUtils
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.RegisterInput

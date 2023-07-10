@@ -3,9 +3,9 @@ package pt.ipc.services.clientService
 import pt.ipc.domain.client.ClientOutput
 import pt.ipc.domain.exercises.Exercise
 import pt.ipc.domain.monitor.MonitorAvailable
-import pt.ipc.services.dtos.MonitorOutput
-import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.MonitorOutput
 import java.time.LocalDate
 import java.util.*
 

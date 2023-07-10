@@ -5,8 +5,8 @@ import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.LoginFailed
 import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.domain.jwt.PairOfTokens
-import pt.ipc.services.dtos.LoginOutput
 import pt.ipc.services.ServiceUtils
+import pt.ipc.services.dtos.LoginOutput
 import pt.ipc.storage.transaction.TransactionManager
 import java.util.*
 
