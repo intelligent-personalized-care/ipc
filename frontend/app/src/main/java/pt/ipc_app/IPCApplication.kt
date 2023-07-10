@@ -64,7 +64,7 @@ class IPCApplication : DependenciesContainer, Application() {
 
         if (sessionManager.isLoggedIn()) {
             val periodicWorkRequest =
-                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.DAYS)//alter to minutes after
+                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.MINUTES)
                 .setConstraints(workerConstraints)
                 .build()
 
@@ -79,6 +79,6 @@ class IPCApplication : DependenciesContainer, Application() {
     }
 
     companion object {
-        private const val API_ENDPOINT = "https://7617-95-93-220-19.ngrok-free.app"
+        private const val API_ENDPOINT = "https://organic-byway-391719.ew.r.appspot.com"
     }
 }

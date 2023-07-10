@@ -42,7 +42,7 @@ class PoseDetectorProcessor(
     detector.close()
   }
 
-  override fun detectInImage(image: InputImage): Task<Pose> {//Task<Pose?>?
+  override fun detectInImage(image: InputImage): Task<Pose> {
     return detector.process(image)
   }
 
