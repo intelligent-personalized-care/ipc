@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
@@ -13,7 +14,7 @@ import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
-class ExerciseFeedbackActivity: ComponentActivity() {
+class ClientExerciseActivity: ComponentActivity() {
 
     private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
@@ -27,7 +28,7 @@ class ExerciseFeedbackActivity: ComponentActivity() {
         const val CLIENT_ID = "CLIENT_ID_OF_EXERCISE"
         fun navigate(context: Context, exercise: ExerciseTotalInfo, clientId: UUID) {
             with(context) {
-                val intent = Intent(this, ExerciseFeedbackActivity::class.java)
+                val intent = Intent(this, ClientExerciseActivity::class.java)
                 intent.putExtra(EXERCISE_TOTAL_INFO, exercise)
                 intent.putExtra(CLIENT_ID, clientId.toString())
                 startActivity(intent)
@@ -39,15 +40,26 @@ class ExerciseFeedbackActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setAppContentMonitor(viewModel) {
-            ExerciseFeedbackScreen(
+            val set = viewModel.nrSetToSee.collectAsState().value
+            ClientExerciseScreen(
                 exercise = exercise,
-                exercisePreviewUrl =
-                viewModel.getExerciseVideoOfClientUrl(
+                clientExerciseUrl = viewModel.getExerciseVideoOfClientUrl(
                     clientId = clientId,
                     planId = exercise.planId,
                     dailyListId = exercise.dailyListId,
                     exerciseId = exercise.exercise.id
-                )
+                ),
+                setSelected = set,
+                onSetSelected = { viewModel.selectSetToSee(it) },
+                onFeedbackSent = {
+                    viewModel.sendFeedbackToExerciseDone(
+                        clientId = clientId,
+                        planId = exercise.planId,
+                        dailyListId = exercise.dailyListId,
+                        exerciseId = exercise.exercise.id,
+                        feedback = it
+                    )
+                }
             )
         }
 

@@ -35,7 +35,7 @@ fun RegisterUser(
         maxLength = User.EMAIL_LENGTH_RANGE.last,
         iconImageVector = Icons.Default.Email,
         keyboardType = KeyboardType.Email,
-        error = error
+        error = error?.let { TextFieldType.EMAIL.errorToShow(it) }
     )
     CustomTextField(
         fieldType = TextFieldType.PASSWORD,

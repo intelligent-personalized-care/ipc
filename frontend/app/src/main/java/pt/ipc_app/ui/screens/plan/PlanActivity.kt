@@ -9,7 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.screens.exercises.feedback.ExerciseFeedbackActivity
+import pt.ipc_app.ui.screens.exercises.feedback.ClientExerciseActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
@@ -52,7 +52,7 @@ class PlanActivity : ComponentActivity() {
                 clientName = clientName,
                 onExerciseSelect = {
                     if (it.exercise.isDone)
-                        ExerciseFeedbackActivity.navigate(this, it, UUID.fromString(clientId))
+                        ClientExerciseActivity.navigate(this, it, UUID.fromString(clientId))
                     else
                         Toast.makeText(this, "Wait for the exercise to be recorded by client", Toast.LENGTH_SHORT).show()
                 }

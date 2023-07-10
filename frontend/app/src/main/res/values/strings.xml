@@ -31,6 +31,9 @@
     <string name="create_plan_screen_label_exercise_sets">Sets</string>
     <string name="create_plan_screen_label_exercise_reps">Reps</string>
 
+    <string name="client_exercise_screen_label_feedback">Feedback</string>
+    <string name="monitor_details_screen_label_request">Comment</string>
+
     <string name="search_label">Search…</string>
     <string name="search_monitors">Search Monitors</string>
     <string name="search_clients">Search Clients</string>

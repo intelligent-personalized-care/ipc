@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.ipc_app.service.utils.Errors
-import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.theme.Grey
 
 private const val MAX_INPUT_SIZE = 100
@@ -40,11 +39,10 @@ fun CustomTextField(
     enabled: Boolean = true,
     iconImageVector: ImageVector? = null,
     keyboardType: KeyboardType? = null,
-    error: ProblemJson? = null,
+    error: String? = null,
     modifier: Modifier = Modifier.padding(horizontal = 48.dp)
 ) {
     val text = textToDisplay.take(maxLength)
-    val errorToShow = error?.let { fieldType.errorToShow(it) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,9 +70,9 @@ fun CustomTextField(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.Black,
                 leadingIconColor = Grey,
-                focusedBorderColor = if (errorToShow == null) Grey else Color.Red,
-                unfocusedBorderColor = if (errorToShow == null) Grey else Color.Red,
-                disabledBorderColor = if (errorToShow == null) Grey else Color.Red,
+                focusedBorderColor = if (error == null) Grey else Color.Red,
+                unfocusedBorderColor = if (error == null) Grey else Color.Red,
+                disabledBorderColor = if (error == null) Grey else Color.Red,
                 focusedLabelColor = Grey,
                 unfocusedLabelColor = Grey,
                 disabledLabelColor = Grey,
@@ -83,7 +81,7 @@ fun CustomTextField(
             visualTransformation = if (hide) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = if (keyboardType != null) KeyboardOptions(keyboardType = keyboardType) else KeyboardOptions.Default
         )
-        errorToShow?.let {
+        error?.let {
             Text(
                 text = it,
                 fontSize = 12.sp,
@@ -101,6 +99,6 @@ fun CustomTextFieldPreview() {
         textToDisplay = "",
         updateText = { },
         iconImageVector = Icons.Default.Face,
-        error = ProblemJson(Errors.emailAlreadyExists, status = 1)
+        error = Errors.emailAlreadyExists
     )
 }

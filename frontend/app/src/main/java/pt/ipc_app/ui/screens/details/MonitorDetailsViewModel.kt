@@ -31,17 +31,18 @@ class MonitorDetailsViewModel(
      * Attempts to connect the monitor with a client.
      */
     fun connectWithMonitor(
-        monitorId: UUID
+        monitorId: UUID,
+        comment: String
     ) {
         launchAndExecuteRequest(
             request = {
                 usersService.connectMonitor(
                     monitorId = monitorId,
                     clientId = sessionManager.userUUID,
+                    comment = comment.ifEmpty { null },
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            },
-            onSuccess = { }
+            }
         )
     }
 
@@ -60,8 +61,7 @@ class MonitorDetailsViewModel(
                     stars = stars,
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            },
-            onSuccess = { }
+            }
         )
     }
 }

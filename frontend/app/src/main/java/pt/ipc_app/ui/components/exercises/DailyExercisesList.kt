@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEmotions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +41,15 @@ fun DailyExercisesList(
                 }
         }
     } else {
-        Text("No exercises for this day.\nDay off :)", textAlign = TextAlign.Center)
+        Text("No exercises for this day.", textAlign = TextAlign.Center)
+        Row {
+            Text(text = "Day off")
+            Icon(
+                imageVector = Icons.Default.EmojiEmotions,
+                contentDescription = "Emoji",
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
     }
 
 }

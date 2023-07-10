@@ -91,9 +91,6 @@ class MonitorHomeViewModel(
                     requestDecision = requestDecision,
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            },
-            onSuccess = {
-
             }
         )
     }

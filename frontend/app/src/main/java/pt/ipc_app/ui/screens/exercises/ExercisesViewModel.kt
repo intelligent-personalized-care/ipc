@@ -10,11 +10,9 @@ import pt.ipc_app.domain.exercise.ExerciseInfo
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
 import pt.ipc_app.service.ExercisesService
-import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
-import java.io.File
 import java.util.*
 
 /**
@@ -40,10 +38,13 @@ class ExercisesViewModel(
     val exercises
         get() = _exercises.asStateFlow()
 
-
     private var _nrSetToSee = MutableStateFlow(1)
     val nrSetToSee
         get() = _nrSetToSee.asStateFlow()
+
+    private var _urlClientExerciseVideo = MutableStateFlow<String?>(null)
+    val urlClientExerciseVideo
+        get() = _urlClientExerciseVideo.asStateFlow()
 
     private var _nrSetDone = MutableStateFlow(1)
     val nrSetDone
@@ -147,8 +148,33 @@ class ExercisesViewModel(
             clientId = clientId,
             planId = planId,
             dailyListId = dailyListId,
-            exerciseId = exerciseId
+            exerciseId = exerciseId,
+            set = nrSetToSee.value
         )
+
+    fun selectSetToSee(set: Int) { _nrSetToSee.value = set }
+
+    fun sendFeedbackToExerciseDone(
+        clientId: String,
+        planId: Int,
+        dailyListId: Int,
+        exerciseId: Int,
+        feedback: String,
+    ) {
+        launchAndExecuteRequest(
+            request = {
+                exercisesService.sendFeedbackToExerciseDone(
+                    clientId = clientId,
+                    planId = planId,
+                    dailyListId = dailyListId,
+                    exerciseId = exerciseId,
+                    set = nrSetToSee.value,
+                    feedback = feedback,
+                    token = sessionManager.userLoggedIn.accessToken
+                )
+            }
+        )
+    }
 
     fun getExercises(
         skip: Int = 0
@@ -162,37 +188,6 @@ class ExercisesViewModel(
             },
             onSuccess = {
                 _exercises.value = it.exercises
-            }
-        )
-    }
-
-    /**
-     * Attempts to submit an exercise of client.
-     */
-    fun submitExerciseVideo(
-        video: File,
-        planId: Int,
-        dailyListId: Int,
-        exerciseId: Int,
-        set: Int
-    ) {
-        launchAndExecuteRequest(
-            request = {
-                _state.value = ProgressState.WAITING
-                exercisesService.submitExerciseVideo(
-                    video = video,
-                    clientId = sessionManager.userUUID,
-                    planId = planId,
-                    dailyListId = dailyListId,
-                    exerciseId = exerciseId,
-                    set = set,
-                    token = sessionManager.userLoggedIn.accessToken
-                ).also {
-                    if (it !is APIResult.Success) _state.value = ProgressState.IDLE
-                }
-            },
-            onSuccess = {
-                _state.value = ProgressState.FINISHED
             }
         )
     }

@@ -20,7 +20,10 @@ enum class TextFieldType(val labelId: Int, val required: Boolean = false) {
     PLAN_START_DATE(R.string.create_plan_screen_label_startDate),
 
     EXERCISE_SETS(R.string.create_plan_screen_label_exercise_sets),
-    EXERCISE_REPS(R.string.create_plan_screen_label_exercise_reps)
+    EXERCISE_REPS(R.string.create_plan_screen_label_exercise_reps),
+
+    EXERCISE_FEEDBACK(R.string.client_exercise_screen_label_feedback),
+    REQUEST_CONNECTION(R.string.monitor_details_screen_label_request)
 }
 
 fun TextFieldType.errorToShow(error: ProblemJson): String? =

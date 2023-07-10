@@ -1,12 +1,15 @@
 package pt.ipc_app.ui.screens.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Comment
+import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,23 +19,25 @@ import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
-import pt.ipc_app.ui.components.MonitorRating
-import pt.ipc_app.ui.components.RateMonitor
-import pt.ipc_app.ui.components.TextEmail
+import pt.ipc_app.ui.components.*
+import pt.ipc_app.ui.components.TextFieldType
 import java.util.*
 
 @Composable
 fun MonitorDetailsScreen(
     monitor: MonitorOutput,
     profilePicture: @Composable () -> Unit = { },
-    requestEnable: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
-    onRequestedConnection: () -> Unit = { },
+    onRequestedConnection: (String) -> Unit = { },
     onRatedMonitor: (Int) -> Unit = { }
 ) {
+    var comment by remember { mutableStateOf("") }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(30.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(30.dp)
     ) {
         Text(
             text = stringResource(R.string.monitor_details_title),
@@ -52,9 +57,18 @@ fun MonitorDetailsScreen(
         )
         MonitorRating(rating = monitor.rating)
 
-        if (!monitor.isMyMonitor && requestEnable) {
+        if (!monitor.isMyMonitor && !monitor.requested) {
+            Spacer(modifier = Modifier.padding(top = 50.dp))
+
+            CustomTextField(
+                fieldType = TextFieldType.REQUEST_CONNECTION,
+                textToDisplay = comment,
+                updateText = { comment = it },
+                isToTrim = false,
+                iconImageVector = Icons.Default.Comment
+            )
             Button(
-                onClick = { onRequestedConnection() },
+                onClick = { onRequestedConnection(comment) },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255)),
             ) {
                 Icon(

@@ -36,7 +36,7 @@ open class AppViewModel : ViewModel() {
 
     fun <T> launchAndExecuteRequest(
         request: suspend () -> APIResult<T>,
-        onSuccess: suspend (T) -> Unit
+        onSuccess: suspend (T) -> Unit = { }
     ) {
         _error.value = null
         viewModelScope.launch {

@@ -42,7 +42,8 @@ fun MonitorRow(
             Row {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = "Search",
+                    modifier = Modifier.padding(end = 4.dp)
                 )
                 Text("Search for monitors to connect...")
             }

@@ -247,12 +247,13 @@ class UsersService(
     suspend fun connectMonitor(
         monitorId: UUID,
         clientId: UUID,
+        comment: String?,
         token: String
     ): APIResult<Any> =
         post(
             uri = "/users/monitors/$monitorId",
             token = token,
-            body = ConnectionRequestInput(clientId)
+            body = ConnectionRequestInput(clientId, comment)
         )
 
     /**

@@ -69,7 +69,7 @@
         </activity>
 
         <activity
-            android:name=".ui.screens.exercises.feedback.ExerciseFeedbackActivity"
+            android:name=".ui.screens.exercises.feedback.ClientExerciseActivity"
             android:exported="false"
             android:screenOrientation="portrait">
         </activity>

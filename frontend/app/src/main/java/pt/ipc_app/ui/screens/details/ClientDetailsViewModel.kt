@@ -91,8 +91,7 @@ class ClientDetailsViewModel(
                     planId = planId,
                     startDate = startDate
                 )
-            },
-            onSuccess = { }
+            }
         )
     }
 }
