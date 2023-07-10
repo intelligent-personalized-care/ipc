@@ -74,8 +74,8 @@
     <string name="pref_title_front_camera_preview_size" translatable="false">Front camera preview size</string>
     <string name="pref_title_camerax_rear_camera_target_resolution" translatable="false">CameraX rear camera target resolution</string>
     <string name="pref_title_camerax_front_camera_target_resolution" translatable="false">CameraX front camera target resolution</string>
-    <string name="pref_title_camera_live_viewport" translatable="false">Enable live viewport</string>
-    <string name="pref_summary_camera_live_viewport" translatable="false">Do not block camera preview drawing on detection</string>
+    <string name="pref_title_camera_live_viewport" translatable="false">Enable enhancement of live camera view</string>
+    <string name="pref_summary_camera_live_viewport" translatable="false">Do not block camera preview drawing on detection, detection might be slower</string>
 
     <!-- Strings for pose detector performance mode preference. -->
     <string name="pref_title_pose_detector_performance_mode">Performance mode</string>

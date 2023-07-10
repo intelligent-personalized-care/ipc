@@ -37,30 +37,7 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/pref_category_info">
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="@string/pref_key_info_hide"
-        android:persistent="true"
-        android:title="@string/pref_title_info_hide"/>
-  </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/pref_category_pose_detection">
-    <ListPreference
-        android:defaultValue="@string/pref_entry_values_pose_detector_performance_mode_fast"
-        android:entries="@array/pref_entries_values_pose_detector_performance_mode"
-        android:entryValues="@array/pref_entry_values_pose_detector_performance_mode"
-        android:key="@string/pref_key_live_preview_pose_detection_performance_mode"
-        android:persistent="true"
-        android:title="@string/pref_title_pose_detector_performance_mode"
-        android:summary="%s"/>
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="@string/pref_key_pose_detector_prefer_gpu"
-        android:persistent="true"
-        android:title="@string/pref_title_pose_detector_prefer_gpu"
-        android:summary="@string/pref_summary_pose_detector_prefer_gpu"/>
 
-  </PreferenceCategory>
 
 </PreferenceScreen>

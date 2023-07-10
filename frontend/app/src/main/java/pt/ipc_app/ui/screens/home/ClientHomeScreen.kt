@@ -85,7 +85,7 @@ fun ClientHomeScreen(
                     dailyListSelected = plan?.getListOfDayIfExists(it)
                 }
             )
-            
+
             DailyExercisesList(
                 dailyListSelected = dailyListSelected,
                 onExerciseSelect = { ex ->
