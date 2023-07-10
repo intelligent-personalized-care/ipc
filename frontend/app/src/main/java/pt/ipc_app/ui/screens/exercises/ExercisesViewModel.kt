@@ -46,6 +46,11 @@ class ExercisesViewModel(
     val urlClientExerciseVideo
         get() = _urlClientExerciseVideo.asStateFlow()
 
+    private var _exerciseVideoFeedBack = MutableStateFlow<String?>(null)
+    val exerciseVideoFeedBack
+        get() = _exerciseVideoFeedBack.asStateFlow()
+
+
     private var _nrSetDone = MutableStateFlow(1)
     val nrSetDone
         get() = _nrSetDone.asStateFlow()
@@ -153,6 +158,29 @@ class ExercisesViewModel(
         )
 
     fun selectSetToSee(set: Int) { _nrSetToSee.value = set }
+
+    fun getFeedbackOfMonitor(
+        clientId: String,
+        planId: Int,
+        dailyListId: Int,
+        exerciseId: Int
+    ) {
+        launchAndExecuteRequest(
+            request = {
+                exercisesService.getFeedbackOfMonitor(
+                    clientId = clientId,
+                    planId = planId,
+                    dailyListId = dailyListId,
+                    exerciseId = exerciseId,
+                    set = nrSetToSee.value,
+                    token = sessionManager.userLoggedIn.accessToken
+                )
+            },
+            onSuccess = {
+                _exerciseVideoFeedBack.value = it.monitorFeedBack
+            }
+        )
+    }
 
     fun sendFeedbackToExerciseDone(
         clientId: String,

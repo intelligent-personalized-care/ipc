@@ -16,6 +16,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.components.bottomBar.ButtonBarType
 import pt.ipc_app.ui.getFileFromUri
+import pt.ipc_app.ui.screens.login.LoginActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.io.IOException
@@ -62,7 +63,11 @@ class MonitorProfileActivity : ComponentActivity() {
                     viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
                     checkReadStoragePermission()
                 },
-                onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() }
+                onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() },
+                onLogout = {
+                    LoginActivity.navigate(this)
+                    finish()
+                }
             )
         }
     }

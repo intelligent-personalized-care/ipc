@@ -54,10 +54,6 @@
 
     <!-- ########################### ML KIT ########################### -->
 
-    <!-- Strings for info preference. -->
-    <string name="pref_title_info_hide" translatable="false">Hide detection info</string>
-    <string name="pref_key_info_hide" translatable="false">ih</string>
-
     <!-- Settings related strings. -->
     <string name="pref_screen" translatable="false">ps</string>
     <string name="pref_screen_title_camerax_live_preview" translatable="false">CameraX live preview settings</string>

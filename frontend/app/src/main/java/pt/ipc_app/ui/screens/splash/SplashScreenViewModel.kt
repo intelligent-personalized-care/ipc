@@ -3,6 +3,7 @@ package pt.ipc_app.ui.screens.splash
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.Plan
+import pt.ipc_app.service.SseService
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientsOfMonitor
@@ -17,6 +18,7 @@ import pt.ipc_app.ui.screens.AppViewModel
  */
 class SplashScreenViewModel(
     private val usersService: UsersService,
+    private val sseService: SseService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
@@ -35,6 +37,10 @@ class SplashScreenViewModel(
     private val _requests = MutableStateFlow<RequestsOfMonitor?>(null)
     val requests
         get() = _requests.asStateFlow()
+
+    suspend fun subscribeToServerSendEvents() {
+        sseService.chatEvents(sessionManager.userLoggedIn.accessToken)
+    }
 
     fun getCurrentPlanOfClient() {
         launchAndExecuteRequest(

@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.exercises.feedback
+package pt.ipc_app.ui.screens.exercises.done
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,6 +25,7 @@ fun ClientExerciseScreen(
     clientExerciseUrl: String,
     setSelected: Int,
     onSetSelected: (Int) -> Unit = { },
+    feedbackReceived: String? = null,
     onFeedbackSent: (String) -> Unit = { }
 ) {
     var feedback by remember { mutableStateOf("") }
@@ -55,7 +56,9 @@ fun ClientExerciseScreen(
                 Button(
                     onClick = { onSetSelected(it + 1) },
                     enabled = setSelected != it + 1,
-                    modifier = Modifier.padding(2.dp).size(40.dp),
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .size(40.dp),
                     colors = if (setSelected != it + 1) ButtonDefaults.buttonColors(backgroundColor = Color.Black, contentColor = Color.White)
                     else ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                 ) {
@@ -69,24 +72,28 @@ fun ClientExerciseScreen(
 
         Spacer(modifier = Modifier.padding(top = 100.dp))
 
-        CustomTextField(
-            fieldType = TextFieldType.EXERCISE_FEEDBACK,
-            textToDisplay = feedback,
-            updateText = { feedback = it },
-            isToTrim = false,
-            iconImageVector = Icons.Default.Feedback
-        )
-
-        Button(
-            onClick = {
-                onFeedbackSent(feedback)
-                feedback = ""
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Send,
-                contentDescription = "Send Feedback"
+        if (feedbackReceived == null) {
+            CustomTextField(
+                fieldType = TextFieldType.EXERCISE_FEEDBACK,
+                textToDisplay = feedback,
+                updateText = { feedback = it },
+                isToTrim = false,
+                iconImageVector = Icons.Default.Feedback
             )
+
+            Button(
+                onClick = {
+                    onFeedbackSent(feedback)
+                    feedback = ""
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Send,
+                    contentDescription = "Send Feedback"
+                )
+            }
+        } else {
+            Text(text = feedbackReceived)
         }
 
     }

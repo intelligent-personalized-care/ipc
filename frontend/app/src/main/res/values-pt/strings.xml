@@ -1,4 +1,94 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">IPCare</string>
+
+    <string name="choose_role_screen_title">Escolha um Papel</string>
+    <string name="register_client_screen_title">Registar Cliente</string>
+    <string name="register_monitor_screen_title">Registar Monitor</string>
+    <string name="login_screen_title">Iniciar Sessão</string>
+
+    <string name="register_screen_label_name">Nome</string>
+    <string name="register_screen_label_email">E-mail</string>
+    <string name="register_screen_label_password">Senha</string>
+    <string name="birthDate">Data de Nascimento</string>
+    <string name="weight">Peso</string>
+    <string name="height">Altura</string>
+    <string name="physicalCondition">Condição Física</string>
+
+    <string name="client">Cliente</string>
+    <string name="monitor">Monitor</string>
+    <string name="select">Selecionar</string>
+
+    <string name="already_have_account">Já possui uma conta? Faça login aqui</string>
+
+    <string name="hello">Olá</string>
+
+    <string name="create_plan_screen_title">Criar Plano</string>
+    <string name="plan_screen_title">Detalhes do Plano</string>
+
+    <string name="create_plan_screen_label_name">Nome do Plano</string>
+    <string name="create_plan_screen_label_startDate">Data de Início</string>
+
+    <string name="create_plan_screen_label_exercise_sets">Séries</string>
+    <string name="create_plan_screen_label_exercise_reps">Repetições</string>
+
+    <string name="client_exercise_screen_label_feedback">Feedback</string>
+    <string name="monitor_details_screen_label_request">Comentário</string>
+
+    <string name="search_label">Pesquisar…</string>
+    <string name="search_monitors">Pesquisar Monitores</string>
+    <string name="search_clients">Pesquisar Clientes</string>
+    <string name="search_results">Resultados</string>
+
+    <string name="client_requests">Pedidos de Cliente</string>
+    <string name="my_clients">Meus Clientes</string>
+
+    <string name="exercises_title">Exercícios</string>
+    <string name="monitor_details_title">Detalhes do Monitor</string>
+    <string name="client_details_title">Detalhes do Cliente</string>
+    <string name="profile_title">Perfil</string>
+    <string name="about_title">Autores</string>
+    <string name="about_repo_github">"O código desta aplicação está disponível em: "</string>
+
+    <string name="activity_info_no_suitable_app">Não foi possível encontrar um aplicativo adequado</string>
+
+    <!-- ########################### ML KIT ########################### -->
+
+    <!-- Settings related strings. -->
+    <string name="pref_screen" translatable="false">ps</string>
+    <string name="pref_screen_title_camerax_live_preview" translatable="false">Configurações de visualização ao vivo da CameraX</string>
+    <string name="pref_category_pose_detection" translatable="false">Deteção de Pose</string>
+
+    <!-- Strings for camera settings. -->
+    <string name="pref_category_key_camera" translatable="false">pckc</string>
+    <string name="pref_category_title_camera" translatable="false">Câmara</string>
+    <string name="pref_key_rear_camera_preview_size" translatable="false">rcpvs</string>
+    <string name="pref_key_rear_camera_picture_size" translatable="false">rcpts</string>
+    <string name="pref_key_front_camera_preview_size" translatable="false">fcpvs</string>
+    <string name="pref_key_front_camera_picture_size" translatable="false">fcpts</string>
+    <string name="pref_key_camerax_rear_camera_target_resolution" translatable="false">crctas</string>
+    <string name="pref_key_camerax_front_camera_target_resolution" translatable="false">cfctas</string>
+    <string name="pref_key_camera_live_viewport" translatable="false">clv</string>
+    <string name="pref_title_rear_camera_preview_size" translatable="false">Tamanho da visualização da câmera traseira</string>
+    <string name="pref_title_front_camera_preview_size" translatable="false">Tamanho da visualizaçãoda câmera frontal</string>
+    <string name="pref_title_camerax_rear_camera_target_resolution" translatable="false">Resolução de destino da câmera traseira do CameraX</string>
+    <string name="pref_title_camerax_front_camera_target_resolution" translatable="false">Resolução de destino da câmera frontal do CameraX</string>
+    <string name="pref_title_camera_live_viewport" translatable="false">Ativar melhoria da visualização ao vivo da câmera</string>
+    <string name="pref_summary_camera_live_viewport" translatable="false">Não bloquear o desenho da visualização da câmera na detecção, a detecção pode ser mais lenta</string>
+
+    <!-- Strings for pose detector performance mode preference. -->
+    <string name="pref_title_pose_detector_performance_mode">Modo de desempenho</string>
+    <string name="pref_key_live_preview_pose_detection_performance_mode" translatable="false">lppdpm</string>
+    <string name="pref_key_still_image_pose_detection_performance_mode" translatable="false">sipdpm</string>
+    <string name="pref_entries_pose_detector_performance_mode_fast">Rápido</string>
+    <string name="pref_entries_pose_detector_performance_mode_accurate">Preciso</string>
+
+    <!-- Strings for pose detector prefer gpu preference. -->
+    <string name="pref_title_pose_detector_prefer_gpu" translatable="false">Preferir usar GPU</string>
+    <string name="pref_key_pose_detector_prefer_gpu" translatable="false">pdpug</string>
+    <string name="pref_summary_pose_detector_prefer_gpu" translatable="false">Se ativado, a GPU será utilizada desde que esteja disponível, estável e retorne resultados corretos. Nesse caso, o detector não verificará se a GPU é realmente mais rápida que a CPU.</string>
+
+    <string name="menu_item_settings" translatable="false">Configurações</string>
+
+    <string name="pref_category_info" translatable="false">Informações de Detecção</string>
 
 </resources>

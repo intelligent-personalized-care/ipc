@@ -9,7 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
-import pt.ipc_app.ui.screens.exercises.feedback.ClientExerciseActivity
+import pt.ipc_app.ui.screens.exercises.done.ClientExerciseActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*

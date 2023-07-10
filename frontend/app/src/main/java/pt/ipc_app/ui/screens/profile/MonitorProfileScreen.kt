@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.HourglassBottom
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,8 @@ fun MonitorProfileScreen(
     onSuccessUpdateProfilePicture: () -> Unit = { },
     submitCredentialDocumentState: ProgressState = ProgressState.IDLE,
     onSubmitCredentialDocument: () -> Unit = { },
-    onSuccessSubmitCredentialDocument: () -> Unit = { }
+    onSuccessSubmitCredentialDocument: () -> Unit = { },
+    onLogout: () -> Unit = { }
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,6 +120,17 @@ fun MonitorProfileScreen(
             } else {
                 if (submitCredentialDocumentState == ProgressState.FINISHED)
                     onSuccessSubmitCredentialDocument()
+            }
+
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier.fillMaxHeight().padding(bottom = 50.dp)
+            ) {
+                CircularButton(
+                    icon = Icons.Default.Logout,
+                    color = Color.Red,
+                    onClick = onLogout
+                )
             }
         }
     }

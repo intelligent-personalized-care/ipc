@@ -3,6 +3,7 @@ package pt.ipc_app.service
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.exercises.ExerciseVideoFeedback
 import pt.ipc_app.service.models.exercises.FeedbackInput
 import pt.ipc_app.service.models.exercises.ListOfExercisesInfo
 import pt.ipc_app.service.utils.ContentType
@@ -53,6 +54,26 @@ class ExercisesService(
         set: Int
     ): String =
         "$apiEndpoint/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId?set=$set"
+
+    /**
+     * Gets monitor feedback of a client exercise.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun getFeedbackOfMonitor(
+        clientId: String,
+        planId: Int,
+        dailyListId: Int,
+        exerciseId: Int,
+        set: Int,
+        token: String
+    ): APIResult<ExerciseVideoFeedback> =
+        get(
+            uri = "/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId/feedback?set=$set",
+            token = token
+        )
 
     /**
      * Sends monitor feedback of a client exercise.

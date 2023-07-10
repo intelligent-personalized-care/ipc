@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.screens.exercises.feedback
+package pt.ipc_app.ui.screens.exercises.done
 
 import android.content.Context
 import android.content.Intent
@@ -15,6 +15,10 @@ import pt.ipc_app.utils.viewModelInit
 import java.util.*
 
 class ClientExerciseActivity: ComponentActivity() {
+
+    private val repo by lazy {
+        (application as DependenciesContainer).sessionManager
+    }
 
     private val viewModel by viewModels<ExercisesViewModel> {
         viewModelInit {
@@ -39,6 +43,14 @@ class ClientExerciseActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (repo.userUUID.toString() == clientId)
+            viewModel.getFeedbackOfMonitor(
+                clientId = clientId,
+                planId = exercise.planId,
+                dailyListId = exercise.dailyListId,
+                exerciseId = exercise.exercise.id
+            )
+
         setAppContentMonitor(viewModel) {
             val set = viewModel.nrSetToSee.collectAsState().value
             ClientExerciseScreen(
@@ -51,6 +63,7 @@ class ClientExerciseActivity: ComponentActivity() {
                 ),
                 setSelected = set,
                 onSetSelected = { viewModel.selectSetToSee(it) },
+                feedbackReceived = viewModel.exerciseVideoFeedBack.collectAsState().value,
                 onFeedbackSent = {
                     viewModel.sendFeedbackToExerciseDone(
                         clientId = clientId,

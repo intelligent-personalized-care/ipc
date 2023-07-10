@@ -41,7 +41,7 @@ class Client(
          * Checks whether the received values are acceptable as [Client]
          * instance fields.
          */
-        fun validateClient(
+        private fun validateClient(
             name: String,
             email: String,
             password: String,

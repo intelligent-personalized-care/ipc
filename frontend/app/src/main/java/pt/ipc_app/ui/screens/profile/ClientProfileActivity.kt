@@ -16,6 +16,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.components.bottomBar.ButtonBarType
 import pt.ipc_app.ui.getFileFromUri
+import pt.ipc_app.ui.screens.login.LoginActivity
 import pt.ipc_app.ui.setAppContentClient
 import pt.ipc_app.utils.viewModelInit
 import java.io.IOException
@@ -53,7 +54,11 @@ class ClientProfileActivity : ComponentActivity() {
                 profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this)) },
                 updateProfilePictureState = viewModel.state.collectAsState().value,
                 onUpdateProfilePicture = { checkReadStoragePermission() },
-                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() }
+                onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() },
+                onLogout = {
+                    LoginActivity.navigate(this)
+                    finish()
+                }
             )
         }
     }

@@ -13,6 +13,7 @@ import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.search.SearchMonitorsActivity
 import pt.ipc_app.ui.screens.details.MonitorDetailsActivity
+import pt.ipc_app.ui.screens.exercises.done.ClientExerciseActivity
 import pt.ipc_app.ui.setAppContentClient
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
@@ -62,7 +63,12 @@ class ClientHomeActivity : ComponentActivity() {
                     if (mon != null) MonitorDetailsActivity.navigate(this, mon.copy(isMyMonitor = true))
                     else SearchMonitorsActivity.navigate(this)
                 },
-                onExerciseSelect = { ExerciseActivity.navigate(this, it) }
+                onExerciseSelect = {
+                    if (it.exercise.isDone)
+                        ClientExerciseActivity.navigate(this, it, repo.userUUID)
+                    else
+                        ExerciseActivity.navigate(this, it)
+                }
             )
         }
     }

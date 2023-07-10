@@ -56,7 +56,7 @@ fun ExerciseScreen(
         )
 
         if (isToRecord) {
-            Spacer(modifier = Modifier.padding(top = 100.dp))
+            Spacer(modifier = Modifier.padding(top = 50.dp))
 
             Button(
                 onClick = {
