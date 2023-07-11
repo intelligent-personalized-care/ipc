@@ -35,10 +35,6 @@ class AppConfig {
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 class ApiApplication {
 
-    /*
-
-    }
-     */
     @Bean
     fun jdbi(): Jdbi {
         val jdbcURL = System.getenv("jdbcURL")
@@ -56,8 +52,8 @@ class ApiApplication {
 
         return Jdbi.create(dataSource).configure()
     }
+}
 
-    fun main(args: Array<String>) {
-        runApplication<ApiApplication>(*args)
-    }
+fun main(args: Array<String>) {
+    runApplication<ApiApplication>(*args)
 }

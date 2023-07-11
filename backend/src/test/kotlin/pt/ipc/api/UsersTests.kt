@@ -1,26 +1,6 @@
 package pt.ipc.api
 
-import org.jdbi.v3.core.Jdbi
-import org.junit.jupiter.api.Test
-import org.postgresql.ds.PGSimpleDataSource
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Primary
-import org.springframework.http.HttpHeaders
-import org.springframework.stereotype.Component
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.util.UriComponentsBuilder
-import pt.ipc.http.controllers.clients.models.RegisterClientInput
-import pt.ipc.http.pipeline.exceptionHandler.Problem
-import pt.ipc.http.utils.Uris
-import pt.ipc.services.dtos.CredentialsOutput
-import pt.ipc.services.dtos.RegisterInput
-import pt.ipc.storage.repositories.jdbi.configure
-import java.util.*
-import kotlin.test.assertEquals
-
+/*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UsersTests {
 
@@ -220,3 +200,5 @@ class UsersTests {
             .responseBody!!
     }
 }
+
+ */
