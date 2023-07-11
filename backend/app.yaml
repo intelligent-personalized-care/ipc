@@ -1,8 +1,7 @@
 runtime: java17
-env: flex
+env: standard
 instance_class: B1
 automatic_scaling:
-  target_cpu_utilization: 0.65
   min_instances: 1
   max_instances: 5
   cool_down_period_sec: 60
