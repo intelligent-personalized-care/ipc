@@ -5,8 +5,7 @@ handlers:
   - url: .*
     script: auto
 basic_scaling:
-  min_instances: 1
-  max_instances: 5
+  max_instances: 3
   idle_timeout: 10m
 service_account: organic-byway-391719@appspot.gserviceaccount.com
 env_variables:
