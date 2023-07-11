@@ -4,7 +4,6 @@ instance_class: B1
 automatic_scaling:
   min_instances: 1
   max_instances: 5
-  cool_down_period_sec: 60
 service_account: organic-byway-391719@appspot.gserviceaccount.com
 env_variables:
   jdbcURL: "jdbc:postgresql://google/ipc"
