@@ -1,5 +1,5 @@
 runtime: java17
-env: standard
+env: flex
 instance_class: B1
 automatic_scaling:
   target_cpu_utilization: 0.65
