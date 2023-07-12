@@ -8,6 +8,705 @@
 	},
 	"item": [
 		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user1@gmail.com\",\r\n    \"password\": \"@Password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/login",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"monitor1@gmail.com\",\r\n    \"password\": \"@Password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/login",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 04:39:52 GMT"
+								},
+								{
+									"key": "Ngrok-Trace-Id",
+									"value": "3b45aafc08df485876ecf5b75a67c1c4"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"78d82d8d-36a5-4f15-bc71-b846887555fe\",\n    \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI3OGQ4MmQ4ZC0zNmE1LTRmMTUtYmM3MS1iODQ2ODg3NTU1ZmUiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImYyZTg4MjA0LWI1N2YtNDE0MC05MzA0LTdhNDc0Nzk4YTg0MSIsImV4cCI6MTY4OTA1MDM5Mn0.M7lT-aCgYU3O6XY2AKNzD4GoFPh2i570qem3gMg89BZW1XX9bfmPORGTHr5PEwNHzhj6O48ZL-GhP6d3fXGEYQ\",\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMmU4ODIwNC1iNTdmLTQxNDAtOTMwNC03YTQ3NDc5OGE4NDEiLCJleHAiOjE2ODkwNTAzOTJ9.rF6Z-DnG3Ta4wtx_fTsAiqIYoDwD7qdYy8BEjciB-VUmNuLhiMvyohKFada8qT9H2Vf9LIZLKFbufQwF4xnUYQ\",\n    \"name\": \"monitor1\",\n    \"role\": \"MONITOR\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Tokens",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\" : \"{{refreshMonitor}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/refresh",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Refresh Tokens",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\" : \"{{refreshMonitor}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/refresh",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"refresh"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:25:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI0NTU4NjIxMS1iZTVlLTQ5ZDEtODI1Mi03MmMzOTNhMWVlYzYiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImM2ZjYyNjdlLTNlMTYtNGY1NC05MGM4LWI5ODNhMWFiMzc2ZSIsImV4cCI6MTY4OTExMDczNn0.KqjTTO-qmh5gshqIckk0Z-foJGCRrPMuQs2YKyuquw5vjXRBx-x5cqxKNgd19E71WgL9llPsyiY-4n-31ARJPA\",\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJjNmY2MjY3ZS0zZTE2LTRmNTQtOTBjOC1iOTgzYTFhYjM3NmUiLCJleHAiOjE2ODkxMTA3MzZ9.cdcqN2J8-jlndSXa_V6nZguuKw26MGpp5CYPeaNjjqNa-tTqcqLQtXOv5GJ4kCQ5H8wKsikmgZck_gDtxG00uQ\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Profile Picture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/{{idMonitor}}/photo",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"{{idMonitor}}",
+								"photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Subscribe Server Sent Events",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/subscribe",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"subscribe"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "client subscribe",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/subscribe",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"subscribe"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/event-stream"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:33:57 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "data:{\"className\":\"AcceptConnection\",\"obj\":{\"accept\":\"Connection Accepted\"}}\n\n"
+						}
+					]
+				},
+				{
+					"name": "User Unsubscribe Server Sent Events",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/unsubscribe",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"unsubscribe"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User Unsubscribe Server Sent Events",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/unsubscribe",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"unsubscribe"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jul 2023 00:47:32 GMT"
+								},
+								{
+									"key": "Ngrok-Trace-Id",
+									"value": "87e9a39ed3e76a2462229ec3c170c98e"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Create Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"admin1@gmail.com\",\r\n    \"name\" : \"admin\",\r\n    \"password\" : \"@Password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/admin",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"admin"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Admin",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\" : \"admin1@gmail.com\",\r\n    \"name\" : \"admin\",\r\n    \"password\" : \"@Password1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/admin",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"admin"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:28:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"a568d547-fdca-49e1-b3a9-8e8cd9948c1f\",\n    \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhNTY4ZDU0Ny1mZGNhLTQ5ZTEtYjNhOS04ZThjZDk5NDhjMWYiLCJyb2xlIjoiQURNSU4iLCJzZXNzaW9uSUQiOiIwYjljZWJjNy1mZDQ2LTQ3MjItYTE5YS0wMmY1NTZmODk5ODAiLCJleHAiOjE2ODkxMTA5MDB9.-UJAfdHrmHakPVo6UELig594OWxR2b2k4A9R_b32IH-jNO7Y3ETKIrWFqAKrZBBmvlzhohH2hLWqQXiHFw3VTA\",\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiIwYjljZWJjNy1mZDQ2LTQ3MjItYTE5YS0wMmY1NTZmODk5ODAiLCJleHAiOjE2ODkxMTA5MDB9.-vC012ExLsIQIFIon-nUZIbA-ParjXEXygD6qkyuNIvOgvhV5Orw8e02ogl3fMGh89CcJlegCNtD5CI3JlG22g\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Unverified Monitors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/admin/unverified_monitors",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"admin",
+								"unverified_monitors"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Unverified Monitors",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/admin/unverified_monitors",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"admin",
+										"unverified_monitors"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:29:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"monitors\": [\n        {\n            \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n            \"name\": \"monitor3\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Decide Monitor Credential",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accept\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/admin/unverified_monitors/{{idMonitor}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"admin",
+								"unverified_monitors",
+								"{{idMonitor}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Decide Monitor Credential",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accept\" : true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/admin/unverified_monitors/{{idMonitor}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"admin",
+										"unverified_monitors",
+										"{{idMonitor}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:30:13 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Get Credential of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/admin/unverified_monitors/{{idMonitor}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"admin",
+								"unverified_monitors",
+								"{{idMonitor}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Monitors",
 			"item": [
 				{
@@ -17,7 +716,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\" : \"monitor111@gmail.com\",\r\n    \"name\" : \"monitor\",\r\n    \"password\" : \"@Password123\"\r\n}",
+							"raw": "{\r\n    \"email\" : \"monitor6@gmail.com\",\r\n    \"name\" : \"monitor3\",\r\n    \"password\" : \"@Password1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -35,7 +734,73 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Register Monitor",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\" : \"monitor6@gmail.com\",\r\n    \"name\" : \"monitor3\",\r\n    \"password\" : \"@Password1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:23:31 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n    \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI0NTU4NjIxMS1iZTVlLTQ5ZDEtODI1Mi03MmMzOTNhMWVlYzYiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6IjA0M2IxMTBjLTNkYTQtNDkxMS1iMDhiLWUxZjc5OThjYWY1ZiIsImV4cCI6MTY4OTExMDYxMX0.IHShBY8BED_n1XubytCjCeMkEoRevtCQ7UmiLwRVxmhRK5cCWNwmtTXUGaD-lCRLfFvSJPVcBMe14bWTtzu78g\",\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiIwNDNiMTEwYy0zZGE0LTQ5MTEtYjA4Yi1lMWY3OTk4Y2FmNWYiLCJleHAiOjE2ODkxMTA2MTF9.Zj-UhjW4tspkJCUL0s-g16lN_Mfsth3kSe---oTuKJXZW5urFljUxw8nr7EtjxlABdiQNs3h9SuVrodTcQFL2w\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Submit Credential Document",
@@ -58,7 +823,7 @@
 								{
 									"key": "credential",
 									"type": "file",
-									"src": "bjwVuUZDf/curriculum-vitae-bernardo-fragoso.pdf"
+									"src": "H1ZD6VVm3/263b1801-8785-4efd-b1c7-6c287376a99b.pdf"
 								}
 							]
 						},
@@ -75,7 +840,72 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Submit Credential Document",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "credential",
+											"type": "file",
+											"src": "H1ZD6VVm3/263b1801-8785-4efd-b1c7-6c287376a99b.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/credential",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"credential"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:24:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Get Monitor",
@@ -104,11 +934,79 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Monitor",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:30:44 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n    \"name\": \"monitor3\",\n    \"email\": \"monitor6@gmail.com\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Search Monitors Available",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -139,147 +1037,81 @@
 							]
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "Accept Connection Request",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+					"response": [
+						{
+							"name": "Search Monitors Available",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "monitor",
+											"disabled": true
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
 								{
-									"key": "token",
-									"value": "{{tokenMonitor}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"accept\": true\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests/4dbecfbb-0e23-45e6-a3be-55d95acfd59a",
-							"host": [
-								"{{serverDomainName}}"
-							],
-							"path": [
-								"users",
-								"monitors",
-								"{{idMonitor}}",
-								"requests",
-								"4dbecfbb-0e23-45e6-a3be-55d95acfd59a"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Rate Monitor",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Get Monitor Profile Picture",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/picture",
-							"host": [
-								"{{serverDomainName}}"
-							],
-							"path": [
-								"users",
-								"monitors",
-								"{{idMonitor}}",
-								"profile",
-								"picture"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Profile Picture",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"key": "Vary",
+									"value": "Origin"
+								},
 								{
-									"key": "token",
-									"value": "{{tokenMonitor}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
 								{
-									"key": "photo",
-									"type": "file",
-									"src": "Mz3HVBlWc/Simplified-diagram-of-the-paper-plant-production-process.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/photo",
-							"host": [
-								"{{serverDomainName}}"
-							],
-							"path": [
-								"users",
-								"monitors",
-								"{{idMonitor}}",
-								"profile",
-								"photo"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Clients Of Monitor",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
 								{
-									"key": "token",
-									"value": "{{tokenMonitor}}",
-									"type": "string"
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:30:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
 								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients",
-							"host": [
-								"{{serverDomainName}}"
 							],
-							"path": [
-								"users",
-								"monitors",
-								"{{idMonitor}}",
-								"clients"
-							]
+							"cookie": [],
+							"body": "{\n    \"monitors\": [\n        {\n            \"id\": \"4d5c8fd0-67e0-4077-bd02-200d2cac0774\",\n            \"name\": \"monitor3\",\n            \"email\": \"monitor5@gmail.com\",\n            \"rating\": {\n                \"averageStarts\": 5,\n                \"nrOfReviews\": 0\n            },\n            \"requested\": true\n        },\n        {\n            \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n            \"name\": \"monitor3\",\n            \"email\": \"monitor6@gmail.com\",\n            \"rating\": {\n                \"averageStarts\": 5,\n                \"nrOfReviews\": 0\n            },\n            \"requested\": false\n        }\n    ]\n}"
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "Requests of Monitor",
@@ -309,7 +1141,650 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Requests of Monitor",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"requests"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:34:38 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"requests\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Accept Connection Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accept\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests/{{requestID}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"requests",
+								"{{requestID}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Accept Connection Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accept\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/requests/{{requestID}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"requests",
+										"{{requestID}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:32:44 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clients\": [\n        {\n            \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n            \"name\": \"user3\",\n            \"email\": \"user4@gmail.com\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Clients Of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Clients Of Monitor",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"clients"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:34:26 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clients\": [\n        {\n            \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n            \"name\": \"user3\",\n            \"email\": \"user4@gmail.com\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Client of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients",
+								"{{idClient}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Client of Monitor",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"clients",
+										"{{idClient}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:37:29 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n    \"name\": \"user3\",\n    \"email\": \"user4@gmail.com\",\n    \"weight\": 70,\n    \"height\": 180,\n    \"physicalCondition\": \"lesão na perna esquerda\",\n    \"birthDate\": \"2001-04-05\",\n    \"plans\": [\n        {\n            \"id\": 1,\n            \"title\": \"Plan Test\",\n            \"startDate\": \"2023-07-11\",\n            \"endDate\": \"2023-07-14\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Exercises Of Clients in a Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/exercises?date=2023-07-11",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients",
+								"exercises"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2023-07-11"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Exercises Of Clients in a Date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/exercises?date=2023-07-11",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"clients",
+										"exercises"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2023-07-11"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 12 Jul 2023 00:56:41 GMT"
+								},
+								{
+									"key": "Ngrok-Trace-Id",
+									"value": "1b85f06325b8415a861c9f30af8618af"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clientsExercises\": [\n        {\n            \"id\": \"a26a52cb-6d7d-4957-91b3-b78e941dd384\",\n            \"name\": \"user1\",\n            \"planId\": 12,\n            \"dailyListId\": 38,\n            \"exercises\": [\n                {\n                    \"id\": 69,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 2,\n                    \"reps\": 10,\n                    \"isDone\": true\n                },\n                {\n                    \"id\": 70,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 6,\n                    \"reps\": 11,\n                    \"isDone\": false\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Change Profile Picture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "fZyrDqHO8/AINC1924.JPG"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/photo",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"profile",
+								"photo"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Change Profile Picture",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "fZyrDqHO8/AINC1924.JPG"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile/photo",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"profile",
+										"photo"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:35:09 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Monitor Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"profile"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Monitor Profile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/profile",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:37:18 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n    \"name\": \"monitor3\",\n    \"email\": \"monitor6@gmail.com\",\n    \"rating\": {\n        \"averageStarts\": 3,\n        \"nrOfReviews\": 1\n    },\n    \"docState\": \"valid\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -323,7 +1798,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\"  : \"testeee\",\r\n    \"email\" : \"testeee@gmail.com\",\r\n    \"password\" : \"Password1@\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
+							"raw": "{\r\n    \"name\"  : \"user3\",\r\n    \"email\" : \"user5@gmail.com\",\r\n    \"password\" : \"@Password1\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -341,48 +1816,73 @@
 							]
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "Change Profile Picture",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{tokenClient}}",
-									"type": "string"
+					"response": [
+						{
+							"name": "Register Client",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\"  : \"user3\",\r\n    \"email\" : \"user4@gmail.com\",\r\n    \"password\" : \"@Password1\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients"
+									]
 								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
 								{
-									"key": "profilePicture",
-									"type": "file",
-									"src": "D9eS12kp2/Poster (2).png"
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:31:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
 								}
-							]
-						},
-						"url": {
-							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile/photo",
-							"host": [
-								"{{serverDomainName}}"
 							],
-							"path": [
-								"users",
-								"clients",
-								"{{idClient}}",
-								"profile",
-								"photo"
-							]
+							"cookie": [],
+							"body": "{\n    \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n    \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI4YzhiOTYyNS1lMjE0LTQ2MDEtYTJjOS1mOGVjODczOWY3N2QiLCJyb2xlIjoiQ0xJRU5UIiwic2Vzc2lvbklEIjoiNmVkZGI4YmUtOGE2YS00ZmNmLWIwMGEtMWYyOTJkNWZhMzMwIiwiZXhwIjoxNjg5MTExMDgzfQ.crtCCvaAoqPoiVt2U3PXQEUVfdamsI_s5NZLZ2bJG9Zrrmb5XVgFIKZJKRh6-YTNwqswy1KhtMjOrFmfPE5sBA\",\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiI2ZWRkYjhiZS04YTZhLTRmY2YtYjAwYS0xZjI5MmQ1ZmEzMzAiLCJleHAiOjE2ODkxMTEwODN9.6U2Jtpv5piSwOzfKAvZPiFUu4Gk6nm1pQGa-sl2kVirloZwM9n-LtmRdwxCQKzOCjmN7TbX_azr3hfgf54EImw\"\n}"
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "Send Connection Request",
@@ -401,7 +1901,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"monitorId\": \"c284382e-dffc-4a75-8c98-c78c5e6f97e3\"\r\n}",
+							"raw": "{\r\n    \"clientID\": \"{{idClient}}\",\r\n    \"text\" : \"please be my monitor\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -409,19 +1909,85 @@
 							}
 						},
 						"url": {
-							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/requests",
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}",
 							"host": [
 								"{{serverDomainName}}"
 							],
 							"path": [
 								"users",
-								"clients",
-								"{{idClient}}",
-								"requests"
+								"monitors",
+								"{{idMonitor}}"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Send Connection Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"clientID\": \"{{idClient}}\",\r\n    \"text\" : \"please be my monitor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:32:08 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"requestID\": \"1aa4d7ab-aa53-496d-a0b6-aaaf007e560b\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Monitor of Client",
@@ -451,7 +2017,365 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Monitor of Client",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/monitor",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"monitor"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:32:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n    \"name\": \"monitor3\",\n    \"email\": \"monitor6@gmail.com\",\n    \"rating\": {\n        \"averageStarts\": 5,\n        \"nrOfReviews\": 0\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Rate Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": \"{{idClient}}\",\r\n    \"rating\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/rate",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"rate"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Rate Monitor",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user\": \"{{idClient}}\",\r\n    \"rating\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/rate",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"rate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:33:05 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Change Profile Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "rfzCfU67A/AINC1924.JPG"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile/photo",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"profile",
+								"photo"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Change Profile Photo",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "rfzCfU67A/AINC1924.JPG"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile/photo",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"profile",
+										"photo"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:33:14 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Client Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"profile"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Client Profile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/profile",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:33:49 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n    \"name\": \"user3\",\n    \"email\": \"user4@gmail.com\",\n    \"weight\": 70,\n    \"height\": 180,\n    \"physicalCondition\": \"lesão na perna esquerda\",\n    \"birthDate\": \"2001-04-05\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -475,7 +2399,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"This is a plan for testing\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 5,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 7,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 8,\r\n                    \"reps\": 13\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Plan Test\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 5,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 2,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 4,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\r\n                    \"sets\": 3,\r\n                    \"reps\": 12\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,7 +2419,75 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Plan",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Plan Test\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 5,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 2,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 4,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\r\n                    \"sets\": 3,\r\n                    \"reps\": 12\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"plans"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:35:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Plan",
@@ -526,7 +2518,67 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Plan",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans/1",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"plans",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:36:14 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"title\": \"Plan Test\",\n    \"dailyLists\": [\n        {\n            \"id\": 1,\n            \"exercises\": [\n                {\n                    \"id\": 1,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 5,\n                    \"reps\": 10\n                },\n                {\n                    \"id\": 2,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 6,\n                    \"reps\": 11\n                }\n            ]\n        },\n        {\n            \"id\": 2,\n            \"exercises\": [\n                {\n                    \"id\": 3,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 2,\n                    \"reps\": 12\n                },\n                {\n                    \"id\": 4,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 4,\n                    \"reps\": 12\n                },\n                {\n                    \"id\": 5,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\n                    \"title\": \"Pull Ups\",\n                    \"description\": \"1. Grasp the bar with an overhand grip, arms and shoulders fully extended.\\r\\n2. Pull your body up until your chin is above the bar.\\r\\n3. Lower your body back to starting position.\",\n                    \"type\": \"Back\",\n                    \"sets\": 3,\n                    \"reps\": 12\n                }\n            ]\n        },\n        {\n            \"id\": 3,\n            \"exercises\": [\n                {\n                    \"id\": 6,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 9,\n                    \"reps\": 14\n                },\n                {\n                    \"id\": 7,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 10,\n                    \"reps\": 15\n                }\n            ]\n        },\n        {\n            \"id\": 4,\n            \"exercises\": [\n                {\n                    \"id\": 8,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 10,\n                    \"reps\": 16\n                },\n                {\n                    \"id\": 9,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 10,\n                    \"reps\": 17\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Plan of Client on Date",
@@ -544,7 +2596,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans?date=2023-06-06",
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans?date=2023-07-11",
 							"host": [
 								"{{serverDomainName}}"
 							],
@@ -557,15 +2609,169 @@
 							"query": [
 								{
 									"key": "date",
-									"value": "2023-06-06"
+									"value": "2023-07-11"
 								}
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Plan of Client on Date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans?date=2023-07-11",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"plans"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "2023-07-11"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:36:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"title\": \"Plan Test\",\n    \"startDate\": \"2023-07-11\",\n    \"dailyLists\": [\n        {\n            \"id\": 1,\n            \"exercises\": [\n                {\n                    \"id\": 2,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 6,\n                    \"reps\": 11,\n                    \"isDone\": false\n                },\n                {\n                    \"id\": 1,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 5,\n                    \"reps\": 10,\n                    \"isDone\": false\n                }\n            ]\n        },\n        {\n            \"id\": 2,\n            \"exercises\": [\n                {\n                    \"id\": 4,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 4,\n                    \"reps\": 12,\n                    \"isDone\": false\n                },\n                {\n                    \"id\": 5,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\n                    \"title\": \"Pull Ups\",\n                    \"description\": \"1. Grasp the bar with an overhand grip, arms and shoulders fully extended.\\r\\n2. Pull your body up until your chin is above the bar.\\r\\n3. Lower your body back to starting position.\",\n                    \"type\": \"Back\",\n                    \"sets\": 3,\n                    \"reps\": 12,\n                    \"isDone\": false\n                },\n                {\n                    \"id\": 3,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 2,\n                    \"reps\": 12,\n                    \"isDone\": false\n                }\n            ]\n        },\n        {\n            \"id\": 3,\n            \"exercises\": [\n                {\n                    \"id\": 7,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 10,\n                    \"reps\": 15,\n                    \"isDone\": false\n                },\n                {\n                    \"id\": 6,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 9,\n                    \"reps\": 14,\n                    \"isDone\": false\n                }\n            ]\n        },\n        {\n            \"id\": 4,\n            \"exercises\": [\n                {\n                    \"id\": 8,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n                    \"title\": \"Push ups\",\n                    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n                    \"type\": \"Chest\",\n                    \"sets\": 10,\n                    \"reps\": 16,\n                    \"isDone\": false\n                },\n                {\n                    \"id\": 9,\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n                    \"title\": \"Squats\",\n                    \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n                    \"type\": \"Legs\",\n                    \"sets\": 10,\n                    \"reps\": 17,\n                    \"isDone\": false\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
-					"name": "Add User to Plan",
+					"name": "Plans of Monitor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"plans"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Plans of Monitor",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"plans"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:37:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"plans\": [\n        {\n            \"id\": 1,\n            \"title\": \"Plan Test\",\n            \"days\": 4\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Client to Plan",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -581,7 +2787,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"planID\" : 6,\r\n    \"startDate\" : \"2035-01-01\"\r\n\r\n}",
+							"raw": "{\r\n    \"planID\" : 1,\r\n    \"startDate\" : \"2023-07-11\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -603,15 +2809,73 @@
 							]
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "Plans of Monitor",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
+					"response": [
+						{
+							"name": "Add Client to Plan",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"planID\" : 1,\r\n    \"startDate\" : \"2023-07-11\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}/plans",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"clients",
+										"{{idClient}}",
+										"plans"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:36:33 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -626,7 +2890,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenMonitor}}",
+									"value": "{{tokenClient}}",
 									"type": "string"
 								}
 							]
@@ -647,6 +2911,173 @@
 									"value": "Chest",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Exercises",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/exercises",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"exercises"
+									],
+									"query": [
+										{
+											"key": "exerciseType",
+											"value": "Chest",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:38:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"exercises\": [\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n            \"title\": \"Push ups\",\n            \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n            \"type\": \"Chest\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n            \"title\": \"Squats\",\n            \"description\": \"1. Stand with feet a little wider than hip width, toes facing front.\\r\\n2. Drive your hips back—bending at the knees and ankles and pressing your knees slightly open—as you…\\r\\n3. Sit into a squat position while still keeping your heels and toes on the ground, chest up and shoulders back.\\r\\n4. Strive to eventually reach parallel, meaning knees are bent to a 90-degree angle.\\r\\n5. Press into your heels and straighten legs to return to a standing upright position.\",\n            \"type\": \"Legs\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd14\",\n            \"title\": \"Planks\",\n            \"description\": \"1. Place forearms on the ground with your elbows bent at a 90° angle aligned beneath your shoulders, with your arms parallel at shoulder-width.\\r\\n2. Your feet should be together, with only your toes touching the floor.\\r\\n3. Lift your belly off the floor and form a straight line from your heels to the crown of your head and hold.\",\n            \"type\": \"Abdominals\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd15\",\n            \"title\": \"Dumbbell Rows Unilateral\",\n            \"description\": \"1. Brace your off arm against something stable (bench, box). Stagger your stance so your leg on the side of your working arm is back.\\r\\n2. Try to get your torso to parallel with the ground. That will extend your range of motion.\\r\\n3. Let your arm hang freely and then pull your elbow back. Imagine you've got a tennis ball in your armpit and squeeze it each rep.\",\n            \"type\": \"Back\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd16\",\n            \"title\": \"Forward Lunges\",\n            \"description\": \"1. Step forward with one leg.\\r\\n2. Lower your body until your rear knee nearly touches the ground.\\r\\n3. Ensure you remain upright, and your front knee stay above the front foot.\\r\\n4. Push off the floor with your front foot until you return to the starting position. Switch legs.\",\n            \"type\": \"Legs\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd17\",\n            \"title\": \"Burpee\",\n            \"description\": \"1. Start standing with your feet hip-width apart. Lower your body into a squat position, placing your hands on the ground in front of you.\\r\\n2. Quickly jump your feet back into a plank position, keeping your body in a straight line from your head to your toes.\\r\\n3. Perform a push-up, keeping your core tight and your elbows close to your body.\\r\\n4. Jump your feet back towards your hands, and then jump up into the air, reaching your arms overhead.\\r\\n5. Land softly and immediately lower your body back into the squat position to repeat the movement.\",\n            \"type\": \"Chest\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd18\",\n            \"title\": \"Crunches\",\n            \"description\": \"1. Lay flat on your back with your knees bent and your feet flat on the ground, about a foot from your lower back.\\r\\n2. Place your fingertips on your temples with your palms facing out.\\r\\n3. Draw your belly into the base of your spine to engage the muscles, then raise your head and shoulders off the floor. Return to starting position and repeat.\",\n            \"type\": \"Abdominals\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd19\",\n            \"title\": \"Russian Twist\",\n            \"description\": \"1. Hover your heels just off the ground.\\r\\n2. Stick your chest out and maintain a flat back. Make all the movement happen at your mid and upper spine.\\r\\n3. Point your chest to the left, then rotate at the spine until your chest is pointed right.\",\n            \"type\": \"Abdominals\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd20\",\n            \"title\": \"Glute Bridge\",\n            \"description\": \"1. Lie down with your knees bent and your feet flat on the floor.\\r\\n2. Push your hips up so that your butt is elevated and your back straight.\\r\\n3. Tense your glutes and raise your hips towards the ceiling.\\r\\n4. Once you are at the highest point you can manage, hold the position for a few seconds, and then slowly return to the starting position.\",\n            \"type\": \"Legs\"\n        },\n        {\n            \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd21\",\n            \"title\": \"Wrist Curl\",\n            \"description\": \"1. Grip the dumbbell with your palm facing upwards with your forearm rested against the bench.\\r\\n2. Slowly curl your wrist upwards in a semicircular motion.\\r\\n3. Return to starting position and repeat.\",\n            \"type\": \"Forearms\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Exercise Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/exercises/40c806c4-d4e7-472f-88f8-ed547e8afd12",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"exercises",
+								"40c806c4-d4e7-472f-88f8-ed547e8afd12"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Exercise Info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/exercises/40c806c4-d4e7-472f-88f8-ed547e8afd12",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"exercises",
+										"40c806c4-d4e7-472f-88f8-ed547e8afd12"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:39:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n    \"title\": \"Push ups\",\n    \"description\": \"1. Contract your abs and tighten your core by pulling your belly button toward your spine.\\r\\n2. Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\\r\\n3. Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.\",\n    \"type\": \"Chest\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Exercise Preview",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/exercises/40c806c4-d4e7-472f-88f8-ed547e8afd12/video",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"exercises",
+								"40c806c4-d4e7-472f-88f8-ed547e8afd12",
+								"video"
 							]
 						}
 					},
@@ -680,18 +3111,247 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get Exercises of Client",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/exercises",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"exercises"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:39:03 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"exercises\": [\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n            \"sets\": 5,\n            \"reps\": 10\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n            \"sets\": 6,\n            \"reps\": 11\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n            \"sets\": 2,\n            \"reps\": 12\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n            \"sets\": 4,\n            \"reps\": 12\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\n            \"sets\": 3,\n            \"reps\": 12\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n            \"sets\": 9,\n            \"reps\": 14\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n            \"sets\": 10,\n            \"reps\": 15\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\n            \"sets\": 10,\n            \"reps\": 16\n        },\n        {\n            \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\n            \"sets\": 10,\n            \"reps\": 17\n        }\n    ]\n}"
+						}
+					]
 				},
 				{
-					"name": "Get Exercise Info",
+					"name": "Get Daily Exercise Video",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "set",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/12/daily_lists/38/exercises/69?set=2",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"plans",
+								"12",
+								"daily_lists",
+								"38",
+								"exercises",
+								"69"
+							],
+							"query": [
+								{
+									"key": "set",
+									"value": "2"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "Submit Exercise Video",
+					"name": "Get Daily Exercise Feedback",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1/feedback?set=2",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"plans",
+								"1",
+								"daily_lists",
+								"1",
+								"exercises",
+								"1",
+								"feedback"
+							],
+							"query": [
+								{
+									"key": "set",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Daily Exercise Feedback",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1/feedback?set=2",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"plans",
+										"1",
+										"daily_lists",
+										"1",
+										"exercises",
+										"1",
+										"feedback"
+									],
+									"query": [
+										{
+											"key": "set",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:44:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clientFeedBack\": \"\\\"This was easy to do\\\"\",\n    \"monitorFeedBack\": \"Arms stronger\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Submit Daily Exercise Video",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -711,12 +3371,22 @@
 								{
 									"key": "video",
 									"type": "file",
-									"src": "dSirZmy3g/2023-03-13 22-14-51.mkv"
+									"src": "V697h85LR/WIN_20230523_04_38_04_Pro.mp4"
+								},
+								{
+									"key": "set",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "feedBack",
+									"value": "\"This was easy to do\"",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/2",
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1",
 							"host": [
 								"{{serverDomainName}}"
 							],
@@ -729,30 +3399,206 @@
 								"daily_lists",
 								"1",
 								"exercises",
-								"2"
+								"1"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Submit Daily Exercise Video",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "video",
+											"type": "file",
+											"src": "V697h85LR/WIN_20230523_04_38_04_Pro.mp4"
+										},
+										{
+											"key": "set",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "feedBack",
+											"value": "\"This was easy to do\"",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"plans",
+										"1",
+										"daily_lists",
+										"1",
+										"exercises",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:41:04 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
-					"name": "Get Exercise Video",
+					"name": "Post Monitor Feedback",
 					"request": {
-						"method": "GET",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"set\" : 2,\r\n    \"feedback\" : \"Arms stronger\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{serverDomainName}}/exercises/40c806c4-d4e7-472f-88f8-ed547e8afd12/video",
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1/feedback",
 							"host": [
 								"{{serverDomainName}}"
 							],
 							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"plans",
+								"1",
+								"daily_lists",
+								"1",
 								"exercises",
-								"40c806c4-d4e7-472f-88f8-ed547e8afd12",
-								"video"
+								"1",
+								"feedback"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Post Monitor Feedback",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"set\" : 2,\r\n    \"feedback\" : \"Arms stronger\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1/feedback",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"clients",
+										"{{idClient}}",
+										"plans",
+										"1",
+										"daily_lists",
+										"1",
+										"exercises",
+										"1",
+										"feedback"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:44:14 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		}
@@ -794,12 +3640,42 @@
 			"type": "string"
 		},
 		{
+			"key": "refreshClient",
+			"value": "",
+			"type": "string"
+		},
+		{
 			"key": "idMonitor",
 			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "tokenMonitor",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshMonitor",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idAdmin",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tokenAdmin",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshAdmin\n",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "requestID",
 			"value": "",
 			"type": "string"
 		}
