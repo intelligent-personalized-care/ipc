@@ -38,10 +38,6 @@ class SplashScreenViewModel(
     val requests
         get() = _requests.asStateFlow()
 
-    suspend fun subscribeToServerSendEvents() {
-        sseService.chatEvents(sessionManager.userLoggedIn.accessToken)
-    }
-
     fun getCurrentPlanOfClient() {
         launchAndExecuteRequest(
             request = {
