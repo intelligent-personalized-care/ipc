@@ -36,7 +36,7 @@ class AuthenticationInterceptor(
                 (
                     !(uri.matches(monitorCredentialRegex) && request.method == "POST") && // Inputting Credential
                         !(uri.matches(monitorProfileRegex) && request.method == "GET") &&
-                        !(uri.matches(subscribeURI) && request.method == "POST") &&
+                        !(uri.matches(subscribeURI) && request.method == "GET") &&
                         !(uri.matches(unsubscribeURI) && request.method == "POST")
                     )
             ) {
