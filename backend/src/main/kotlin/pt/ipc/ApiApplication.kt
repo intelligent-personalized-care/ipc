@@ -35,26 +35,6 @@ class AppConfig {
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 class ApiApplication {
 
-    /*
-    @Bean
-    fun jdbi(): Jdbi {
-        val jdbcURL = System.getenv("jdbcURL")
-        val connProps = Properties()
-
-        connProps.setProperty("sslmode", "disable")
-        connProps.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
-        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) // cloudSqlInstance
-
-        val dataSource = HikariDataSource()
-        dataSource.jdbcUrl = jdbcURL
-        dataSource.username = System.getenv("postgresql_username") // postgresql_username
-        dataSource.password = System.getenv("postgresql_password") // postgresql_username
-        dataSource.dataSourceProperties = connProps
-
-        return Jdbi.create(dataSource).configure()
-    }
-     */
-
     @Bean
     fun jdbi(): Jdbi = Jdbi.create(
         PGSimpleDataSource().apply {
