@@ -122,7 +122,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
             accept = decision.accept
         )
 
-        if (decision.accept) sseEmitterRepository.send(userID = clientID, RequestAcceptance(monitorName = monitorName))
+        if (decision.accept) sseEmitterRepository.send(userID = clientID, RequestAcceptance(monitorName = monitorName)).also { println() }
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }

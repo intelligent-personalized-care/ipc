@@ -8,6 +8,7 @@ import pt.ipc.domain.client.ClientInformation
 import pt.ipc.domain.client.ClientOfMonitor
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
+import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.domain.exceptions.HasNotUploadedVideo
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
@@ -124,17 +125,20 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
                 val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
+                if(monitorID != monitor.id) throw ForbiddenRequest
 
-                it.monitorRepository.decideRequest(
-                    requestID = requestID,
-                    clientID = requestInformation.clientID,
-                    monitorID = monitorID,
-                    decision = accept
-                )
+                if(accept) {
+                    it.monitorRepository.decideRequest(
+                        requestID = requestID,
+                        clientID = requestInformation.clientID,
+                        monitorID = monitorID
+                    )
+                }
+
 
                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
 
-                Triple(first = clients, second = monitor.id, third = requestInformation.clientName)
+                Triple(first = clients, second = requestInformation.clientID, third = monitor.name)
             }
         )
 

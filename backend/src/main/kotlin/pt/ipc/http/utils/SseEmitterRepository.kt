@@ -2,23 +2,15 @@ package pt.ipc.http.utils
 
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.lang.IllegalArgumentException
-import java.util.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
+import pt.ipc.http.models.emitter.EmitterModel
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
 @Component
 class SseEmitterRepository {
 
-    private class AcceptConnection(val accept: String = "Connection Accepted")
-
-    private val accept = AcceptConnection()
-
-    private data class SenderObject(val className: String, val obj: Any) {
-        init {
-            require(obj::class.simpleName != null)
-        }
-    }
 
     private val nonBlockingService = Executors.newCachedThreadPool()
 
@@ -26,22 +18,25 @@ class SseEmitterRepository {
 
     fun createConnection(userID: UUID): SseEmitter {
         val emitter = SseEmitter(0)
+
         emitters.put(userID, emitter)?.complete()
+
+        class AcceptConnection(accept: String) : EmitterModel(eventID = "AcceptConnection",obj = accept)
+
+        val accept = AcceptConnection("Connection Accepted")
+
         send(userID = userID, accept)
+
         return emitter
     }
 
-    fun send(userID: UUID, obj: Any) {
-        val emitter = emitters[userID] ?: return
+    fun send(userID: UUID, obj: EmitterModel) {
 
-        val newSenderObject = SenderObject(
-            className = obj::class.simpleName ?: throw IllegalArgumentException("Class can not be anonymous"),
-            obj = obj
-        )
+        val emitter = emitters[userID] ?: return
 
         nonBlockingService.execute {
             try {
-                emitter.send(newSenderObject)
+                emitter.send(event().id(obj.eventID).data(obj.obj))
             } catch (ex: Exception) {
                 emitter.completeWithError(ex)
             }

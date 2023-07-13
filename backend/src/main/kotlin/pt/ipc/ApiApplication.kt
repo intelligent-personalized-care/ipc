@@ -2,6 +2,7 @@ package pt.ipc
 
 import com.zaxxer.hikari.HikariDataSource
 import org.jdbi.v3.core.Jdbi
+import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
@@ -35,6 +36,7 @@ class AppConfig {
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 class ApiApplication {
 
+    /*
     @Bean
     fun jdbi(): Jdbi {
         val jdbcURL = System.getenv("jdbcURL")
@@ -52,6 +54,16 @@ class ApiApplication {
 
         return Jdbi.create(dataSource).configure()
     }
+
+     */
+
+    @Bean
+    fun jdbi(): Jdbi = Jdbi.create(
+        PGSimpleDataSource().apply {
+            setURL(System.getenv("postgresql_database"))
+        }
+    ).configure()
+
 }
 
 fun main(args: Array<String>) {
