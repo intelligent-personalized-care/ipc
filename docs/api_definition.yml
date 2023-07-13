@@ -1,0 +1,1944 @@
+openapi: 3.0.0
+info:
+  title: Intelligent Personalized Care API
+  description: 'A Solution to promote Physical Agility and Recovery.'
+  termsOfService: https://swagger.io/terms/
+  version: 1.0.0
+
+servers:
+  - url: https://3f25-2a01-11-8120-4ce0-71b4-9861-5969-d868.ngrok-free.app
+  - url: http://localhost:8080
+
+tags:
+  - name: Users
+  - name: Admin
+  - name: Monitors
+  - name: Clients
+  - name: Plans
+  - name: Exercises
+
+paths:
+  
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Logs a user in
+      requestBody:
+        description: User credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+      responses:
+        200:
+          description: User was logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        400:
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        404:
+          description: No user with that email exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          
+  /users/refresh:
+    post:
+      tags:
+        - Users
+      summary: Refreshs the user tokens
+      requestBody:
+        description: User refresh token
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshUserRequest'
+      responses:
+        200:
+          description: User tokens have been refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshUserResponse'
+                
+  /users/{idUser}/photo:
+    get:
+      tags:
+        - Users
+      summary: Gets a photo of user
+      security:
+        - token: [ ]
+      parameters:
+        - name: idUser
+          in: path
+          description: User id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Photo of user.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: bynary
+        404:
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          
+  /admin:
+    post:
+      tags:
+        - Admin
+      summary: Creates a new admin
+      security:
+        - token: [ ]
+      requestBody:
+        description: Admin object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        201:
+          description: Admin was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        400:
+          description: Invalid user request body. User name invalid, email invalid or insecure password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        409:
+          description: User with this email already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+          
+  /admin/unverified_monitors:
+    get:
+      tags:
+        - Admin
+      summary: Gets all monitors unverified
+      security:
+        - token: [ ]
+      responses:
+        200:
+          description: List of monitors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorsUnverifiedResponse'
+          
+  /admin/unverified_monitors/{idMonitor}:
+    post:
+      tags:
+        - Admin
+      summary: Gives validation to a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Monitor object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecideMonitorValidationRequest'
+      responses:
+        200:
+          description: Monitor was verified.
+    get:
+      tags:
+        - Admin
+      summary: Gets a credential of a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The credential of a monitor in pdf file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: bynary
+          
+  /users/monitors:
+    post:
+      tags:
+        - Monitors
+      summary: Creates a new monitor
+      requestBody:
+        description: Monitor object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        201:
+          description: Monitor was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        400:
+          description: Invalid user request body. User name invalid, email invalid or insecure password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        409:
+          description: User with this email already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+    get:
+      tags:
+        - Monitors
+      summary: Searchs all monitors available
+      security:
+        - token: [ ]
+      parameters:
+        - name: name
+          in: query
+          description: Similar Name of monitors
+          required: false
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: Number of monitors to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: Number of monitors that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: List of monitors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorsAvailableResponse'
+                
+  /users/monitors/{idMonitor}:
+    get:
+      tags:
+        - Monitors
+      summary: Gets a monitor by id
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Monitor was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    post:
+      tags:
+        - Clients
+      summary: Client sends a connection request to a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Request object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientConnectionRequest'
+      responses:
+        201:
+          description: The request to the monitor was made
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRequestResponse'
+        404:
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/credential:
+    post:
+      tags:
+        - Monitors
+      summary: Submits a credential of a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The credential of a monitor in file
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                credential:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Monitor credential has been submitted.
+                
+  /users/monitors/{idMonitor}/profile:
+    get:
+      tags:
+        - Monitors
+      summary: Gets the profile of the monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Monitor information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorProfile'
+                
+  /users/monitors/{idMonitor}/profile/photo:
+    post:
+      tags:
+        - Monitors
+      summary: Updates a photo of a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The photo of a monitor in file
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Monitor photo has been updated.
+                
+  /users/monitors/{idMonitor}/requests:
+    get:
+      tags:
+        - Monitors
+      summary: Gets all client connection requests for a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of all client requests for a monitor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorRequestsResponse'
+        404:
+          description: No monitor with that id exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/requests/{idRequest}:
+    post:
+      tags:
+        - Monitors
+      summary: Accept client connection request for a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+        - name: idRequest
+          in: path
+          description: Request id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Decision of client connection request object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecideClientConnectionRequest'
+      responses:
+        200:
+          description: List of all monitor clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorClientsResponse'
+        404:
+          description: No monitor or request with that id exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+
+  /users/monitors/{idMonitor}/clients:
+    get:
+      tags:
+        - Monitors
+      summary: Gets all monitor clients
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of all monitor clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorClientsResponse'
+        404:
+          description: No monitor with that id exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/clients/exercises:
+    get:
+      tags:
+        - Monitors
+      summary: Gets all exercises of monitor clients
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: Date to search the exercises of clients (format yyyy-mm-dd)
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of all exercises of clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorClientsExercisesResponse'
+        404:
+          description: No monitor with that id exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/clients/{idClient}:
+    get:
+      tags:
+        - Monitors
+      summary: Gets a client of monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Client details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        404:
+          description: No monitor or client with that id exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/rate:
+    post:
+      tags:
+        - Clients
+      summary: Client rates a monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Request object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateMonitorRequest'
+      responses:
+        200:
+          description: The rating for the monitor was made
+        404:
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/clients:
+    post:
+      tags:
+        - Clients
+      summary: Creates a new client
+      requestBody:
+        description: Client object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClientRequest'
+      responses:
+        201:
+          description: Client was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        400:
+          description: Invalid user request body. User name invalid, email invalid or insecure password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        409:
+          description: User with this email already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+                
+  /users/clients/{idClient}/profile:
+    get:
+      tags:
+        - Clients
+      summary: Gets the profile of the client
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Client information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientProfile'
+                
+  /users/clients/{idClient}/profile/photo:
+    post:
+      tags:
+        - Clients
+      summary: Updates a photo of a client
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The photo of a client in file
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Client photo has been updated.
+
+  /users/clients/{idClient}/monitor:
+    get:
+      tags:
+        - Clients
+      summary: Gets the monitor of the client
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Monitor of client information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitorOfClient'
+        404:
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/plans:
+    post:
+      tags:
+        - Plans
+      summary: Creates a new plan
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Plan object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlanRequest'
+      responses:
+        201:
+          description: Plan was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePlanResponse'
+        400:
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    get:
+      tags:
+        - Plans
+      summary: Gets the plans of the monitor
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Plans of monitor information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlansInfoResponse'
+        404:
+          description: Monitor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/plans/{idPlan}:
+    get:
+      tags:
+        - Plans
+      summary: Gets a plan by id
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+        - name: idPlan
+          in: path
+          description: Plan id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Plan object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          description: Monitor or plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/clients/{idClient}/plans/{idPlan}:
+    get:
+      tags:
+        - Plans
+      summary: Gets a plan that is running on a date
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+        - name: idPlan
+          in: path
+          description: Plan id
+          required: true
+          schema:
+            type: integer
+        - name: date
+          in: query
+          description: Date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+      responses:
+        200:
+          description: Plan object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          description: Monitor or plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/monitors/{idMonitor}/clients/{idClient}/plans:
+    post:
+      tags:
+        - Plans
+      summary: Add a client to the plan
+      security:
+        - token: [ ]
+      parameters:
+        - name: idMonitor
+          in: path
+          description: Monitor id
+          required: true
+          schema:
+            type: string
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Associate plan
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPlanRequest'
+      responses:
+        200:
+          description: Plan has been added to the client
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        404:
+          description: Monitor, client or plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /exercises:
+    get:
+      tags: 
+        - Exercises
+      summary: Searchs exercises
+      security:
+        - token: [ ]
+      parameters:
+        - name: exerciseType
+          in: query
+          description: Type of exercises to search
+          required: false
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: Number of exercises to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: Number of exercises that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: List of exercises
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExercisesInfo'
+                
+  /exercises/{idExercise}:
+    get:
+      tags: 
+        - Exercises
+      summary: Gets an exercise information by id
+      security:
+        - token: [ ]
+      parameters:
+        - name: idExercise
+          in: path
+          description: Exercise id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Exercise object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseInfo'
+        404:
+          description: Exercise not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+                
+  /users/clients/{idClient}/exercises:
+    get:
+      tags: 
+        - Exercises
+      summary: Gets daily exercises in a day of a client
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: Daily Exercises date
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - name: skip
+          in: query
+          description: Number of exercises to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: Number of exercises that are returned
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: Exercises of a client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDailyList'
+                
+  /users/clients/{idClient}/plans/{idPlan}/daily_lists/{idDailyList}/exercises/{idDailyExercise}/feedback:
+    post:
+      tags: 
+        - Exercises
+      summary: Gives monitor feedback of a daily exercise
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+        - name: idPlan
+          in: path
+          description: Plan id
+          required: true
+          schema:
+            type: integer
+        - name: idDailyList
+          in: path
+          description: Daily List id
+          required: true
+          schema:
+            type: integer
+        - name: idDailyExercise
+          in: path
+          description: Daily Exercise id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Exercise feedback to a daily exercise of a client
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseFeedbackRequest'
+      responses:
+        200:
+          description: Feedback was submitted
+    get:
+      tags: 
+        - Exercises
+      summary: Gets feedback of a daily exercise
+      security:
+        - token: [ ]
+      parameters:
+        - name: idClient
+          in: path
+          description: Client id
+          required: true
+          schema:
+            type: string
+        - name: idPlan
+          in: path
+          description: Plan id
+          required: true
+          schema:
+            type: integer
+        - name: idDailyList
+          in: path
+          description: Daily List id
+          required: true
+          schema:
+            type: integer
+        - name: idDailyExercise
+          in: path
+          description: Daily Exercise id
+          required: true
+          schema:
+            type: integer
+        - name: set
+          in: query
+          description: Exercise set number
+          required: true
+          schema:
+            type: string
+            example: 1
+      responses:
+        200:
+          description: Client and Monitor feedbacks of exercise
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseFeedback'
+
+components:
+
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: User name
+          example: Test1
+        email:
+          type: string
+          description: User email
+          example: user1@gmail.com
+        password:
+          type: string
+          description: User password
+          example: "@Password1"
+    
+    LoginUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User email
+          example: user1@gmail.com
+        password:
+          type: string
+          description: User password
+          example: "@Password1"
+          
+    RefreshUserRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: User refresh token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMmU4ODIwNC1iNTdmLTQxNDAtOTMwNC03YTQ3NDc5OGE4NDEiLCJleHAiOjE2ODkwNTAzOTJ9.rF6Z-DnG3Ta4wtx_fTsAiqIYoDwD7qdYy8BEjciB-VUmNuLhiMvyohKFada8qT9H2Vf9LIZLKFbufQwF4xnUYQ
+          
+    CreateClientRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - weight
+        - height
+        - birthDate
+        - physicalCondition
+      properties:
+        name:
+          type: string
+          description: Client name
+          example: Client1
+        email:
+          type: string
+          description: Client email
+          example: client1@gmail.com
+        password:
+          type: string
+          description: Client password
+          example: "@Password1"
+        weight:
+          type: integer
+          description: Client weight
+          example: 70
+        height:
+          type: integer
+          description: Client height
+          example: 184
+        birthDate:
+          $ref: '#/components/schemas/Date'
+        physicalCondition:
+          type: string
+          description: Client physical condition
+          example: knee injury
+          
+    DecideMonitorValidationRequest:
+      type: object
+      required:
+        - accept
+      properties:
+        accept:
+          type: boolean
+          description: Decision of accept or decline the monitor credential
+          example: true
+          
+    DecideClientConnectionRequest:
+      type: object
+      required:
+        - accept
+      properties:
+        accept:
+          type: boolean
+          description: Decision of accept or decline the client connection request
+          example: true
+          
+    ClientConnectionRequest:
+      type: object
+      required:
+        - clientID
+        - text
+      properties:
+        clientID:
+          type: string
+          description: Client id
+          example: a568d547-fdca-49e1-b3a9-8e8cd9948c1f
+        text:
+          type: string
+          description: Request message
+          example: Help me please
+          
+    RateMonitorRequest:
+      type: object
+      required:
+        - user
+        - rating
+      properties:
+        user:
+          type: string
+          description: Client id
+          example: a568d547-fdca-49e1-b3a9-8e8cd9948c1f
+        rating:
+          type: integer
+          description: Monitor rating from 1 to 5
+          example: 4
+          
+    CreatePlanRequest:
+      type: object
+      required:
+        - title
+        - dailyLists
+      properties:
+        title:
+          type: string
+          description: Plan title
+          example: Plan Test
+        dailyLists:
+          type: array
+          items: 
+            $ref: '#/components/schemas/CreateDailyList'
+            
+    AddPlanRequest:
+      type: object
+      required:
+        - planID
+        - startDate
+      properties:
+        planID:
+          type: string
+          description: Plan title
+          example: Plan Test
+        startDate:
+          $ref: '#/components/schemas/Date'
+          
+    ExerciseFeedbackRequest:
+      type: object
+      required:
+        - set
+        - feedback
+      properties:
+        set:
+          type: integer
+          description: Set number of exercise
+          example: 1
+        feedback:
+          type: string
+          description: Feedback of exercise
+          example: Good job!
+
+    CreateUserResponse:
+      type: object
+      required:
+        - id
+        - accessToken
+        - refreshToken
+      properties:
+        id:
+          type: string
+          description: User id
+          example: a568d547-fdca-49e1-b3a9-8e8cd9948c1f
+        accessToken:
+          type: string
+          description: Generated access token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJhNTY4ZDU0Ny1mZGNhLTQ5ZTEtYjNhOS04ZThjZDk5NDhjMWYiLCJyb2xlIjoiQURNSU4iLCJzZXNzaW9uSUQiOiIwYjljZWJjNy1mZDQ2LTQ3MjItYTE5YS0wMmY1NTZmODk5ODAiLCJleHAiOjE2ODkxMTA5MDB9.-UJAfdHrmHakPVo6UELig594OWxR2b2k4A9R_b32IH-jNO7Y3ETKIrWFqAKrZBBmvlzhohH2hLWqQXiHFw3VTA
+        refershToken:
+          type: string
+          description: Generated refresh token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiIwYjljZWJjNy1mZDQ2LTQ3MjItYTE5YS0wMmY1NTZmODk5ODAiLCJleHAiOjE2ODkxMTA5MDB9.-vC012ExLsIQIFIon-nUZIbA-ParjXEXygD6qkyuNIvOgvhV5Orw8e02ogl3fMGh89CcJlegCNtD5CI3JlG22g
+    
+    LoginUserResponse:
+      type: object
+      required:
+        - id
+        - accessToken
+        - refreshToken
+        - name
+        - role
+      properties:
+        id:
+          type: string
+          description: User id
+          example: 78d82d8d-36a5-4f15-bc71-b846887555fe
+        accessToken:
+          type: string
+          description: User access token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI3OGQ4MmQ4ZC0zNmE1LTRmMTUtYmM3MS1iODQ2ODg3NTU1ZmUiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImYyZTg4MjA0LWI1N2YtNDE0MC05MzA0LTdhNDc0Nzk4YTg0MSIsImV4cCI6MTY4OTA1MDM5Mn0.M7lT-aCgYU3O6XY2AKNzD4GoFPh2i570qem3gMg89BZW1XX9bfmPORGTHr5PEwNHzhj6O48ZL-GhP6d3fXGEYQ
+        refreshToken:
+          type: string
+          description: User refresh token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMmU4ODIwNC1iNTdmLTQxNDAtOTMwNC03YTQ3NDc5OGE4NDEiLCJleHAiOjE2ODkwNTAzOTJ9.rF6Z-DnG3Ta4wtx_fTsAiqIYoDwD7qdYy8BEjciB-VUmNuLhiMvyohKFada8qT9H2Vf9LIZLKFbufQwF4xnUYQ
+        name:
+          type: string
+          description: Username
+          example: user1
+        role:
+          type: string
+          description: Role of user
+          example: CLIENT
+          
+    RefreshUserResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+      properties:
+        accessToken:
+          type: string
+          description: User access token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiI3OGQ4MmQ4ZC0zNmE1LTRmMTUtYmM3MS1iODQ2ODg3NTU1ZmUiLCJyb2xlIjoiTU9OSVRPUiIsInNlc3Npb25JRCI6ImYyZTg4MjA0LWI1N2YtNDE0MC05MzA0LTdhNDc0Nzk4YTg0MSIsImV4cCI6MTY4OTA1MDM5Mn0.M7lT-aCgYU3O6XY2AKNzD4GoFPh2i570qem3gMg89BZW1XX9bfmPORGTHr5PEwNHzhj6O48ZL-GhP6d3fXGEYQ
+        refreshToken:
+          type: string
+          description: User refresh token
+          example: eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uSUQiOiJmMmU4ODIwNC1iNTdmLTQxNDAtOTMwNC03YTQ3NDc5OGE4NDEiLCJleHAiOjE2ODkwNTAzOTJ9.rF6Z-DnG3Ta4wtx_fTsAiqIYoDwD7qdYy8BEjciB-VUmNuLhiMvyohKFada8qT9H2Vf9LIZLKFbufQwF4xnUYQ
+          
+    MonitorRequestsResponse:
+      type: object
+      required:
+        - requests
+      properties:
+        requests:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Request'
+            
+    CreateRequestResponse:
+      type: object
+      required:
+        - requestID
+      properties:
+        requestID:
+          type: string
+          description: Request id
+          example: 1aa4d7ab-aa53-496d-a0b6-aaaf007e560b
+            
+    MonitorClientsResponse:
+      type: object
+      required:
+        - clients
+      properties:
+        clients:
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+          
+    MonitorsUnverifiedResponse:
+      type: object
+      required:
+        - monitors
+      properties:
+        monitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorUnverified'
+
+    MonitorsAvailableResponse:
+      type: object
+      required:
+        - monitors
+      properties:
+        monitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonitorAvailable'
+            
+    MonitorClientsExercisesResponse:
+      type: object
+      required:
+        - clientsExercises
+      properties:
+        clientsExercises:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ClientExercises'
+            
+    CreatePlanResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: Plan id
+          example: 1
+            
+    PlansInfoResponse:
+      type: object
+      required:
+        - plans
+      properties:
+        plans:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanInfo'
+
+    User:
+      type: object
+      description: User object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+          description: User id
+          example: 46cd2e8e-ab3d-482a-92c7-a2fce7e15f00
+        name:
+          type: string
+          description: User name
+          example: User Test1
+        email:
+          type: string
+          description: User email
+          example: test1@gmail.com
+          
+    MonitorUnverified:
+      type: object
+      description: Monitor object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          description: Monitor id
+          example: 45586211-be5e-49d1-8252-72c393a1eec6
+        name:
+          type: string
+          description: Monitor name
+          example: Monitor Test1
+          
+    MonitorAvailable:
+      type: object
+      description: Monitor object
+      required:
+        - id
+        - name
+        - email
+        - rating
+        - requested
+      properties:
+        id:
+          type: string
+          description: Monitor id
+          example: 45586211-be5e-49d1-8252-72c393a1eec6
+        name:
+          type: string
+          description: Monitor name
+          example: Monitor Test1
+        email:
+          type: string
+          description: Monitor email
+          example: monitor1@gmail.com
+        rating:
+          type: object
+          description: Rating object
+          properties:
+            averageStarts:
+              type: integer
+              description: Average of monitor ratings
+              example: 4.5
+            nrOfReviews:
+              type: integer
+              description: Total monitor reviews
+              example: 2
+        requested:
+          type: boolean
+          description: Whether a connection request has already been given to this monitor by the client that executed the request
+          example: false
+          
+    MonitorOfClient:
+      type: object
+      description: Monitor of client object
+      required:
+        - id
+        - name
+        - email
+        - rating
+      properties:
+        id:
+          type: string
+          description: Monitor id
+          example: 45586211-be5e-49d1-8252-72c393a1eec6
+        name:
+          type: string
+          description: Monitor name
+          example: Monitor Test1
+        email:
+          type: string
+          description: Monitor email
+          example: monitor1@gmail.com
+        rating:
+          type: object
+          description: Rating object
+          properties:
+            averageStarts:
+              type: integer
+              description: Average of monitor ratings
+              example: 4.5
+            nrOfReviews:
+              type: integer
+              description: Total monitor reviews
+              example: 2
+          
+    MonitorProfile:
+      type: object
+      description: Monitor profile object
+      required:
+        - id
+        - name
+        - email
+        - rating
+        - docState
+      properties:
+        id:
+          type: string
+          description: Monitor id
+          example: 45586211-be5e-49d1-8252-72c393a1eec6
+        name:
+          type: string
+          description: Monitor name
+          example: Monitor Test1
+        email:
+          type: string
+          description: Monitor email
+          example: monitor1@gmail.com
+        rating:
+          type: object
+          description: Rating object
+          properties:
+            averageStarts:
+              type: integer
+              description: Average of monitor ratings
+              example: 4.5
+            nrOfReviews:
+              type: integer
+              description: Total monitor reviews
+              example: 2
+        docState:
+          type: string
+          description: Whether the monitor credentials document is valid
+          example: valid
+          
+    ClientProfile:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - weight
+        - height
+        - birthDate
+        - physicalCondition
+      properties:
+        id:
+          type: string
+          description: Client id
+          example: a568d547-fdca-49e1-b3a9-8e8cd9948c1f
+        name:
+          type: string
+          description: Client name
+          example: Client1
+        email:
+          type: string
+          description: Client email
+          example: client1@gmail.com
+        weight:
+          type: integer
+          description: Client weight
+          example: 70
+        height:
+          type: integer
+          description: Client height
+          example: 184
+        birthDate:
+          $ref: '#/components/schemas/Date'
+        physicalCondition:
+          type: string
+          description: Client physical condition
+          example: knee injury
+
+    ClientExercises:
+      type: object
+      description: Client with his exercises
+      required:
+        - id
+        - name
+        - planId
+        - dailyListId
+        - exercises
+      properties:
+        id:
+          type: string
+          description: Client id
+          example: 46cd2e8e-ab3d-482a-92c7-a2fce7e15f00
+        name:
+          type: string
+          description: Client name
+          example: User Test1
+        planId:
+          type: integer
+          description: Plan id of exercises
+          example: 1
+        dailyListId:
+          type: integer
+          description: Daily List id of exercises
+          example: 1
+        exercises:
+          type: array
+          items: 
+            $ref: '#/components/schemas/DailyExerciseOfClient'
+            
+    ExercisesInfo:
+      type: object
+      description: Exercises Info
+      required:
+        - exercises
+      properties:
+        exercises:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ExerciseInfo'
+
+    Request:
+      type: object
+      description: Request object
+      required:
+        - requestID
+        - requestText
+        - clientID
+        - clientName
+        - clientEmail
+      properties:
+        requestID:
+          type: string
+          description: Request id
+          example: b5c5529e-e4b7-4c7a-88a7-9bcfed61254f
+        requestText:
+          type: string
+          description: Request text
+          example: Help me please
+        clientID:
+          type: string
+          description: Client id
+          example: fee2ac77-30d5-4fe2-b28d-dc940dd5a3a8
+        clientName:
+          type: string
+          description: Client name
+          example: Client Test
+        clientEmail:
+          type: string
+          description: Client email
+          example: user1@gmail.com
+          
+    CreateDailyList:
+      type: object
+      description: Daily List creation object
+      required:
+        - exercises
+      properties:
+        exercises:
+          type: array
+          items: 
+            $ref: '#/components/schemas/CreateDailyExercise'
+          
+    CreateDailyExercise:
+      type: object
+      description: Daily Exercise creation object
+      required:
+        - exerciseInfoID
+        - sets
+        - reps
+      properties:
+        exerciseInfoID:
+          type: string
+          description: Exercise Info id of this exercise
+          example: 40c806c4-d4e7-472f-88f8-ed547e8afd12
+        sets:
+          type: integer
+          description: Exercise number of sets
+          example: 3
+        reps:
+          type: integer
+          description: Exercise number of repetitions 
+          example: 15
+          
+    PlanInfo:
+      type: object
+      description: Plan Info object
+      required:
+        - id
+        - title
+        - days
+      properties:
+        id:
+          type: integer
+          description: Plan id
+          example: 1
+        title:
+          type: string
+          description: Plan title
+          example: Plan Test
+        days:
+          type: integer
+          description: Plan duration
+          example: 7
+          
+    Plan:
+      type: object
+      description: Plan object
+      required:
+        - id
+        - title
+        - dailyLists
+      properties:
+        id:
+          type: integer
+          description: Plan id
+          example: 1
+        title:
+          type: string
+          description: Plan title
+          example: Plan Test
+        dailyLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyList'
+          
+    DailyList:
+      type: object
+      description: Daily List object
+      required:
+        - id
+        - exercises
+      properties:
+        id:
+          type: integer
+          description: Daily Exercise id
+          example: 1
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyExercise'
+            
+    DailyExercise:
+      type: object
+      description: Daily Exercise object
+      required:
+        - id
+        - exerciseInfoID
+        - title
+        - description
+        - type
+        - sets
+        - reps
+      properties:
+        id:
+          type: integer
+          description: Daily Exercise id
+          example: 1
+        exerciseInfoID:
+          type: string
+          description: Exercise Info id of this exercise
+          example: 40c806c4-d4e7-472f-88f8-ed547e8afd12
+        title:
+          type: string
+          description: Exercise title
+          example: Push ups
+        description:
+          type: string
+          description: Exercise description
+          example: Exercise description
+        type:
+          type: string
+          description: Exercise type
+          example: Chest
+        sets:
+          type: integer
+          description: Exercise number of sets
+          example: 3
+        reps:
+          type: integer
+          description: Exercise number of repetitions 
+          example: 15
+          
+    DailyExerciseOfClient:
+      type: object
+      description: Daily Exercise object
+      required:
+        - id
+        - exerciseInfoID
+        - title
+        - description
+        - type
+        - sets
+        - reps
+        - isDone
+      properties:
+        id:
+          type: integer
+          description: Daily Exercise id
+          example: 1
+        exerciseInfoID:
+          type: string
+          description: Exercise Info id of this exercise
+          example: 40c806c4-d4e7-472f-88f8-ed547e8afd12
+        title:
+          type: string
+          description: Exercise title
+          example: Push ups
+        description:
+          type: string
+          description: Exercise description
+          example: Exercise description
+        type:
+          type: string
+          description: Exercise type
+          example: Chest
+        sets:
+          type: integer
+          description: Exercise number of sets
+          example: 3
+        reps:
+          type: integer
+          description: Exercise number of repetitions 
+          example: 15
+        isDone:
+          type: boolean
+          description: If the exercise has already been performed by the client, if all the exercise series have already been recorded
+          example: false
+          
+    ExerciseInfo:
+      type: object
+      description: Exercise object
+      required:
+        - id
+        - title
+        - description
+        - type
+      properties:
+        id:
+          type: string
+          description: Exercise Info id
+          example: 40c806c4-d4e7-472f-88f8-ed547e8afd12
+        title:
+          type: string
+          description: Exercise title
+          example: Push ups
+        description:
+          type: string
+          description: Exercise description
+          example: Exercise description
+        type:
+          type: string
+          description: Exercise type
+          example: Chest
+          
+    ExerciseFeedback:
+      type: object
+      description: Feedback of exercise
+      required:
+        - clientFeedBack
+        - monitorFeedBack
+      properties:
+        clientFeedBack:
+          type: string
+          description: Feedback of client
+          example: This was easy
+        monitorFeedBack:
+          type: string
+          description: Feedback of monitor
+          example: Good job!
+
+    Date:
+      type: string
+      description: Date (yyyy-mm-dd)
+      pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+      example: "2002-03-02"
+
+    BadRequest:
+      type: object
+      description: Invalid request error
+      required:
+        - title
+        - status
+      properties:
+        title:
+          type: string
+          description: Error title
+          example: Bad Request
+        status:
+          type: integer
+          description: Error status
+          example: 400
+
+    NotFound:
+      type: object
+      description: Not found error
+      required:
+        - title
+        - status
+      properties:
+        title:
+          type: string
+          description: Error title
+          example: Not Found
+        status:
+          type: integer
+          description: Error status
+          example: 404
+
+    Conflict:
+      type: object
+      description: Already exists error
+      required:
+        - title
+        - status
+      properties:
+        title:
+          type: string
+          description: Error title
+          example: Conflict
+        status:
+          type: integer
+          description: Error status
+          example: 409
+
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
