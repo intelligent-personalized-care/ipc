@@ -1,6 +1,26 @@
 package pt.ipc.api
 
-/*
+import org.jdbi.v3.core.Jdbi
+import org.junit.jupiter.api.Test
+import org.postgresql.ds.PGSimpleDataSource
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
+import org.springframework.http.HttpHeaders
+import org.springframework.stereotype.Component
+import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.util.UriComponentsBuilder
+import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.http.pipeline.exceptionHandler.Problem
+import pt.ipc.http.utils.Uris
+import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.RegisterInput
+import pt.ipc.storage.repositories.jdbi.configure
+import java.util.*
+import kotlin.test.assertEquals
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UsersTests {
 
@@ -11,7 +31,7 @@ class UsersTests {
         @Primary
         fun testJdbi(): Jdbi = Jdbi.create(
             PGSimpleDataSource().apply {
-                setURL("jdbc:postgresql://localhost:5432/testes?user=postgres&password=lsverao")
+                setURL(System.getenv("postgresql_database_tests"))
             }
         ).configure()
     }
@@ -28,9 +48,6 @@ class UsersTests {
         val uuid = UUID.randomUUID()
         return RegisterInput(name = uuid.toString(), email = "$uuid@gmail.com", password = "@Password12")
     }
-
-    private val monitorID = "e4d09ca1-e010-4088-9bda-3ba127b4259e"
-    private val monitorToken = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySUQiOiJlNGQwOWNhMS1lMDEwLTQwODgtOWJkYS0zYmExMjdiNDI1OWUiLCJyb2xlIjoiTU9OSVRPUiJ9.eVD9y5ESue0CAL9Pb5O4PU5kPGZ5mPOL0SpIBCuZwSA432eK1_L3w7J1xfGRZDLLWobU_hp3d0zMigqSeb1Utg"
 
     @Test
     fun `Create Client`() {
@@ -190,7 +207,7 @@ class UsersTests {
 
         val httpClient = WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
 
-        val client = httpClient.post()
+        httpClient.post()
             .uri(Uris.CLIENT_REGISTER)
             .bodyValue(registerClientInput)
             .exchange()
@@ -200,5 +217,3 @@ class UsersTests {
             .responseBody!!
     }
 }
-
- */

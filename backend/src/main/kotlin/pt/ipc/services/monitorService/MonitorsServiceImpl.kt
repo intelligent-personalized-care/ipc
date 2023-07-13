@@ -125,16 +125,15 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
                 val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
-                if(monitorID != monitor.id) throw ForbiddenRequest
+                if (monitorID != monitor.id) throw ForbiddenRequest
 
-                if(accept) {
+                if (accept) {
                     it.monitorRepository.decideRequest(
                         requestID = requestID,
                         clientID = requestInformation.clientID,
                         monitorID = monitorID
                     )
                 }
-
 
                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
 

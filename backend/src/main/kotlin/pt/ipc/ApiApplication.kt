@@ -1,6 +1,5 @@
 package pt.ipc
 
-import com.zaxxer.hikari.HikariDataSource
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -54,7 +53,6 @@ class ApiApplication {
 
         return Jdbi.create(dataSource).configure()
     }
-
      */
 
     @Bean
@@ -63,7 +61,6 @@ class ApiApplication {
             setURL(System.getenv("postgresql_database"))
         }
     ).configure()
-
 }
 
 fun main(args: Array<String>) {

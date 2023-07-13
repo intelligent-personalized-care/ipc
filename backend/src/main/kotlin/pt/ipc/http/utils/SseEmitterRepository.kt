@@ -11,7 +11,6 @@ import java.util.concurrent.Executors
 @Component
 class SseEmitterRepository {
 
-
     private val nonBlockingService = Executors.newCachedThreadPool()
 
     private val emitters = ConcurrentHashMap<UUID, SseEmitter>()
@@ -21,7 +20,7 @@ class SseEmitterRepository {
 
         emitters.put(userID, emitter)?.complete()
 
-        class AcceptConnection(accept: String) : EmitterModel(eventID = "AcceptConnection",obj = accept)
+        class AcceptConnection(accept: String) : EmitterModel(eventID = "AcceptConnection", obj = accept)
 
         val accept = AcceptConnection("Connection Accepted")
 
@@ -31,7 +30,6 @@ class SseEmitterRepository {
     }
 
     fun send(userID: UUID, obj: EmitterModel) {
-
         val emitter = emitters[userID] ?: return
 
         nonBlockingService.execute {
