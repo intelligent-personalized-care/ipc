@@ -25,7 +25,7 @@ class SplashScreenActivity: ComponentActivity() {
     private val viewModel by viewModels<SplashScreenViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            SplashScreenViewModel(app.services.usersService, app.services.sseService, app.sessionManager)
+            SplashScreenViewModel(app.services.usersService, app.sessionManager)
         }
     }
 
