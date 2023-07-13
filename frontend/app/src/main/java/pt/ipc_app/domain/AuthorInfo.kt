@@ -1,4 +1,4 @@
-package pt.ipc_app.ui.components
+package pt.ipc_app.domain
 
 import android.net.Uri
 

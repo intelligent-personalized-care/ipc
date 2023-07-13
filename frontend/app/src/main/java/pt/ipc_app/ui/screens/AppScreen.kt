@@ -1,5 +1,6 @@
 package pt.ipc_app.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
@@ -24,6 +25,7 @@ import pt.ipc_app.ui.components.TopBar
  *
  * @param content the content to be displayed
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AppClientScreen(
     buttonBarClicked: ButtonBarType = ButtonBarType.HOME,
@@ -56,6 +58,7 @@ fun AppClientScreen(
  *
  * @param content the content to be displayed
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AppMonitorScreen(
     buttonBarClicked: ButtonBarType = ButtonBarType.HOME,

@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
+import pt.ipc_app.domain.AuthorInfo
 
 private const val DEV_INFO_PADDING = 16
 private const val DEV_INFO_MAX_WIDTH_FACTOR = 0.8f
