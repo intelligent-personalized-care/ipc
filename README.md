@@ -8,7 +8,7 @@
 
 > Developed in the scope of a final bachelor degree project in Computer Science and Engineering, at [ISEL](https://www.isel.pt/).
 
-The Intelligent Personalized Care project aims to respond to the rapidly increasing sedentary lifestyle and isolation of the population. Using advanced artificial intelligence technologies to provide personalized and effective remote care for patients in different health scenarios, it will be possible to reduce and prevent sedentary lifestyle, and promote physical exercise and rehabilitation in people. 
+The Intelligent Personalized Care project aims to respond to the rapidly increasing sedentary lifestyle and isolation of the population. Using advanced vision techniques to provide personalized and effective remote care for patients in different health scenarios, it will be possible to reduce and prevent sedentary lifestyle, and promote physical exercise and rehabilitation in people. 
 
 This project is based on an Android application to promote physical agility and recovery, through (tele) exercise and (tele) rehabilitation using immersive approaches with vision techniques and artificial intelligence. In addition, the application will offer advanced patient monitoring and follow-up features, allowing physiotherapists to monitor the patient progress. 
 
@@ -18,7 +18,7 @@ The beta demo of the application can be found [here](https://github.com/intellig
 
 ## Documentation
 
-A beta version of the project's final report is
+The project's final report is
 available [here](https://github.com/intelligent-personalized-care/ipc/blob/main/docs/rfG23.pdf).
 
 You can find additional documentation in the [docs](https://github.com/intelligent-personalized-care/ipc/tree/main/docs) folder.

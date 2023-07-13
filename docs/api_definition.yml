@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://3f25-2a01-11-8120-4ce0-71b4-9861-5969-d868.ngrok-free.app
+  - url: https://organic-byway-391719.ew.r.appspot.com
   - url: http://localhost:8080
 
 tags:
