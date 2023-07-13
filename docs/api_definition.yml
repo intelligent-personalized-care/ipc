@@ -804,7 +804,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
                 
-  /users/clients/{idClient}/plans/{idPlan}:
+  /users/clients/{idClient}/plans:
     get:
       tags:
         - Plans
@@ -818,12 +818,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: idPlan
-          in: path
-          description: Plan id
-          required: true
-          schema:
-            type: integer
         - name: date
           in: query
           description: Date
@@ -1239,9 +1233,9 @@ components:
         - startDate
       properties:
         planID:
-          type: string
+          type: integer
           description: Plan title
-          example: Plan Test
+          example: 1
         startDate:
           $ref: '#/components/schemas/Date'
           
