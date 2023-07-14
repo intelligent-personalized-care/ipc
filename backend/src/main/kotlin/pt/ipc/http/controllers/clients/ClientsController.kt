@@ -22,7 +22,6 @@ import pt.ipc.http.controllers.clients.models.ListOfExercisesOfClient
 import pt.ipc.http.controllers.clients.models.RegisterClientInput
 import pt.ipc.http.controllers.clients.models.RequestIdOutput
 import pt.ipc.http.models.emitter.PostedVideo
-import pt.ipc.http.models.emitter.RequestMonitor
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.SseEmitterRepository
@@ -91,11 +90,11 @@ class ClientsController(private val clientsService: ClientsService, private val 
     fun makeRequestForMonitor(@PathVariable monitorID: UUID, @RequestBody connRequest: ConnectionRequest, user: User): ResponseEntity<RequestIdOutput> {
         if (user.id != connRequest.clientID) throw ForbiddenRequest
 
-        val (requestID, clientName) = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
+        val requestMonitor = clientsService.requestMonitor(monitorID = monitorID, clientID = connRequest.clientID, requestText = connRequest.text)
 
-        sseEmitterRepository.send(userID = monitorID, obj = RequestMonitor(requestID = requestID, name = clientName))
+        sseEmitterRepository.send(userID = monitorID, obj = requestMonitor)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestID))
+        return ResponseEntity.status(HttpStatus.CREATED).body(RequestIdOutput(requestID = requestMonitor.requestID))
     }
 
     @Authentication
@@ -144,7 +143,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
     ): ResponseEntity<Unit> {
         if (user.id != clientID) throw ForbiddenRequest
 
-        val (monitorID, clientName) = clientsService.uploadVideoOfClient(
+        val (monitorID, postedVideo) = clientsService.uploadVideoOfClient(
             video = video.bytes,
             clientID = clientID,
             planID = planID,
@@ -154,7 +153,9 @@ class ClientsController(private val clientsService: ClientsService, private val 
             feedback = feedBack
         )
 
-        sseEmitterRepository.send(userID = monitorID, obj = PostedVideo(name = clientName))
+        postedVideo?.let {
+            sseEmitterRepository.send(userID = monitorID, obj = PostedVideo(clientID = it.clientID, name = it.name, exerciseID = it.exerciseID))
+        }
 
         return ResponseEntity.ok().build()
     }

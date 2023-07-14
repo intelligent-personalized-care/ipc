@@ -1,3 +1,5 @@
 package pt.ipc.http.models.emitter
 
-data class RequestAcceptance(val monitorName: String) : EmitterModel(eventID = "RequestAcceptance", obj = object { val monitorName = monitorName })
+import pt.ipc.services.dtos.MonitorOutput
+
+data class RequestAcceptance(val monitor : MonitorOutput) : EmitterModel(eventID = "RequestAcceptance", obj = monitor)

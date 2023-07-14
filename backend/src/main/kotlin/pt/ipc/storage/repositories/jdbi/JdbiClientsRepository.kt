@@ -113,7 +113,8 @@ class JdbiClientsRepository(
         date: LocalDate,
         set: Int,
         clientFeedback: String?
-    ) {
+    ): Boolean {
+
         handle.createUpdate(
             "insert into dbo.exercises_video (id, ex_id, client_id, dt_submit, feedback_client, feedback_monitor,nr_set) " +
                 "VALUES (:exerciseVideoID,:exerciseID,:clientID,:date,:clientFeedback,null,:set)"
@@ -125,5 +126,14 @@ class JdbiClientsRepository(
             .bind("clientFeedback", clientFeedback)
             .bind("set", set)
             .execute()
+
+        return handle.createQuery("select " +
+                "exists(select * from dbo.exercises_video ev " +
+                "inner join dbo.daily_exercises de on de.id = ev.ex_id where ev.nr_set = de.sets and ev.id = :exerciseID) " +
+                "from dbo.exercises_video ev " +
+                "inner join dbo.daily_exercises dl on ev.ex_id = dl.id where ev.id = :exerciseID")
+            .bind("exerciseID",exerciseVideoID)
+            .mapTo<Boolean>()
+            .single()
     }
 }

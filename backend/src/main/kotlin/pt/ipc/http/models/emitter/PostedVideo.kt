@@ -1,3 +1,12 @@
 package pt.ipc.http.models.emitter
 
-data class PostedVideo(val name: String) : EmitterModel(eventID = "PostedVideo", obj = object { val name = name })
+import java.util.UUID
+
+data class PostedVideo(val clientID : UUID, val name: String, val exerciseID : Int) : EmitterModel(
+    eventID = "PostedVideo",
+    obj = object {
+        val clientID = clientID
+        val name = name
+        val exerciseID = exerciseID
+    }
+)

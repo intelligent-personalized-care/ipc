@@ -116,13 +116,16 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<ListOfClients> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val (clients, clientID, monitorName) = monitorService.decideRequest(
+        if(!decision.accept){
+            return ResponseEntity.ok().build()
+        }
+
+        val (clients, clientID, monitorOutput) = monitorService.decideRequest(
             requestID = requestID,
-            monitorID = monitorID,
-            accept = decision.accept
+            monitorID = monitorID
         )
 
-        if (decision.accept) sseEmitterRepository.send(userID = clientID, RequestAcceptance(monitorName = monitorName)).also { println() }
+        sseEmitterRepository.send(userID = clientID, obj = RequestAcceptance(monitor = monitorOutput))
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }
@@ -177,14 +180,14 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<Unit> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val title = monitorService.associatePlanToClient(
+        val planOutput = monitorService.associatePlanToClient(
             monitorID = monitorID,
             clientID = clientID,
             startDate = planInfo.startDate,
             planID = planInfo.planID
         )
 
-        sseEmitterRepository.send(userID = clientID, obj = PlanAssociation(planTitle = title, startDate = planInfo.startDate))
+        sseEmitterRepository.send(userID = clientID, obj = PlanAssociation(planOutput = planOutput))
 
         return ResponseEntity.ok().build()
     }

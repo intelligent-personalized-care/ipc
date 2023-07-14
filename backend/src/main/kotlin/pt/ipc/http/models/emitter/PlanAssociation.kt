@@ -1,12 +1,9 @@
 package pt.ipc.http.models.emitter
 
-import java.time.LocalDate
+import pt.ipc.domain.plan.PlanOutput
 
-data class PlanAssociation(val planTitle: String, val startDate: LocalDate) :
+data class PlanAssociation(val planOutput : PlanOutput) :
     EmitterModel(
         eventID = "PlanAssociation",
-        obj = object {
-            val planTitle = planTitle
-            val startDate = startDate
-        }
+        obj = planOutput
     )

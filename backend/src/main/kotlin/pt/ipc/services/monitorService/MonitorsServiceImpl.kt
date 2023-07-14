@@ -8,7 +8,6 @@ import pt.ipc.domain.client.ClientInformation
 import pt.ipc.domain.client.ClientOfMonitor
 import pt.ipc.domain.encryption.EncryptionUtils
 import pt.ipc.domain.exceptions.ClientAlreadyHavePlanInThisPeriod
-import pt.ipc.domain.exceptions.ForbiddenRequest
 import pt.ipc.domain.exceptions.HasNotUploadedVideo
 import pt.ipc.domain.exceptions.MonitorNotFound
 import pt.ipc.domain.exceptions.NotMonitorOfClient
@@ -24,6 +23,7 @@ import pt.ipc.domain.plan.PlanInput
 import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.services.ServiceUtils
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.MonitorOutput
 import pt.ipc.services.dtos.RegisterInput
 import pt.ipc.storage.transaction.TransactionManager
 import java.time.LocalDate
@@ -120,24 +120,25 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): Triple<List<ClientInformation>, UUID, String> =
+    override fun decideRequest(requestID: UUID, monitorID: UUID): Triple<List<ClientInformation>, UUID, MonitorOutput> =
         transactionManager.runBlock(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
-                val monitor = it.monitorRepository.getMonitor(monitorID = monitorID) ?: throw MonitorNotFound
-                if (monitorID != monitor.id) throw ForbiddenRequest
 
-                if (accept) {
                     it.monitorRepository.decideRequest(
                         requestID = requestID,
                         clientID = requestInformation.clientID,
                         monitorID = monitorID
                     )
-                }
 
                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
 
-                Triple(first = clients, second = requestInformation.clientID, third = monitor.name)
+                val details = it.monitorRepository.getMonitorOfClient(requestInformation.clientID) ?: throw MonitorNotFound
+                val stars = it.monitorRepository.getMonitorRating(details.id)
+
+                val monitorOutput = MonitorOutput(id = details.id, name = details.name, email = details.email, rating = stars)
+
+                Triple(first = clients, second = requestInformation.clientID, third = monitorOutput)
             }
         )
 
@@ -149,8 +150,8 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): String {
-        return transactionManager.runBlock(
+    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): PlanOutput {
+      return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
 
@@ -162,7 +163,7 @@ class MonitorsServiceImpl(
 
                 it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate, endDate = endDate)
 
-                plan.title
+                it.plansRepository.getPlanOfClientContainingDate(clientID = clientID, date = startDate) ?: throw PlanNotFound
             }
         )
     }

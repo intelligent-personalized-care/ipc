@@ -10,6 +10,7 @@ import pt.ipc.domain.plan.PlanInfoOutput
 import pt.ipc.domain.plan.PlanInput
 import pt.ipc.domain.plan.PlanOutput
 import pt.ipc.services.dtos.CredentialsOutput
+import pt.ipc.services.dtos.MonitorOutput
 import pt.ipc.services.dtos.RegisterInput
 import java.time.LocalDate
 import java.util.*
@@ -34,11 +35,11 @@ interface MonitorService {
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
-    fun decideRequest(requestID: UUID, monitorID: UUID, accept: Boolean): Triple<List<ClientInformation>, UUID, String>
+    fun decideRequest(requestID: UUID, monitorID: UUID): Triple<List<ClientInformation>, UUID, MonitorOutput>
 
     fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 
-    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): String
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): PlanOutput
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

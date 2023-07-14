@@ -4,6 +4,8 @@ import pt.ipc.domain.client.ClientOutput
 import pt.ipc.domain.exercises.Exercise
 import pt.ipc.domain.monitor.MonitorAvailable
 import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.http.models.emitter.PostedVideo
+import pt.ipc.http.models.emitter.RequestMonitor
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.MonitorOutput
 import java.time.LocalDate
@@ -19,7 +21,7 @@ interface ClientsService {
 
     fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable>
 
-    fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID, String>
+    fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): RequestMonitor
 
     fun getMonitorOfClient(clientID: UUID): MonitorOutput
 
@@ -27,5 +29,5 @@ interface ClientsService {
 
     fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int)
 
-    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, set: Int, feedback: String? = null): Pair<UUID, String>
+    fun uploadVideoOfClient(video: ByteArray, clientID: UUID, planID: Int, dailyListID: Int, exerciseID: Int, set: Int, feedback: String? = null): Pair<UUID, PostedVideo?>
 }

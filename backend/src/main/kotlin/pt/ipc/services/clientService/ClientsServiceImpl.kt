@@ -16,6 +16,8 @@ import pt.ipc.domain.exceptions.UserNotExists
 import pt.ipc.domain.exercises.Exercise
 import pt.ipc.domain.monitor.MonitorAvailable
 import pt.ipc.http.controllers.clients.models.RegisterClientInput
+import pt.ipc.http.models.emitter.PostedVideo
+import pt.ipc.http.models.emitter.RequestMonitor
 import pt.ipc.services.ServiceUtils
 import pt.ipc.services.dtos.CredentialsOutput
 import pt.ipc.services.dtos.MonitorOutput
@@ -82,7 +84,7 @@ class ClientsServiceImpl(
             }
         )
 
-    override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): Pair<UUID, String> {
+    override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): RequestMonitor {
         val requestID = UUID.randomUUID()
 
         return transactionManager.runBlock(
@@ -95,7 +97,8 @@ class ClientsServiceImpl(
                     clientID = clientID,
                     requestText = requestText
                 )
-                Pair(first = requestID, second = client.name)
+
+                RequestMonitor(requestID = requestID, name = client.name, requestText = requestText, clientID = clientID)
             }
         )
     }
@@ -140,7 +143,7 @@ class ClientsServiceImpl(
         exerciseID: Int,
         set: Int,
         feedback: String?
-    ): Pair<UUID, String> {
+    ): Pair<UUID, PostedVideo?> {
         val exerciseVideoID = UUID.randomUUID()
         return transactionManager.runBlock(
             block = {
@@ -150,18 +153,19 @@ class ClientsServiceImpl(
                 if (!it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
                 if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID, exerciseID = exerciseID, set = set)) throw ExerciseAlreadyUploaded
 
-                it.clientsRepository.uploadExerciseVideoOfClient(
-                    clientID = clientID,
-                    exerciseID = exerciseID,
-                    exerciseVideoID = exerciseVideoID,
-                    date = LocalDate.now(),
-                    clientFeedback = feedback,
-                    set = set
-                )
+                val hasDone =
+                    it.clientsRepository.uploadExerciseVideoOfClient(
+                                    clientID = clientID,
+                                    exerciseID = exerciseID,
+                                    exerciseVideoID = exerciseVideoID,
+                                    date = LocalDate.now(),
+                                    clientFeedback = feedback,
+                                    set = set
+                                )
 
                 it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video)
 
-                Pair(first = monitor.id, second = client.name)
+                Pair(first = monitor.id, second = if (hasDone) PostedVideo(clientID = clientID, name = client.name, exerciseID = exerciseID) else null)
             },
             fileName = exerciseVideoID
         )
