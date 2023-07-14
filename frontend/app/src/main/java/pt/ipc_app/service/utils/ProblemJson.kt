@@ -1,5 +1,7 @@
 package pt.ipc_app.service.utils
 
+import java.net.HttpURLConnection
+
 open class ResponseError(
     val title: String,
     val message: String? = null
@@ -12,8 +14,16 @@ open class ResponseError(
  */
 class ProblemJson(
     title: String,
-    val status: Int
-): ResponseError(title)
+    private val status: Int
+): ResponseError(title) {
+
+    fun unauthenticatedResponse() = title == UNAUTHENTICATED && status == HttpURLConnection.HTTP_UNAUTHORIZED
+
+    companion object {
+        private const val UNAUTHENTICATED = "Unauthenticated"
+    }
+
+}
 
 class NoInternetConnection(
     title: String = "No Internet Connection",

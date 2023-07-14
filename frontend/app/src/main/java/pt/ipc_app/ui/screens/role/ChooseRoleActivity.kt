@@ -12,6 +12,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.ui.screens.login.LoginActivity
 import pt.ipc_app.ui.screens.register.RegisterActivity
 import pt.ipc_app.ui.screens.register.RegisterViewModel
+import pt.ipc_app.ui.setAppContentInitial
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -37,7 +38,7 @@ class ChooseRoleActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        setAppContentInitial(viewModel) {
             val roleChose by viewModel.chosenRole.collectAsState()
 
             ChooseRoleScreen(

@@ -38,7 +38,12 @@ fun AppClientScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
             topBar = {
-                TopBar(onInfoRequested = { AboutActivity.navigate(ctx) })
+                TopBar(
+                    onInfoRequested = {
+                        if (buttonBarClicked != ButtonBarType.ABOUT)
+                            AboutActivity.navigate(ctx)
+                    }
+                )
             },
             bottomBar = {
                 ClientBottomBar(
@@ -71,7 +76,12 @@ fun AppMonitorScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
             topBar = {
-                TopBar(onInfoRequested = { AboutActivity.navigate(ctx) })
+                TopBar(
+                    onInfoRequested = {
+                        if (buttonBarClicked != ButtonBarType.ABOUT)
+                            AboutActivity.navigate(ctx)
+                    }
+                )
             },
             bottomBar = {
                 MonitorBottomBar(

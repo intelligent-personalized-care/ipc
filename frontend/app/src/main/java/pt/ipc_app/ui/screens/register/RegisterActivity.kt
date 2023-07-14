@@ -16,6 +16,7 @@ import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
+import pt.ipc_app.ui.setAppContentInitial
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -43,7 +44,7 @@ class RegisterActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+        setAppContentInitial(viewModel) {
             val state by viewModel.state.collectAsState()
             val error by viewModel.error.collectAsState()
 

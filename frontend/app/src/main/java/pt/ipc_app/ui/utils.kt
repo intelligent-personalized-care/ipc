@@ -1,5 +1,6 @@
 package pt.ipc_app.ui
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -8,8 +9,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
@@ -19,9 +25,9 @@ import pt.ipc_app.ui.screens.AppClientScreen
 import pt.ipc_app.ui.screens.AppMonitorScreen
 import pt.ipc_app.ui.screens.AppViewModel
 import pt.ipc_app.ui.screens.login.LoginActivity
+import pt.ipc_app.ui.theme.AppTheme
 import java.io.File
 import java.io.FileOutputStream
-import java.net.HttpURLConnection
 
 fun Context.openSendEmail(email: String) {
     try {
@@ -65,7 +71,7 @@ private fun ComponentActivity.setAppContent(
     setContent {
         content()
         viewModel.error.collectAsState().value?.let {
-            if (it is ProblemJson && it.status == HttpURLConnection.HTTP_UNAUTHORIZED)
+            if (it is ProblemJson && it.unauthenticatedResponse())
                 ErrorAlert(
                     title = it.title,
                     message = "You need to authenticate yourself.",
@@ -82,6 +88,24 @@ private fun ComponentActivity.setAppContent(
         }
     }
 }
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+fun ComponentActivity.setAppContentInitial(
+    viewModel: AppViewModel,
+    content: @Composable () -> Unit
+) {
+    setAppContent(viewModel) {
+        AppTheme {
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                content = { content() }
+            )
+        }
+    }
+}
+
 
 fun ComponentActivity.setAppContentClient(
     viewModel: AppViewModel,

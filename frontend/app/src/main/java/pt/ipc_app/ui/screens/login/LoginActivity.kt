@@ -16,6 +16,7 @@ import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.home.ClientHomeActivity
 import pt.ipc_app.ui.screens.home.MonitorHomeActivity
+import pt.ipc_app.ui.setAppContentInitial
 import pt.ipc_app.utils.viewModelInit
 
 /**
@@ -46,7 +47,7 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         repo.clearSession()
-        setContent {
+        setAppContentInitial(viewModel) {
             val state by viewModel.state.collectAsState()
 
             LoginScreen(
