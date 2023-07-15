@@ -61,7 +61,7 @@ class AdminController(private val adminService: AdminService, private val sseEmi
 
         sseEmitterRepository.send(userID = monitorID, CredentialAcceptance(acceptance = decision.accept))
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @Authentication

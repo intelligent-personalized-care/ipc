@@ -50,7 +50,7 @@ class UserController(private val userService: UserService, private val sseEmitte
     @PostMapping(Uris.USERS_UNSUBSCRIBE)
     fun unsubscribeToServerSendEvents(user: User): ResponseEntity<Unit> {
         sseEmitterRepository.endConnection(userID = user.id)
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @Authentication

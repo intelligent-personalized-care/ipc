@@ -142,6 +142,16 @@ class MonitorsServiceImpl(
             }
         )
 
+    override fun deleteConnection(monitorID: UUID, clientID: UUID) {
+        transactionManager.runBlock(
+            block = {
+                it.monitorRepository.getClientOfMonitor(monitorID = monitorID, clientID = clientID) ?: NotMonitorOfClient
+                it.clientsRepository.deleteConnection(monitorID = monitorID, clientID = clientID)
+            }
+        )
+    }
+
+
     override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
         return transactionManager.runBlock(
             block = {
@@ -150,7 +160,7 @@ class MonitorsServiceImpl(
         )
     }
 
-    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): PlanOutput {
+    override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): Pair<String, LocalDate> {
       return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
@@ -163,7 +173,7 @@ class MonitorsServiceImpl(
 
                 it.plansRepository.associatePlanToClient(planID = planID, clientID = clientID, startDate = startDate, endDate = endDate)
 
-                it.plansRepository.getPlanOfClientContainingDate(clientID = clientID, date = startDate) ?: throw PlanNotFound
+                Pair(first = plan.title, second = startDate)
             }
         )
     }

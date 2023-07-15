@@ -3,6 +3,7 @@ package pt.ipc.http.controllers.monitors
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -180,16 +181,16 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<Unit> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val planOutput = monitorService.associatePlanToClient(
+        val (title,startDate) = monitorService.associatePlanToClient(
             monitorID = monitorID,
             clientID = clientID,
             startDate = planInfo.startDate,
             planID = planInfo.planID
         )
 
-        sseEmitterRepository.send(userID = clientID, obj = PlanAssociation(planOutput = planOutput))
+        sseEmitterRepository.send(userID = clientID, obj = PlanAssociation(title = title, startDate = startDate))
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @Authentication
@@ -222,7 +223,16 @@ class MonitorsController(private val monitorService: MonitorService, private val
 
         sseEmitterRepository.send(userID = clientID, obj = MonitorFeedBack(feedBack = feedbackInput.feedback))
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    @Authentication
+    @DeleteMapping(Uris.CLIENT_OF_MONITOR)
+    fun endClientConnection(@PathVariable monitorID: UUID, @PathVariable clientID: UUID) : ResponseEntity<Unit>{
+
+        monitorService.deleteConnection(monitorID = monitorID, clientID = clientID)
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @Authentication

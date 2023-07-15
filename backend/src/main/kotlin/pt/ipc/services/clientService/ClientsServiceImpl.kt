@@ -77,6 +77,15 @@ class ClientsServiceImpl(
             }
         )
 
+    override fun deleteConnection(clientID: UUID) {
+        transactionManager.runBlock(
+            block = {
+                val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
+                it.clientsRepository.deleteConnection(monitorID = monitor.id, clientID = clientID)
+            }
+        )
+    }
+
     override fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable> =
         transactionManager.runBlock(
             block = {

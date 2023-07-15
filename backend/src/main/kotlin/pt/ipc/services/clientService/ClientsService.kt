@@ -19,6 +19,8 @@ interface ClientsService {
 
     fun getClientProfile(clientID: UUID): ClientOutput
 
+    fun deleteConnection(clientID: UUID)
+
     fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable>
 
     fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): RequestMonitor

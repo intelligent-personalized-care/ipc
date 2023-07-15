@@ -37,9 +37,11 @@ interface MonitorService {
 
     fun decideRequest(requestID: UUID, monitorID: UUID): Triple<List<ClientInformation>, UUID, MonitorOutput>
 
+    fun deleteConnection(monitorID: UUID, clientID: UUID)
+
     fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 
-    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): PlanOutput
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): Pair<String,LocalDate>
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

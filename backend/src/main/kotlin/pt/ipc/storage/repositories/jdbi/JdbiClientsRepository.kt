@@ -38,6 +38,13 @@ class JdbiClientsRepository(
             .execute()
     }
 
+    override fun deleteConnection(monitorID: UUID, clientID: UUID) {
+        handle.createUpdate("delete from dbo.client_to_monitor where client_id = :clientID and monitor_id = :monitorID")
+            .bind("clientID",clientID)
+            .bind("monitorID",monitorID)
+            .execute()
+    }
+
     override fun registerClient(input: Client, sessionID: String) {
         handle.createUpdate("insert into dbo.users (id, name, email, password_hash) values (:id,:u_name,:u_email,:password_hash)")
             .bind("id", input.id)

@@ -3,6 +3,7 @@ package pt.ipc.http.controllers.clients
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,6 +23,7 @@ import pt.ipc.http.controllers.clients.models.ListOfExercisesOfClient
 import pt.ipc.http.controllers.clients.models.RegisterClientInput
 import pt.ipc.http.controllers.clients.models.RequestIdOutput
 import pt.ipc.http.models.emitter.PostedVideo
+import pt.ipc.http.models.emitter.RateMonitor
 import pt.ipc.http.pipeline.authentication.Authentication
 import pt.ipc.http.pipeline.exceptionHandler.Problem.Companion.PROBLEM_MEDIA_TYPE
 import pt.ipc.http.utils.SseEmitterRepository
@@ -108,6 +110,13 @@ class ClientsController(private val clientsService: ClientsService, private val 
     }
 
     @Authentication
+    @DeleteMapping(Uris.CLIENT_MONITOR)
+    fun endMonitorConnection(@PathVariable clientID: UUID) : ResponseEntity<Unit>{
+        clientsService.deleteConnection(clientID = clientID)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    @Authentication
     @GetMapping(Uris.EXERCISES_OF_CLIENT)
     fun getExercisesOfClient(
         @PathVariable clientID: UUID,
@@ -125,9 +134,15 @@ class ClientsController(private val clientsService: ClientsService, private val 
     @PostMapping(Uris.MONITOR_RATE)
     fun rateMonitor(@PathVariable monitorID: UUID, @RequestBody ratingInput: RatingInput, user: User): ResponseEntity<Unit> {
         if (ratingInput.user != user.id) throw ForbiddenRequest
+
         clientsService.rateMonitor(monitorID = monitorID, clientID = user.id, rating = ratingInput.rating)
-        return ResponseEntity.ok().build()
+
+        sseEmitterRepository.send(userID = monitorID, obj = RateMonitor(rate = ratingInput.rating))
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
+
+
 
     @Authentication
     @PostMapping(Uris.VIDEO_OF_EXERCISE)
@@ -157,7 +172,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
             sseEmitterRepository.send(userID = monitorID, obj = PostedVideo(clientID = it.clientID, name = it.name, exerciseID = it.exerciseID))
         }
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     companion object {

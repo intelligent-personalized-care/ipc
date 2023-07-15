@@ -15,6 +15,8 @@ interface ClientsRepository {
 
     fun requestMonitor(requestID: UUID, monitorID: UUID, clientID: UUID, requestText: String? = null)
 
+    fun deleteConnection(monitorID: UUID, clientID: UUID)
+
     fun hasClientRatedMonitor(clientID: UUID, monitorID: UUID): Boolean
 
     fun rateMonitor(clientID: UUID, monitorID: UUID, rating: Int)
