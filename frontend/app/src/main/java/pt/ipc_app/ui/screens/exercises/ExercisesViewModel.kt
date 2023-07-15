@@ -10,6 +10,10 @@ import pt.ipc_app.domain.exercise.ExerciseInfo
 import pt.ipc_app.ui.screens.exercises.info.ExerciseActivity
 import pt.ipc_app.ui.screens.exercises.list.ExercisesListActivity
 import pt.ipc_app.service.ExercisesService
+import pt.ipc_app.service.models.sse.MonitorFeedBack
+import pt.ipc_app.service.models.sse.SseEvent
+import pt.ipc_app.service.sse.EventBus
+import pt.ipc_app.service.sse.SseEventListener
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
@@ -23,7 +27,7 @@ import java.util.*
 class ExercisesViewModel(
     private val exercisesService: ExercisesService,
     private val sessionManager: SessionManagerSharedPrefs
-) : AppViewModel() {
+) : AppViewModel(), SseEventListener {
 
     private val defaultRestTime = 30
     private val defaultDelay = 1000
@@ -41,10 +45,6 @@ class ExercisesViewModel(
     private var _nrSetToSee = MutableStateFlow(1)
     val nrSetToSee
         get() = _nrSetToSee.asStateFlow()
-
-    private var _urlClientExerciseVideo = MutableStateFlow<String?>(null)
-    val urlClientExerciseVideo
-        get() = _urlClientExerciseVideo.asStateFlow()
 
     private var _exerciseVideoFeedBack = MutableStateFlow<String?>(null)
     val exerciseVideoFeedBack
@@ -218,5 +218,19 @@ class ExercisesViewModel(
                 _exercises.value = it.exercises
             }
         )
+    }
+
+    init {
+        EventBus.registerListener(this)
+    }
+
+    override fun onCleared() {
+        EventBus.unregisterListener(this)
+        super.onCleared()
+    }
+
+    override fun onEventReceived(eventData: SseEvent) {
+        if (eventData is MonitorFeedBack)
+            _exerciseVideoFeedBack.value = eventData.feedBack
     }
 }

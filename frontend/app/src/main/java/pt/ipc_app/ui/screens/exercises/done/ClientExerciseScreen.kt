@@ -22,6 +22,7 @@ import java.util.*
 @Composable
 fun ClientExerciseScreen(
     exercise: Exercise,
+    isClient: Boolean,
     clientExerciseUrl: String,
     setSelected: Int,
     onSetSelected: (Int) -> Unit = { },
@@ -72,7 +73,7 @@ fun ClientExerciseScreen(
 
         Spacer(modifier = Modifier.padding(top = 100.dp))
 
-        if (feedbackReceived == null) {
+        if (!isClient) {
             CustomTextField(
                 fieldType = TextFieldType.EXERCISE_FEEDBACK,
                 textToDisplay = feedback,
@@ -93,7 +94,7 @@ fun ClientExerciseScreen(
                 )
             }
         } else {
-            Text(text = feedbackReceived)
+            feedbackReceived?.let { Text(text = feedbackReceived) }
         }
 
     }
@@ -106,6 +107,7 @@ fun ExerciseFeedbackScreenPreview() {
         exercise = Exercise(UUID.randomUUID(), "Push ups", "Contract your abs and tighten your core by pulling your belly button toward your spine. \n" +
                 "Inhale as you slowly bend your elbows and lower yourself to the floor, until your elbows are at a 90-degree angle.\n" +
                 "Exhale while contracting your chest muscles and pushing back up through your hands, returning to the start position.", 15, 3),
+        isClient = false,
         clientExerciseUrl = "",
         setSelected = 1
     )

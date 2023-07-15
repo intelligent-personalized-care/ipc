@@ -7,7 +7,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.sse.CredentialAcceptance
+import pt.ipc_app.service.models.sse.SseEvent
+import pt.ipc_app.service.models.users.DocState
 import pt.ipc_app.service.models.users.MonitorProfile
+import pt.ipc_app.service.sse.EventBus
+import pt.ipc_app.service.sse.SseEventListener
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
@@ -21,7 +26,7 @@ import java.io.File
 class MonitorProfileViewModel(
     private val usersService: UsersService,
     private val sessionManager: SessionManagerSharedPrefs
-) : AppViewModel() {
+) : AppViewModel(), SseEventListener {
 
     enum class FileToSubmit { PICTURE, CREDENTIAL}
 
@@ -114,5 +119,20 @@ class MonitorProfileViewModel(
                 _documentState.value = ProgressState.FINISHED
             }
         )
+    }
+
+    init {
+        EventBus.registerListener(this)
+    }
+
+    override fun onCleared() {
+        EventBus.unregisterListener(this)
+        super.onCleared()
+    }
+
+    override fun onEventReceived(eventData: SseEvent) {
+        if (eventData is CredentialAcceptance && monitorProfile.value != null) {
+            _monitorProfile.value = _monitorProfile.value!!.copy(docState = if (eventData.acceptance) DocState.VALID.name.lowercase() else DocState.INVALID.name.lowercase())
+        }
     }
 }

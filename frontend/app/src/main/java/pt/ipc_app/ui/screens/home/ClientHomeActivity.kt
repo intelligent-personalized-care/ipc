@@ -63,6 +63,7 @@ class ClientHomeActivity : ComponentActivity() {
                     if (mon != null) MonitorDetailsActivity.navigate(this, mon.copy(isMyMonitor = true))
                     else SearchMonitorsActivity.navigate(this)
                 },
+                onDayWithoutPlanSelect = { viewModel.getCurrentPlanOfClient(it) },
                 onExerciseSelect = {
                     if (it.exercise.isDone)
                         ClientExerciseActivity.navigate(this, it, repo.userUUID)

@@ -29,6 +29,7 @@ fun ClientHomeScreen(
     monitor: MonitorOutput? = null,
     plan: Plan? = null,
     onMonitorClick: () -> Unit = { },
+    onDayWithoutPlanSelect: (LocalDate) -> Unit = { },
     onExerciseSelect: (ExerciseTotalInfo) -> Unit = { }
 ) {
     var notifications by remember { mutableStateOf(true) }
@@ -83,6 +84,7 @@ fun ClientHomeScreen(
                 onDaySelected = {
                     daySelected = it
                     dailyListSelected = plan?.getListOfDayIfExists(it)
+                    if (dailyListSelected == null) onDayWithoutPlanSelect(daySelected)
                 }
             )
 

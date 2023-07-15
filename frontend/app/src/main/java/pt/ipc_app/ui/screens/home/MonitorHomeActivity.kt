@@ -7,6 +7,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientOutput
@@ -37,6 +42,7 @@ class MonitorHomeActivity : ComponentActivity() {
     companion object {
         const val CLIENTS = "CLIENTS"
         const val REQUESTS = "REQUESTS"
+
         fun navigate(context: Context, clientsOfMonitor: ClientsOfMonitor? = null, requestsOfMonitor: RequestsOfMonitor? = null) {
             with(context) {
                 val intent = Intent(this, MonitorHomeActivity::class.java)
@@ -51,18 +57,26 @@ class MonitorHomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         if (clients == null) viewModel.getClientsOfMonitor()
+        else viewModel.setClients(clients!!)
         if (requests == null) viewModel.getRequestsOfMonitor()
-        viewModel.getExercisesOfClients(LocalDate.now())
+        else viewModel.setRequests(requests!!)
 
+        viewModel.getExercisesOfClients(LocalDate.now())
+/*
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    viewModel.getRequestsOfMonitor()
+                    delay(5000)
+                }
+            }
+        }
+
+ */
         setAppContentMonitor(viewModel) {
 
-            var clientsList by remember { mutableStateOf(clients?.clients) }
-            var requestsList by remember { mutableStateOf(requests?.requests) }
-
-            if (clientsList == null)
-                clientsList = viewModel.clients.collectAsState().value?.clients
-            if (requestsList == null)
-                requestsList = viewModel.requests.collectAsState().value?.requests
+            val clientsList = viewModel.clients.collectAsState().value?.clients
+            val requestsList = viewModel.requests.collectAsState().value?.requests
 
             MonitorHomeScreen(
                 monitor = repo.userLoggedIn,
@@ -74,13 +88,7 @@ class MonitorHomeActivity : ComponentActivity() {
                 onClientSelected = { ClientDetailsActivity.navigate(this, it) },
                 onClientRequestDecided = { request, decision ->
                     viewModel.decideConnectionRequestOfClient(request.requestID, decision)
-
-                    if (decision.accept)
-                        clientsList = (clientsList ?: listOf()) + ClientOutput(request.clientID, request.clientName, request.clientEmail)
-
-                    requestsList?.let { reqs ->
-                        requestsList = reqs - reqs.first {it == request}
-                    }
+                    viewModel.delRequest(request)
                 },
                 onClientExercisesSelected = { clientId, clientName, planDate ->
                     PlanActivity.navigate(this, clientId, clientName, planDate.toString())

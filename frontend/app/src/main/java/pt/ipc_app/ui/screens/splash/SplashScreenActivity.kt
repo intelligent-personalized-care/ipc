@@ -25,7 +25,7 @@ class SplashScreenActivity: ComponentActivity() {
     private val viewModel by viewModels<SplashScreenViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            SplashScreenViewModel(app.services.usersService, app.sessionManager)
+            SplashScreenViewModel(app.services.usersService, app.services.sseService, app.sessionManager)
         }
     }
 
@@ -35,6 +35,7 @@ class SplashScreenActivity: ComponentActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             if (repo.isLoggedIn()) {
+                viewModel.subscribe()
                 if (repo.userLoggedIn.role.isClient()) {
                     viewModel.getMonitorOfClient()
                     viewModel.getCurrentPlanOfClient()

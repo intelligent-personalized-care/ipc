@@ -8,6 +8,7 @@ import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.users.ClientOutput
+import pt.ipc_app.service.sse.SseService
 import pt.ipc_app.session.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
@@ -20,6 +21,7 @@ import java.io.File
  */
 class ClientProfileViewModel(
     private val usersService: UsersService,
+    private val sseService: SseService,
     private val sessionManager: SessionManagerSharedPrefs
 ) : AppViewModel() {
 
@@ -30,6 +32,14 @@ class ClientProfileViewModel(
     private val _clientProfile = MutableStateFlow<ClientOutput?>(null)
     val clientProfile
         get() = _clientProfile.asStateFlow()
+
+    fun unsubscribe() {
+        launchAndExecuteRequest(
+            request = {
+                sseService.stop(sessionManager.userLoggedIn.accessToken)
+            }
+        )
+    }
 
     fun getProfilePicture(
         context: Context

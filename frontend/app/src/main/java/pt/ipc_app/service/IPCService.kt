@@ -2,6 +2,7 @@ package pt.ipc_app.service
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
+import pt.ipc_app.service.sse.SseService
 
 /**
  * The service that handles the ipc application.
@@ -21,5 +22,7 @@ open class IPCService(
     val usersService = UsersService(apiEndpoint, httpClient, jsonEncoder)
     val plansService = PlansService(apiEndpoint, httpClient, jsonEncoder)
     val exercisesService = ExercisesService(apiEndpoint, httpClient, jsonEncoder)
+
+    val sseService = SseService(apiEndpoint, httpClient, jsonEncoder)
 
 }

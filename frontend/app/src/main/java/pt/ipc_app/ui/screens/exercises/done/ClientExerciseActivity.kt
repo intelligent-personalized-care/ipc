@@ -55,6 +55,7 @@ class ClientExerciseActivity: ComponentActivity() {
             val set = viewModel.nrSetToSee.collectAsState().value
             ClientExerciseScreen(
                 exercise = exercise,
+                isClient = repo.userUUID.toString() == clientId,
                 clientExerciseUrl = viewModel.getExerciseVideoOfClientUrl(
                     clientId = clientId,
                     planId = exercise.planId,
@@ -62,7 +63,16 @@ class ClientExerciseActivity: ComponentActivity() {
                     exerciseId = exercise.exercise.id
                 ),
                 setSelected = set,
-                onSetSelected = { viewModel.selectSetToSee(it) },
+                onSetSelected = {
+                    viewModel.selectSetToSee(it)
+                    if (repo.userUUID.toString() == clientId)
+                        viewModel.getFeedbackOfMonitor(
+                            clientId = clientId,
+                            planId = exercise.planId,
+                            dailyListId = exercise.dailyListId,
+                            exerciseId = exercise.exercise.id
+                        )
+                },
                 feedbackReceived = viewModel.exerciseVideoFeedBack.collectAsState().value,
                 onFeedbackSent = {
                     viewModel.sendFeedbackToExerciseDone(

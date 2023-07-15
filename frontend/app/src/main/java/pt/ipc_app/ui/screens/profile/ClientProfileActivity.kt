@@ -29,7 +29,7 @@ class ClientProfileActivity : ComponentActivity() {
     private val viewModel by viewModels<ClientProfileViewModel> {
         viewModelInit {
             val app = (application as DependenciesContainer)
-            ClientProfileViewModel(app.services.usersService, app.sessionManager)
+            ClientProfileViewModel(app.services.usersService, app.services.sseService, app.sessionManager)
         }
     }
 
@@ -56,6 +56,7 @@ class ClientProfileActivity : ComponentActivity() {
                 onUpdateProfilePicture = { checkReadStoragePermission() },
                 onSuccessUpdateProfilePicture = { Toast.makeText(this, "Picture updated!", Toast.LENGTH_SHORT).show() },
                 onLogout = {
+                    viewModel.unsubscribe()
                     LoginActivity.navigate(this)
                     finish()
                 }

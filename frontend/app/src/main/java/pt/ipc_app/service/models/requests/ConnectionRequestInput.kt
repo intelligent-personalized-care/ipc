@@ -1,4 +1,4 @@
-package pt.ipc_app.service.models
+package pt.ipc_app.service.models.requests
 
 import java.util.*
 

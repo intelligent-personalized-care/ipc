@@ -36,7 +36,9 @@ class IPCApplication : DependenciesContainer, Application() {
 
     override val okHttp: OkHttpClient by lazy {
         OkHttpClient.Builder()
-            .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(0, TimeUnit.MINUTES)
+            .writeTimeout(0, TimeUnit.MINUTES)
+            .readTimeout(0, TimeUnit.MINUTES)
             .build()
     }
 
@@ -80,6 +82,5 @@ class IPCApplication : DependenciesContainer, Application() {
 
     companion object {
         private const val API_ENDPOINT = "https://organic-byway-391719.ew.r.appspot.com"
-        private const val CONNECTION_TIMEOUT = 300L
     }
 }

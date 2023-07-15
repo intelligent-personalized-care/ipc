@@ -8,7 +8,7 @@ import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.AUTHORIZATION
-import pt.ipc_app.service.models.ConnectionRequestInput
+import pt.ipc_app.service.models.requests.ConnectionRequestInput
 import pt.ipc_app.service.models.exercises.ExercisesOfClients
 import pt.ipc_app.service.models.login.LoginInput
 import pt.ipc_app.service.models.login.LoginOutput
@@ -230,10 +230,11 @@ class UsersService(
      */
     suspend fun getCurrentPlanOfClient(
         clientId: UUID,
+        date: LocalDate = LocalDate.now(),
         token: String
     ): APIResult<Plan> =
         get(
-            uri = "/users/clients/$clientId/plans",
+            uri = "/users/clients/$clientId/plans?date=$date",
             token = token
         )
 
@@ -301,7 +302,7 @@ class UsersService(
         requestId: UUID,
         requestDecision: ConnectionRequestDecisionInput,
         token: String
-    ): APIResult<RequestsOfMonitor> =
+    ): APIResult<ClientsOfMonitor> =
         post(
             uri = "/users/monitors/$monitorId/requests/$requestId",
             token = token,
