@@ -41,7 +41,7 @@ interface MonitorService {
 
     fun createPlan(monitorID: UUID, planInput: PlanInput): Int
 
-    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): Pair<String,LocalDate>
+    fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): Pair<String, LocalDate>
 
     fun getPlan(monitorID: UUID, planID: Int): PlanOutput
 

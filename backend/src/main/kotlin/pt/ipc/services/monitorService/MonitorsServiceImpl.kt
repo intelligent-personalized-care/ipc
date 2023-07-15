@@ -125,7 +125,7 @@ class MonitorsServiceImpl(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
 
-                if(!decision){
+                if (!decision) {
                     it.monitorRepository.declineRequest(requestID = requestID)
                     return@runBlock null
                 }
@@ -156,7 +156,6 @@ class MonitorsServiceImpl(
         )
     }
 
-
     override fun createPlan(monitorID: UUID, planInput: PlanInput): Int {
         return transactionManager.runBlock(
             block = {
@@ -166,7 +165,7 @@ class MonitorsServiceImpl(
     }
 
     override fun associatePlanToClient(monitorID: UUID, clientID: UUID, startDate: LocalDate, planID: Int): Pair<String, LocalDate> {
-      return transactionManager.runBlock(
+        return transactionManager.runBlock(
             block = {
                 if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
 

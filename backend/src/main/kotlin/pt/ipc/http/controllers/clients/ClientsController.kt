@@ -111,7 +111,7 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
     @Authentication
     @DeleteMapping(Uris.CLIENT_MONITOR)
-    fun endMonitorConnection(@PathVariable clientID: UUID) : ResponseEntity<Unit>{
+    fun endMonitorConnection(@PathVariable clientID: UUID): ResponseEntity<Unit> {
         clientsService.deleteConnection(clientID = clientID)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
@@ -141,8 +141,6 @@ class ClientsController(private val clientsService: ClientsService, private val 
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
-
-
 
     @Authentication
     @PostMapping(Uris.VIDEO_OF_EXERCISE)

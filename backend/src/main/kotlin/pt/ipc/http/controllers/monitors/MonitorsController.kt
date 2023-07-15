@@ -115,9 +115,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
         @RequestBody decision: Decision,
         user: User
     ): ResponseEntity<ListOfClients> {
-
         if (user.id != monitorID) throw ForbiddenRequest
-
 
         val triple = monitorService.decideRequest(
             requestID = requestID,
@@ -131,7 +129,6 @@ class MonitorsController(private val monitorService: MonitorService, private val
         }
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-
     }
 
     @Authentication
@@ -184,7 +181,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
     ): ResponseEntity<Unit> {
         if (user.id != monitorID) throw ForbiddenRequest
 
-        val (title,startDate) = monitorService.associatePlanToClient(
+        val (title, startDate) = monitorService.associatePlanToClient(
             monitorID = monitorID,
             clientID = clientID,
             startDate = planInfo.startDate,
@@ -231,8 +228,7 @@ class MonitorsController(private val monitorService: MonitorService, private val
 
     @Authentication
     @DeleteMapping(Uris.CLIENT_OF_MONITOR)
-    fun endClientConnection(@PathVariable monitorID: UUID, @PathVariable clientID: UUID) : ResponseEntity<Unit>{
-
+    fun endClientConnection(@PathVariable monitorID: UUID, @PathVariable clientID: UUID): ResponseEntity<Unit> {
         monitorService.deleteConnection(monitorID = monitorID, clientID = clientID)
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()

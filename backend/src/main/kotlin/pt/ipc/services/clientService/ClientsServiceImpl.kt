@@ -164,13 +164,13 @@ class ClientsServiceImpl(
 
                 val hasDone =
                     it.clientsRepository.uploadExerciseVideoOfClient(
-                                    clientID = clientID,
-                                    exerciseID = exerciseID,
-                                    exerciseVideoID = exerciseVideoID,
-                                    date = LocalDate.now(),
-                                    clientFeedback = feedback,
-                                    set = set
-                                )
+                        clientID = clientID,
+                        exerciseID = exerciseID,
+                        exerciseVideoID = exerciseVideoID,
+                        date = LocalDate.now(),
+                        clientFeedback = feedback,
+                        set = set
+                    )
 
                 it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video)
 
