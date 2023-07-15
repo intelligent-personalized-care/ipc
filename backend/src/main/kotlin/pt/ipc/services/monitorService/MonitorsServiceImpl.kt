@@ -120,16 +120,20 @@ class MonitorsServiceImpl(
             }
         )
 
-    override fun decideRequest(requestID: UUID, monitorID: UUID): Triple<List<ClientInformation>, UUID, MonitorOutput> =
+    override fun decideRequest(requestID: UUID, monitorID: UUID, decision: Boolean): Triple<List<ClientInformation>, UUID, MonitorOutput> =
         transactionManager.runBlock(
             block = {
                 val requestInformation = it.monitorRepository.getRequestInformation(requestID = requestID) ?: throw RequestNotExists
 
-                    it.monitorRepository.decideRequest(
+                if(decision){
+                    it.monitorRepository.acceptRequest(
                         requestID = requestID,
                         clientID = requestInformation.clientID,
-                        monitorID = monitorID
+                        monitorID = monitorID,
                     )
+                } else{
+                    it.monitorRepository.declineRequest(requestID = requestID)
+                }
 
                 val clients = it.monitorRepository.getClientsOfMonitor(monitorID = monitorID)
 

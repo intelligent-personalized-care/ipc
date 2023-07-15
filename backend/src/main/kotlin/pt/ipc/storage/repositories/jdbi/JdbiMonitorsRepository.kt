@@ -192,7 +192,7 @@ class JdbiMonitorsRepository(
             .toList().map { it.copy(rating = getMonitorRating(it.id)) }
     }
 
-    override fun decideRequest(requestID: UUID, clientID: UUID, monitorID: UUID) {
+    override fun acceptRequest(requestID: UUID, clientID: UUID, monitorID: UUID) {
         handle.createUpdate("insert into dbo.client_to_monitor values (:monitorID,:clientID)")
             .bind("monitorID", monitorID)
             .bind("clientID", clientID)
@@ -200,6 +200,12 @@ class JdbiMonitorsRepository(
 
         handle.createUpdate("delete from dbo.monitor_requests where client_id = :clientID ")
             .bind("clientID", clientID)
+            .execute()
+    }
+
+    override fun declineRequest(requestID: UUID) {
+        handle.createUpdate("delete from dbo.monitor_requests where request_id = :requestID ")
+            .bind("requestID", requestID)
             .execute()
     }
 

@@ -115,18 +115,17 @@ class MonitorsController(private val monitorService: MonitorService, private val
         @RequestBody decision: Decision,
         user: User
     ): ResponseEntity<ListOfClients> {
+
         if (user.id != monitorID) throw ForbiddenRequest
 
-        if(!decision.accept){
-            return ResponseEntity.ok().build()
-        }
 
         val (clients, clientID, monitorOutput) = monitorService.decideRequest(
             requestID = requestID,
-            monitorID = monitorID
+            monitorID = monitorID,
+            decision = decision.accept
         )
 
-        sseEmitterRepository.send(userID = clientID, obj = RequestAcceptance(monitor = monitorOutput))
+        if(decision.accept) sseEmitterRepository.send(userID = clientID, obj = RequestAcceptance(monitor = monitorOutput))
 
         return ResponseEntity.ok(ListOfClients(clients = clients))
     }
