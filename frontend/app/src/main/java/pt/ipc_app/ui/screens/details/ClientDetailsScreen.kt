@@ -2,6 +2,8 @@ package pt.ipc_app.ui.screens.details
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ fun ClientDetailsScreen(
     isMyClient: Boolean = true,
     onSendEmailRequest: () -> Unit = { },
     plans: List<PlanInfoOutput> = listOf(),
+    onRemoveClient: () -> Unit = { },
     onAssociatePlan: (Int, String) -> Unit = { _, _ -> },
     onPlanSelected: (String) -> Unit = { }
 ) {
@@ -48,10 +51,23 @@ fun ClientDetailsScreen(
         TextEmail(
             email = client.email,
             onClick = onSendEmailRequest,
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(vertical = 5.dp)
         )
+
+        Button(
+            onClick = onRemoveClient,
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+            modifier = Modifier.height(30.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.PersonRemove,
+                contentDescription = "Remove Connection",
+                tint = Color.White
+            )
+        }
+
         Column(
-            modifier = Modifier.padding(vertical = 20.dp)
+            modifier = Modifier.padding(vertical = 10.dp)
         ) {
             Text(text = stringResource(id = R.string.birthDate) + ": ${client.birthDate}")
             Text(text = stringResource(id = R.string.weight) + ": ${client.weight}")

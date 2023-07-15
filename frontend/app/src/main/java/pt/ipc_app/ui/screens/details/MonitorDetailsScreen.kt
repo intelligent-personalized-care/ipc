@@ -1,14 +1,11 @@
 package pt.ipc_app.ui.screens.details
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
-import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +26,7 @@ fun MonitorDetailsScreen(
     profilePicture: @Composable () -> Unit = { },
     onSendEmailRequest: () -> Unit = { },
     onRequestedConnection: (String) -> Unit = { },
+    onRemoveClient: () -> Unit = { },
     onRatedMonitor: (Int) -> Unit = { }
 ) {
     var comment by remember { mutableStateOf("") }
@@ -79,11 +77,24 @@ fun MonitorDetailsScreen(
             }
         }
 
-        if (monitor.isMyMonitor)
+        if (monitor.isMyMonitor) {
+            Button(
+                onClick = onRemoveClient,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                modifier = Modifier.height(30.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PersonRemove,
+                    contentDescription = "Remove Connection",
+                    tint = Color.White
+                )
+            }
+
             RateMonitor(
                 modifier = Modifier.padding(top = 150.dp),
                 onSubmitRating = onRatedMonitor
             )
+        }
     }
 }
 

@@ -45,6 +45,7 @@ class MonitorDetailsActivity : ComponentActivity() {
                 profilePicture = { ProfilePicture(imageRequest = viewModel.getProfilePicture(this, monitor.id)) },
                 onSendEmailRequest = { openSendEmail(monitor.email) },
                 onRequestedConnection = { viewModel.connectWithMonitor(monitor.id, it) },
+                onRemoveClient = { viewModel.disconnectMonitor() },
                 onRatedMonitor = { viewModel.rateMonitor(monitor.id, it) }
             )
         }

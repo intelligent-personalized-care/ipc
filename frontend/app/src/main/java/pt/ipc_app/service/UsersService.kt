@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.Role
+import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.AUTHORIZATION
 import pt.ipc_app.service.models.requests.ConnectionRequestInput
@@ -255,6 +256,23 @@ class UsersService(
             uri = "/users/monitors/$monitorId",
             token = token,
             body = ConnectionRequestInput(clientId, comment)
+        )
+
+    /**
+     * Disconnects a client from the monitor.
+     *
+     * @return the API result of the request
+     *
+     * @throws IOException if there is an error while sending the request
+     */
+    suspend fun disconnectMonitor(
+        clientId: UUID,
+        monitorId: UUID? = null,
+        token: String
+    ): APIResult<Any> =
+        delete(
+            uri = if (monitorId != null) "/users/monitors/$monitorId/clients/$clientId" else "/users/clients/$clientId/monitor",
+            token = token
         )
 
     /**

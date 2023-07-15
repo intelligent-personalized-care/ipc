@@ -138,6 +138,27 @@ abstract class HTTPService(
             .getResponseResult()
     }
 
+    /**
+     * Sends a DELETE request to the [uri]. If the [token] has
+     * an associated value, the request requires authorization and will be sent in the header.
+     *
+     * @param uri the uri to send the request to
+     * @param token if not null, the token to send in the header
+     *
+     * @return the result of the request
+     * @throws IOException if there is an error while sending the request
+     */
+    protected suspend inline fun <reified T> delete(
+        uri: String,
+        token: String? = null
+    ): APIResult<T> =
+        Request.Builder()
+            .url(apiEndpoint + uri)
+            .checkAuthorization(BEARER_TOKEN, token)
+            .delete()
+            .build()
+            .getResponseResult()
+
     companion object {
         const val BEARER_TOKEN = "Bearer"
     }

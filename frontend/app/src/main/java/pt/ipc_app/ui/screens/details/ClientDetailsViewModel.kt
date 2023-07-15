@@ -94,4 +94,21 @@ class ClientDetailsViewModel(
             }
         )
     }
+
+    /**
+     * Attempts to disconnects a client from his monitor.
+     */
+    fun disconnectMonitor(
+        clientId: UUID
+    ) {
+        launchAndExecuteRequest(
+            request = {
+                usersService.disconnectMonitor(
+                    monitorId = sessionManager.userUUID,
+                    clientId = clientId,
+                    token = sessionManager.userLoggedIn.accessToken
+                )
+            }
+        )
+    }
 }

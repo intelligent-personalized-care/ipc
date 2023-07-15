@@ -60,7 +60,6 @@ class MonitorHomeViewModel(
         _clients.value = clientsRequests
     }
 
-
     fun getClientsOfMonitor() {
         launchAndExecuteRequest(
             request = {

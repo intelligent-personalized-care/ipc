@@ -54,6 +54,9 @@ class ClientDetailsActivity : ComponentActivity() {
                     isMyClient = true,
                     onSendEmailRequest = { openSendEmail(client.email) },
                     plans = viewModel.plans.collectAsState().value.plans,
+                    onRemoveClient = {
+                        viewModel.disconnectMonitor(cl.id)
+                    },
                     onAssociatePlan = { pid, startDate ->
                         viewModel.associatePlanToClient(
                             clientId = client.id,

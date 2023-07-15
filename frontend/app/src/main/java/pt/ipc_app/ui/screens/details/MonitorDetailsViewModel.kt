@@ -47,6 +47,20 @@ class MonitorDetailsViewModel(
     }
 
     /**
+     * Attempts to disconnects a client from his monitor.
+     */
+    fun disconnectMonitor() {
+        launchAndExecuteRequest(
+            request = {
+                usersService.disconnectMonitor(
+                    clientId = sessionManager.userUUID,
+                    token = sessionManager.userLoggedIn.accessToken
+                )
+            }
+        )
+    }
+
+    /**
      * Attempts to rate a monitor.
      */
     fun rateMonitor(
