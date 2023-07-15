@@ -45,7 +45,7 @@ class CloudStorageUtilsImpl(
         return outputStream.toByteArray()
     }
 
-    private fun deleteFile(bucketName: String, fileName : String){
+    private fun deleteFile(bucketName: String, fileName: String) {
         BlobId.of(bucketName, fileName)?.let { storage.delete(it) }
     }
 
@@ -90,28 +90,26 @@ class CloudStorageUtilsImpl(
         storage.list(monitorCredentialsBucket).iterateAll().toList().map { UUID.fromString(it.name) }
 
     override fun deleteCredential(fileName: UUID) {
-        deleteFile(bucketName = monitorCredentialsBucket,fileName = fileName.toString())
+        deleteFile(bucketName = monitorCredentialsBucket, fileName = fileName.toString())
     }
 
     override fun getClientsVideosIDs(): List<UUID> =
         storage.list(clientsVideosBucket).iterateAll().toList().map { UUID.fromString(it.name) }
 
     override fun deleteClientVideo(fileName: UUID) =
-        deleteFile(bucketName = clientsVideosBucket,fileName = fileName.toString())
+        deleteFile(bucketName = clientsVideosBucket, fileName = fileName.toString())
 
     override fun getUserPhotosIDs(): List<UUID> =
         storage.list(userPhotosBucket).iterateAll().toList().map { UUID.fromString(it.name) }
 
-
     override fun deleteUserPicture(fileName: UUID) {
-        deleteFile(bucketName = userPhotosBucket ,fileName = fileName.toString())
+        deleteFile(bucketName = userPhotosBucket, fileName = fileName.toString())
     }
 
     override fun getVideoPreviewsIDs(): List<UUID> =
         storage.list(exercisesPreviewsBucket).iterateAll().toList().map { UUID.fromString(it.name) }
 
     override fun deleteVideoPreview(fileName: UUID) {
-        deleteFile(bucketName = exercisesPreviewsBucket,fileName = fileName.toString())
+        deleteFile(bucketName = exercisesPreviewsBucket, fileName = fileName.toString())
     }
-
 }

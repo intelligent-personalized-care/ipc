@@ -307,7 +307,7 @@ class JdbiMonitorsRepository(
 
     override fun deleteCredential(monitorID: UUID) {
         handle.createUpdate("delete from dbo.docs_authenticity where monitor_id = :monitorID")
-            .bind("monitorID",monitorID)
+            .bind("monitorID", monitorID)
             .execute()
     }
 

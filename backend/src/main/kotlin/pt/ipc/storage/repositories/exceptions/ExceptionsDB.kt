@@ -35,6 +35,6 @@ object ExceptionsDB {
         "valid_nr_set" to "This set does not exists",
         "client_requests_monitor_id_fkey" to "This monitor does not exists",
         "org.postgresql.util.PSQLException: ERROR: Invalid nr_set\n" +
-                "  Where: função PL/pgSQL validate_exercises_video_nr_set() linha 8 em RAISE" to "This set does not exists"
+            "  Where: função PL/pgSQL validate_exercises_video_nr_set() linha 8 em RAISE" to "This set does not exists"
     )
 }

@@ -148,15 +148,9 @@ class JdbiClientsRepository(
     override fun getClientsVideosIDs(): List<UUID> =
         handle.createQuery("select id from dbo.exercises_video").mapTo<UUID>().toList()
 
-
     override fun deleteClientVideoID(videoID: UUID) {
         handle.createUpdate("delete from dbo.exercises_video where id = :videoID")
-            .bind("videoID",videoID)
+            .bind("videoID", videoID)
             .execute()
     }
-
-
 }
-
-
-

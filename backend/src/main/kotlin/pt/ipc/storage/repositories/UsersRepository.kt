@@ -18,5 +18,5 @@ interface UsersRepository {
 
     fun getUserByIDAndSession(id: UUID, sessionID: String): User?
 
-    fun getUsersIDs() : List<UUID>
+    fun getUsersIDs(): List<UUID>
 }

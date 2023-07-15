@@ -119,11 +119,10 @@ class JdbiExercisesRepository(
 
     override fun deletePreview(videoID: UUID) {
         handle.createUpdate("delete from dbo.exercises_info where id = :videoID")
-            .bind("videoID",videoID)
+            .bind("videoID", videoID)
             .execute()
     }
 
     override fun getPreviewsIDs(): List<UUID> =
         handle.createQuery("select id from dbo.exercises_info").mapTo<UUID>().toList()
-
 }

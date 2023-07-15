@@ -27,7 +27,7 @@ interface ClientsRepository {
 
     fun uploadExerciseVideoOfClient(clientID: UUID, exerciseID: Int, exerciseVideoID: UUID, date: LocalDate, set: Int, clientFeedback: String?): Boolean
 
-    fun getClientsVideosIDs() : List<UUID>
+    fun getClientsVideosIDs(): List<UUID>
 
-    fun deleteClientVideoID(videoID : UUID)
+    fun deleteClientVideoID(videoID: UUID)
 }

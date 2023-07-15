@@ -25,7 +25,7 @@ interface ExerciseRepository {
 
     fun getVideoFeedback(videoID: UUID): VideoFeedBack
 
-    fun getPreviewsIDs() : List<UUID>
+    fun getPreviewsIDs(): List<UUID>
 
     fun deletePreview(videoID: UUID)
 }
