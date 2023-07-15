@@ -20,11 +20,7 @@ class SseEmitterRepository {
 
         emitters.put(userID, emitter)?.complete()
 
-        class AcceptConnection(accept: String) : EmitterModel(eventID = "AcceptConnection", obj = accept)
-
-        val accept = AcceptConnection("Connection Accepted")
-
-        send(userID = userID, accept)
+        send(userID = userID, object: EmitterModel() { val accept = "Connection Accepted" })
 
         return emitter
     }
@@ -34,7 +30,7 @@ class SseEmitterRepository {
 
         nonBlockingService.execute {
             try {
-                emitter.send(event().id(obj.eventID).data(obj.obj))
+                emitter.send(event().id(obj::class.java.simpleName).data(obj))
             } catch (ex: Exception) {
                 emitter.completeWithError(ex)
             }
