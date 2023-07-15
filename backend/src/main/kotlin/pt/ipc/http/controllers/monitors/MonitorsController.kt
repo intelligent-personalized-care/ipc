@@ -119,15 +119,19 @@ class MonitorsController(private val monitorService: MonitorService, private val
         if (user.id != monitorID) throw ForbiddenRequest
 
 
-        val (clients, clientID, monitorOutput) = monitorService.decideRequest(
+        val triple = monitorService.decideRequest(
             requestID = requestID,
             monitorID = monitorID,
             decision = decision.accept
         )
 
-        if(decision.accept) sseEmitterRepository.send(userID = clientID, obj = RequestAcceptance(monitor = monitorOutput))
+        triple?.let { (clients, clientID, monitorOutput) ->
+            sseEmitterRepository.send(userID = clientID, obj = RequestAcceptance(monitor = monitorOutput))
+            return ResponseEntity.ok(ListOfClients(clients = clients))
+        }
 
-        return ResponseEntity.ok(ListOfClients(clients = clients))
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+
     }
 
     @Authentication

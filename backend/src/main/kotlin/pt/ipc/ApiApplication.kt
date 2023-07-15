@@ -8,6 +8,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import pt.ipc.storage.repositories.jdbi.configure
 import java.io.File
@@ -33,6 +34,7 @@ class AppConfig {
 }
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
+@EnableScheduling
 class ApiApplication {
 
     @Bean

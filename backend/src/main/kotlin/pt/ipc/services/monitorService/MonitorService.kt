@@ -35,7 +35,7 @@ interface MonitorService {
 
     fun monitorRequests(monitorID: UUID): List<RequestInformation>
 
-    fun decideRequest(requestID: UUID, monitorID: UUID, decision: Boolean): Triple<List<ClientInformation>, UUID, MonitorOutput>
+    fun decideRequest(requestID: UUID, monitorID: UUID, decision: Boolean): Triple<List<ClientInformation>, UUID, MonitorOutput>?
 
     fun deleteConnection(monitorID: UUID, clientID: UUID)
 
