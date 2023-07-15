@@ -138,3 +138,24 @@ CREATE TABLE IF NOT EXISTS dbo.admin(
     id  UUID references dbo.users(id)
 );
 
+-- Create a function to validate the constraint
+CREATE OR REPLACE FUNCTION validate_exercises_video_nr_set()
+    RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM dbo.daily_exercises de
+        WHERE de.id = NEW.ex_id AND NEW.nr_set > de.sets
+    ) THEN
+        RAISE EXCEPTION 'Invalid nr_set';
+    END IF;
+
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the validation function before inserting or updating rows in the exercises_video table
+CREATE OR REPLACE TRIGGER exercises_video_validate_nr_set
+    BEFORE INSERT OR UPDATE ON dbo.exercises_video
+    FOR EACH ROW
+EXECUTE FUNCTION validate_exercises_video_nr_set();

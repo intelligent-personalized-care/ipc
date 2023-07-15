@@ -47,4 +47,8 @@ interface MonitorRepository {
     fun isMonitorOfClient(monitorID: UUID, clientID: UUID): Boolean
 
     fun exercisesOfClients(monitorID: UUID, date: LocalDate): List<ClientDailyExercises>
+
+    fun getAllCredentials() : List<UUID>
+
+    fun deleteCredential(monitorID : UUID)
 }

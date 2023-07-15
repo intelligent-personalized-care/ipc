@@ -24,8 +24,8 @@ class CloudStorageUtilsImpl(
     private val pdfContentType = "application/pdf"
     private val pngContentType = "image/png"
 
-    private fun upload(fileName: String, content: ByteArray, contentType: String, bucketName: String) {
-        val blobId = BlobId.of(bucketName, fileName)
+    private fun upload(fileName: UUID, content: ByteArray, contentType: String, bucketName: String) {
+        val blobId = BlobId.of(bucketName, fileName.toString())
 
         val blobInfo = BlobInfo.newBuilder(blobId)
             .setContentType(contentType)
@@ -34,8 +34,8 @@ class CloudStorageUtilsImpl(
         storage.create(blobInfo, content)
     }
 
-    private fun download(fileName: String, bucketName: String): ByteArray {
-        val blob = storage.get(bucketName, fileName) ?: throw FileDoesNotExists
+    private fun download(fileName: UUID, bucketName: String): ByteArray {
+        val blob = storage.get(bucketName, fileName.toString()) ?: throw FileDoesNotExists
 
         val outputStream = ByteArrayOutputStream()
 
@@ -45,20 +45,24 @@ class CloudStorageUtilsImpl(
         return outputStream.toByteArray()
     }
 
+    private fun deleteFile(bucketName: String, fileName : String){
+        BlobId.of(bucketName, fileName)?.let { storage.delete(it) }
+    }
+
     override fun uploadClientVideo(fileName: UUID, video: ByteArray) =
-        upload(fileName = fileName.toString(), content = video, contentType = videoContentType, bucketName = clientsVideosBucket)
+        upload(fileName = fileName, content = video, contentType = videoContentType, bucketName = clientsVideosBucket)
 
     override fun downloadClientVideo(fileName: UUID): ByteArray =
-        download(fileName = fileName.toString(), bucketName = clientsVideosBucket)
+        download(fileName = fileName, bucketName = clientsVideosBucket)
 
     override fun uploadMonitorCredentials(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName.toString(), content = file, contentType = pdfContentType, bucketName = monitorCredentialsBucket)
+        upload(fileName = fileName, content = file, contentType = pdfContentType, bucketName = monitorCredentialsBucket)
 
     override fun downloadMonitorCredentials(fileName: UUID): ByteArray =
-        download(fileName = fileName.toString(), bucketName = monitorCredentialsBucket)
+        download(fileName = fileName, bucketName = monitorCredentialsBucket)
 
     override fun downloadExampleVideo(exerciseID: UUID): ByteArray =
-        download(fileName = exerciseID.toString(), bucketName = exercisesPreviewsBucket)
+        download(fileName = exerciseID, bucketName = exercisesPreviewsBucket)
 
     override fun deleteWithID(fileName: UUID) {
         val buckets = listOf(userPhotosBucket, monitorCredentialsBucket, clientsVideosBucket)
@@ -74,11 +78,40 @@ class CloudStorageUtilsImpl(
     }
 
     override fun uploadProfilePicture(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName.toString(), content = file, contentType = pngContentType, bucketName = userPhotosBucket)
+        upload(fileName = fileName, content = file, contentType = pngContentType, bucketName = userPhotosBucket)
 
     override fun downloadProfilePicture(fileName: UUID): ByteArray =
-        download(fileName = fileName.toString(), bucketName = userPhotosBucket)
+        download(fileName = fileName, bucketName = userPhotosBucket)
 
     override fun uploadVideoPreview(fileName: UUID, file: ByteArray) =
-        upload(fileName = fileName.toString(), file, contentType = videoContentType, exercisesPreviewsBucket)
+        upload(fileName = fileName, file, contentType = videoContentType, exercisesPreviewsBucket)
+
+    override fun getAllCredentialsIDs(): List<UUID> =
+        storage.list(monitorCredentialsBucket).iterateAll().toList().map { UUID.fromString(it.name) }
+
+    override fun deleteCredential(fileName: UUID) {
+        deleteFile(bucketName = monitorCredentialsBucket,fileName = fileName.toString())
+    }
+
+    override fun getClientsVideosIDs(): List<UUID> =
+        storage.list(clientsVideosBucket).iterateAll().toList().map { UUID.fromString(it.name) }
+
+    override fun deleteClientVideo(fileName: UUID) =
+        deleteFile(bucketName = clientsVideosBucket,fileName = fileName.toString())
+
+    override fun getUserPhotosIDs(): List<UUID> =
+        storage.list(userPhotosBucket).iterateAll().toList().map { UUID.fromString(it.name) }
+
+
+    override fun deleteUserPicture(fileName: UUID) {
+        deleteFile(bucketName = userPhotosBucket ,fileName = fileName.toString())
+    }
+
+    override fun getVideoPreviewsIDs(): List<UUID> =
+        storage.list(exercisesPreviewsBucket).iterateAll().toList().map { UUID.fromString(it.name) }
+
+    override fun deleteVideoPreview(fileName: UUID) {
+        deleteFile(bucketName = exercisesPreviewsBucket,fileName = fileName.toString())
+    }
+
 }

@@ -21,4 +21,20 @@ interface CloudStorageUtils {
     fun downloadProfilePicture(fileName: UUID): ByteArray
 
     fun uploadVideoPreview(fileName: UUID, file: ByteArray)
+
+    fun getAllCredentialsIDs() : List<UUID>
+
+    fun deleteCredential(fileName : UUID)
+
+    fun getClientsVideosIDs() : List<UUID>
+
+    fun deleteClientVideo(fileName: UUID)
+
+    fun getUserPhotosIDs() : List<UUID>
+
+    fun deleteUserPicture(fileName: UUID)
+
+    fun getVideoPreviewsIDs() : List<UUID>
+
+    fun deleteVideoPreview(fileName: UUID)
 }

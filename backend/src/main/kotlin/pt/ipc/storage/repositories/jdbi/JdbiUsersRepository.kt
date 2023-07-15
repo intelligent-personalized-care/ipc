@@ -38,6 +38,11 @@ class JdbiUsersRepository(
             .mapTo<User>()
             .singleOrNull()
 
+    override fun getUsersIDs(): List<UUID> =
+        handle.createQuery("select id from dbo.users")
+            .mapTo<UUID>()
+            .toList()
+
     override fun login(email: String, passwordHash: String): UUID? =
         handle.createQuery("select id from dbo.users where email = :email  and password_hash = :passwordHash")
             .bind("email", email)

@@ -300,5 +300,16 @@ class JdbiMonitorsRepository(
         )
     }
 
+    override fun getAllCredentials(): List<UUID> =
+        handle.createQuery("select monitor_id from dbo.docs_authenticity")
+            .mapTo<UUID>()
+            .toList()
+
+    override fun deleteCredential(monitorID: UUID) {
+        handle.createUpdate("delete from dbo.docs_authenticity where monitor_id = :monitorID")
+            .bind("monitorID",monitorID)
+            .execute()
+    }
+
     private data class PlanInfo(@ColumnName("plan_id") val id: Int, @ColumnName("dt_start") val dtStart: LocalDate)
 }

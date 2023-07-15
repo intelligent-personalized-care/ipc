@@ -83,7 +83,6 @@ class ExceptionHandler {
         request: HttpServletRequest,
         ex: UnableToExecuteStatementException
     ): ResponseEntity<Any> {
-        println(ex)
 
         val key = ex.shortMessage.substringAfter("constraint \"").substringBefore("\"")
 

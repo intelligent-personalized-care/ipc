@@ -17,4 +17,6 @@ interface UsersRepository {
     fun updateSession(userID: UUID, sessionID: String)
 
     fun getUserByIDAndSession(id: UUID, sessionID: String): User?
+
+    fun getUsersIDs() : List<UUID>
 }

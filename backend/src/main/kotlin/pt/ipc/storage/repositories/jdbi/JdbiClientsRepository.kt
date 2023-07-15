@@ -135,13 +135,28 @@ class JdbiClientsRepository(
 
         return handle.createQuery(
             "select " +
-                "exists(select * from dbo.exercises_video ev " +
-                "inner join dbo.daily_exercises de on de.id = ev.ex_id where ev.nr_set = de.sets and ev.id = :exerciseID) " +
+                "case when count(ev.ex_id) != de.sets then 0 else 1 end " +
                 "from dbo.exercises_video ev " +
-                "inner join dbo.daily_exercises dl on ev.ex_id = dl.id where ev.id = :exerciseID"
+                "inner join dbo.daily_exercises de on ev.ex_id = de.id where ev.ex_id = :exerciseID " +
+                "GROUP BY de.sets"
         )
-            .bind("exerciseID", exerciseVideoID)
-            .mapTo<Boolean>()
-            .single()
+            .bind("exerciseID", exerciseID)
+            .mapTo<Int>()
+            .single() == 1
     }
+
+    override fun getClientsVideosIDs(): List<UUID> =
+        handle.createQuery("select id from dbo.exercises_video").mapTo<UUID>().toList()
+
+
+    override fun deleteClientVideoID(videoID: UUID) {
+        handle.createUpdate("delete from dbo.exercises_video where id = :videoID")
+            .bind("videoID",videoID)
+            .execute()
+    }
+
+
 }
+
+
+

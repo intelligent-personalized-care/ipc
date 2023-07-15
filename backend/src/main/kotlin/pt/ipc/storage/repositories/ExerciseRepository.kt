@@ -24,4 +24,8 @@ interface ExerciseRepository {
     fun getClientVideoID(clientID: UUID, planID: Int, dailyListID: Int, dailyExerciseID: Int, set: Int): UUID?
 
     fun getVideoFeedback(videoID: UUID): VideoFeedBack
+
+    fun getPreviewsIDs() : List<UUID>
+
+    fun deletePreview(videoID: UUID)
 }
