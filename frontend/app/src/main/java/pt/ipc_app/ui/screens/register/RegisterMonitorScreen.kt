@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Monitor
@@ -17,6 +18,8 @@ import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.components.CircularButton
 import pt.ipc_app.ui.components.RegisterUser
+
+const val RegisterMonitorScreenTag = "RegisterMonitorScreen"
 
 /**
  * Register monitor screen.
@@ -38,7 +41,9 @@ fun RegisterMonitorScreen(
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .testTag(RegisterMonitorScreenTag)
+            .fillMaxSize()
     ) {
         Row {
             Text(

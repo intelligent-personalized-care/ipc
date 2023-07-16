@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,8 @@ import pt.ipc_app.domain.user.Client
 import pt.ipc_app.domain.user.User
 import pt.ipc_app.service.utils.ProblemJson
 import pt.ipc_app.ui.components.*
+
+const val RegisterClientScreenTag = "RegisterClientScreen"
 
 private const val WEIGHT_METRIC = " kg"
 private const val HEIGHT_METRIC = " cm"
@@ -52,7 +55,9 @@ fun RegisterClientScreen(
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .testTag(RegisterClientScreenTag)
+            .fillMaxSize()
     ) {
         Row {
             Text(

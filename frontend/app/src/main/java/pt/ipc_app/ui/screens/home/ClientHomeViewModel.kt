@@ -10,7 +10,7 @@ import pt.ipc_app.service.models.sse.SseEvent
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.sse.EventBus
 import pt.ipc_app.service.sse.SseEventListener
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
 import java.time.LocalDate
 

@@ -8,7 +8,7 @@ import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.models.requests.RequestsOfMonitor
 import pt.ipc_app.service.models.users.ClientsOfMonitor
 import pt.ipc_app.service.models.users.MonitorOutput
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
 
 /**

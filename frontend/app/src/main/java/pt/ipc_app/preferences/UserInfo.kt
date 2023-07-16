@@ -1,4 +1,4 @@
-package pt.ipc_app.session
+package pt.ipc_app.preferences
 
 import pt.ipc_app.domain.user.Role
 

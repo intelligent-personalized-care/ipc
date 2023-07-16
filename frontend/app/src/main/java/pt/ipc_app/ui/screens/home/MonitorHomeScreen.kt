@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,7 +16,7 @@ import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.DailyExercise
 import pt.ipc_app.domain.user.Role
 import pt.ipc_app.service.models.exercises.ClientDailyExercises
-import pt.ipc_app.session.UserInfo
+import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.service.models.requests.ConnectionRequestDecisionInput
 import pt.ipc_app.service.models.requests.RequestInformation
 import pt.ipc_app.service.models.users.ClientOutput
@@ -23,6 +24,8 @@ import pt.ipc_app.ui.components.*
 import pt.ipc_app.ui.components.exercises.ClientExercisesToDoList
 import java.time.LocalDate
 import java.util.*
+
+const val MonitorHomeScreenTag = "MonitorHomeScreen"
 
 @Composable
 fun MonitorHomeScreen(
@@ -41,7 +44,9 @@ fun MonitorHomeScreen(
     var daySelected: LocalDate by remember { mutableStateOf(LocalDate.now()) }
 
     Row(
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier
+            .testTag(MonitorHomeScreenTag)
+            .padding(30.dp)
     ) {
         Text(
             text = stringResource(id = R.string.hello) + " ${monitor.name}",

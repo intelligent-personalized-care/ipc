@@ -13,7 +13,7 @@ import pt.ipc_app.service.models.users.DocState
 import pt.ipc_app.service.models.users.MonitorProfile
 import pt.ipc_app.service.sse.EventBus
 import pt.ipc_app.service.sse.SseEventListener
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 import java.io.File

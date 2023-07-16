@@ -3,7 +3,7 @@ package pt.ipc_app.ui.screens.details
 import android.content.Context
 import coil.request.ImageRequest
 import pt.ipc_app.service.UsersService
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
 import java.util.*
 

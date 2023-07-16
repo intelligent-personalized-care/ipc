@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.connection.APIResult
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 

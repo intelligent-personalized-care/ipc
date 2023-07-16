@@ -9,12 +9,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.R
 import pt.ipc_app.domain.user.Role
+
+const val ChooseRoleScreenTag = "ChooseRoleScreen"
+const val SelectButtonTag = "SelectButton"
+const val ChooseClientButtonTag = "ChooseClientButton"
+const val ChooseMonitorButtonTag = "ChooseMonitorButton"
+const val LoginButtonTag = "LoginButton"
 
 @Composable
 fun ChooseRoleScreen(
@@ -27,6 +34,7 @@ fun ChooseRoleScreen(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .testTag(ChooseRoleScreenTag)
             .fillMaxSize()
             .padding(20.dp)
     ) {
@@ -42,6 +50,7 @@ fun ChooseRoleScreen(
                 onClick = { onRoleChoose(if (role != Role.CLIENT) Role.CLIENT else null) },
                 colors = styleButtonIf(role == Role.CLIENT),
                 modifier = Modifier
+                    .testTag(ChooseClientButtonTag)
                     .weight(0.5f)
             ) {
                 Column(
@@ -63,6 +72,7 @@ fun ChooseRoleScreen(
                 onClick = { onRoleChoose(if (role != Role.MONITOR) Role.MONITOR else null) },
                 colors = styleButtonIf(role == Role.MONITOR),
                 modifier = Modifier
+                    .testTag(ChooseMonitorButtonTag)
                     .weight(0.5f)
             ) {
                 Column(
@@ -86,18 +96,21 @@ fun ChooseRoleScreen(
         ) {
             Button(
                 onClick = { role?.let { onRoleSelect(it) } },
-                enabled = role != null
+                enabled = role != null,
+                modifier = Modifier.testTag(SelectButtonTag)
             ) {
                 Text(stringResource(id = R.string.select))
             }
 
             Text(
                 text = stringResource(R.string.already_have_account),
-                modifier = Modifier.clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null,
-                    onClick = onLoginClick
-                )
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null,
+                        onClick = onLoginClick
+                    )
+                    .testTag(LoginButtonTag)
             )
         }
 

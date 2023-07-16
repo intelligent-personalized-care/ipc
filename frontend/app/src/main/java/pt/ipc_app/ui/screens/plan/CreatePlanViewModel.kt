@@ -7,7 +7,7 @@ import pt.ipc_app.service.ExercisesService
 import pt.ipc_app.service.PlansService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.models.plans.PlanInput
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.components.ProgressState
 import pt.ipc_app.ui.screens.AppViewModel
 

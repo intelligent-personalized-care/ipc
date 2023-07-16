@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,7 +15,7 @@ import pt.ipc_app.domain.DailyList
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
 import pt.ipc_app.domain.user.*
-import pt.ipc_app.session.UserInfo
+import pt.ipc_app.preferences.UserInfo
 import pt.ipc_app.service.models.users.MonitorOutput
 import pt.ipc_app.service.models.users.Rating
 import pt.ipc_app.ui.components.*
@@ -22,6 +23,8 @@ import pt.ipc_app.ui.components.exercises.DailyExercisesList
 import pt.ipc_app.ui.components.exercises.planTest
 import java.time.LocalDate
 import java.util.*
+
+const val ClientHomeScreenTag = "ClientHomeScreen"
 
 @Composable
 fun ClientHomeScreen(
@@ -40,7 +43,9 @@ fun ClientHomeScreen(
     dailyListSelected = plan?.getListOfDayIfExists(daySelected)
 
     Row(
-        modifier = Modifier.padding(30.dp)
+        modifier = Modifier
+            .testTag(ClientHomeScreenTag)
+            .padding(30.dp)
     ) {
         Text(
             text = stringResource(id = R.string.hello) + " ${client.name}",

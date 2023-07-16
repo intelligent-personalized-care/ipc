@@ -8,7 +8,7 @@ import pt.ipc_app.service.PlansService
 import pt.ipc_app.service.UsersService
 import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.service.models.users.ClientOfMonitor
-import pt.ipc_app.session.SessionManagerSharedPrefs
+import pt.ipc_app.preferences.SessionManagerSharedPrefs
 import pt.ipc_app.ui.screens.AppViewModel
 import java.util.*
 
