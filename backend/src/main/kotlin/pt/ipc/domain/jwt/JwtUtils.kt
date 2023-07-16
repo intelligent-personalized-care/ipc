@@ -73,7 +73,7 @@ class JwtUtils(jwtConfiguration: JwtConfiguration) {
 
     fun getSessionID(token: String): UUID {
         val claims = getClaimsOfToken(token = token)
-        return UUID.fromString(claims[sessionID].toString())
+        return claims[sessionID].toUUID()
     }
 
     private fun getClaimsOfToken(token: String): Claims {

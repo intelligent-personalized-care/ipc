@@ -47,6 +47,7 @@ class SseEmitterRepository {
         val emitter = emitters[userID] ?: return
         emitter.complete()
         emitters.remove(userID)
+        usages.remove(userID)
     }
 
     @Scheduled(fixedDelay = EMITTERS_CLEANUP_INTERVAL, timeUnit = TimeUnit.HOURS)
