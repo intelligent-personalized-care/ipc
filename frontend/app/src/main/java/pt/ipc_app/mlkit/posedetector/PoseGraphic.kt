@@ -20,13 +20,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
-import android.text.TextUtils
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
 import pt.ipc_app.mlkit.exercises.ExerciseLogic
-import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
+import pt.ipc_app.mlkit.vision.CameraXLiveViewModel
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -37,7 +36,7 @@ class PoseGraphic internal constructor(
   overlay: GraphicOverlay,
   private val pose: Pose,
   private val exercise: Exercise,
-  private  val viewModel: ExercisesViewModel
+  private  val viewModel: CameraXLiveViewModel
 ): GraphicOverlay.Graphic(overlay) {
 
   private val leftPaint: Paint
@@ -232,7 +231,7 @@ class PoseGraphic internal constructor(
     }
 
     //draws all the info regarding the exercise
-    drawInfoOnScreen(canvas,toDraw)
+    drawInfoOnScreen(canvas, toDraw)
 
   }
 
@@ -287,7 +286,7 @@ class PoseGraphic internal constructor(
    * Draws the text received in the specific line
    * */
   private fun drawText(canvas: Canvas, text:String, xline: Int?, yline: Int) {
-    if (TextUtils.isEmpty(text)) return
+    if (text.isEmpty()) return
 
     xline?.let {canvas.drawText(text, TEXT_SIZE * textSizeCoordinateX * it, TEXT_SIZE * textSizeCoordinateY + TEXT_SIZE * yline, tipPaint)}
       ?: canvas.drawText(text, TEXT_SIZE * textSizeCoordinateX, TEXT_SIZE * textSizeCoordinateY + TEXT_SIZE * yline, tipPaint)
@@ -398,6 +397,7 @@ class PoseGraphic internal constructor(
       if (!isUp && (upCount < downCount) && (lastHeight - currentHeight) > minSize) {
         isUp = true
         isDown = false
+        viewModel.incrementReps()
         upCount++
         lastHeight = currentHeight
         lineTwoText = "start up"
@@ -415,20 +415,18 @@ class PoseGraphic internal constructor(
     if(isPoseDetectionSupported) {
       drawText(canvas, lineOneText, null, -3)
       drawText(canvas, lineTwoText, null, -2)
-      drawText(canvas, "Rep count: $upCount/${exercise.exeReps}", null, -1)
-    }else{
-      drawText(canvas, "Reps to do: ${exercise.exeReps}", null, -1)
-    }
+      drawText(canvas, "Rep count: ${viewModel.nrRepsDone.value}/${exercise.exeReps}", null, -1)
+    } else drawText(canvas, "Reps to do: ${exercise.exeReps}", null, -1)
 
-    drawText(canvas, "Sets done: ${viewModel.nrSetDone.value - 1}/${exercise.exeSets}", null, 1)
+    drawText(canvas, "Sets done: ${viewModel.nrSetsDone.value - 1}/${exercise.exeSets}", null, 1)
 
     if (viewModel.isResting()) {
-      drawText(canvas, "Rest Time: ${timeFormat(viewModel.restTime.value)}",null, 3)
+      drawText(canvas, "Rest Time: ${viewModel.restTime.value.toTimeFormat()}",null, 3)
       drawText(canvas, "Time to REST!",null, 4)
     }
 
     if(viewModel.isRecording()) {
-      drawText(canvas, "Record Time: ${timeFormat(viewModel.recordTime.value)}",null, 3)
+      drawText(canvas, "Record Time: ${viewModel.recordTime.value.toTimeFormat()}",null, 3)
     }
 
     if(!viewModel.isResting()) drawText(canvas, "GO! Do the next set",null, 4)
@@ -437,10 +435,10 @@ class PoseGraphic internal constructor(
   /**
    * Formats the parameter received into MM:SS format
    * */
-  private fun timeFormat(totalSecs: Int) : String{
-    val minutes = (totalSecs % (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)) / SECONDS_PER_MINUTE;
-    val seconds = totalSecs % SECONDS_PER_MINUTE;
+  private fun Int.toTimeFormat() : String{
+    val minutes = (this % (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)) / SECONDS_PER_MINUTE
+    val seconds = this % SECONDS_PER_MINUTE
 
-    return String.format("%02d:%02d", minutes, seconds);
+    return String.format("%02d:%02d", minutes, seconds)
   }
 }

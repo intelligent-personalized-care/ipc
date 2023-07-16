@@ -26,15 +26,15 @@ import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.mlkit.GraphicOverlay
+import pt.ipc_app.mlkit.vision.CameraXLiveViewModel
 import pt.ipc_app.mlkit.vision.VisionProcessorBase
-import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 
 /** A processor to run pose detector.  */
 class PoseDetectorProcessor(
   context: Context,
   options: PoseDetectorOptions,
   private val exercise: Exercise,
-  private  val viewModel: ExercisesViewModel
+  private  val viewModel: CameraXLiveViewModel
 ): VisionProcessorBase<Pose>(context) {
   private val detector: PoseDetector
   override fun stop() {

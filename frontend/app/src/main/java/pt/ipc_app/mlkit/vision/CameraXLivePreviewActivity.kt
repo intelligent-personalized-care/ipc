@@ -40,7 +40,6 @@ import androidx.work.*
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
-import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.R
 import pt.ipc_app.domain.exercise.Exercise
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
@@ -50,7 +49,6 @@ import pt.ipc_app.mlkit.VisionImageProcessor
 import pt.ipc_app.mlkit.posedetector.PoseDetectorProcessor
 import pt.ipc_app.mlkit.preference.PreferenceUtils
 import pt.ipc_app.mlkit.preference.SettingsActivity
-import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
 import pt.ipc_app.ui.workers.VideoSubmissionOneTimeWorker
 import pt.ipc_app.ui.workers.WorkerKeys
 import pt.ipc_app.utils.viewModelInit
@@ -79,10 +77,9 @@ class CameraXLivePreviewActivity :
     private lateinit var camera: Camera
     private lateinit var videoCapture: VideoCapture
 
-    private val viewModel by viewModels<ExercisesViewModel> {
+    private val viewModel by viewModels<CameraXLiveViewModel> {
         viewModelInit {
-            val app = (application as DependenciesContainer)
-            ExercisesViewModel(app.services.exercisesService, app.sessionManager)
+            CameraXLiveViewModel()
         }
     }
 
@@ -93,7 +90,7 @@ class CameraXLivePreviewActivity :
             .putString(WorkerKeys.PLAN_ID, exe.planId.toString())
             .putString(WorkerKeys.DAILY_LIST_ID, exe.dailyListId.toString())
             .putString(WorkerKeys.EXERCISE_ID, exe.exercise.id.toString())
-            .putString(WorkerKeys.NR_SET, viewModel.nrSetDone.value.toString())
+            .putString(WorkerKeys.NR_SET, viewModel.nrSetsDone.value.toString())
             .build()
 
         val constraints = Constraints.Builder()
@@ -161,19 +158,18 @@ class CameraXLivePreviewActivity :
             //free exercises aren't sent to storage, only the exercises in a plan
             if (exercise is ExerciseTotalInfo) createWorker()
 
-            if (viewModel.nrSetDone.value == exercise.exeSets) {
+            if (viewModel.nrSetsDone.value == exercise.exeSets) {
                 //in the final set waits a little to assure the response arrives
                 viewModel.resetRestTime()
                 viewModel.decrementRestTime{
-                    viewModel.resetSet()
                     finish()
                 }
             }
             else viewModel.decrementRestTime()
 
-            viewModel.incrementSet()
+            viewModel.resetRepsCount()
+            viewModel.incrementSets()
             viewModel.resetRestTime()
-
         }
     }
 
@@ -236,6 +232,7 @@ class CameraXLivePreviewActivity :
 
     override fun onPause() {
         super.onPause()
+        viewModel.stopRecordTime()
         imageProcessor?.run { this.stop() }
     }
 
@@ -369,7 +366,7 @@ class CameraXLivePreviewActivity :
     private fun startRecording(onSubmission: () -> Unit) {
         val videoName =
             if (exercise is ExerciseTotalInfo)
-                (exercise as ExerciseTotalInfo).exercise.id.toString() + "(${viewModel.nrSetDone.value}set)"
+                (exercise as ExerciseTotalInfo).exercise.id.toString() + "(${viewModel.nrSetsDone.value}set)"
             else UUID.randomUUID()
 
         file = File(outputDirectory, "$videoName.mp4")
