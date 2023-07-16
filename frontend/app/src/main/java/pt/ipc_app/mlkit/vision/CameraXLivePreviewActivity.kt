@@ -158,9 +158,9 @@ class CameraXLivePreviewActivity :
             //free exercises aren't sent to storage, only the exercises in a plan
             if (exercise is ExerciseTotalInfo) createWorker()
 
+            viewModel.resetRestTime()
             if (viewModel.nrSetsDone.value == exercise.exeSets) {
                 //in the final set waits a little to assure the response arrives
-                viewModel.resetRestTime()
                 viewModel.decrementRestTime{
                     finish()
                 }
@@ -169,7 +169,6 @@ class CameraXLivePreviewActivity :
 
             viewModel.resetRepsCount()
             viewModel.incrementSets()
-            viewModel.resetRestTime()
         }
     }
 
@@ -232,7 +231,6 @@ class CameraXLivePreviewActivity :
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopRecordTime()
         imageProcessor?.run { this.stop() }
     }
 
