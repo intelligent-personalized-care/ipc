@@ -10,5 +10,8 @@ enum class ExerciseType {
     Back,
     Abdominals,
     Chest,
-    Forearms
+    Forearms,
+    Traps,
+    Biceps,
+    Triceps
 }
