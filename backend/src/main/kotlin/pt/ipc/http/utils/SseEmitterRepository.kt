@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @Component
 class SseEmitterRepository {
@@ -48,12 +49,13 @@ class SseEmitterRepository {
         emitters.remove(userID)
     }
 
-    @Scheduled(fixedDelay = EMITTERS_CLEANUP_INTERVAL)
+    @Scheduled(fixedDelay = EMITTERS_CLEANUP_INTERVAL, timeUnit = TimeUnit.HOURS)
     private fun removeExpiredEmitters() {
+
         for ((user, date) in usages) {
             val currentDateTime = LocalDateTime.now()
 
-            val dateLimit = date.plusMinutes(MAX_HOURS)
+            val dateLimit = date.plusHours(MAX_HOURS)
 
             if (currentDateTime.isAfter(dateLimit)) {
                 emitters[user]?.complete()
@@ -64,7 +66,7 @@ class SseEmitterRepository {
     }
 
     companion object {
-        const val EMITTERS_CLEANUP_INTERVAL = 10L * 1000L * 60L // 10 minutes
-        const val MAX_HOURS = 1000L * 60L * 60L * 12L
+        const val EMITTERS_CLEANUP_INTERVAL =  8L // 10 minutes
+        const val MAX_HOURS = 12L
     }
 }
