@@ -125,4 +125,13 @@ insert into dbo.exercises_info values
                                    ('40c806c4-d4e7-472f-88f8-ed547e8afd41', 'Decline Push up', '1. Use a bench to elevate your feet.
 2. Put your hands slightly wider than shoulder-width.
 3. Slowly lower your body until your chest almost touches the ground
-4. Raise your body until you almost lock your elbows.', 'Chest');
+4. Raise your body until you almost lock your elbows.', 'Chest'),
+
+                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd42', 'Leg Raise', '1. Lay on your back with your arms palms down on either side.
+2. Keep your legs together and as straight as possible.
+3. Slowly raise your legs to a 90° angle, pause at this position, or as high as you can reach your legs, and then slowly lower your legs back down.
+4. Duration of these movements should be slow so that you do not utilize momentum, enabling you to get the most out of the exercise.', 'Abdominals'),
+
+                                   ('40c806c4-d4e7-472f-88f8-ed547e8afd43', 'Abdominals Stretch', '1. Lay on your stomach on the floor with your forearms flat on the ground.
+2. Extend your elbows and push your upper body upwards.
+3. Push your upper body upwards until you feel a stretch in your abs, then return to the starting position and repeat.', 'Abdominals');
