@@ -88,16 +88,18 @@ fun ExerciseInfoRow(
             Box(
                 modifier = Modifier
                     .clickable {
-                        onExerciseAdd(
-                            Exercise(
-                                exeID = exercise.id,
-                                exeTitle = exercise.title,
-                                exeDescription = exercise.description,
-                                exeSets = sets,
-                                exeReps = reps
+                        if (sets != 0 && reps != 0) {
+                            onExerciseAdd(
+                                Exercise(
+                                    exeID = exercise.id,
+                                    exeTitle = exercise.title,
+                                    exeDescription = exercise.description,
+                                    exeSets = sets,
+                                    exeReps = reps
+                                )
                             )
-                        )
-                        clicked = !clicked
+                            clicked = !clicked
+                        }
                     }
                     .padding(start = 16.dp)
             ) {

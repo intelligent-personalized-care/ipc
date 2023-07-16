@@ -63,7 +63,10 @@ class MonitorProfileActivity : ComponentActivity() {
                     viewModel.setFileToSubmit(MonitorProfileViewModel.FileToSubmit.CREDENTIAL)
                     checkReadStoragePermission()
                 },
-                onSuccessSubmitCredentialDocument = { Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show() },
+                onSuccessSubmitCredentialDocument = {
+                    Toast.makeText(this, "Document submitted!", Toast.LENGTH_SHORT).show()
+                    viewModel.setDocumentSubmitted()
+                },
                 onLogout = {
                     LoginActivity.navigate(this)
                     finish()

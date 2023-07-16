@@ -1,10 +1,15 @@
 package pt.ipc_app.ui
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -16,6 +21,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.documentfile.provider.DocumentFile
 import pt.ipc_app.R
 import pt.ipc_app.TAG
@@ -61,6 +67,20 @@ fun Context.getFileFromUri(imageUri: Uri): File? {
             }
         }
         outputFile
+    }
+}
+
+fun Context.createNotification(
+    channelId: String,
+    name: String
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, name, importance)
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }
 

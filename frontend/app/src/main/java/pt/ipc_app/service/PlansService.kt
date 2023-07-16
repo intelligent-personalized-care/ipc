@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.EmptyResponseBody
 import pt.ipc_app.service.models.plans.CreatePlanOutput
 import pt.ipc_app.service.models.plans.ListOfPlans
 import pt.ipc_app.service.models.plans.PlanInput
@@ -73,7 +74,7 @@ class PlansService(
         token: String,
         planId: Int,
         startDate: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         post(
             uri = "/users/monitors/$monitorId/clients/$clientId/plans",
             token = token,

@@ -7,7 +7,9 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.IPCService
 import pt.ipc_app.preferences.SessionManagerSharedPrefs
+import pt.ipc_app.ui.createNotification
 import pt.ipc_app.ui.workers.RefreshTokensPeriodicWorker
+import pt.ipc_app.ui.workers.SubscribeSSEPeriodicWorker
 import java.util.concurrent.TimeUnit
 
 /**
@@ -64,23 +66,51 @@ class IPCApplication : DependenciesContainer, Application() {
     override fun onCreate() {
         super.onCreate()
 
+        createNotification(
+            SSE_NOTIFICATIONS_CHANNEL,
+            SSE_NOTIFICATIONS
+        )
+
         if (sessionManager.isLoggedIn()) {
-            val periodicWorkRequest =
-                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(repeatInterval = 50, TimeUnit.MINUTES)
+            val periodicWorkSubscribeRequest =
+                PeriodicWorkRequestBuilder<SubscribeSSEPeriodicWorker>(
+                    repeatInterval = SUBSCRIBE_REQUEST_REPEAT_MINUTES,
+                    repeatIntervalTimeUnit = TimeUnit.MINUTES
+                )
+                    .setConstraints(workerConstraints)
+                    .build()
+
+            WorkManager.getInstance(applicationContext)
+                .enqueueUniquePeriodicWork(
+                    SubscribeSSEPeriodicWorker::class.java.simpleName,
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    periodicWorkSubscribeRequest
+                )
+
+            val periodicWorkLoginRequest =
+                PeriodicWorkRequestBuilder<RefreshTokensPeriodicWorker>(
+                    repeatInterval = LOGIN_REQUEST_REPEAT_MINUTES,
+                    repeatIntervalTimeUnit = TimeUnit.MINUTES
+                )
                 .setConstraints(workerConstraints)
                 .build()
 
             WorkManager.getInstance(applicationContext)
                 .enqueueUniquePeriodicWork(
-                    "LoginPeriodicWorker",
+                    RefreshTokensPeriodicWorker::class.java.simpleName,
                     ExistingPeriodicWorkPolicy.KEEP,
-                    periodicWorkRequest
+                    periodicWorkLoginRequest
                 )
         }
-
     }
 
     companion object {
         private const val API_ENDPOINT = "https://organic-byway-391719.ew.r.appspot.com"
+
+        const val SSE_NOTIFICATIONS_CHANNEL = "sse_notifications_channel"
+        private const val SSE_NOTIFICATIONS = "Notifications"
+
+        private const val SUBSCRIBE_REQUEST_REPEAT_MINUTES = 15L
+        private const val LOGIN_REQUEST_REPEAT_MINUTES = 50L
     }
 }

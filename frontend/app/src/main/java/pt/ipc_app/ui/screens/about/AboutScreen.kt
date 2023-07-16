@@ -72,17 +72,17 @@ private val authors = listOf(
     AuthorInfo(
         name = "Guilherme Cepeda",
         githubLink = Uri.parse("https://github.com/bodeborder"),
-        email = "47531@alunos.isel.pt"
+        email = "a47531@alunos.isel.pt"
     ),
     AuthorInfo(
         name = "Rodrigo Neves",
         githubLink = Uri.parse("https://github.com/RodrigoNevesWork"),
-        email = "46536@alunos.isel.pt"
+        email = "a46536@alunos.isel.pt"
     ),
     AuthorInfo(
         name = "Tiago Martinho",
         githubLink = Uri.parse("https://github.com/tiagomartinhoo"),
-        email = "48256@alunos.isel.pt"
+        email = "a48256@alunos.isel.pt"
     )
 )
 

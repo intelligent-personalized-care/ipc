@@ -6,9 +6,9 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.domain.Plan
 import pt.ipc_app.domain.user.Role
-import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.AUTHORIZATION
+import pt.ipc_app.service.models.EmptyResponseBody
 import pt.ipc_app.service.models.requests.ConnectionRequestInput
 import pt.ipc_app.service.models.exercises.ExercisesOfClients
 import pt.ipc_app.service.models.login.LoginInput
@@ -251,7 +251,7 @@ class UsersService(
         clientId: UUID,
         comment: String?,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         post(
             uri = "/users/monitors/$monitorId",
             token = token,
@@ -269,7 +269,7 @@ class UsersService(
         clientId: UUID,
         monitorId: UUID? = null,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         delete(
             uri = if (monitorId != null) "/users/monitors/$monitorId/clients/$clientId" else "/users/clients/$clientId/monitor",
             token = token
@@ -339,7 +339,7 @@ class UsersService(
         clientId: UUID,
         stars: Int,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         post(
             uri = "/users/monitors/$monitorId/rate",
             token = token,
@@ -375,7 +375,7 @@ class UsersService(
         userId: UUID,
         role: Role,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         postWithMultipartBody(
             uri = "/users/${role.name.lowercase()}s/$userId/profile/photo",
             token = token,
@@ -393,7 +393,7 @@ class UsersService(
         doc: File,
         monitorId: UUID,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         postWithMultipartBody(
             uri = "/users/monitors/$monitorId/credential",
             token = token,

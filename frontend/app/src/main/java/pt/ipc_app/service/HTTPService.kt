@@ -9,6 +9,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import pt.ipc_app.service.connection.*
+import pt.ipc_app.service.models.EmptyResponseBody
 import pt.ipc_app.service.utils.*
 import java.io.File
 import java.io.IOException
@@ -42,6 +43,8 @@ abstract class HTTPService(
             try {
                 if (response.isSuccessful && body.contentType() == ContentType.JSON.mediaType)
                     APIResult.Success(jsonEncoder.fromJson(resJson, T::class.java))
+                else if (response.isSuccessful && body.contentLength() == 0L)
+                    APIResult.Success(EmptyResponseBody() as T)
                 else if (!response.isSuccessful && response.code.toString().startsWith("5"))
                     APIResult.Failure(
                         ResponseError(

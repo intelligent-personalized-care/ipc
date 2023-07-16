@@ -3,6 +3,7 @@ package pt.ipc_app.service
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import pt.ipc_app.service.connection.APIResult
+import pt.ipc_app.service.models.EmptyResponseBody
 import pt.ipc_app.service.models.exercises.ExerciseVideoFeedback
 import pt.ipc_app.service.models.exercises.FeedbackInput
 import pt.ipc_app.service.models.exercises.ListOfExercisesInfo
@@ -90,7 +91,7 @@ class ExercisesService(
         set: Int,
         feedback: String,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         post(
             uri = "/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId/feedback",
             token = token,
@@ -115,7 +116,7 @@ class ExercisesService(
         exerciseId: Int,
         set: Int,
         token: String
-    ): APIResult<Any> =
+    ): APIResult<EmptyResponseBody> =
         postWithMultipartBody(
             uri = "/users/clients/$clientId/plans/$planId/daily_lists/$dailyListId/exercises/$exerciseId",
             token = token,

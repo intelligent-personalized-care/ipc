@@ -50,6 +50,10 @@ class MonitorProfileViewModel(
         _fileToSubmit.value = type
     }
 
+    fun setDocumentSubmitted() {
+        _monitorProfile.value = monitorProfile.value?.copy(docState = DocState.WAITING.name.lowercase())
+    }
+
     fun getProfilePicture(context: Context): ImageRequest =
         usersService.getProfilePicture(
             context = context,

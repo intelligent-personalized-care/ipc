@@ -35,7 +35,6 @@ class SplashScreenActivity: ComponentActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             if (repo.isLoggedIn()) {
-                viewModel.subscribe()
                 if (repo.userLoggedIn.role.isClient()) {
                     viewModel.getMonitorOfClient()
                     viewModel.getCurrentPlanOfClient()

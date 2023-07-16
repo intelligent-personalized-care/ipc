@@ -5,6 +5,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 /**
  * Create a [AppTheme] that is based on the system's current theme.
@@ -18,7 +19,7 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = if (darkTheme) DarkColorPalette else LightColorPalette,
+        colors = LightColorPalette,
         typography = Typography,
         shapes = Shapes,
         content = content

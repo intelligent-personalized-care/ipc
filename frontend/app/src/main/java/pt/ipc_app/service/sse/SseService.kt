@@ -2,15 +2,14 @@ package pt.ipc_app.service.sse
 
 import android.util.Log
 import com.google.gson.Gson
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
 import pt.ipc_app.service.HTTPService
 import pt.ipc_app.service.connection.APIResult
 import pt.ipc_app.service.connection.checkAuthorization
+import pt.ipc_app.service.models.EmptyResponseBody
 import pt.ipc_app.service.models.sse.*
 
 /**
@@ -47,17 +46,21 @@ class SseService(
         ) {
             Log.d(TAG, "On Event Received! Id: $id, Data: $data")
             id?.let {
-                // Deserialize the SSE event data based on the event type
-                val event = when (it) {
-                    CredentialAcceptance::class.java.simpleName -> jsonEncoder.fromJson(data, CredentialAcceptance::class.java)
-                    MonitorFeedBack::class.java.simpleName -> jsonEncoder.fromJson(data, MonitorFeedBack::class.java)
-                    PlanAssociation::class.java.simpleName -> jsonEncoder.fromJson(data, PlanAssociation::class.java)
-                    PostedVideo::class.java.simpleName -> jsonEncoder.fromJson(data, PostedVideo::class.java)
-                    RequestAcceptance::class.java.simpleName -> jsonEncoder.fromJson(data, RequestAcceptance::class.java)
-                    RequestMonitor::class.java.simpleName -> jsonEncoder.fromJson(data, RequestMonitor::class.java)
-                    else -> SseEvent()
+                try {
+                    // Deserialize the SSE event data based on the event type
+                    val event = when (it) {
+                        CredentialAcceptance::class.java.simpleName -> jsonEncoder.fromJson(data, CredentialAcceptance::class.java)
+                        MonitorFeedBack::class.java.simpleName -> jsonEncoder.fromJson(data, MonitorFeedBack::class.java)
+                        PlanAssociation::class.java.simpleName -> jsonEncoder.fromJson(data, PlanAssociation::class.java)
+                        PostedVideo::class.java.simpleName -> jsonEncoder.fromJson(data, PostedVideo::class.java)
+                        RequestAcceptance::class.java.simpleName -> jsonEncoder.fromJson(data, RequestAcceptance::class.java)
+                        RequestMonitor::class.java.simpleName -> jsonEncoder.fromJson(data, RequestMonitor::class.java)
+                        else -> SseEvent()
+                    }
+                    EventBus.postEvent(event)
+                } catch (e: Exception) {
+                    throw IllegalArgumentException()
                 }
-                EventBus.postEvent(event)
             }
         }
 
@@ -85,8 +88,8 @@ class SseService(
     }
 
     // Stop the SSE connection
-    suspend fun stop(token: String): APIResult<Any> =
-        post<Any>(
+    suspend fun stop(token: String): APIResult<EmptyResponseBody> =
+        post<EmptyResponseBody>(
             uri = "/users/unsubscribe",
             token = token
         ).also { eventSource.cancel() }

@@ -118,7 +118,7 @@ fun MonitorProfileScreen(
             if (submitCredentialDocumentState == ProgressState.WAITING) {
                 CircularProgressIndicator()
             } else {
-                if (submitCredentialDocumentState == ProgressState.FINISHED)
+                if (submitCredentialDocumentState == ProgressState.FINISHED && monitor.docState == null)
                     onSuccessSubmitCredentialDocument()
             }
 
