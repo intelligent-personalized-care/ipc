@@ -1,6 +1,6 @@
 runtime: java17
 env: standard
-instance_class: B1
+instance_class: F1
 handlers:
   - url: .*
     script: auto
