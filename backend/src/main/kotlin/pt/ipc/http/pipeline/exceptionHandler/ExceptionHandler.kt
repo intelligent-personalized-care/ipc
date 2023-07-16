@@ -3,6 +3,7 @@ package pt.ipc.http.pipeline.exceptionHandler
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 import org.springframework.http.HttpStatus
@@ -129,7 +130,7 @@ class ExceptionHandler {
     ): ResponseEntity<Any> {
         return Problem(
             title = ex.message(),
-            status = HttpStatus.BAD_REQUEST.value()
+            status = if (ex is ExpiredJwtException) HttpStatus.UNAUTHORIZED.value() else HttpStatus.BAD_REQUEST.value()
         ).toResponseEntity()
     }
 
