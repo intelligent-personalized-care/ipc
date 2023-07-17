@@ -43,8 +43,10 @@ This project uses the following open source packages:
 
 ## Test Our App
 
-Scan this Qr Code to download the app: **insert qr code**
-
+Scan this Qr Code to download the app:
+<h1 align="left">
+    <img src="docs/imgs/qrcode.png" alt="App QR Code" width="150">
+</h1>
 
 Here are some dummy accounts to login and experiment:
 
