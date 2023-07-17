@@ -17,8 +17,8 @@ import java.util.*
 @Configuration
 class AppConfig {
 
-    private val maxVideoSize: Long = -1
-    private val maxInMemory: Int = -1
+    private val maxVideoSize: Long = 300_000_000
+    private val maxInMemory: Int = 300_000_000
 
     @Bean
     fun multipartResolver(): CommonsMultipartResolver {
@@ -44,7 +44,7 @@ class ApiApplication {
 
         connProps.setProperty("sslmode", "disable")
         connProps.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
-        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) //cloudSqlInstance
+        connProps.setProperty("cloudSqlInstance", System.getenv("cloudSqlInstance")) // cloudSqlInstance
 
         val dataSource = HikariDataSource()
         dataSource.jdbcUrl = jdbcURL

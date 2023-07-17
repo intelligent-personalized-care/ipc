@@ -52,7 +52,6 @@ class SseEmitterRepository {
 
     @Scheduled(fixedDelay = EMITTERS_CLEANUP_INTERVAL, timeUnit = TimeUnit.HOURS)
     private fun removeExpiredEmitters() {
-
         for ((user, date) in usages) {
             val currentDateTime = LocalDateTime.now()
 
@@ -67,7 +66,7 @@ class SseEmitterRepository {
     }
 
     companion object {
-        const val EMITTERS_CLEANUP_INTERVAL =  8L // 10 minutes
+        const val EMITTERS_CLEANUP_INTERVAL = 8L // 10 minutes
         const val MAX_HOURS = 12L
     }
 }
