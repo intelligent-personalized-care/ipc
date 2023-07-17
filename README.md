@@ -14,8 +14,6 @@ This project is based on an Android application to promote physical agility and 
 
 ---
 
-The beta demo of the application can be found [here](https://github.com/intelligent-personalized-care/ipc/tree/main/docs/demo_beta.mp4).
-
 ## Documentation
 
 The project's final report is
@@ -23,9 +21,13 @@ available [here](https://github.com/intelligent-personalized-care/ipc/blob/main/
 
 You can find additional documentation in the [docs](https://github.com/intelligent-personalized-care/ipc/tree/main/docs) folder.
 
+---
+
 ## Languages
 
 We focused on choosing **_Kotlin_** as the master language, both in the backend and frontend. There are some **_Java_** classes created by Google, which are used to handle the ML Kit Pose Detection. We are using **_PostgreSQL_** in the database.
+
+---
 
 ## Frameworks / Libraries
 
@@ -36,6 +38,31 @@ This project uses the following open source packages:
 * [Jetpack Compose](https://developer.android.com/jetpack/compose)
 * [Google Cloud Storage](https://cloud.google.com/storage)
 * [ML Kit – API Pose Detection](https://developers.google.com/ml-kit/vision/pose-detection)
+
+---
+
+## Test Our App
+
+Scan this Qr Code to download the app: **insert qr code**
+
+
+Here are some dummy accounts to login and experiment:
+
+- **Client**:
+    - **email**: **jose123@gmail.com**
+    - **password**: @Password1
+
+- **Monitor**:
+    - **email**: **pedro123@gmail.com**
+    - **password**: @Password1
+
+---
+
+## Special Thanks
+
+Special Thanks to the **Muscle Wiki** organization, from where we took our exercise videos and most of our exercise descriptions.
+
+To access their [website](https://musclewiki.com/).
 
 ---
 
