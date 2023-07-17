@@ -74,8 +74,8 @@ class IPCApplication : DependenciesContainer, Application() {
         if (sessionManager.isLoggedIn()) {
             val periodicWorkSubscribeRequest =
                 PeriodicWorkRequestBuilder<SubscribeSSEPeriodicWorker>(
-                    repeatInterval = SUBSCRIBE_REQUEST_REPEAT_MINUTES,
-                    repeatIntervalTimeUnit = TimeUnit.MINUTES
+                    repeatInterval = SUBSCRIBE_REQUEST_REPEAT_HOURS,
+                    repeatIntervalTimeUnit = TimeUnit.HOURS
                 )
                     .setConstraints(workerConstraints)
                     .build()
@@ -110,7 +110,7 @@ class IPCApplication : DependenciesContainer, Application() {
         const val SSE_NOTIFICATIONS_CHANNEL = "sse_notifications_channel"
         private const val SSE_NOTIFICATIONS = "Notifications"
 
-        private const val SUBSCRIBE_REQUEST_REPEAT_MINUTES = 15L
+        private const val SUBSCRIBE_REQUEST_REPEAT_HOURS = 11L
         private const val LOGIN_REQUEST_REPEAT_MINUTES = 50L
     }
 }

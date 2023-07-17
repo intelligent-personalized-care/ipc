@@ -37,7 +37,6 @@ import java.util.List;
 import pt.ipc_app.R;
 
 /** Configures CameraX live preview demo settings. */
-@RequiresApi(VERSION_CODES.LOLLIPOP)
 public class CameraXLivePreviewPreferenceFragment extends LivePreviewPreferenceFragment {
 
     @Override
