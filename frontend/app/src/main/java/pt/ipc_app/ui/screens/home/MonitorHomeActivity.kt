@@ -62,17 +62,7 @@ class MonitorHomeActivity : ComponentActivity() {
         else viewModel.setRequests(requests!!)
 
         viewModel.getExercisesOfClients(LocalDate.now())
-/*
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                while (true) {
-                    viewModel.getRequestsOfMonitor()
-                    delay(5000)
-                }
-            }
-        }
 
- */
         setAppContentMonitor(viewModel) {
 
             val clientsList = viewModel.clients.collectAsState().value?.clients

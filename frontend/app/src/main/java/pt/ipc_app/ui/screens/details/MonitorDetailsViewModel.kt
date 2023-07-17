@@ -32,7 +32,8 @@ class MonitorDetailsViewModel(
      */
     fun connectWithMonitor(
         monitorId: UUID,
-        comment: String
+        comment: String,
+        onSuccess: () -> Unit = { }
     ) {
         launchAndExecuteRequest(
             request = {
@@ -42,21 +43,25 @@ class MonitorDetailsViewModel(
                     comment = comment.ifEmpty { null },
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            }
+            },
+            onSuccess = { onSuccess() }
         )
     }
 
     /**
      * Attempts to disconnects a client from his monitor.
      */
-    fun disconnectMonitor() {
+    fun disconnectMonitor(
+        onSuccess: () -> Unit = { }
+    ) {
         launchAndExecuteRequest(
             request = {
                 usersService.disconnectMonitor(
                     clientId = sessionManager.userUUID,
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            }
+            },
+            onSuccess = { onSuccess() }
         )
     }
 
@@ -65,7 +70,8 @@ class MonitorDetailsViewModel(
      */
     fun rateMonitor(
         monitorId: UUID,
-        stars: Int
+        stars: Int,
+        onSuccess: () -> Unit = { }
     ) {
         launchAndExecuteRequest(
             request = {
@@ -75,7 +81,8 @@ class MonitorDetailsViewModel(
                     stars = stars,
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            }
+            },
+            onSuccess = { onSuccess() }
         )
     }
 }

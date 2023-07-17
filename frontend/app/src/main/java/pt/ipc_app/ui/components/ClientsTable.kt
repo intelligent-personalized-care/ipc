@@ -1,6 +1,5 @@
 package pt.ipc_app.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -9,13 +8,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pt.ipc_app.service.models.users.ClientOutput
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClientsTable(
     columnText: String,
@@ -25,12 +24,12 @@ fun ClientsTable(
 ) {
     val usernameWeight = 1f
 
-    LazyColumn(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(horizontal = 50.dp)
             .height(180.dp)
     ) {
-        stickyHeader {
             Row(
                 modifier = Modifier.background(Color(27, 69, 113))
             ) {
@@ -40,18 +39,23 @@ fun ClientsTable(
                     weight = usernameWeight
                 )
             }
-        }
-
-        items(clients) {
-            Row(modifier = modifier.fillMaxWidth()) {
-                ClientInfoEntry(
-                    text = it.name,
-                    weight = usernameWeight,
-                    textAlign = TextAlign.Left,
-                    onPersonClick = { onClientClick(it) },
-                    enable = true
-                )
+        if (clients.isNotEmpty())
+            LazyColumn {
+                items(clients) {
+                    Row(modifier = modifier.fillMaxWidth()) {
+                        ClientInfoEntry(
+                            text = it.name,
+                            weight = usernameWeight,
+                            textAlign = TextAlign.Left,
+                            onPersonClick = { onClientClick(it) },
+                            enable = true
+                        )
+                    }
+                }
             }
+        else {
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Text(text = "You don't have any clients yet.")
         }
     }
 }

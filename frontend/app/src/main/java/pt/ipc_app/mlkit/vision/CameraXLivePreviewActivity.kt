@@ -402,7 +402,7 @@ class CameraXLivePreviewActivity :
 
     private fun setupRecordingButton(onSubmission: () -> Unit) {
         val recordButton: Button = findViewById(R.id.camera_button)
-
+        recordButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
         recordButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()

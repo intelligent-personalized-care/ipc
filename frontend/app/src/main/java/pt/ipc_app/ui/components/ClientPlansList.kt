@@ -20,32 +20,37 @@ fun ClientPlansList(
     plans: List<PlanOfClient>,
     onPlanClick: (PlanOfClient) -> Unit = { }
 ) {
-    LazyColumn(
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .padding(top = 10.dp, bottom = 60.dp)
-            .border(1.dp, Color(204, 202, 202, 255))
-    ) {
-        items(plans) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)
-                    .background(Color.White)
-                    .clickable {
-                        onPlanClick(it)
+    if (plans.isNotEmpty())
+        LazyColumn(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 60.dp)
+                .border(1.dp, Color(204, 202, 202, 255))
+        ) {
+            items(plans) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(60.dp)
+                        .background(Color.White)
+                        .clickable {
+                            onPlanClick(it)
+                        }
+                        .padding(8.dp)
+                ) {
+                    Column {
+                        Text(text = it.title)
+                        Text(
+                            text = "${it.startDate} - ${it.endDate}",
+                            style = MaterialTheme.typography.overline
+                        )
                     }
-                    .padding(8.dp)
-            ) {
-                Column {
-                    Text(text = it.title)
-                    Text(
-                        text = "${it.startDate} - ${it.endDate}",
-                        style = MaterialTheme.typography.overline
-                    )
                 }
             }
         }
+    else {
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
+        Text(text = "This client doesn't have any associated plans yet.")
     }
 }

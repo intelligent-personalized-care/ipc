@@ -6,10 +6,13 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.domain.exercise.ExerciseTotalInfo
+import pt.ipc_app.domain.user.isClient
 import pt.ipc_app.ui.screens.exercises.ExercisesViewModel
+import pt.ipc_app.ui.setAppContentClient
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
 import java.util.*
@@ -43,16 +46,9 @@ class ClientExerciseActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (repo.userUUID.toString() == clientId)
-            viewModel.getFeedbackOfMonitor(
-                clientId = clientId,
-                planId = exercise.planId,
-                dailyListId = exercise.dailyListId,
-                exerciseId = exercise.exercise.id
-            )
-
-        setAppContentMonitor(viewModel) {
+        val content: @Composable () -> Unit = {
             val set = viewModel.nrSetToSee.collectAsState().value
+
             ClientExerciseScreen(
                 exercise = exercise,
                 isClient = repo.userUUID.toString() == clientId,
@@ -65,9 +61,8 @@ class ClientExerciseActivity: ComponentActivity() {
                 setSelected = set,
                 onSetSelected = {
                     viewModel.selectSetToSee(it)
-                    if (repo.userUUID.toString() == clientId)
+                    if (repo.userLoggedIn.role.isClient())
                         viewModel.getFeedbackOfMonitor(
-                            clientId = clientId,
                             planId = exercise.planId,
                             dailyListId = exercise.dailyListId,
                             exerciseId = exercise.exercise.id
@@ -85,6 +80,23 @@ class ClientExerciseActivity: ComponentActivity() {
                 }
             )
         }
+
+        if (repo.userLoggedIn.role.isClient()) {
+            viewModel.getFeedbackOfMonitor(
+                planId = exercise.planId,
+                dailyListId = exercise.dailyListId,
+                exerciseId = exercise.exercise.id
+            )
+            setAppContentClient(
+                viewModel = viewModel,
+                content = content
+            )
+        }
+        else
+            setAppContentMonitor(
+                viewModel = viewModel,
+                content = content
+            )
 
     }
 

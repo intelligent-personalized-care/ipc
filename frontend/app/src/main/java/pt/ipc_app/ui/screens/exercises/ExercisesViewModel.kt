@@ -69,7 +69,6 @@ class ExercisesViewModel(
     fun selectSetToSee(set: Int) { _nrSetToSee.value = set }
 
     fun getFeedbackOfMonitor(
-        clientId: String,
         planId: Int,
         dailyListId: Int,
         exerciseId: Int
@@ -77,7 +76,7 @@ class ExercisesViewModel(
         launchAndExecuteRequest(
             request = {
                 exercisesService.getFeedbackOfMonitor(
-                    clientId = clientId,
+                    clientId = sessionManager.userUUID.toString(),
                     planId = planId,
                     dailyListId = dailyListId,
                     exerciseId = exerciseId,

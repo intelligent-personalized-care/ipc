@@ -29,6 +29,7 @@ import pt.ipc_app.ui.components.TopBar
 @Composable
 fun AppClientScreen(
     buttonBarClicked: ButtonBarType = ButtonBarType.HOME,
+    onNavigated: () -> Unit = { },
     content: @Composable () -> Unit
 ) {
     AppTheme {
@@ -48,9 +49,18 @@ fun AppClientScreen(
             bottomBar = {
                 ClientBottomBar(
                     buttonClicked = buttonBarClicked,
-                    onHomeClick = { ClientHomeActivity.navigate(ctx) },
-                    onExercisesClick = { ExercisesListActivity.navigate(ctx) },
-                    onProfileClick = { ClientProfileActivity.navigate(ctx) }
+                    onHomeClick = {
+                        ClientHomeActivity.navigate(ctx)
+                        onNavigated()
+                    },
+                    onExercisesClick = {
+                        ExercisesListActivity.navigate(ctx)
+                        onNavigated()
+                    },
+                    onProfileClick = {
+                        ClientProfileActivity.navigate(ctx)
+                        onNavigated()
+                    }
                 )
             },
             content = { content() }
@@ -67,6 +77,7 @@ fun AppClientScreen(
 @Composable
 fun AppMonitorScreen(
     buttonBarClicked: ButtonBarType = ButtonBarType.HOME,
+    onNavigated: () -> Unit = { },
     content: @Composable () -> Unit
 ) {
     AppTheme {
@@ -86,9 +97,18 @@ fun AppMonitorScreen(
             bottomBar = {
                 MonitorBottomBar(
                     buttonClicked = buttonBarClicked,
-                    onHomeClick = { MonitorHomeActivity.navigate(ctx) },
-                    onPlanCreateClick = { CreatePlanActivity.navigate(ctx) },
-                    onProfileClick = { MonitorProfileActivity.navigate(ctx) }
+                    onHomeClick = {
+                        MonitorHomeActivity.navigate(ctx)
+                        onNavigated()
+                    },
+                    onPlanCreateClick = {
+                        CreatePlanActivity.navigate(ctx)
+                        onNavigated()
+                    },
+                    onProfileClick = {
+                        MonitorProfileActivity.navigate(ctx)
+                        onNavigated()
+                    }
                 )
             },
             content = { content() }

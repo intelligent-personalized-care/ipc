@@ -43,8 +43,8 @@
     <string name="my_clients">Meus Clientes</string>
 
     <string name="exercises_title">Exercícios</string>
-    <string name="monitor_details_title">Detalhes do Monitor</string>
-    <string name="client_details_title">Detalhes do Cliente</string>
+    <string name="monitor_details_title">Monitor</string>
+    <string name="client_details_title">Cliente</string>
     <string name="profile_title">Perfil</string>
     <string name="about_title">Autores</string>
     <string name="about_repo_github">"O código desta aplicação está disponível em: "</string>

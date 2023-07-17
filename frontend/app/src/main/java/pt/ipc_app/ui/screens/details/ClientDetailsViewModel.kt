@@ -80,7 +80,8 @@ class ClientDetailsViewModel(
     fun associatePlanToClient(
         clientId: UUID,
         planId: Int,
-        startDate: String
+        startDate: String,
+        onSuccess: () -> Unit = { }
     ) {
         launchAndExecuteRequest(
             request = {
@@ -91,7 +92,8 @@ class ClientDetailsViewModel(
                     planId = planId,
                     startDate = startDate
                 )
-            }
+            },
+            onSuccess = { onSuccess() }
         )
     }
 
@@ -99,7 +101,8 @@ class ClientDetailsViewModel(
      * Attempts to disconnects a client from his monitor.
      */
     fun disconnectMonitor(
-        clientId: UUID
+        clientId: UUID,
+        onSuccess: () -> Unit = { }
     ) {
         launchAndExecuteRequest(
             request = {
@@ -108,7 +111,8 @@ class ClientDetailsViewModel(
                     clientId = clientId,
                     token = sessionManager.userLoggedIn.accessToken
                 )
-            }
+            },
+            onSuccess = { onSuccess() }
         )
     }
 }

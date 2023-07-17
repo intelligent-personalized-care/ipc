@@ -85,13 +85,13 @@ fun ClientDetailsScreen(
                     colors = if (showPlansOfClient) ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255))
                         else ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(35.dp)
                         .width(150.dp)
                 ) {
                     Text(
                         text = "Client Plans",
                         color = Color.White,
-                        fontSize = 14.sp
+                        fontSize = 10.sp
                     )
                 }
 
@@ -103,13 +103,13 @@ fun ClientDetailsScreen(
                     colors = if (showPlansOfMonitor) ButtonDefaults.buttonColors(backgroundColor = Color(14, 145, 14, 255))
                     else ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(35.dp)
                         .width(150.dp)
                 ) {
                     Text(
                         text = "Associate Plan",
                         color = Color.White,
-                        fontSize = 14.sp
+                        fontSize = 10.sp
                     )
                 }
             }

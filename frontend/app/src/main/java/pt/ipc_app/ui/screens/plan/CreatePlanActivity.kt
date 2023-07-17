@@ -42,7 +42,7 @@ class CreatePlanActivity : ComponentActivity() {
             CreatePlanScreen(
                 exercises = viewModel.exercises.collectAsState().value,
                 onPlanCreation = {
-                    viewModel.createPlan(it)
+                    viewModel.createPlan(it, onSuccess = ::finish)
                 },
                 onExercisesPaginationClick = { viewModel.getExercises(it) }
             )

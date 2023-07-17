@@ -62,7 +62,8 @@ class CreatePlanViewModel(
      * Attempts to create a plan.
      */
     fun createPlan(
-        plan: PlanInput
+        plan: PlanInput,
+        onSuccess: () -> Unit = { }
     ) {
         launchAndExecuteRequest(
             request = {
@@ -78,6 +79,7 @@ class CreatePlanViewModel(
             },
             onSuccess = {
                 _planState.value = ProgressState.FINISHED
+                onSuccess()
             }
         )
     }

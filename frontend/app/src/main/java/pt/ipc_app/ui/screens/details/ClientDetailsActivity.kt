@@ -11,6 +11,7 @@ import pt.ipc_app.DependenciesContainer
 import pt.ipc_app.service.models.users.ClientOutput
 import pt.ipc_app.ui.components.ProfilePicture
 import pt.ipc_app.ui.openSendEmail
+import pt.ipc_app.ui.screens.home.MonitorHomeActivity
 import pt.ipc_app.ui.screens.plan.PlanActivity
 import pt.ipc_app.ui.setAppContentMonitor
 import pt.ipc_app.utils.viewModelInit
@@ -55,13 +56,14 @@ class ClientDetailsActivity : ComponentActivity() {
                     onSendEmailRequest = { openSendEmail(client.email) },
                     plans = viewModel.plans.collectAsState().value.plans,
                     onRemoveClient = {
-                        viewModel.disconnectMonitor(cl.id)
+                        viewModel.disconnectMonitor(cl.id, onSuccess = ::finish)
                     },
                     onAssociatePlan = { pid, startDate ->
                         viewModel.associatePlanToClient(
                             clientId = client.id,
                             planId = pid,
-                            startDate = startDate
+                            startDate = startDate,
+                            onSuccess = ::finish
                         )
                     },
                     onPlanSelected = {
