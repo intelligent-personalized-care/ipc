@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user1@gmail.com\",\r\n    \"password\": \"@Password1\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin1@gmail.com\",\r\n    \"password\": \"@Password1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -106,7 +106,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"refreshToken\" : \"{{refreshMonitor}}\"\r\n}",
+							"raw": "{\r\n    \"refreshToken\" : \"{{refreshClient}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -222,7 +222,7 @@
 					"response": []
 				},
 				{
-					"name": "User Subscribe Server Sent Events",
+					"name": "Client Subscribe Server Sent Events",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -307,6 +307,91 @@
 					]
 				},
 				{
+					"name": "Monitor Subscribe Server Sent Events Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/subscribe",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"subscribe"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "client subscribe",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/subscribe",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"subscribe"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/event-stream"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 10 Jul 2023 21:33:57 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "data:{\"className\":\"AcceptConnection\",\"obj\":{\"accept\":\"Connection Accepted\"}}\n\n"
+						}
+					]
+				},
+				{
 					"name": "User Unsubscribe Server Sent Events",
 					"request": {
 						"auth": {
@@ -314,7 +399,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenClient}}",
+									"value": "{{tokenMonitor}}",
 									"type": "string"
 								}
 							]
@@ -396,7 +481,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{tokenAdmin}}",
+									"value": "",
 									"type": "string"
 								}
 							]
@@ -716,7 +801,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\" : \"monitor6@gmail.com\",\r\n    \"name\" : \"monitor3\",\r\n    \"password\" : \"@Password1\"\r\n}",
+							"raw": "{\r\n    \"email\" : \"testMonitorDeploy3w2@gmail.com\",\r\n    \"name\" : \"monitor4asasasasasas5\",\r\n    \"password\" : \"@Password1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1785,6 +1870,89 @@
 							"body": "{\n    \"id\": \"45586211-be5e-49d1-8252-72c393a1eec6\",\n    \"name\": \"monitor3\",\n    \"email\": \"monitor6@gmail.com\",\n    \"rating\": {\n        \"averageStarts\": 3,\n        \"nrOfReviews\": 1\n    },\n    \"docState\": \"valid\"\n}"
 						}
 					]
+				},
+				{
+					"name": "End client Connection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenMonitor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"monitors",
+								"{{idMonitor}}",
+								"clients",
+								"{{idClient}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "End client Connection",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/clients/{{idClient}}",
+									"host": [
+										"{{serverDomainName}}"
+									],
+									"path": [
+										"users",
+										"monitors",
+										"{{idMonitor}}",
+										"clients",
+										"{{idClient}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 15 Jul 2023 02:18:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -1798,7 +1966,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\"  : \"user3\",\r\n    \"email\" : \"user5@gmail.com\",\r\n    \"password\" : \"@Password1\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
+							"raw": "{\r\n    \"name\"  : \"Client1\",\r\n    \"email\" : \"client1@gmail.com\",\r\n    \"password\" : \"@Password1\",\r\n    \"weight\" : 70,\r\n    \"height\" : 180,\r\n    \"birthDate\" : \"2001-04-05\",\r\n    \"physicalCondition\" : \"lesão na perna esquerda\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2376,6 +2544,36 @@
 							"body": "{\n    \"id\": \"8c8b9625-e214-4601-a2c9-f8ec8739f77d\",\n    \"name\": \"user3\",\n    \"email\": \"user4@gmail.com\",\n    \"weight\": 70,\n    \"height\": 180,\n    \"physicalCondition\": \"lesão na perna esquerda\",\n    \"birthDate\": \"2001-04-05\"\n}"
 						}
 					]
+				},
+				{
+					"name": "End Monitor Connection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenClient}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/monitor",
+							"host": [
+								"{{serverDomainName}}"
+							],
+							"path": [
+								"users",
+								"clients",
+								"{{idClient}}",
+								"monitor"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -2399,7 +2597,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Plan Test\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 5,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 2,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 4,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\r\n                    \"sets\": 3,\r\n                    \"reps\": 12\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Plan Test\",\r\n    \"dailyLists\": [\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 2,\r\n                    \"reps\": 10\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 6,\r\n                    \"reps\": 11\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 2,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 4,\r\n                    \"reps\": 12\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd25\",\r\n                    \"sets\": 3,\r\n                    \"reps\": 12\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 9,\r\n                    \"reps\": 14\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 15\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"exercises\": [\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd12\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 16\r\n                },\r\n                {\r\n                    \"exerciseInfoID\": \"40c806c4-d4e7-472f-88f8-ed547e8afd13\",\r\n                    \"sets\": 10,\r\n                    \"reps\": 17\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2505,7 +2703,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans/1",
+							"raw": "{{serverDomainName}}/users/monitors/{{idMonitor}}/plans/{{planID}}",
 							"host": [
 								"{{serverDomainName}}"
 							],
@@ -2514,7 +2712,7 @@
 								"monitors",
 								"{{idMonitor}}",
 								"plans",
-								"1"
+								"{{planID}}"
 							]
 						}
 					},
@@ -2787,7 +2985,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"planID\" : 1,\r\n    \"startDate\" : \"2023-07-11\"\r\n}",
+							"raw": "{\r\n    \"planID\" : {{planID}},\r\n    \"startDate\" : \"2023-07-16\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2898,7 +3096,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{serverDomainName}}/exercises",
+							"raw": "{{serverDomainName}}/exercises?exerciseType=Legs",
 							"host": [
 								"{{serverDomainName}}"
 							],
@@ -2908,8 +3106,7 @@
 							"query": [
 								{
 									"key": "exerciseType",
-									"value": "Chest",
-									"disabled": true
+									"value": "Legs"
 								}
 							]
 						}
@@ -3375,7 +3572,7 @@
 								},
 								{
 									"key": "set",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -3386,7 +3583,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/1/daily_lists/1/exercises/1",
+							"raw": "{{serverDomainName}}/users/clients/{{idClient}}/plans/{{planID}}/daily_lists/{{dailyListID}}/exercises/{{dailyexerciseID}}",
 							"host": [
 								"{{serverDomainName}}"
 							],
@@ -3395,11 +3592,11 @@
 								"clients",
 								"{{idClient}}",
 								"plans",
-								"1",
+								"{{planID}}",
 								"daily_lists",
-								"1",
+								"{{dailyListID}}",
 								"exercises",
-								"1"
+								"{{dailyexerciseID}}"
 							]
 						}
 					},
@@ -3670,12 +3867,31 @@
 			"type": "string"
 		},
 		{
-			"key": "refreshAdmin\n",
+			"key": "refreshAdmin",
 			"value": "",
 			"type": "string"
 		},
 		{
 			"key": "requestID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "planID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "dailyListID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "dailyexerciseID",
+			"value": "",
+			"type": "string"
+		},
+		{
 			"value": "",
 			"type": "string"
 		}
