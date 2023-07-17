@@ -42,8 +42,13 @@ class UserController(private val userService: UserService, private val sseEmitte
 
     @Authentication
     @GetMapping(Uris.USERS_SUBSCRIBE)
-    fun subscribeToServerSendEvents(user: User): SseEmitter {
-        return sseEmitterRepository.createConnection(userID = user.id)
+    fun subscribeToServerSendEvents(user: User): ResponseEntity<SseEmitter> {
+        val headers = HttpHeaders()
+        headers.set("X-Accel-Buffering", "no")
+
+        val emitter = sseEmitterRepository.createConnection(userID = user.id)
+
+        return ResponseEntity(emitter, headers, HttpStatus.OK)
     }
 
     @Authentication
