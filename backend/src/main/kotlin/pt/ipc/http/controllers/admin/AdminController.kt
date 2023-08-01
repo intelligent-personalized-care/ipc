@@ -1,5 +1,6 @@
 package pt.ipc.http.controllers.admin
 
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -66,6 +67,7 @@ class AdminController(private val adminService: AdminService, private val sseEmi
 
     @Authentication
     @PostMapping(Uris.ADD_VIDEO_PREVIEW)
+    @CacheEvict("cacheExercises")
     fun addVideoPreview(
         @RequestParam video: MultipartFile,
         @RequestParam title: String,

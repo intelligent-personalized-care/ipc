@@ -38,6 +38,8 @@ dependencies {
     implementation("org.springframework.security:spring-security-core:5.7.7")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-cache:2.4.0")
+
 
     // JDBI dependencies
     implementation("org.jdbi:jdbi3-core:3.35.0")

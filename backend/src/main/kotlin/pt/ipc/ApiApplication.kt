@@ -5,6 +5,7 @@ import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.FileSystemResource
@@ -34,6 +35,7 @@ class AppConfig {
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class])
 @EnableScheduling
+@EnableCaching
 class ApiApplication {
 
     @Bean

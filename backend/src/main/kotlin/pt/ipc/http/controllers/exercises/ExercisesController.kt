@@ -1,5 +1,6 @@
 package pt.ipc.http.controllers.exercises
 
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -26,7 +27,9 @@ import java.util.UUID
 @RequestMapping(produces = ["application/json", "video/mp4", Problem.PROBLEM_MEDIA_TYPE])
 class ExercisesController(private val exercisesService: ExercisesService) {
 
+
     @GetMapping(Uris.EXERCISES)
+    @Cacheable("cacheExercises")
     fun getExercises(
         @RequestParam(required = false) exerciseType: ExerciseType?,
         @RequestParam(required = false, defaultValue = DEFAULT_SKIP) skip: Int,
@@ -39,6 +42,7 @@ class ExercisesController(private val exercisesService: ExercisesService) {
     }
 
     @GetMapping(Uris.EXERCISES_INFO)
+    @Cacheable("cacheExerciseInfo")
     fun getExerciseInfo(@PathVariable exerciseID: UUID): ResponseEntity<ExerciseInfo> {
         val exerciseInfo = exercisesService.getExercisesInfo(exerciseID = exerciseID)
         return ResponseEntity.ok(exerciseInfo)
