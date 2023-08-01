@@ -9,11 +9,9 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 @Component
-class CloudStorageUtilsImpl(
-    cloudStorageConfiguration: CloudStorageConfiguration
-) : CloudStorageUtils {
+class CloudStorageUtilsImpl : CloudStorageUtils {
 
-    private val storage: Storage = cloudStorageConfiguration.storage
+    private val storage: Storage = CloudStorageConfiguration.storage
 
     private val userPhotosBucket = CloudStorageConfiguration.userPhotosBucket
     private val monitorCredentialsBucket = CloudStorageConfiguration.monitorCredentialsBucket
