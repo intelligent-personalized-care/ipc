@@ -9,17 +9,9 @@ import org.threeten.bp.Duration
 
 @Configuration
 class CloudStorageConfiguration(
-
     @Value("\${server.config.secrets.google-project-id}")
-    private val projectID: String
-
+     projectID: String
 ) {
-
-    private val maxAttempts = 5
-
-    private val retryDelayMultiplier = 3.0
-
-    private val totalTimeOut: Duration = Duration.ofMinutes(3)
 
     private val retryStorageOptions: RetrySettings = StorageOptions
         .getDefaultRetrySettings()
@@ -38,8 +30,19 @@ class CloudStorageConfiguration(
 
     val storage: Storage = storageOptions.service
 
-    val userPhotosBucket = "ipc_users_photos"
-    val monitorCredentialsBucket = "ipc_monitors_credentials"
-    val clientsVideosBucket = "ipc_clients_videos"
-    val exercisesPreviewsBucket = "ipc_exercises_previews"
+
+    companion object{
+
+        private const val maxAttempts = 5
+
+        private const val retryDelayMultiplier = 3.0
+
+        private val totalTimeOut: Duration = Duration.ofMinutes(3)
+
+        const val userPhotosBucket = "ipc_users_photos"
+        const val monitorCredentialsBucket = "ipc_monitors_credentials"
+        const val clientsVideosBucket = "ipc_clients_videos"
+        const val exercisesPreviewsBucket = "ipc_exercises_previews"
+
+    }
 }

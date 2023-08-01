@@ -11,7 +11,7 @@ class TransactionManagerImpl(
     private val cloudStorageConfiguration: CloudStorageConfiguration
 ) : TransactionManager {
 
-    override fun <R> runBlock(block: (Transaction) -> R, fileName: UUID?): R {
+    override fun <R> run(fileName: UUID?, block: (Transaction) -> R): R {
         return jdbi.inTransaction<R, Exception> { handle ->
 
             val transaction = TransactionImpl(handle, cloudStorageConfiguration)

@@ -25,55 +25,46 @@ class AdminServiceImpl(
 
         val encryptedSession = encryptionUtils.encrypt(plainText = sessionID.toString())
 
-        transactionManager.runBlock(
-            block = {
-                it.adminRepository.createAdmin(
-                    id = userID,
-                    email = registerInput.email,
-                    name = registerInput.name,
-                    passwordHash = encryptionUtils.encrypt(plainText = registerInput.password),
-                    sessionID = encryptedSession
-                )
-            }
-        )
+        transactionManager.run {
+            it.adminRepository.createAdmin(
+                id = userID,
+                email = registerInput.email,
+                name = registerInput.name,
+                passwordHash = encryptionUtils.encrypt(plainText = registerInput.password),
+                sessionID = encryptedSession
+            )
+        }
 
         return CredentialsOutput(id = userID, accessToken = accessToken, refreshToken = refreshToken)
     }
 
     override fun getUnverifiedMonitors(): List<MonitorInfo> =
-        transactionManager.runBlock(
-            block = {
-                it.adminRepository.getUnverifiedMonitors()
-            }
-        )
+        transactionManager.run {
+            it.adminRepository.getUnverifiedMonitors()
+        }
 
     override fun getCredentialOfMonitor(monitorID: UUID): ByteArray =
-        transactionManager.runBlock(
-            block = {
-                it.cloudStorage.downloadMonitorCredentials(fileName = monitorID)
-            }
-        )
+        transactionManager.run {
+            it.cloudStorage.downloadMonitorCredentials(fileName = monitorID)
+        }
 
     override fun decideMonitorCredential(monitorID: UUID, accept: Boolean) =
-        transactionManager.runBlock(
-            block = {
-                it.adminRepository.decideMonitorVerification(monitorID = monitorID, decision = accept)
-            }
-        )
+        transactionManager.run {
+            it.adminRepository.decideMonitorVerification(monitorID = monitorID, decision = accept)
+        }
 
     override fun addExerciseInfoPreview(title: String, description: String, type: ExerciseType, video: ByteArray) {
         val exerciseID = UUID.randomUUID()
+        transactionManager.run(fileName = exerciseID) {
 
-        transactionManager.runBlock(
-            block = {
-                it.exerciseRepository.addExerciseInfoPreview(
-                    exerciseID = exerciseID,
-                    title = title,
-                    description = description,
-                    type = type
-                )
-                it.cloudStorage.uploadVideoPreview(fileName = exerciseID, file = video)
-            }
-        )
+            it.exerciseRepository.addExerciseInfoPreview(
+                exerciseID = exerciseID,
+                title = title,
+                description = description,
+                type = type
+            )
+
+            it.cloudStorage.uploadVideoPreview(fileName = exerciseID, file = video)
+        }
     }
 }

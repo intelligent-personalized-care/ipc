@@ -50,98 +50,88 @@ class ClientsServiceImpl(
             birthDate = input.birthDate?.toLocalDate()
         )
 
-        transactionManager.runBlock(
-            block = {
-                it.clientsRepository.registerClient(
-                    input = encryptedClient,
-                    sessionID = encryptedSession
-                )
-            }
-        )
+        transactionManager.run {
+            it.clientsRepository.registerClient(
+                input = encryptedClient,
+                sessionID = encryptedSession
+            )
+        }
 
         return CredentialsOutput(id = userID, accessToken = accessToken, refreshToken = refreshToken)
     }
 
     override fun addProfilePicture(clientID: UUID, profilePicture: ByteArray) {
-        transactionManager.runBlock(
-            block = {
-                it.cloudStorage.uploadProfilePicture(fileName = clientID, file = profilePicture)
-            }
-        )
+        transactionManager.run(fileName = clientID) {
+            it.cloudStorage.uploadProfilePicture(fileName = clientID, file = profilePicture)
+        }
     }
 
     override fun getClientProfile(clientID: UUID): ClientOutput =
-        transactionManager.runBlock(
-            block = {
-                it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
-            }
-        )
+        transactionManager.run {
+            it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
+        }
 
     override fun deleteConnection(clientID: UUID) {
-        transactionManager.runBlock(
-            block = {
-                val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
-                it.clientsRepository.deleteConnection(monitorID = monitor.id, clientID = clientID)
-            }
-        )
+        transactionManager.run {
+            val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
+            it.clientsRepository.deleteConnection(monitorID = monitor.id, clientID = clientID)
+        }
     }
 
     override fun searchMonitorsAvailable(clientID: UUID, name: String?, skip: Int, limit: Int): List<MonitorAvailable> =
-        transactionManager.runBlock(
-            block = {
-                it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit, clientID)
-            }
-        )
+        transactionManager.run {
+            it.monitorRepository.searchMonitorsAvailable(name = name, skip = skip, limit = limit, clientID)
+        }
 
     override fun requestMonitor(monitorID: UUID, clientID: UUID, requestText: String?): RequestMonitor {
         val requestID = UUID.randomUUID()
 
-        return transactionManager.runBlock(
-            block = {
-                val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
-                if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
-                it.clientsRepository.requestMonitor(
-                    requestID = requestID,
-                    monitorID = monitorID,
-                    clientID = clientID,
-                    requestText = requestText
-                )
+        return transactionManager.run {
+            val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
+            if (it.monitorRepository.getMonitorOfClient(clientID) != null) throw ClientAlreadyHaveMonitor
+            it.clientsRepository.requestMonitor(
+                requestID = requestID,
+                monitorID = monitorID,
+                clientID = clientID,
+                requestText = requestText
+            )
 
-                RequestMonitor(requestID = requestID, name = client.name, requestText = requestText, clientID = clientID)
-            }
-        )
+            RequestMonitor(requestID = requestID, name = client.name, requestText = requestText, clientID = clientID)
+        }
     }
 
     override fun getMonitorOfClient(clientID: UUID): MonitorOutput {
-        return transactionManager.runBlock(
-            block = {
-                val details = it.monitorRepository.getMonitorOfClient(clientID) ?: throw MonitorNotFound
-                val stars = it.monitorRepository.getMonitorRating(details.id)
-                MonitorOutput(id = details.id, name = details.name, email = details.email, rating = stars)
-            }
-        )
+        return transactionManager.run {
+            val details = it.monitorRepository.getMonitorOfClient(clientID) ?: throw MonitorNotFound
+            val stars = it.monitorRepository.getMonitorRating(details.id)
+            MonitorOutput(id = details.id, name = details.name, email = details.email, rating = stars)
+        }
     }
 
     override fun getExercisesOfClient(clientID: UUID, date: LocalDate?, skip: Int, limit: Int): List<Exercise> {
-        return transactionManager.runBlock(
-            block = {
-                if (date == null) {
-                    it.exerciseRepository.getAllExercisesOfClient(clientID = clientID, skip = skip, limit = limit)
-                } else {
-                    it.exerciseRepository.getExercisesOfDay(clientID = clientID, date = date)
-                }
+        return transactionManager.run {
+            if (date == null) {
+                it.exerciseRepository.getAllExercisesOfClient(clientID = clientID, skip = skip, limit = limit)
+            } else {
+                it.exerciseRepository.getExercisesOfDay(clientID = clientID, date = date)
             }
-        )
+        }
     }
 
     override fun rateMonitor(monitorID: UUID, clientID: UUID, rating: Int) {
-        transactionManager.runBlock(
-            block = {
-                if (!it.monitorRepository.isMonitorOfClient(monitorID = monitorID, clientID = clientID)) throw NotMonitorOfClient
-                if (it.clientsRepository.hasClientRatedMonitor(clientID = clientID, monitorID = monitorID)) throw AlreadyRatedThisMonitor
-                it.clientsRepository.rateMonitor(clientID = clientID, monitorID = monitorID, rating = rating)
-            }
-        )
+        transactionManager.run {
+            if (!it.monitorRepository.isMonitorOfClient(
+                    monitorID = monitorID,
+                    clientID = clientID
+                )
+            ) throw NotMonitorOfClient
+            if (it.clientsRepository.hasClientRatedMonitor(
+                    clientID = clientID,
+                    monitorID = monitorID
+                )
+            ) throw AlreadyRatedThisMonitor
+            it.clientsRepository.rateMonitor(clientID = clientID, monitorID = monitorID, rating = rating)
+        }
     }
 
     override fun uploadVideoOfClient(
@@ -154,29 +144,46 @@ class ClientsServiceImpl(
         feedback: String?
     ): Pair<UUID, PostedVideo?> {
         val exerciseVideoID = UUID.randomUUID()
-        return transactionManager.runBlock(
-            block = {
-                val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
-                val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
-
-                if (!it.clientsRepository.checkIfClientHasThisExercise(clientID = clientID, planID = planID, dailyList = dailyListID, exerciseID = exerciseID)) throw ClientDontHaveThisExercise
-                if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(clientID = clientID, exerciseID = exerciseID, set = set)) throw ExerciseAlreadyUploaded
-
-                val hasDone =
-                    it.clientsRepository.uploadExerciseVideoOfClient(
-                        clientID = clientID,
-                        exerciseID = exerciseID,
-                        exerciseVideoID = exerciseVideoID,
-                        date = LocalDate.now(),
-                        clientFeedback = feedback,
-                        set = set
-                    )
-
-                it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video)
-
-                Pair(first = monitor.id, second = if (hasDone) PostedVideo(clientID = clientID, name = client.name, exerciseID = exerciseID) else null)
-            },
+        return transactionManager.run(
             fileName = exerciseVideoID
-        )
+        ) {
+            val monitor = it.monitorRepository.getMonitorOfClient(clientID = clientID) ?: throw MonitorNotFound
+            val client = it.clientsRepository.getClient(clientID = clientID) ?: throw UserNotExists
+
+            if (!it.clientsRepository.checkIfClientHasThisExercise(
+                    clientID = clientID,
+                    planID = planID,
+                    dailyList = dailyListID,
+                    exerciseID = exerciseID
+                )
+            ) throw ClientDontHaveThisExercise
+            if (it.clientsRepository.checkIfClientAlreadyUploadedVideo(
+                    clientID = clientID,
+                    exerciseID = exerciseID,
+                    set = set
+                )
+            ) throw ExerciseAlreadyUploaded
+
+            val hasDone =
+                it.clientsRepository.uploadExerciseVideoOfClient(
+                    clientID = clientID,
+                    exerciseID = exerciseID,
+                    exerciseVideoID = exerciseVideoID,
+                    date = LocalDate.now(),
+                    clientFeedback = feedback,
+                    set = set
+                )
+
+            it.cloudStorage.uploadClientVideo(fileName = exerciseVideoID, video = video)
+
+            Pair(
+                first = monitor.id,
+                second = if (hasDone) PostedVideo(
+                    clientID = clientID,
+                    name = client.name,
+                    exerciseID = exerciseID
+                ) else null
+            )
+        }
     }
 }

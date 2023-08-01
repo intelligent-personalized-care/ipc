@@ -18,47 +18,65 @@ class UserServiceImpl(
 ) : UserService {
 
     override fun getUserPhoto(userID: UUID): ByteArray =
-        transactionManager.runBlock(
-            block = {
-                it.cloudStorage.downloadProfilePicture(fileName = userID)
-            }
-        )
+        transactionManager.run {
+            it.cloudStorage.downloadProfilePicture(fileName = userID)
+        }
 
     override fun login(email: String, password: String): LoginOutput =
-        transactionManager.runBlock(
-            block = {
-                val userID = it.usersRepository.login(email = email, passwordHash = encryptionUtils.encrypt(plainText = password)) ?: throw LoginFailed
+        transactionManager.run {
+            val userID =
+                it.usersRepository.login(email = email, passwordHash = encryptionUtils.encrypt(plainText = password))
+                    ?: throw LoginFailed
 
-                val user = it.usersRepository.getUserByID(userID = userID) ?: throw UserNotExists
+            val user = it.usersRepository.getUserByID(userID = userID) ?: throw UserNotExists
 
-                val role = it.usersRepository.getRoleByID(userID = user.id)
+            val role = it.usersRepository.getRoleByID(userID = user.id)
 
-                val sessionID = UUID.randomUUID()
+            val sessionID = UUID.randomUUID()
 
-                val (accessToken, refreshToken) = serviceUtils.createTokens(id = user.id, role = role, sessionID = sessionID)
+            val (accessToken, refreshToken) = serviceUtils.createTokens(
+                id = user.id,
+                role = role,
+                sessionID = sessionID
+            )
 
-                it.usersRepository.updateSession(userID = userID, sessionID = encryptionUtils.encrypt(plainText = sessionID.toString()))
+            it.usersRepository.updateSession(
+                userID = userID,
+                sessionID = encryptionUtils.encrypt(plainText = sessionID.toString())
+            )
 
-                LoginOutput(id = user.id, accessToken = accessToken, refreshToken = refreshToken, name = user.name, role = role)
-            }
-        )
+            LoginOutput(
+                id = user.id,
+                accessToken = accessToken,
+                refreshToken = refreshToken,
+                name = user.name,
+                role = role
+            )
+        }
 
     override fun refreshToken(refreshToken: String): PairOfTokens =
-        transactionManager.runBlock(
-            block = {
-                val sessionID = serviceUtils.getSessionID(refreshToken = refreshToken)
+        transactionManager.run {
+            val sessionID = serviceUtils.getSessionID(refreshToken = refreshToken)
 
-                val userID = it.usersRepository.getUserBySession(sessionID = encryptionUtils.encrypt(plainText = sessionID.toString())) ?: throw UserNotExists
+            val userID =
+                it.usersRepository.getUserBySession(sessionID = encryptionUtils.encrypt(plainText = sessionID.toString()))
+                    ?: throw UserNotExists
 
-                val role = it.usersRepository.getRoleByID(userID = userID)
+            val role = it.usersRepository.getRoleByID(userID = userID)
 
-                val newSessionID = UUID.randomUUID()
+            val newSessionID = UUID.randomUUID()
 
-                it.usersRepository.updateSession(userID = userID, sessionID = encryptionUtils.encrypt(plainText = newSessionID.toString()))
+            it.usersRepository.updateSession(
+                userID = userID,
+                sessionID = encryptionUtils.encrypt(plainText = newSessionID.toString())
+            )
 
-                val (newAccessToken, newRefreshToken) = serviceUtils.createTokens(id = userID, role = role, sessionID = newSessionID)
+            val (newAccessToken, newRefreshToken) = serviceUtils.createTokens(
+                id = userID,
+                role = role,
+                sessionID = newSessionID
+            )
 
-                PairOfTokens(accessToken = newAccessToken, refreshToken = newRefreshToken)
-            }
-        )
+            PairOfTokens(accessToken = newAccessToken, refreshToken = newRefreshToken)
+        }
 }

@@ -23,29 +23,23 @@ class ServiceUtils(
 
     fun getUser(id: UUID, role: Role, sessionID: String): User? =
         when (role) {
-            Role.MONITOR -> transactionManager.runBlock(
-                block = {
-                    it.monitorRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
-                }
-            )
-            Role.CLIENT -> transactionManager.runBlock(
-                block = {
-                    it.usersRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
-                }
-            )
-            Role.ADMIN -> transactionManager.runBlock(
-                block = {
-                    it.adminRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
-                }
-            )
+            Role.MONITOR -> transactionManager.run {
+                it.monitorRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
+            }
+
+            Role.CLIENT -> transactionManager.run {
+                it.usersRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
+            }
+
+            Role.ADMIN -> transactionManager.run {
+                it.adminRepository.getUserByIDAndSession(id = id, sessionID = sessionID)
+            }
         }
 
     fun checkIfMonitorIsVerified(monitorID: UUID) =
-        transactionManager.runBlock(
-            block = {
-                if (!it.monitorRepository.checkIfMonitorIsVerified(monitorID = monitorID)) throw MonitorNotVerified
-            }
-        )
+        transactionManager.run {
+            if (!it.monitorRepository.checkIfMonitorIsVerified(monitorID = monitorID)) throw MonitorNotVerified
+        }
 
     fun createCredentials(role: Role): Session {
         val userID = UUID.randomUUID()

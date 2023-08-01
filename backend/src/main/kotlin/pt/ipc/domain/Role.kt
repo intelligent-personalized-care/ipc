@@ -5,41 +5,17 @@ enum class Role {
     MONITOR,
     ADMIN;
 
-    fun isMonitor(): Boolean =
-        when (this) {
-            MONITOR -> true
-            CLIENT, ADMIN -> false
-        }
+    fun isMonitor(): Boolean = this == MONITOR
 
-    fun isClient(): Boolean =
-        when (this) {
-            CLIENT -> true
-            MONITOR, ADMIN -> false
-        }
 
-    fun isAdmin(): Boolean =
-        when (this) {
-            ADMIN -> true
-            MONITOR, CLIENT -> false
-        }
+    fun notAdmin(): Boolean = this != ADMIN
 
-    fun notAdmin(): Boolean =
-        when (this) {
-            CLIENT, MONITOR -> true
-            ADMIN -> false
-        }
 
-    fun notClient(): Boolean =
-        when (this) {
-            ADMIN, MONITOR -> true
-            CLIENT -> false
-        }
+    fun notClient(): Boolean = this != CLIENT
 
-    fun notMonitor(): Boolean =
-        when (this) {
-            CLIENT, ADMIN -> true
-            MONITOR -> false
-        }
+
+    fun notMonitor(): Boolean = this != MONITOR
+
 }
 
 fun Any?.toRole(): Role =

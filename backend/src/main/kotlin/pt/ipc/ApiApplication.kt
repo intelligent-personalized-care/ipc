@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import pt.ipc.storage.repositories.jdbi.configure
 import java.io.File
-import java.util.*
 
 @Configuration
 class AppConfig {

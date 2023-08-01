@@ -1,6 +1,7 @@
 package pt.ipc.domain.client
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 data class Client(
@@ -14,15 +15,7 @@ data class Client(
     val birthDate: LocalDate? = null
 )
 
-fun String.toLocalDate(): LocalDate {
-    val date = split("-")
-
-    val year = date[0].toInt()
-    val month = date[1].toInt()
-    val day = date[2].toInt()
-
-    return LocalDate.of(year, month, day)
-}
+fun String.toLocalDate(): LocalDate = LocalDate.parse(this, DateTimeFormatter.ISO_LOCAL_DATE)
 
 data class ClientOutput(
     val id: UUID,

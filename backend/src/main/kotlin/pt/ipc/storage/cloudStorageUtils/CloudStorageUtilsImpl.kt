@@ -15,10 +15,10 @@ class CloudStorageUtilsImpl(
 
     private val storage: Storage = cloudStorageConfiguration.storage
 
-    private val userPhotosBucket = cloudStorageConfiguration.userPhotosBucket
-    private val monitorCredentialsBucket = cloudStorageConfiguration.monitorCredentialsBucket
-    private val clientsVideosBucket = cloudStorageConfiguration.clientsVideosBucket
-    private val exercisesPreviewsBucket = cloudStorageConfiguration.exercisesPreviewsBucket
+    private val userPhotosBucket = CloudStorageConfiguration.userPhotosBucket
+    private val monitorCredentialsBucket = CloudStorageConfiguration.monitorCredentialsBucket
+    private val clientsVideosBucket = CloudStorageConfiguration.clientsVideosBucket
+    private val exercisesPreviewsBucket = CloudStorageConfiguration.exercisesPreviewsBucket
 
     private val videoContentType = "video/mp4"
     private val pdfContentType = "application/pdf"

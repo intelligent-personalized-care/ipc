@@ -11,91 +11,83 @@ class StorageIntegrity(
 
     @Scheduled(fixedDelay = DAY)
     fun removeUsersPhotos() {
-        transactionManager.runBlock(
-            block = {
-                val photosID = it.usersRepository.getUsersIDs()
+        transactionManager.run {
+            val photosID = it.usersRepository.getUsersIDs()
 
-                it.cloudStorage.getUserPhotosIDs().forEach { cloudID ->
-                    if (!photosID.contains(cloudID)) {
-                        println("DELETING CLOUD PHOTO -> $cloudID")
-                        it.cloudStorage.deleteUserPicture(fileName = cloudID)
-                    }
+            it.cloudStorage.getUserPhotosIDs().forEach { cloudID ->
+                if (!photosID.contains(cloudID)) {
+                    println("DELETING CLOUD PHOTO -> $cloudID")
+                    it.cloudStorage.deleteUserPicture(fileName = cloudID)
                 }
             }
-        )
+        }
     }
 
     @Scheduled(fixedDelay = DAY)
     fun removeCredentials() {
-        transactionManager.runBlock(
-            block = {
-                val docsIDs = it.monitorRepository.getAllCredentials()
+        transactionManager.run {
+            val docsIDs = it.monitorRepository.getAllCredentials()
 
-                val cloudIDs = it.cloudStorage.getAllCredentialsIDs()
+            val cloudIDs = it.cloudStorage.getAllCredentialsIDs()
 
-                cloudIDs.forEach { cloudID ->
-                    if (!docsIDs.contains(cloudID)) {
-                        println("DELETING CLOUD CREDENTIAL -> $cloudID")
-                        it.cloudStorage.deleteCredential(fileName = cloudID)
-                    }
-                }
-
-                docsIDs.forEach { docID ->
-                    if (!cloudIDs.contains(docID)) {
-                        println("DELETING SQL CREDENTIAL -> $docID")
-                        it.monitorRepository.deleteCredential(monitorID = docID)
-                    }
+            cloudIDs.forEach { cloudID ->
+                if (!docsIDs.contains(cloudID)) {
+                    println("DELETING CLOUD CREDENTIAL -> $cloudID")
+                    it.cloudStorage.deleteCredential(fileName = cloudID)
                 }
             }
-        )
+
+            docsIDs.forEach { docID ->
+                if (!cloudIDs.contains(docID)) {
+                    println("DELETING SQL CREDENTIAL -> $docID")
+                    it.monitorRepository.deleteCredential(monitorID = docID)
+                }
+            }
+        }
     }
 
     @Scheduled(fixedDelay = DAY)
     fun removeClientsVideos() {
-        transactionManager.runBlock(
-            block = {
-                val clientsVideosIDs = it.clientsRepository.getClientsVideosIDs()
-                val cloudIDs = it.cloudStorage.getClientsVideosIDs()
+        transactionManager.run {
+            val clientsVideosIDs = it.clientsRepository.getClientsVideosIDs()
+            val cloudIDs = it.cloudStorage.getClientsVideosIDs()
 
-                cloudIDs.forEach { cloudID ->
-                    if (!clientsVideosIDs.contains(cloudID)) {
-                        println("DELETING CLOUD CLIENT VIDEO -> $cloudID")
-                        it.cloudStorage.deleteClientVideo(fileName = cloudID)
-                    }
-                }
-
-                clientsVideosIDs.forEach { videoID ->
-                    if (!cloudIDs.contains(videoID)) {
-                        println("DELETING SQL CLIENT VIDEO -> $videoID")
-                        it.clientsRepository.deleteClientVideoID(videoID = videoID)
-                    }
+            cloudIDs.forEach { cloudID ->
+                if (!clientsVideosIDs.contains(cloudID)) {
+                    println("DELETING CLOUD CLIENT VIDEO -> $cloudID")
+                    it.cloudStorage.deleteClientVideo(fileName = cloudID)
                 }
             }
-        )
+
+            clientsVideosIDs.forEach { videoID ->
+                if (!cloudIDs.contains(videoID)) {
+                    println("DELETING SQL CLIENT VIDEO -> $videoID")
+                    it.clientsRepository.deleteClientVideoID(videoID = videoID)
+                }
+            }
+        }
     }
 
     @Scheduled(fixedDelay = DAY)
     fun removeExercisesPreviews() {
-        transactionManager.runBlock(
-            block = {
-                val cloudPreviews = it.cloudStorage.getVideoPreviewsIDs()
-                val previewsIDs = it.exerciseRepository.getPreviewsIDs()
+        transactionManager.run {
+            val cloudPreviews = it.cloudStorage.getVideoPreviewsIDs()
+            val previewsIDs = it.exerciseRepository.getPreviewsIDs()
 
-                cloudPreviews.forEach { cloudID ->
-                    if (!previewsIDs.contains(cloudID)) {
-                        println("DELETING CLOUD PREVIEW VIDEO -> $cloudID")
-                        it.cloudStorage.deleteVideoPreview(fileName = cloudID)
-                    }
-                }
-
-                previewsIDs.forEach { videoID ->
-                    if (!cloudPreviews.contains(videoID)) {
-                        println("DELETING SQL PREVIEW VIDEO -> $videoID")
-                        it.exerciseRepository.deletePreview(videoID = videoID)
-                    }
+            cloudPreviews.forEach { cloudID ->
+                if (!previewsIDs.contains(cloudID)) {
+                    println("DELETING CLOUD PREVIEW VIDEO -> $cloudID")
+                    it.cloudStorage.deleteVideoPreview(fileName = cloudID)
                 }
             }
-        )
+
+            previewsIDs.forEach { videoID ->
+                if (!cloudPreviews.contains(videoID)) {
+                    println("DELETING SQL PREVIEW VIDEO -> $videoID")
+                    it.exerciseRepository.deletePreview(videoID = videoID)
+                }
+            }
+        }
     }
 
     companion object {
