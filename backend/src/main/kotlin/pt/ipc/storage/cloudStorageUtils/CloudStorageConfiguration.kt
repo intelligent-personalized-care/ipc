@@ -3,10 +3,9 @@ package pt.ipc.storage.cloudStorageUtils
 import com.google.api.gax.retrying.RetrySettings
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
-import org.springframework.context.annotation.Configuration
 import org.threeten.bp.Duration
 
-@Configuration
+
 class CloudStorageConfiguration{
     companion object{
 

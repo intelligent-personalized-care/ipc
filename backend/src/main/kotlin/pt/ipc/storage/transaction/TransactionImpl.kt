@@ -19,7 +19,6 @@ import pt.ipc.storage.repositories.jdbi.JdbiUsersRepository
 
 class TransactionImpl(
     private val handle: Handle,
-    private val cloudStorageConfiguration: CloudStorageConfiguration
 ) : Transaction {
 
     override val clientsRepository: ClientsRepository by lazy { JdbiClientsRepository(handle) }
@@ -30,7 +29,7 @@ class TransactionImpl(
 
     override val exerciseRepository: ExerciseRepository by lazy { JdbiExercisesRepository(handle) }
 
-    override val cloudStorage: CloudStorageUtils by lazy { CloudStorageUtilsImpl(cloudStorageConfiguration) }
+    override val cloudStorage: CloudStorageUtils by lazy { CloudStorageUtilsImpl() }
 
     override val adminRepository: AdminRepository by lazy { JdbiAdminRepository(handle) }
 
